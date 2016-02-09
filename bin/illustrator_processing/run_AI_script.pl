@@ -38,6 +38,7 @@ my $perl_hash  = decode_json $json_text;
 
 my $SourceFile = $perl_hash->{ "source file" };
 my $ScriptFile = $perl_hash->{ "script file" };
+my $outputFolder = $perl_hash->{ "output folder" };
 
 $ASCode =~ s/<<source>>/$SourceFile/g;
 $ASCode =~ s/<<script>>/$ScriptFile/g;

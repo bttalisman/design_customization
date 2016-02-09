@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
 
 
-  @@path_to_runner_script = "/Users/bent/customization/bin/illustrator_processing/run_AI_script.pl"
+  @@path_to_runner_script = "/Users/bent/customization/bin/illustrator_processing/run_AI_script.rb"
   @@path_to_extract_script = "/Users/bent/customization/bin/illustrator_processing/extractPrompts.jsx"
   @@path_to_search_replace_script = "/Users/bent/customization/bin/illustrator_processing/searchAndReplace.jsx"
 
@@ -20,7 +20,7 @@ class HomeController < ApplicationController
     o = {
       "source file" => original_file.path,
       "script file" => @@path_to_extract_script,
-      "output folder" => original_folder
+      "output folder" => "/Users/bent/customization/working/versions/testDesign/v1"
     }
 
     File.open( config_extract_prompts_path, "w" ) do |file|
@@ -32,7 +32,8 @@ class HomeController < ApplicationController
 
     o = {
       "source file" => original_file.path,
-      "script file" => @@path_to_search_replace_script
+      "script file" => @@path_to_search_replace_script,
+      "output folder" => "/Users/bent/customization/working/versions/testDesign/v1"
     }
 
     File.open( config_search_replace_path, "w" ) do |file|
@@ -43,8 +44,7 @@ class HomeController < ApplicationController
 
     # run -- perl run_AI_script.pl "config_extract_prompts.jsn"
 
-    sys_com = "perl " + @@path_to_runner_script + " '" + config_extract_prompts_path + "'"
-    logger.info "sys_com: " + sys_com
+    sys_com = "ruby " + @@path_to_runner_script + " '" + config_extract_prompts_path + "'"
     system( sys_com )
 
   end
