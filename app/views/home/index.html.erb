@@ -6,6 +6,53 @@
 <%
 
   f = File.new( "/Users/bent/customization/working/originals/testDesign/testDesign-V1S12.ai", "r" )
-  generate_customization_view( f )
+  #generate_customization_view( f )
+
+
+  prompt_files = Array.new
+
+
+  parent_dir = Dir.open "/Users/bent/customization/working/originals"
+
+  parent_dir.each do |f|
+
+    path = parent_dir.path + "/" + f.to_s
+    is_dir = File.directory?( path )
+
+    next if !is_dir
+
+    # path is a subdirectory of parent_dir!
+
+    design_dir = Dir.open path
+    Dir.chdir design_dir.path
+
+    prompt_glob = f.to_s + "*" + "_prompts.*"
+
+    prompt_files = Dir.glob prompt_glob
+
+    if( prompt_files.length > 0 ) then
+
+      # we've found a design directory with a prompts file!
+
+      path = path + "/" + prompt_files[0]
+
+      logger.info "Found a prompt file: " + path.to_s
+
+      prompt_files.push( path )
+
+    end
+
+    logger.info "prompt_files.length: " + prompt_files.length.to_s
+
+  end
+
+
+  prompt_files.each { |p|
+%>
+
+  <%= button_to "Edit Design", { action: "edit", path: p },
+                                method: :delete, data: { confirm: "Are you sure?" } %>
+<%
+  }
 
 %>

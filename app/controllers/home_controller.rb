@@ -20,7 +20,7 @@ class HomeController < ApplicationController
     o = {
       "source file" => original_file.path,
       "script file" => @@path_to_extract_script,
-      "output folder" => "/Users/bent/customization/working/versions/testDesign/v1"
+      "output folder" => original_folder
     }
 
     File.open( config_extract_prompts_path, "w" ) do |file|
@@ -46,6 +46,7 @@ class HomeController < ApplicationController
 
     sys_com = "ruby " + @@path_to_runner_script + " '" + config_extract_prompts_path + "'"
     system( sys_com )
+
 
   end
 

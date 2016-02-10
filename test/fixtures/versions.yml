@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  output_folder_path: MyString
+  values: 
+  template_id: 1
+
+two:
+  output_folder_path: MyString
+  values: 
+  template_id: 1

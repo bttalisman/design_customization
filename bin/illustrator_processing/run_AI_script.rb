@@ -1,4 +1,5 @@
 require 'json'
+require 'FileUtils'
 
 
 ASCode = <<-EOD
@@ -23,35 +24,58 @@ ASCode = <<-EOD
 EOD
 
 
+def osascript(script)
+  system 'osascript', *script.split(/\n/).map { |line| ['-e', line] }.flatten
+end
+
+
+def move_all( dir, dest )
+
+	  Dir.entries(dir).each do |name|
+
+        next if File.directory? name
+
+	      from_path = File.join(dir, name)
+        to_path = dest
+
+        puts "About to MV: " + from_path.to_s + " to " + to_path.to_s
+	      FileUtils.mv from_path, to_path
+
+	  end
+end
+
+
+
+# Load configuration json, get settings
 
 config_file = ARGV[0]
 
-puts "config_file: " + config_file.to_s
-
-
 f = File.open(config_file.to_s, "r")
 s = f.read
-
-
 config_hash = JSON.parse( s )
 
 source_file = config_hash[ "source file" ]
 script_file = config_hash[ "script file" ]
 output_folder = config_hash[ "output folder" ]
 
-
-puts "source_file: " + source_file.to_s
-puts "script_file: " + script_file.to_s
 puts "output_folder: " + output_folder.to_s
+
+# Search and replace values in ASCode
 
 ASCode.gsub! '<<source>>', source_file
 ASCode.gsub! '<<script>>', script_file
 
 
+# Run the applescript
 
-def osascript(script)
-  system 'osascript', *script.split(/\n/).map { |line| ['-e', line] }.flatten
-end
+#osascript ASCode;
 
 
-osascript ASCode;
+# the source folder is the folder containing the source file
+source_folder = File.dirname( source_file )
+
+# AI places all new files in /output/
+AI_output_files = source_folder + "/output/."
+
+
+move_all( AI_output_files, output_folder )
