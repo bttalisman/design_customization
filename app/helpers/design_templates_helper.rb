@@ -1,0 +1,2 @@
+module DesignTemplatesHelper
+end

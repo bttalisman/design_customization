@@ -1,6 +1,7 @@
 class VersionsController < ApplicationController
 
     def index
+      @versions = Version.all
     end
 
     def edit
@@ -10,6 +11,9 @@ class VersionsController < ApplicationController
     end
 
     def new
+      @version = Version.new
+      @templates = Template.all
+
     end
 
     def update
@@ -20,6 +24,12 @@ class VersionsController < ApplicationController
 
     def destroy
     end
+
+
+    def version_params
+       params.require(:version).permit( :output_folder_path, :values, :template_id )
+    end
+
 
 
 end

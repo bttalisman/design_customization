@@ -3,8 +3,7 @@ class CreateTemplates < ActiveRecord::Migration
     create_table :templates do |t|
       t.string :orig_file_path
       t.string :name
-      t.json :prompts
-
+      t.column :prompts, :json   # Edited      
       t.timestamps null: false
     end
   end

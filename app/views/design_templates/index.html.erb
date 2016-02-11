@@ -1,0 +1,11 @@
+<h1>DesignTemplates#index</h1>
+
+
+
+<%
+@design_templates.each { |t|
+%>
+  <h1><%= link_to t.name, t %></h1>
+<%
+}
+%>

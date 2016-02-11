@@ -1,7 +1,18 @@
 <h1>Versions#new</h1>
 
 
+<%=
+form_for @version do |form|
+%>
+  <p>
+    <%= form.label :output_folder_path %><br/>
+    <%= form.text_field :output_folder_path %><br/>
+  </p>
+
+  <p>
+    <%= form.select :template_id, ::Template.all.collect { |x| [ x.name, x.id ] }, { :include_blank => "Select a Template" } %>
+  </p>
 
 <%
-
+end
 %>

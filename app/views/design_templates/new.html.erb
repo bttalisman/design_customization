@@ -1,0 +1,19 @@
+<h1>DesignTemplates#new</h1>
+
+
+
+<%=
+form_for @template do |form|
+%>
+  <p>
+    <%= form.label :name %><br/>
+    <%= form.text_field :name %><br/>
+  </p>
+  <p>
+    <%= form.label :orig_file_path %><br/>
+    <%= form.text_field :orig_file_path %><br/>
+  </p>
+
+<%
+end
+%>

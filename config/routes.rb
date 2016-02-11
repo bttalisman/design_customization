@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   get 'edit' => 'home#edit'
 
-  resources :templates
+  resources :design_templates
   resources :versions
 
 
