@@ -8,11 +8,19 @@ class VersionsController < ApplicationController
     end
 
     def create
+      @version = Version.new( version_params )
+
+      if @version.save
+        redirect_to versions_path, :notice => "This version was saved."
+      else
+        render "new"
+      end
+
     end
 
     def new
       @version = Version.new
-      @templates = Template.all
+      @design_templates = DesignTemplate.all
 
     end
 
@@ -26,8 +34,10 @@ class VersionsController < ApplicationController
     end
 
 
+    private
+
     def version_params
-       params.require(:version).permit( :output_folder_path, :values, :template_id )
+       params.require(:version).permit( :output_folder_path, :values, :design_template_id )
     end
 
 

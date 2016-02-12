@@ -10,8 +10,16 @@ form_for @version do |form|
   </p>
 
   <p>
-    <%= form.select :template_id, ::Template.all.collect { |x| [ x.name, x.id ] }, { :include_blank => "Select a Template" } %>
+    <%= form.label :values %><br/>
+    <%= form.text_field :values %><br/>
   </p>
+
+
+  <p>
+    <%= form.select :design_template_id, DesignTemplate.all.collect { |x| [ x.name, x.id ] }, { :include_blank => "Select a Template" } %>
+  </p>
+
+  <%= form.submit "Create Version" %>
 
 <%
 end
