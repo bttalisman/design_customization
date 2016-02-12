@@ -2,6 +2,8 @@
 
 
 
-<%
+<h1>Output folder: <%= @version.output_folder_path.to_s %></h1>
+<h1>values: <%= @version.values.to_s %></h1>
+<h1>Template: <%= DesignTemplate.find( @verion.design_template_id ) %>
 
-%>
+<%= link_to "Edit Version", edit_version_path %>

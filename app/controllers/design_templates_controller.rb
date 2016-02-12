@@ -10,11 +10,18 @@ class DesignTemplatesController < ApplicationController
     end
 
     def create
+      @design_template = DesignTemplate.new( design_template_params )
+
+      if @design_template.save
+        redirect_to design_templates_path, :notice => "This template was saved."
+      else
+        render "new"
+      end
+
     end
 
     def new
       @design_template = DesignTemplate.new
-
     end
 
     def update

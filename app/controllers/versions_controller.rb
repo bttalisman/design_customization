@@ -21,13 +21,14 @@ class VersionsController < ApplicationController
     def new
       @version = Version.new
       @design_templates = DesignTemplate.all
-
     end
 
     def update
     end
 
     def show
+      logger.info "versions_controller - show - id: " + params[ :id ].to_s
+      @version = Version.find( params[ :id ] )
     end
 
     def destroy

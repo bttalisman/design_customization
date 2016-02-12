@@ -3,7 +3,7 @@
 
 
 <%=
-form_for @template do |form|
+form_for @design_template do |form|
 %>
   <p>
     <%= form.label :name %><br/>
@@ -13,6 +13,8 @@ form_for @template do |form|
     <%= form.label :orig_file_path %><br/>
     <%= form.text_field :orig_file_path %><br/>
   </p>
+
+  <%= form.submit "Create Version" %>
 
 <%
 end

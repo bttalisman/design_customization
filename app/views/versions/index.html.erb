@@ -1,15 +1,17 @@
 <h1>Versions#index</h1>
 
 
-
-
 <%
 @versions.each { |v|
 %>
-  <h3>Folder path: </h3><%= v.output_folder_path %>
-  <h3>Template ID: </h3><%= v.design_template_id %>
-  <h3>Values: </h3><%= v.values %>
-
+  <%= link_to "Click", v %>
+  <h3>Folder path: <%= v.output_folder_path %></h3>
+  <h3>ID: <%= v.id %></h3>
+  <h3>Template ID: <%= v.design_template_id %></h3>
+  <h3>Values: <%= v.values %></h3>
+  <hr/>
 <%
 }
 %>
+
+<%= link_to "New Version", new_version_path %>

@@ -4,7 +4,6 @@ class CreateVersions < ActiveRecord::Migration
       t.string :output_folder_path
       t.column :values, :json   # Edited
       t.integer :design_template_id
-
       t.timestamps null: false
     end
   end

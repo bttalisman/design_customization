@@ -6,6 +6,9 @@
 @design_templates.each { |t|
 %>
   <h1><%= link_to t.name, t %></h1>
+  <h3>ID: <%= t.id %> <h3>
 <%
 }
 %>
+
+<%= link_to "New Template", new_design_template_path %>
