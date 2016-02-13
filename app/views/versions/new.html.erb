@@ -4,6 +4,12 @@
 <%=
 form_for @version do |form|
 %>
+
+  <p>
+    <%= form.label :name %><br/>
+    <%= form.text_field :name %><br/>
+  </p>
+
   <p>
     <%= form.label :output_folder_path %><br/>
     <%= form.text_field :output_folder_path %><br/>
@@ -13,7 +19,6 @@ form_for @version do |form|
     <%= form.label :values %><br/>
     <%= form.text_field :values %><br/>
   </p>
-
 
   <p>
     <%= form.select :design_template_id, DesignTemplate.all.collect { |x| [ x.name, x.id ] }, { :include_blank => "Select a Template" } %>

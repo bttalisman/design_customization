@@ -1,5 +1,5 @@
 class DesignTemplate < ActiveRecord::Base
 
-    has_many :version
+    has_many :versions
 
 end

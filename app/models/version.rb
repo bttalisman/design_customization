@@ -1,5 +1,5 @@
 class Version < ActiveRecord::Base
 
-  belongs_to :template
+  belongs_to :design_template
 
 end

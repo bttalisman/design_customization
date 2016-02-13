@@ -1,7 +1,25 @@
-<h1>DesignTemplates#edit</h1>
+<h1>DesignTemplates Edit</h1>
 
 
+<%=
+form_for @design_template do |form|
+%>
+  <p>
+    <%= form.label :name %><br/>
+    <%= form.text_field :name %><br/>
+  </p>
+  <p>
+    <%= form.label :orig_file_path %><br/>
+    <%= form.text_field :orig_file_path %><br/>
+    <input type="file" id="fileUpload">
+  </p>
+
+  <%= form.submit "Save Changes" %>
 
 <%
-
+end
 %>
+
+
+<%= button_to "delete", {:controller => :design_templates,
+      :action => 'destroy', :id => @design_template.id }, :method => :delete %>

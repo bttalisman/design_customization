@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160211153247) do
+ActiveRecord::Schema.define(version: 20160213024318) do
 
 # Could not dump table "design_templates" because of following NoMethodError
 #   undefined method `[]' for nil:NilClass

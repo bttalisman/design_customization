@@ -1,8 +1,15 @@
-<h1>DesignTemplates#show</h1>
+<h1><%= @design_template.name.to_s %> Template</h1>
 
+<h2>Path: <%= @design_template.orig_file_path.to_s %></h1>
 
-
-<h1><%= @design_template.name.to_s %></h1>
-<h1><%= @design_template.orig_file_path.to_s %></h1>
+<h2>Versions</h3>
+<ul>
+<%
+@versions.each do |v| %>
+  <li> <%= link_to v.name, v %> </li>
+<%
+end %>
+</ul>
 
 <%= link_to "Edit Template", edit_design_template_path %>
+<%= link_to "Back to Templates", design_templates_path %>
