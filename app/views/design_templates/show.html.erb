@@ -1,6 +1,8 @@
 <h1><%= @design_template.name.to_s %> Template</h1>
 
-File: <%= image_tag @design_template.original_file.url %>
+<p>File: <%= image_tag @design_template.original_file.url %></p>
+<p>Source Folder: <%= @folder %></p>
+
 
 <h2>Versions</h3>
 <ul>
@@ -11,5 +13,6 @@ File: <%= image_tag @design_template.original_file.url %>
 end %>
 </ul>
 
-<%= link_to "Edit Template", edit_design_template_path %>
-<%= link_to "Back to Templates", design_templates_path %>
+<%= button_to "Edit Template", edit_design_template_path, :method => "get" %>
+<%= button_to "Process", { controller: "design_templates", action: "force_process", id: @design_template } %>
+<%= button_to "Back to Templates", design_templates_path, :method => "get" %>

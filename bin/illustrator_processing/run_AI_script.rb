@@ -58,7 +58,11 @@ source_file = config_hash[ "source file" ]
 script_file = config_hash[ "script file" ]
 output_folder = config_hash[ "output folder" ]
 
-puts "output_folder: " + output_folder.to_s
+puts "RUN_AI_SCRIPT - source_file: " + source_file.to_s
+puts "RUN_AI_SCRIPT - script_file: " + script_file.to_s
+puts "RUN_AI_SCRIPT - output_folder: " + output_folder.to_s
+
+
 
 # Search and replace values in ASCode
 
@@ -68,7 +72,7 @@ ASCode.gsub! '<<script>>', script_file
 
 # Run the applescript
 
-#osascript ASCode;
+osascript ASCode;
 
 
 # the source folder is the folder containing the source file
