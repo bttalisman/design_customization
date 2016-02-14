@@ -9,9 +9,7 @@ form_for @design_template do |form|
     <%= form.text_field :name %><br/>
   </p>
   <p>
-    <%= form.label :orig_file_path %><br/>
-    <%= form.text_field :orig_file_path %><br/>
-    <input type="file" id="fileUpload">
+    <%= form.file_field :original_file %>
   </p>
 
   <%= form.submit "Save Changes" %>

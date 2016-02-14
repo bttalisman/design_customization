@@ -3,8 +3,15 @@
 <ul>
 <%
 @design_templates.each { |t|
+
+  if t.name == '' then
+    name = "<none>"
+  else
+    name = t.name
+  end
+
 %>
-  <li><%= link_to t.name, t %></li>
+  <li><%= link_to name, t %></li>
 <%
 }
 %>

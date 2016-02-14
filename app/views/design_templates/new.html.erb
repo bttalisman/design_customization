@@ -1,17 +1,17 @@
-<h1>New Templates</h1>
+<h1>New Template</h1>
 
 <%=
-form_for @design_template do |form|
+form_for @design_template, html: { multipart: true } do |form|
 %>
   <p>
     <%= form.label :name %><br/>
     <%= form.text_field :name %><br/>
   </p>
-  <p>
-    <%= form.label :orig_file_path %><br/>
-    <%= form.text_field :orig_file_path %><br/>
-  </p>
 
+  <p>
+    <%= form.file_field :original_file %>
+  </p>
+  
   <%= form.submit "Create Template" %>
 
 <%
