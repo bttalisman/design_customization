@@ -15,4 +15,5 @@ end %>
 
 <%= button_to "Edit Template", edit_design_template_path, :method => "get" %>
 <%= button_to "Process", { controller: "design_templates", action: "force_process", id: @design_template } %>
-<%= button_to "Back to Templates", design_templates_path, :method => "get" %>
+<%= button_to "Back to Templates", :method => "get" %>
+<%= link_to "New Version", new_version_path( :template_id => @design_template.id ) %>

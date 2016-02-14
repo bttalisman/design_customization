@@ -5,7 +5,10 @@
 @versions.each { |v|
 %>
   <h3><%= link_to v.name, v %></h3>
-  <h3>Template: <%= link_to v.design_template.name, v.design_template %></h3>
+  <h3>Template:
+    <%=
+      # link_to v.design_template.name, v.design_template 
+    %></h3>
   <hr/>
 <%
 }

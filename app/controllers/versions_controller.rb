@@ -34,6 +34,8 @@ class VersionsController < ApplicationController
     def create
       @version = Version.new( version_params )
 
+      logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
+
       if @version.save
         redirect_to versions_path, :notice => "This version was saved."
       else
@@ -67,6 +69,7 @@ class VersionsController < ApplicationController
       redirect_to :versions
 
     end
+
 
 
     private

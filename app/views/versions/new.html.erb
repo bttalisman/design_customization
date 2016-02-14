@@ -1,4 +1,4 @@
-<h1>Versions#new</h1>
+<h1>New Version</h1>
 
 
 <%=
@@ -15,17 +15,30 @@ form_for @version do |form|
     <%= form.text_field :output_folder_path %><br/>
   </p>
 
-  <p>
-    <%= form.label :values %><br/>
-    <%= form.text_field :values %><br/>
-  </p>
 
-  <p>
-    <%= form.select :design_template_id, DesignTemplate.all.collect { |x| [ x.name, x.id ] }, { :include_blank => "Select a Template" } %>
-  </p>
+    <p>
+      <select name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
+  <%=   @design_templates.each { |t| %>
+          <option value='<%= t.id.to_s %>'><%= t.name %></option>
+  <%    } %>
+      </select>
+    </p>
 
   <%= form.submit "Create Version" %>
 
 <%
 end
 %>
+
+<script>
+
+function changeTemplate()
+{
+  var template_id = $('#version_design_template_id').val();
+
+  $.get("http://localhost:3000/partials/values/", function(data, status){
+        alert("Data: " + data + "\nStatus: " + status);
+    });
+}
+
+</script>

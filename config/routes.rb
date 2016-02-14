@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   get 'edit' => 'home#edit'
 
+  get '/partials/values/' => 'partials#values'
+
   post 'force_process' => 'design_templates#force_process'
 
   resources :design_templates
