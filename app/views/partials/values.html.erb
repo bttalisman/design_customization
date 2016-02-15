@@ -1,1 +1,21 @@
 <h1>Enter Values!</h1>
+
+<h4>For <%= @design_template.name %> template</h4>
+
+<%
+if @prompts_file_exist then
+
+  i = 0
+  @prompts.each { |p|
+%>
+    <%= p.to_s %>: <input data-prompt='<%= p.to_s %>' type='text' id='val<%= i.to_s %>'></input><br>
+<%
+    i += 1
+  }
+
+%>
+  <input type='hidden' id='count' value='<%= i.to_s %>'></input>
+
+<%
+end
+%>

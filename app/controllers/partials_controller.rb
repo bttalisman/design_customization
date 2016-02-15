@@ -1,12 +1,41 @@
 class PartialsController < ApplicationController
 
-  
+
   layout 'partials'
 
 
   def values
 
-    logger.info "PARTIALS_CONTROLLER - values"
+
+    id = params[ :id ]
+    logger.info "PARTIALS_CONTROLLER - values - id: " + id.to_s
+
+    @design_template = DesignTemplate.find( id )
+
+    file = @design_template.original_file
+    source_path = file.path
+
+    @folder = Rails.root.to_s + "/" + File.dirname( source_path.to_s )
+
+    # get the file name, remove the .ai
+    @orig_file_name = File.basename( source_path.to_s, '.ai' )
+    @prompts_file = @folder + "/" + @orig_file_name + "_prompts.jsn"
+    @prompts_file_exist = File.exist?( @prompts_file )
+
+    prompts_string = ''
+    @prompts = nil
+    
+    if @prompts_file_exist then
+
+      File.open( @prompts_file,"r" ) do |f|
+        prompts_string = f.read()
+      end
+
+      @prompts = JSON.parse( prompts_string )
+
+      logger.info "PARTIALS_CONTROLLER - values - @prompts: " + @prompts.to_s
+
+    end
 
   end
 

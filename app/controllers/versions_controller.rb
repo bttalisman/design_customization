@@ -31,12 +31,38 @@ class VersionsController < ApplicationController
       @design_templates = DesignTemplate.all
     end
 
+
     def create
+
       @version = Version.new( version_params )
 
+      template_id = @version.design_template.id
+
+      versions_folder = Rails.root.to_s + "/public/system/versions/"
+
+
+      logger.info "VERSION_CONTROLLER - create"
+      logger.info "VERSION_CONTROLLER - create - template_id: " + template_id.to_s
       logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
+      logger.info "VERSION_CONTROLLER - create - params[ 'prompt_data' ]: " + params[ 'prompt_data' ].to_s
+      logger.info "VERSION_CONTROLLER - create - versions_folder: " + versions_folder.to_s
+
+
+
+
 
       if @version.save
+
+        version_output_folder = versions_folder + @version.id.to_s
+        FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
+
+        values_file = version_output_folder + "/values.jsn"
+
+        File.open( values_file,"w" ) do |f|
+          f.write( params[ 'prompt_data' ].to_s )
+        end
+
+
         redirect_to versions_path, :notice => "This version was saved."
       else
         render "new"

@@ -6,7 +6,9 @@ Rails.application.routes.draw do
 
   get 'edit' => 'home#edit'
 
-  get '/partials/values/' => 'partials#values'
+  get '/partials/values/:id' => 'partials#values'
+
+  get '/versions/create' => 'versions#create'
 
   post 'force_process' => 'design_templates#force_process'
 
