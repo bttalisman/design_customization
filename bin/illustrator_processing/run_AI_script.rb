@@ -31,14 +31,21 @@ end
 
 def move_all( dir, dest )
 
+    puts "RUN_AI_SCRIPT - move_all - dir: " + dir
+    puts "RUN_AI_SCRIPT - move_all - dest: " + dest
+
+
+
 	  Dir.entries(dir).each do |name|
+
+        puts "RUN_AI_SCRIPT - name: " + name
 
         next if File.directory? name
 
 	      from_path = File.join(dir, name)
         to_path = dest
 
-        puts "About to MV: " + from_path.to_s + " to " + to_path.to_s
+        puts "RUN_AI_SCRIPT - move_all - about to MV: " + from_path.to_s + " to " + to_path.to_s
 	      FileUtils.mv from_path, to_path
 
 	  end
