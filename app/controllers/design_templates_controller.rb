@@ -75,41 +75,6 @@ class DesignTemplatesController < ApplicationController
 
     end
 
-    def process_original
-
-      file = @design_template.original_file
-      source_path = Rails.root.to_s + "/" + file.path
-
-      folder = File.dirname( source_path )
-      config_file = folder + "/config_extract_prompts.jsn"
-
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - source_path: " + source_path.to_s
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - config_file: " + config_file.to_s
-
-      config = {}
-      config[ 'source file' ] = source_path
-      config[ 'script file' ] = @@path_to_extract_script
-      config[ 'output folder' ] = folder
-
-
-
-      File.open( config_file,"w" ) do |f|
-        f.write( config.to_json )
-      end
-
-      ai_output_folder = folder + "/output"
-      FileUtils.mkdir_p( ai_output_folder ) unless File.directory?( ai_output_folder )
-
-      sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - sys_com: " + sys_com.to_s
-
-      system( sys_com )
-
-
-    end
-
-
-
 
     def destroy
 
@@ -119,6 +84,47 @@ class DesignTemplatesController < ApplicationController
       @design_template.destroy
 
       redirect_to :design_templates
+
+    end
+
+
+
+    private
+
+
+
+    def process_original
+
+      file = @design_template.original_file
+      source_path = Rails.root.to_s + "/" + file.path
+
+      source_folder = File.dirname( source_path )
+      config_file = source_folder + "/config_extract_prompts.jsn"
+
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - source_path: " + source_path.to_s
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - config_file: " + config_file.to_s
+
+
+      config = {}
+      config[ 'source file' ] = source_path
+      config[ 'script file' ] = @@path_to_extract_script
+      config[ 'output folder' ] = source_folder   # the prompts file goes right next to the original file
+
+
+      File.open( config_file,"w" ) do |f|
+        f.write( config.to_json )
+      end
+
+      # the illustrator scripts dont get much in the way of input, so all output
+      # is placed in a subfolder of the folder containing the original file, and later
+      # moved to wherever
+      ai_output_folder = folder + "/output"
+      FileUtils.mkdir_p( ai_output_folder ) unless File.directory?( ai_output_folder )
+
+      sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - sys_com: " + sys_com.to_s
+
+      system( sys_com )
 
     end
 

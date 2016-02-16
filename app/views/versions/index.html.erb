@@ -1,17 +1,24 @@
 <h1>All Versions</h1>
 
 
+<%= link_to "New Version", new_version_path %><br>
+
+
 <%
 @versions.each { |v|
+  if( v.name == '' ) then
+    name = '<none>'
+  else
+    name = v.name
+  end
+
 %>
-  <h3><%= link_to v.name, v %></h3>
+  <h3><%= link_to name, v %></h3>
   <h3>Template:
     <%=
-      # link_to v.design_template.name, v.design_template 
+      link_to v.design_template.name, v.design_template
     %></h3>
   <hr/>
 <%
 }
 %>
-
-<%= link_to "New Version", new_version_path %>

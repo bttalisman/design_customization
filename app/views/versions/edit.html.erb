@@ -1,23 +1,21 @@
-<h1>Versions#edit</h1>
-
-
+<h1>Version</h1>
 
 <%=
 form_for @version do |form|
 %>
 
   <p>
-    <%= form.label :name %><br/>
+    <%= form.label :Name %>
     <%= form.text_field :name %><br/>
   </p>
 
   <p>
-    <%= form.label :output_folder_path %><br/>
+    <%= form.label 'Output Folder' %>
     <%= form.text_field :output_folder_path %><br/>
   </p>
 
   <p>
-    <%= form.label :values %><br/>
+    <%= form.label "Values" %>
     <%= form.text_field :values %><br/>
   </p>
 
@@ -26,8 +24,9 @@ form_for @version do |form|
   </p>
 
   <%= form.submit "Save Changes" %>
+  <%= button_to "Delete", {:controller => :versions,
+        :action => 'destroy', :id => @version.id }, :method => :delete %>
+
 <%
 end
 %>
-<%= button_to "delete", {:controller => :versions,
-      :action => 'destroy', :id => @version.id }, :method => :delete %>

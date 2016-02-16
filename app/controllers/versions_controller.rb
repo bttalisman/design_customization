@@ -33,11 +33,10 @@ class VersionsController < ApplicationController
     end
 
 
-
-
     def new
       @version = Version.new
       @design_templates = DesignTemplate.all
+      @design_template_id = params['template_id']
     end
 
 
@@ -45,29 +44,21 @@ class VersionsController < ApplicationController
 
       @version = Version.new( version_params )
 
-      template_id = @version.design_template.id
+      @version.values = params[ 'prompt_data' ]
+
+#      template_id = @version.design_template.id
 
 
       logger.info "VERSION_CONTROLLER - create"
-      logger.info "VERSION_CONTROLLER - create - template_id: " + template_id.to_s
+#      logger.info "VERSION_CONTROLLER - create - template_id: " + template_id.to_s
       logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
-      logger.info "VERSION_CONTROLLER - create - params[ 'prompt_data' ]: " + params[ 'prompt_data' ].to_s
+      logger.info "VERSION_CONTROLLER - create - version values: " + @version.values
 
 
 
       if @version.save
 
         # after we save, we can use the id to specify the output folder path.
-
-        version_output_folder = @@versions_folder + @version.id.to_s
-        FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
-
-        values_file = version_output_folder + "/values.jsn"
-
-        File.open( values_file,"w" ) do |f|
-          f.write( params[ 'prompt_data' ].to_s )
-        end
-
 
         process_version
 
@@ -114,17 +105,13 @@ class VersionsController < ApplicationController
     end
 
 
+
+
     def process_version
 
 
-      # copy this version's values json file to sit right next to the original ai
-      # file, as <original file name>_data.jsn
-
-
       version_output_folder = @@versions_folder + @version.id.to_s
-#      FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
-
-      values_file = version_output_folder + "/values.jsn"
+      FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
 
       source_file = @version.design_template.original_file
       source_path = Rails.root.to_s + "/" + source_file.path
@@ -132,12 +119,16 @@ class VersionsController < ApplicationController
 
       temp_values_file = source_folder + "/" + File.basename( source_file.path, '.ai' ) + "_data.jsn"
 
-      logger.info "VERSIONS_CONTROLLER - process_version - values_file: " + values_file.to_s
-      logger.info "VERSIONS_CONTROLLER - process_version - temp_values_file: " + temp_values_file.to_s
+
+      # we'll create a temporary file containing necessary info, sitting right next to the
+      # original ai file.
+
+      File.open( temp_values_file, "w" ) do |f|
+          f.write( @version.values.to_s )
+      end
 
 
-      FileUtils.cp( values_file, temp_values_file )
-
+      # create a config file that tells run_AI_script what it needs
 
       config_file = version_output_folder + "/config_search_replace.jsn"
 
@@ -146,12 +137,12 @@ class VersionsController < ApplicationController
       config[ 'script file' ] = @@path_to_search_replace_script
       config[ 'output folder' ] = version_output_folder
 
-      File.open( config_file,"w" ) do |f|
+      File.open( config_file, "w" ) do |f|
         f.write( config.to_json )
       end
 
-#      ai_output_folder = version_output_folder + "/output"
-#      FileUtils.mkdir_p( ai_output_folder ) unless File.directory?( ai_output_folder )
+
+      # And run it!
 
       sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
       logger.info "VERSIONS_CONTROLLER - process_version - sys_com: " + sys_com.to_s

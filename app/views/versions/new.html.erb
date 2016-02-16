@@ -1,40 +1,3 @@
-<h1>New Version</h1>
-
-
-<form action='create' id='version_form'>
-
-  <div class='container'>
-
-    <div style='flex:1'>
-
-      <p>
-        Name: <input type='text' name='version_name'></input>
-      </p>
-
-      <p>
-        Output Folder: <input type='text' name='version_output_folder'></input>
-      </p>
-
-        <p>
-          <select name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
-      <%=   @design_templates.each { |t| %>
-              <option value='<%= t.id.to_s %>'><%= t.name %></option>
-      <%    } %>
-          </select>
-        </p>`
-
-    </div>
-
-    <div id='values_container' style='flex:1'>
-    </div>
-
-  </div>
-
-  <input name='prompt_data' id='prompt_data' style='hidden'></div>
-
-  <button id='create' onclick='create_version();'>Create</button>
-
-</form>
 
 <script>
 
@@ -67,10 +30,20 @@ function create_version()
     form.submit();
 }
 
-function changeTemplate()
+
+
+function changeTemplate( id )
 {
-  var template_id = $('#version_design_template_id').val();
-  var uri = "http://localhost:3000/partials/values/" + template_id;
+
+  var o;
+
+  if( id == null )
+  {
+    o = $('#version_design_template_id');
+    id = o.val();
+  }
+
+  var uri = "http://localhost:3000/partials/values/" + id;
 
   $.get( uri, function(data, status)
     {
@@ -79,3 +52,60 @@ function changeTemplate()
 }
 
 </script>
+
+
+
+
+
+
+
+
+<h1>New Version</h1>
+
+<form action='create' id='version_form'>
+
+  <div class='container'>
+
+    <div style='flex:1'>
+
+      <p>
+        Name: <input type='text' name='version[name]'></input>
+      </p>
+
+      <p>
+        Output Folder: <input type='text' name='version_output_folder'></input>
+      </p>
+
+      <p>
+          <select name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
+
+            <option value="" disabled selected>Select a Template</option>
+
+<%          @design_templates.each { |t|
+
+              if ( t.id == @design_template_id.to_i ) then
+                selected = true
+%>
+                <script> changeTemplate( <%= t.id.to_s %> ); </script>
+<%
+              else
+                selected = false
+              end
+%>
+              <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
+<%          }
+%>
+          </select>
+      </p>
+
+    </div>
+
+    <div id='values_container' style='flex:1'></div>
+
+  </div>
+
+  <input name='prompt_data' id='prompt_data' style='display:none;'></input>
+
+  <button id='create' onclick='create_version();'>Create</button>
+
+</form>

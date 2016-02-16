@@ -1,7 +1,8 @@
-<h1><%= @version.name.to_s %> Version</h1>
+<h1>Version</h1>
 
-<h1>Output folder: <%= @version.output_folder_path.to_s %></h1>
-<h1>values: <%= @version.values.to_s %></h1>
-<h1>Template: <%= link_to @design_template.name, @design_template %>
+<div>Name: <%= @version.name %></div>
+<div>Output folder: <%= @version.output_folder_path.to_s %></div>
+<div>Values: <%= @version.values.to_s %></div>
+<div>Template: <%= link_to @design_template.name, @design_template %></div>
 <br><br>
-<%= link_to "Edit Version", edit_version_path %>
+<%= link_to "Edit this Version", edit_version_path %>
