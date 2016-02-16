@@ -16,6 +16,8 @@ class VersionsController < ApplicationController
     def edit
       @version = Version.find( params[ :id ] )
       @design_template = @version.design_template
+      @design_templates = DesignTemplate.all
+      @design_template_id = @design_template.id
     end
 
 
@@ -23,9 +25,15 @@ class VersionsController < ApplicationController
       @version = Version.find( params[ :id ] )
       @version.update( version_params )
 
-      logger.info "UPDATE - version_params: " + version_params.to_s
+      @version.values = params[ 'prompt_data' ]
+
+
+      logger.info "VERSIONS_CONTROLLER - UPDATE - version_params: " + version_params.to_s
 
       if @version.save
+
+        process_version
+
         redirect_to versions_path, :notice => "This version was saved."
       else
         render "new"
@@ -46,11 +54,8 @@ class VersionsController < ApplicationController
 
       @version.values = params[ 'prompt_data' ]
 
-#      template_id = @version.design_template.id
-
 
       logger.info "VERSION_CONTROLLER - create"
-#      logger.info "VERSION_CONTROLLER - create - template_id: " + template_id.to_s
       logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
       logger.info "VERSION_CONTROLLER - create - version values: " + @version.values
 
@@ -109,6 +114,10 @@ class VersionsController < ApplicationController
 
     def process_version
 
+      # we're nothing without a template
+      if @version.design_template == nil then
+        return
+      end
 
       version_output_folder = @@versions_folder + @version.id.to_s
       FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
@@ -145,10 +154,31 @@ class VersionsController < ApplicationController
       # And run it!
 
       sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
-      logger.info "VERSIONS_CONTROLLER - process_version - sys_com: " + sys_com.to_s
+      runai = params[ 'runai' ]
 
-      system( sys_com )
+      logger.info "VERSIONS_CONTROLLER - process_version - runai: " + runai.to_s
 
+      if runai == 'on' then
+
+        logger.info "VERSIONS_CONTROLLER - process_version - about to run sys_com: " + sys_com.to_s
+        # run the ruby script. AI should generate output files to the output folder
+        system( sys_com )
+
+        # copy these files to the user's requested output folder
+        user_out_folder = Rails.root.to_s + "/" + @version.output_folder_path
+
+        logger.info "VERSIONS_CONTROLLER - process_version - user_out_folder: " + user_out_folder.to_s
+
+        FileUtils.mkdir_p( user_out_folder ) unless File.directory?( user_out_folder )
+
+        wildcard = version_output_folder + "/*.ai"
+        Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+
+        wildcard = version_output_folder + "/*.jpg"
+        Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+
+
+      end
 
     end
 

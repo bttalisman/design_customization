@@ -16,7 +16,9 @@
   <h3><%= link_to name, v %></h3>
   <h3>Template:
     <%=
-      link_to v.design_template.name, v.design_template
+      if v.design_template then
+        link_to v.design_template.name, v.design_template
+      end
     %></h3>
   <hr/>
 <%

@@ -1,32 +1,126 @@
-<h1>Version</h1>
 
-<%=
-form_for @version do |form|
+<script>
+
+
+function create_version()
+{
+    var count = $('#count').val();
+    var form = $('#version_form');
+    var s, v, o;
+
+    var oReturn;
+    oReturn = {};
+
+    var prompt;
+
+    for( var i = 0; i < count; i++ )
+    {
+      s = '#val' + i;
+      o = $(s);
+      v = o.val();
+
+      prompt = o.attr( 'data-prompt' );
+
+      oReturn[ prompt ] = v;
+
+    }
+
+    $('#prompt_data').attr( 'value', JSON.stringify( oReturn ) );
+
+    form.submit();
+}
+
+
+
+function getTemplateHTML( templateId, useVersion )
+{
+
+  var o;
+  var uri;
+
+
+  if( templateId == null )
+  {
+    o = $('#version_design_template_id');
+    templateId = o.val();
+  }
+
+
+  if( useVersion )
+  {
+    uri = "http://localhost:3000/partials/values/" + templateId + "?version_id=" + <%= @version.id %>;
+  }
+  else
+  {
+    uri = "http://localhost:3000/partials/values/" + templateId;
+  }
+
+
+  $.get( uri, function(data, status)
+    {
+        $('#values_container').html( data );
+    } );
+}
+
+</script>
+
+
+
+
+
+
+
+
+<h1>Edit Version</h1>
+
+<form action='update' id='version_form'>
+
+  <div class='container'>
+
+    <div style='flex:1'>
+
+      <p>
+        Name: <input type='text' name='version[name]' value='<%= @version.name %>'></input>
+      </p>
+
+      <p>
+        Output Folder: <input type='text' name='version[output_folder_path]' value='<%= @version.output_folder_path %>'></input>
+      </p>
+
+      Run AI <input type='checkbox' name='runai' id='runai'></input>
+
+
+
+      <p>
+          <select name='version[design_template_id]' id='version_design_template_id' onchange='getTemplateHTML( null, false );'>
+
+            <option value="" disabled selected>Select a Template</option>
+
+<%          @design_templates.each { |t|
+
+              if ( t.id == @design_template_id.to_i ) then
+                selected = true
 %>
-
-  <p>
-    <%= form.label :Name %>
-    <%= form.text_field :name %><br/>
-  </p>
-
-  <p>
-    <%= form.label 'Output Folder' %>
-    <%= form.text_field :output_folder_path %><br/>
-  </p>
-
-  <p>
-    <%= form.label "Values" %>
-    <%= form.text_field :values %><br/>
-  </p>
-
-  <p>
-    <%= form.select :design_template_id, DesignTemplate.all.collect { |x| [ x.name, x.id ] }, { :include_blank => "Select a Template" } %>
-  </p>
-
-  <%= form.submit "Save Changes" %>
-  <%= button_to "Delete", {:controller => :versions,
-        :action => 'destroy', :id => @version.id }, :method => :delete %>
-
+                <script> getTemplateHTML( <%= t.id.to_s %>, true ); </script>
 <%
-end
+              else
+                selected = false
+              end
 %>
+              <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
+<%          }
+%>
+          </select>
+      </p>
+
+    </div>
+
+    <div id='values_container' style='flex:1'></div>
+
+  </div>
+
+  <input name='prompt_data' id='prompt_data' style='display:none;'></input>
+
+  <button id='update' onclick='create_version();'>Update</button>
+
+</form>

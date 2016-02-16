@@ -118,7 +118,7 @@ class DesignTemplatesController < ApplicationController
       # the illustrator scripts dont get much in the way of input, so all output
       # is placed in a subfolder of the folder containing the original file, and later
       # moved to wherever
-      ai_output_folder = folder + "/output"
+      ai_output_folder = source_folder + "/output"
       FileUtils.mkdir_p( ai_output_folder ) unless File.directory?( ai_output_folder )
 
       sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"

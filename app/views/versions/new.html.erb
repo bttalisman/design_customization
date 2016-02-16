@@ -73,8 +73,12 @@ function changeTemplate( id )
       </p>
 
       <p>
-        Output Folder: <input type='text' name='version_output_folder'></input>
+        Output Folder: <input type='text' name='version[output_folder_path]'></input>
       </p>
+
+      Run AI <input type='checkbox' name='runai' id='runai'></input>
+
+
 
       <p>
           <select name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>

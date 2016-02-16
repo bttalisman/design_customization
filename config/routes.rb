@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get '/partials/values/:id' => 'partials#values'
 
   get '/versions/create' => 'versions#create'
+  get '/versions/:id/update' => 'versions#update'
+
 
   post 'force_process' => 'design_templates#force_process'
 

@@ -10,7 +10,28 @@ class PartialsController < ApplicationController
     id = params[ :id ]
     logger.info "PARTIALS_CONTROLLER - values - id: " + id.to_s
 
+    version_id = params[ :version_id ]
+    logger.info "PARTIALS_CONTROLLER - values - version_id: " + version_id.to_s
+
+
     @design_template = DesignTemplate.find( id )
+
+    if( version_id != nil ) then
+      version = Version.find( version_id )
+    end
+
+    if( version != nil ) then
+
+      values_string = version.values
+
+      if( values_string != nil ) then
+
+        @values = JSON.parse( values_string )
+
+      end
+
+    end
+
 
     file = @design_template.original_file
     source_path = file.path
@@ -24,7 +45,7 @@ class PartialsController < ApplicationController
 
     prompts_string = ''
     @prompts = nil
-    
+
     if @prompts_file_exist then
 
       File.open( @prompts_file,"r" ) do |f|

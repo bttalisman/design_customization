@@ -7,8 +7,14 @@ if @prompts_file_exist then
 
   i = 0
   @prompts.each { |p|
+
+    val = ''
+    if( @values != nil ) then        
+      val = @values[ p.to_s ]
+    end
+
 %>
-    <%= p.to_s %>: <input data-prompt='<%= p.to_s %>' type='text' id='val<%= i.to_s %>'></input><br>
+    <%= p.to_s %>: <input data-prompt='<%= p.to_s %>' type='text' value='<%= val %>' id='val<%= i.to_s %>'></input><br>
 <%
     i += 1
   }
