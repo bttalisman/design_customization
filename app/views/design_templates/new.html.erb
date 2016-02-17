@@ -11,9 +11,27 @@ form_for @design_template, html: { multipart: true } do |form|
   <p>
     <%= form.file_field :original_file %>
   </p>
-  
-  <%= form.submit "Create Template" %>
+
+  <input name='stayAfterSave' id='stayAfterSave' style='display:none;'></input>
+
+  <button onclick='setPrefs();'>Set Prefs</button><br>
+  <button onclick='save();'>Save</button><br>
 
 <%
 end
 %>
+
+
+<script>
+
+  function save()
+  {
+    $('#stayAfterSave').val( 'false')
+  }
+
+  function setPrefs()
+  {
+    $('#stayAfterSave').val( 'true')
+  }
+
+</script>

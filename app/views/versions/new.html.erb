@@ -68,19 +68,21 @@ function changeTemplate( id )
 
     <div style='flex:1'>
 
-      <p>
+
+      <div>
         Name: <input type='text' name='version[name]'></input>
-      </p>
+      </div>
 
-      <p>
+      <div>
         Output Folder: <input type='text' name='version[output_folder_path]'></input>
-      </p>
+      </div>
 
-      Run AI <input type='checkbox' name='runai' id='runai'></input>
+      <div>
+        Run AI <input type='checkbox' name='runai' id='runai'></input>
+      </div>
 
 
-
-      <p>
+      <div>
           <select name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
 
             <option value="" disabled selected>Select a Template</option>
@@ -100,7 +102,7 @@ function changeTemplate( id )
 <%          }
 %>
           </select>
-      </p>
+      </div>
 
     </div>
 

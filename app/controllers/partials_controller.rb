@@ -1,7 +1,22 @@
 class PartialsController < ApplicationController
 
+  include ApplicationHelper
 
   layout 'partials'
+
+
+  def prompts
+
+    template_id = params[ :id ]
+    @design_template = DesignTemplate.find( template_id )
+    @prompts = get_prompts_array( @design_template )
+
+
+    logger.info "PARTIALS_CONTROLLER - prompts - template_id: " + template_id.to_s
+
+  end
+
+
 
 
   def values

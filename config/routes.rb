@@ -7,9 +7,18 @@ Rails.application.routes.draw do
   get 'edit' => 'home#edit'
 
   get '/partials/values/:id' => 'partials#values'
+  get '/partials/prompts/:id' => 'partials#prompts'
+
 
   get '/versions/create' => 'versions#create'
   get '/versions/:id/update' => 'versions#update'
+
+
+  get '/design_templates/create' => 'design_templates#create'
+  get '/design_templates/:id/edit' => 'design_templates#edit'
+  get '/design_templates/edit' => 'design_templates#edit'
+
+
 
 
   post 'force_process' => 'design_templates#force_process'

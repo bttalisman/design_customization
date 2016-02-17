@@ -1,23 +1,62 @@
 <h1>Edit Template</h1>
 
 
-<%=
-form_for @design_template do |form|
-%>
-  <p>
-    <%= form.label :name %><br/>
-    <%= form.text_field :name %><br/>
-  </p>
-  <p>
-    <%= form.file_field :original_file %>
-  </p>
 
-  <%= form.submit "Save Changes" %>
+<form action='update' id='design_template_form'>
 
-<%
-end
-%>
+  <div class='container'>
+
+    <div style='flex:1;'>
+
+      <p>
+        Name: <input type='text' name='design_template[name]' value='<%= @design_template.name %>'></input>
+      </p>
+
+    </div>
+
+    <div id='panel_container' style='flex:1; background:pink; '></div>
+
+  </div>
+
+  <input name='panel_data' id='prompt_data' style='display:none;'></input>
+
+  <button id='update' onclick='update_template();'>Update</button>
+
+</form>
 
 
 <%= button_to "delete", {:controller => :design_templates,
       :action => 'destroy', :id => @design_template.id }, :method => :delete %>
+
+
+
+<script>
+
+  function getTemplateHTML( templateId )
+  {
+
+    var o;
+    var uri;
+
+
+    if( templateId == null )
+    {
+      o = $('#version_design_template_id');
+      templateId = o.val();
+    }
+
+
+    uri = "http://localhost:3000/partials/prompts/" + templateId
+
+
+    $.get( uri, function(data, status)
+      {
+          $('#panel_container').html( data );
+      } );
+  }
+
+
+  getTemplateHTML( <%= @design_template.id %> );
+
+
+</script>

@@ -1,5 +1,6 @@
 class VersionsController < ApplicationController
 
+    include ApplicationHelper
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
     @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractPrompts.jsx"
@@ -126,8 +127,8 @@ class VersionsController < ApplicationController
       source_path = Rails.root.to_s + "/" + source_file.path
       source_folder = File.dirname( source_path )
 
-      temp_values_file = source_folder + "/" + File.basename( source_file.path, '.ai' ) + "_data.jsn"
-
+#      temp_values_file = source_folder + "/" + File.basename( source_file.path, '.ai' ) + "_data.jsn"
+      temp_values_file = path_to_data_file( @version.design_template )
 
       # we'll create a temporary file containing necessary info, sitting right next to the
       # original ai file.

@@ -1,5 +1,7 @@
 class DesignTemplatesController < ApplicationController
 
+    include ApplicationHelper
+
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
     @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractPrompts.jsx"
@@ -26,8 +28,12 @@ class DesignTemplatesController < ApplicationController
 
 
     def edit
+
       @design_template = DesignTemplate.find( params[ :id ] )
+      @prompts = get_prompts_array( @design_template )
+
     end
+
 
     def update
       @design_template = DesignTemplate.find( params[ :id ] )
@@ -49,16 +55,30 @@ class DesignTemplatesController < ApplicationController
       @design_template = DesignTemplate.new
     end
 
+
     def create
       @design_template = DesignTemplate.new( design_template_params )
 
+      stayAfterSave = params['stayAfterSave']
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - create - stayAfterSave: " + stayAfterSave
+
       if @design_template.save
+
         logger.info "DESIGN_TEMPLATES_CONTROLLER - create - SUCCESS!"
         process_original
-        redirect_to design_templates_path, :notice => "This template was saved."
+
+        if( stayAfterSave == 'true') then
+          redirect_to action: 'edit', :notice => "Set your prefs!", :id => @design_template.id
+        else
+          redirect_to design_templates_path, :notice => "This template was saved."
+        end
+
+
       else
+
         logger.info "DESIGN_TEMPLATES_CONTROLLER - create - FAILURE!"
         render "new"
+
       end
 
     end
@@ -90,6 +110,7 @@ class DesignTemplatesController < ApplicationController
 
 
     private
+
 
 
 
