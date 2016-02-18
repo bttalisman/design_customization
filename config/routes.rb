@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get '/design_templates/:id/edit' => 'design_templates#edit'
   get '/design_templates/:id/update' => 'design_templates#update'
   get '/design_templates/edit' => 'design_templates#edit'
+  post '/design_templates/:id/update' => 'design_templates#update'
 
 
 

@@ -36,9 +36,25 @@ class DesignTemplatesController < ApplicationController
 
 
     def update
+
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - update! - params: " + params.to_s
+
+
+
+
+
+      myHashString = request.body.read.to_s
+      myHash = JSON.parse myHashString
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - update! - myHashString: " + myHashString
+
+
+
       @design_template = DesignTemplate.find( params[ :id ] )
       @design_template.update( design_template_params )
 
+      @design_template.prompts = myHashString
+
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - update - about to save."
       if @design_template.save
         logger.info "DESIGN_TEMPLATES_CONTROLLER - update - SUCCESS!"
         redirect_to design_template_path, :notice => "This template was saved."
@@ -154,7 +170,7 @@ class DesignTemplatesController < ApplicationController
 
 
     def design_template_params
-         params.require(:design_template).permit( :orig_file_path, :name, :tags, :original_file )
+         params.permit( :orig_file_path, :design_template, :name, :tags, :original_file )
     end
 
 end

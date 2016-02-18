@@ -1,0 +1,85 @@
+<h1>Enter Info about extracted tags!</h1>
+
+<h4>For <%= @design_template.name %> template</h4>
+
+<%
+if ( @tags != nil ) then
+
+  i = 0
+  @tags.each { |t|
+%>
+    <h3><%= t %></h3>
+    <div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'>
+      Prompt: <input type='text' value='' id='prompt<%= i.to_s %>'></input><br>
+      Max Length: <input type='number' value='' id='maxl<%= i.to_s %>'></input><br>
+      Pick Color? <input type='checkbox' value='true' id='colorp<%= i.to_s %>'></input><br>
+    </div>
+<%
+    i += 1
+  }
+
+%>
+  <input type='hidden' id='count' value='<%= i.to_s %>'></input>
+
+  <button onclick='build(); return false;'>Build</button>
+<%
+end
+%>
+
+<script>
+
+  function build()
+  {
+
+    alert( 'building()' );
+
+    var o;
+    var s;
+    var count;
+    var prompt, maxl, colorp;
+    var returnSettings, tagName, tagSettings;
+
+    o = $( '#count' );
+
+    count = parseInt( o.val() );
+
+    returnSettings = {};
+
+
+    for( var i = 0; i < count; i++ )
+    {
+
+      s = '#tag' + i;
+      o = $( s );
+
+      tagName = o.attr( 'data-tag-name' ).trim();
+
+      tagSettings = {};
+      returnSettings[ tagName ] = tagSettings;
+
+      s = '#prompt' + i;
+      o = $( s );
+      prompt = o.val();
+      tagSettings[ 'prompt' ] = prompt;
+
+      s = '#maxl' + i;
+      o = $( s );
+      maxl = o.val();
+      tagSettings[ 'max_length' ] = maxl;
+
+      s = '#colorp' + i;
+      o = $( s );
+      colorp = o.is(":checked");
+      tagSettings[ 'pick_color' ] = colorp;
+
+
+    }
+
+    alert( 'returnSettings: ' + returnSettings );
+    
+    return returnSettings;
+
+  }
+
+
+</script>

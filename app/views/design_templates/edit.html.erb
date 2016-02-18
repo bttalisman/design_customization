@@ -20,7 +20,7 @@
 
   <input name='panel_data' id='tags_data' style='display:none;'></input>
 
-  <button id='update' onclick='update_template();'>Update</button>
+  <button onclick='update_template( <%= @design_template.id %> ); return false;'>Update</button>
 
 </form>
 
@@ -31,6 +31,28 @@
 
 
 <script>
+
+  function update_template( templateId )
+  {
+
+    var settings = build();
+
+
+    var uri = "http://localhost:3000/design_templates/" + templateId + "/update"
+
+    alert( 'about to post - uri: ' + uri );
+
+    $.ajax({
+                url: uri,
+                type: 'post',
+                dataType: 'application/json',
+                success: function (data) {
+                  alert( 'yay!')
+                },
+                data: JSON.stringify( settings )
+            });
+  }
+
 
   function getTemplateHTML( templateId )
   {
