@@ -18,7 +18,7 @@
 
   </div>
 
-  <input name='panel_data' id='prompt_data' style='display:none;'></input>
+  <input name='panel_data' id='tags_data' style='display:none;'></input>
 
   <button id='update' onclick='update_template();'>Update</button>
 
@@ -46,7 +46,7 @@
     }
 
 
-    uri = "http://localhost:3000/partials/prompts/" + templateId
+    uri = "http://localhost:3000/partials/tags/" + templateId
 
 
     $.get( uri, function(data, status)

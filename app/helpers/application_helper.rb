@@ -18,13 +18,13 @@ module ApplicationHelper
 
 
 
-  def path_to_prompts_file( design_template )
+  def path_to_tags_file( design_template )
 
     file = design_template.original_file
     source_path = Rails.root.to_s + "/" + file.path
 
     source_folder = File.dirname( source_path )
-    data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_prompts.jsn"
+    data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_tags.jsn"
 
     data_file
 
@@ -32,9 +32,9 @@ module ApplicationHelper
 
 
 
-  def prompts_file_exist?( design_template )
+  def tags_file_exist?( design_template )
 
-    path = path_to_prompts_file( design_template )
+    path = path_to_tags_file( design_template )
     exists = File.exist?( path )
 
     exists
@@ -43,25 +43,28 @@ module ApplicationHelper
 
 
 
-  def get_prompts_array( design_template )
+  def get_tags_array( design_template )
 
-    prompts_file = path_to_prompts_file( design_template )
-    exists = File.exist?( prompts_file )
+    tags_file = path_to_tags_file( design_template )
+    exists = File.exist?( tags_file )
 
-    prompts_string = ''
-    prompts = nil
+
+    logger.info "APPLICATION_HELPER - get_tags_array - exists: " + exists.to_s
+
+    tags_string = ''
+    tags = nil
 
     if exists then
 
-      File.open( prompts_file,"r" ) do |f|
-        prompts_string = f.read()
+      File.open( tags_file,"r" ) do |f|
+        tags_string = f.read()
       end
 
-      prompts = JSON.parse( prompts_string )
+      tags = JSON.parse( tags_string )
 
     end
 
-    prompts
+    tags
 
   end
 

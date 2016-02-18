@@ -4,7 +4,7 @@ class DesignTemplatesController < ApplicationController
 
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
-    @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractPrompts.jsx"
+    @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
     @@path_to_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplace.jsx"
 
 
@@ -30,7 +30,7 @@ class DesignTemplatesController < ApplicationController
     def edit
 
       @design_template = DesignTemplate.find( params[ :id ] )
-      @prompts = get_prompts_array( @design_template )
+      @tags = get_tags_array( @design_template )
 
     end
 
@@ -120,7 +120,7 @@ class DesignTemplatesController < ApplicationController
       source_path = Rails.root.to_s + "/" + file.path
 
       source_folder = File.dirname( source_path )
-      config_file = source_folder + "/config_extract_prompts.jsn"
+      config_file = source_folder + "/config_extract_tags.jsn"
 
       logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - source_path: " + source_path.to_s
       logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - config_file: " + config_file.to_s
@@ -154,7 +154,7 @@ class DesignTemplatesController < ApplicationController
 
 
     def design_template_params
-         params.require(:design_template).permit( :orig_file_path, :name, :prompts, :original_file )
+         params.require(:design_template).permit( :orig_file_path, :name, :tags, :original_file )
     end
 
 end

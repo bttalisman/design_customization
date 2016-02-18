@@ -5,14 +5,14 @@ class PartialsController < ApplicationController
   layout 'partials'
 
 
-  def prompts
+  def tags
 
     template_id = params[ :id ]
     @design_template = DesignTemplate.find( template_id )
-    @prompts = get_prompts_array( @design_template )
+    @tags = get_tags_array( @design_template )
 
 
-    logger.info "PARTIALS_CONTROLLER - prompts - template_id: " + template_id.to_s
+    logger.info "PARTIALS_CONTROLLER - tags - template_id: " + template_id.to_s
 
   end
 
@@ -55,21 +55,21 @@ class PartialsController < ApplicationController
 
     # get the file name, remove the .ai
     @orig_file_name = File.basename( source_path.to_s, '.ai' )
-    @prompts_file = @folder + "/" + @orig_file_name + "_prompts.jsn"
-    @prompts_file_exist = File.exist?( @prompts_file )
+    @tags_file = @folder + "/" + @orig_file_name + "_tags.jsn"
+    @tags_file_exist = File.exist?( @tags_file )
 
-    prompts_string = ''
-    @prompts = nil
+    tags_string = ''
+    @tags = nil
 
-    if @prompts_file_exist then
+    if @tags_file_exist then
 
-      File.open( @prompts_file,"r" ) do |f|
-        prompts_string = f.read()
+      File.open( @tags_file,"r" ) do |f|
+        tags_string = f.read()
       end
 
-      @prompts = JSON.parse( prompts_string )
+      @tags = JSON.parse( tags_string )
 
-      logger.info "PARTIALS_CONTROLLER - values - @prompts: " + @prompts.to_s
+      logger.info "PARTIALS_CONTROLLER - values - @tags: " + @tags.to_s
 
     end
 

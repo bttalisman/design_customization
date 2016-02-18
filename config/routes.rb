@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get 'edit' => 'home#edit'
 
   get '/partials/values/:id' => 'partials#values'
-  get '/partials/prompts/:id' => 'partials#prompts'
+  get '/partials/tags/:id' => 'partials#tags'
 
 
   get '/versions/create' => 'versions#create'
@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   get '/design_templates/create' => 'design_templates#create'
   get '/design_templates/:id/edit' => 'design_templates#edit'
+  get '/design_templates/:id/update' => 'design_templates#update'
   get '/design_templates/edit' => 'design_templates#edit'
 
 

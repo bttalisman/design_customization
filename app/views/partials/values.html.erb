@@ -3,18 +3,18 @@
 <h4>For <%= @design_template.name %> template</h4>
 
 <%
-if @prompts_file_exist then
+if @tags_file_exist then
 
   i = 0
-  @prompts.each { |p|
+  @tags.each { |t|
 
     val = ''
-    if( @values != nil ) then        
-      val = @values[ p.to_s ]
+    if( @values != nil ) then
+      val = @values[ t.to_s ]
     end
 
 %>
-    <%= p.to_s %>: <input data-prompt='<%= p.to_s %>' type='text' value='<%= val %>' id='val<%= i.to_s %>'></input><br>
+    <%= p.to_s %>: <input data-prompt='<%= t.to_s %>' type='text' value='<%= val %>' id='val<%= i.to_s %>'></input><br>
 <%
     i += 1
   }

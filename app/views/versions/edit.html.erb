@@ -11,7 +11,7 @@ function create_version()
     var oReturn;
     oReturn = {};
 
-    var prompt;
+    var tag;
 
     for( var i = 0; i < count; i++ )
     {
@@ -19,9 +19,9 @@ function create_version()
       o = $(s);
       v = o.val();
 
-      prompt = o.attr( 'data-prompt' );
+      tag = o.attr( 'data-prompt' );
 
-      oReturn[ prompt ] = v;
+      oReturn[ tag ] = v;
 
     }
 

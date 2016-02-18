@@ -3,7 +3,7 @@ class VersionsController < ApplicationController
     include ApplicationHelper
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
-    @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractPrompts.jsx"
+    @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
     @@path_to_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplace.jsx"
 
 
