@@ -12,22 +12,31 @@ class DesignTemplatesController < ApplicationController
       @design_templates = DesignTemplate.all
     end
 
+
+
+
+
+
+
+
     def show
       @design_template = DesignTemplate.find( params[ :id ] )
       @versions = @design_template.versions
 
       file = @design_template.original_file
-      source_path = file.path
 
-      @folder = File.dirname( source_path.to_s )
+      if( file.path != nil ) then
+        source_path = file.path
+        @folder = File.dirname( source_path.to_s )
+      end
 
     end
 
 
 
-
-
     def edit
+
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - edit! - params: " + params.to_s
 
       @design_template = DesignTemplate.find( params[ :id ] )
       @tags = get_tags_array( @design_template )
@@ -39,20 +48,8 @@ class DesignTemplatesController < ApplicationController
 
       logger.info "DESIGN_TEMPLATES_CONTROLLER - update! - params: " + params.to_s
 
-
-
-
-
-      myHashString = request.body.read.to_s
-      myHash = JSON.parse myHashString
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - update! - myHashString: " + myHashString
-
-
-
       @design_template = DesignTemplate.find( params[ :id ] )
       @design_template.update( design_template_params )
-
-      @design_template.prompts = myHashString
 
       logger.info "DESIGN_TEMPLATES_CONTROLLER - update - about to save."
       if @design_template.save
@@ -64,6 +61,25 @@ class DesignTemplatesController < ApplicationController
       end
     end
 
+    def set_tag_settings
+
+      myHashString = request.body.read.to_s
+      myHash = JSON.parse myHashString
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - myHashString: " + myHashString
+
+      @design_template = DesignTemplate.find( params[ :id ] )
+      @design_template.prompts = myHashString
+
+      if @design_template.save
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings - SUCCESS!"
+        redirect_to design_template_path, :notice => "This template was saved."
+      else
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings - FAILURE!"
+        render "new"
+      end
+
+
+    end
 
 
 
@@ -73,9 +89,11 @@ class DesignTemplatesController < ApplicationController
 
 
     def create
+
       @design_template = DesignTemplate.new( design_template_params )
 
       stayAfterSave = params['stayAfterSave']
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - create - design_template_params: " + design_template_params.to_s
       logger.info "DESIGN_TEMPLATES_CONTROLLER - create - stayAfterSave: " + stayAfterSave
 
       if @design_template.save
@@ -133,6 +151,7 @@ class DesignTemplatesController < ApplicationController
     def process_original
 
       file = @design_template.original_file
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - file: " + file.to_s
       source_path = Rails.root.to_s + "/" + file.path
 
       source_folder = File.dirname( source_path )
@@ -170,7 +189,7 @@ class DesignTemplatesController < ApplicationController
 
 
     def design_template_params
-         params.permit( :orig_file_path, :design_template, :name, :tags, :original_file )
+         params.require( :design_template ).permit( :orig_file_path, :name, :tags, :original_file )
     end
 
 end

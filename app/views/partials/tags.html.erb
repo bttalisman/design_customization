@@ -5,14 +5,37 @@
 <%
 if ( @tags != nil ) then
 
+  puts '@values: ' + @values.to_s
+
   i = 0
   @tags.each { |t|
+
+    t = t.strip
+    logger.info 't: ' + t
+
+    if( @values != nil ) then
+      tagProps = @values[ t.to_s ]
+      puts 'tagProps: ' + tagProps.to_s
+
+      if( tagProps != nil ) then
+        prompt = tagProps[ 'prompt' ]
+        max_length = tagProps[ 'max_length' ]
+        pick_color = tagProps[ 'pick_color' ]
+
+      else
+        prompt = ''
+        max_length = ''
+        pick_color = ''
+      end
+
+    end
+
 %>
     <h3><%= t %></h3>
     <div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'>
-      Prompt: <input type='text' value='' id='prompt<%= i.to_s %>'></input><br>
-      Max Length: <input type='number' value='' id='maxl<%= i.to_s %>'></input><br>
-      Pick Color? <input type='checkbox' value='true' id='colorp<%= i.to_s %>'></input><br>
+      Prompt: <input type='text' value='<%= prompt %>' id='prompt<%= i.to_s %>'></input><br>
+      Max Length: <input type='number' value='<%= max_length %>' id='maxl<%= i.to_s %>'></input><br>
+      Pick Color? <input type='checkbox' <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input><br>
     </div>
 <%
     i += 1
@@ -70,13 +93,18 @@ end
       s = '#colorp' + i;
       o = $( s );
       colorp = o.is(":checked");
-      tagSettings[ 'pick_color' ] = colorp;
 
+      if( colorp )
+      {
+        tagSettings[ 'pick_color' ] = 'checked';
+      } else {
+        tagSettings[ 'pick_color' ] = '';
+      }
 
     }
 
     alert( 'returnSettings: ' + returnSettings );
-    
+
     return returnSettings;
 
   }

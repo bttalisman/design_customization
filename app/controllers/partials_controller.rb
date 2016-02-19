@@ -11,8 +11,12 @@ class PartialsController < ApplicationController
     @design_template = DesignTemplate.find( template_id )
     @tags = get_tags_array( @design_template )
 
+    if ( @design_template.prompts != nil ) then
+      @values = JSON.parse( @design_template.prompts )
+    end
 
     logger.info "PARTIALS_CONTROLLER - tags - template_id: " + template_id.to_s
+    logger.info "PARTIALS_CONTROLLER - tags - @values: " + @values.to_s
 
   end
 
@@ -46,6 +50,12 @@ class PartialsController < ApplicationController
       end
 
     end
+
+
+    prompts_string = @design_template.prompts
+    @prompts = JSON.parse( prompts_string )
+    logger.info "PARTIALS_CONTROLLER - values - @prompts: " + @prompts.to_s
+
 
 
     file = @design_template.original_file
