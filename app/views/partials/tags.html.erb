@@ -1,4 +1,4 @@
-<h1>Enter Info about extracted tags!</h1>
+<h2>Enter Info about extracted tags!</h2>
 
 <h4>For <%= @design_template.name %> template</h4>
 
@@ -43,8 +43,6 @@ if ( @tags != nil ) then
 
 %>
   <input type='hidden' id='count' value='<%= i.to_s %>'></input>
-
-  <button onclick='build(); return false;'>Build</button>
 <%
 end
 %>
@@ -53,8 +51,6 @@ end
 
   function build()
   {
-
-    alert( 'building()' );
 
     var o;
     var s;
@@ -102,8 +98,6 @@ end
       }
 
     }
-
-    alert( 'returnSettings: ' + returnSettings );
 
     return returnSettings;
 

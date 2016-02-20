@@ -15,6 +15,12 @@ if @prompts then
 
     if( @values ) then
       val = @values[ tag_name ]
+
+      if( val != nil ) then
+          replacement_text = val['replacement_text']
+          text_color = val['text_color']
+      end
+
     end
 
     puts 'tag_name: ' + tag_name.to_s
@@ -23,11 +29,11 @@ if @prompts then
 
 %>
     <div style='margin-top:30px;'>
-<%= prompt %>: <input type='text' value='<%= val %>' id='replacement_text<%= i.to_s %>' data-tag-name='<%= tag_name %>' maxlength='<%= max_length %>'></input><br>
+<%= prompt %>: <input type='text' value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-tag-name='<%= tag_name %>' maxlength='<%= max_length %>'></input><br>
 <%
     if( pick_color != '' ) then
 %>
-      Pick a color!<br>
+      Pick a color: <input type='text_field' value='<%= text_color %>' id='colorp<%= i.to_s %>'></input>
 
 <%  end %>
     </div>
@@ -37,20 +43,39 @@ if @prompts then
 %>
   <input type='hidden' id='count' value='<%= i.to_s %>'></input>
 
+
 <%
 end
 %>
 
 <script>
 
+$( 'input[id*="colorp"]' ).ColorPicker({
+	onSubmit: function(hsb, hex, rgb, el) {
+		$(el).val(hex);
+		$(el).ColorPickerHide();
+	},
+	onBeforeShow: function () {
+		$(this).ColorPickerSetColor(this.value);
+	}
+})
+.bind('keyup', function(){
+	$(this).ColorPickerSetColor(this.value);
+});
+
+
+
 function build_values_form()
 {
-
+  alert( 'build_values_form' );
 
   var count = $('#count').val();
   var s, v, o;
+  var rep_text;
+  var text_color;
 
   var oReturn;
+  var oTagProps;
   oReturn = {};
 
   var tag_name;
@@ -59,12 +84,22 @@ function build_values_form()
   {
         s = '#replacement_text' + i;
         o = $(s);
-        v = o.val();
-
+        rep_text = o.val();
         tag_name = o.attr( 'data-tag-name' );
 
-        oReturn[ tag_name ] = v;
+        s = '#colorp' + i;
+        o = $(s);
+        text_color = o.val();
+
+        oTagProps = {};
+        oTagProps[ 'replacement_text' ] = rep_text;
+        oTagProps[ 'text_color' ] = text_color;
+
+
+        oReturn[ tag_name ] = oTagProps;
   }
+
+  alert( 'oReturn: ' + JSON.stringify( oReturn ) );
 
   return oReturn;
 }

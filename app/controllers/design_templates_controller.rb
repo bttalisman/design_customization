@@ -67,12 +67,11 @@ class DesignTemplatesController < ApplicationController
 
       if @design_template.save
         logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings - SUCCESS!"
-        redirect_to design_template_path, :notice => "This template was saved."
       else
         logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings - FAILURE!"
-        render "new"
       end
 
+      render nothing: true
 
     end
 
@@ -151,7 +150,7 @@ class DesignTemplatesController < ApplicationController
       logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - file: " + file.to_s
 #      source_path = Rails.root.to_s + "/" + file.path
       source_path = file.path
-      
+
       source_folder = File.dirname( source_path )
       config_file = source_folder + "/config_extract_tags.jsn"
 

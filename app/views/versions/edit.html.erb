@@ -62,18 +62,19 @@ function getTemplateHTML( templateId, useVersion )
     <div style='flex:1'>
 
       <p>
-        Name: <input type='text' name='version[name]' value='<%= @version.name %>'></input>
+        <b>Name:</b> <input type='text' name='version[name]' value='<%= @version.name %>'></input>
       </p>
 
       <p>
-        Output Folder: <input type='text' name='version[output_folder_path]' value='<%= @version.output_folder_path %>'></input>
+        <b>Output Folder:</b> <%= @root_folder + "/" %> <input type='text' name='version[output_folder_path]' value='<%= @version.output_folder_path %>'></input>
       </p>
 
-      Run AI <input type='checkbox' name='runai' id='runai'></input>
+      <b>Run AI</b> <input type='checkbox' name='runai' id='runai'></input>
 
 
 
       <p>
+        <b>Template:</b>
           <select name='version[design_template_id]' id='version_design_template_id' onchange='getTemplateHTML( null, false );'>
 
             <option value="" disabled selected>Select a Template</option>

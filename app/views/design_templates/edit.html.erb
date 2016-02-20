@@ -43,11 +43,15 @@
                 url: uri,
                 type: 'post',
                 dataType: 'application/json',
+                data: JSON.stringify( settings ),
                 success: function (data) {
-                  alert( 'yay!')
                 },
-                data: JSON.stringify( settings )
+                error: function(xhr, status, error) {
+                }
             });
+
+    window.location = 'http://localhost:3000'
+
   }
 
 

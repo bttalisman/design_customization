@@ -33,6 +33,8 @@ class VersionsController < ApplicationController
         @values = JSON.parse values_string
       end
 
+      @root_folder = Rails.root.to_s
+
     end
 
 
@@ -60,6 +62,8 @@ class VersionsController < ApplicationController
       @version = Version.new
       @design_templates = DesignTemplate.all
       @design_template_id = params['template_id']
+      @root_folder = Rails.root.to_s
+
     end
 
 
@@ -94,6 +98,8 @@ class VersionsController < ApplicationController
     def show
       @version = Version.find( params[ :id ] )
       @design_template = @version.design_template
+      @root_folder = Rails.root.to_s
+
 
       logger.info "version_controller - show - @version: " + @version.to_s
       logger.info "version_controller - show - @design_template: " + @design_template.to_s
