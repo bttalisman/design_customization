@@ -3,25 +3,70 @@
 <h4>For <%= @design_template.name %> template</h4>
 
 <%
-if @tags_file_exist then
+if @prompts then
 
   i = 0
-  @tags.each { |t|
+  @prompts.each { |tag|
 
-    val = ''
-    if( @values != nil ) then
-      val = @values[ t.to_s ]
+    tag_name = tag[ 0 ]
+    prompt = tag[ 1 ]['prompt']
+    max_length = tag[ 1 ]['max_length']
+    pick_color = tag[ 1 ]['pick_color']
+
+    if( @values ) then
+      val = @values[ tag_name ]
     end
 
+    puts 'tag_name: ' + tag_name.to_s
+    puts 'pick_color: ' + pick_color.to_s
+    puts 'max_length: ' + max_length.to_s
+
 %>
-    <%= p.to_s %>: <input data-prompt='<%= t.to_s %>' type='text' value='<%= val %>' id='val<%= i.to_s %>'></input><br>
+    <div style='margin-top:30px;'>
+<%= prompt %>: <input type='text' value='<%= val %>' id='replacement_text<%= i.to_s %>' data-tag-name='<%= tag_name %>' maxlength='<%= max_length %>'></input><br>
+<%
+    if( pick_color != '' ) then
+%>
+      Pick a color!<br>
+
+<%  end %>
+    </div>
 <%
     i += 1
-  }
-
+  } # each tag in prompts
 %>
   <input type='hidden' id='count' value='<%= i.to_s %>'></input>
 
 <%
 end
 %>
+
+<script>
+
+function build_values_form()
+{
+
+
+  var count = $('#count').val();
+  var s, v, o;
+
+  var oReturn;
+  oReturn = {};
+
+  var tag_name;
+
+  for( var i = 0; i < count; i++ )
+  {
+        s = '#replacement_text' + i;
+        o = $(s);
+        v = o.val();
+
+        tag_name = o.attr( 'data-tag-name' );
+
+        oReturn[ tag_name ] = v;
+  }
+
+  return oReturn;
+}
+
+</script>

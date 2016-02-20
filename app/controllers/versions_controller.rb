@@ -17,8 +17,22 @@ class VersionsController < ApplicationController
     def edit
       @version = Version.find( params[ :id ] )
       @design_template = @version.design_template
+
+      if( @design_template == nil ) then
+        redirect_to versions_path, :notice => "The template for this version was deleted."
+        return
+      end
+
       @design_templates = DesignTemplate.all
       @design_template_id = @design_template.id
+
+
+      values_string = @version.values
+
+      if( values_string != '' ) then
+        @values = JSON.parse values_string
+      end
+
     end
 
 
@@ -124,7 +138,8 @@ class VersionsController < ApplicationController
       FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
 
       source_file = @version.design_template.original_file
-      source_path = Rails.root.to_s + "/" + source_file.path
+#      source_path = Rails.root.to_s + "/" + source_file.path
+      source_path = source_file.path
       source_folder = File.dirname( source_path )
 
 #      temp_values_file = source_folder + "/" + File.basename( source_file.path, '.ai' ) + "_data.jsn"

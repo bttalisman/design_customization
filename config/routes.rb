@@ -14,11 +14,11 @@ Rails.application.routes.draw do
   get '/versions/:id/update' => 'versions#update'
 
 
-  get '/design_templates/create' => 'design_templates#create'
+  post '/design_templates/create' => 'design_templates#create'
   get '/design_templates/:id/edit' => 'design_templates#edit'
   get '/design_templates/:id/update' => 'design_templates#update'
   get '/design_templates/edit' => 'design_templates#edit'
-  get '/design_templates/:id/update' => 'design_templates#update'
+  post '/design_templates/:id/update' => 'design_templates#update'
 
 
 

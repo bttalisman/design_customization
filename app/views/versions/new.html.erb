@@ -4,29 +4,12 @@
 
 function create_version()
 {
-    var count = $('#count').val();
-    var form = $('#version_form');
-    var s, v, o;
-
-    var oReturn;
-    oReturn = {};
-
-    var prompt;
-
-    for( var i = 0; i < count; i++ )
-    {
-      s = '#val' + i;
-      o = $(s);
-      v = o.val();
-
-      prompt = o.attr( 'data-prompt' );
-
-      oReturn[ prompt ] = v;
-
-    }
+    alert( 'create_version' );
+    var oReturn = build_values_form();
 
     $('#prompt_data').attr( 'value', JSON.stringify( oReturn ) );
 
+    var form = $('#version_form');
     form.submit();
 }
 

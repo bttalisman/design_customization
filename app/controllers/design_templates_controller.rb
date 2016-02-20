@@ -14,11 +14,6 @@ class DesignTemplatesController < ApplicationController
 
 
 
-
-
-
-
-
     def show
       @design_template = DesignTemplate.find( params[ :id ] )
       @versions = @design_template.versions
@@ -90,6 +85,8 @@ class DesignTemplatesController < ApplicationController
 
     def create
 
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - create!"
+
       @design_template = DesignTemplate.new( design_template_params )
 
       stayAfterSave = params['stayAfterSave']
@@ -152,8 +149,9 @@ class DesignTemplatesController < ApplicationController
 
       file = @design_template.original_file
       logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - file: " + file.to_s
-      source_path = Rails.root.to_s + "/" + file.path
-
+#      source_path = Rails.root.to_s + "/" + file.path
+      source_path = file.path
+      
       source_folder = File.dirname( source_path )
       config_file = source_folder + "/config_extract_tags.jsn"
 

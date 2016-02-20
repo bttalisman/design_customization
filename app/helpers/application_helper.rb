@@ -7,7 +7,8 @@ module ApplicationHelper
   def path_to_data_file( design_template )
 
     file = design_template.original_file
-    source_path = Rails.root.to_s + "/" + file.path
+#    source_path = Rails.root.to_s + "/" + file.path
+    source_path = file.path.to_s
 
     source_folder = File.dirname( source_path )
     data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_data.jsn"
@@ -21,7 +22,8 @@ module ApplicationHelper
   def path_to_tags_file( design_template )
 
     file = design_template.original_file
-    source_path = Rails.root.to_s + "/" + file.path.to_s
+#    source_path = Rails.root.to_s + "/" + file.path.to_s
+    source_path = file.path.to_s
 
     source_folder = File.dirname( source_path )
     data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_tags.jsn"

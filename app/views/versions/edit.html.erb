@@ -4,30 +4,12 @@
 
 function create_version()
 {
-    var count = $('#count').val();
-    var form = $('#version_form');
-    var s, v, o;
+  var oReturn = build_values_form();
 
-    var oReturn;
-    oReturn = {};
+  $('#prompt_data').attr( 'value', JSON.stringify( oReturn ) );
 
-    var tag;
-
-    for( var i = 0; i < count; i++ )
-    {
-      s = '#val' + i;
-      o = $(s);
-      v = o.val();
-
-      tag = o.attr( 'data-prompt' );
-
-      oReturn[ tag ] = v;
-
-    }
-
-    $('#prompt_data').attr( 'value', JSON.stringify( oReturn ) );
-
-    form.submit();
+  var form = $('#version_form');
+  form.submit();
 }
 
 
@@ -122,5 +104,8 @@ function getTemplateHTML( templateId, useVersion )
   <input name='prompt_data' id='prompt_data' style='display:none;'></input>
 
   <button id='update' onclick='create_version();'>Update</button>
+
+  <%= button_to "delete", {:controller => :versions,
+        :action => 'destroy', :id => @version.id }, :method => :delete %>
 
 </form>
