@@ -33,7 +33,10 @@ if @prompts then
 <%
     if( pick_color != '' ) then
 %>
-      Pick a color: <input type='text_field' value='<%= text_color %>' id='colorp<%= i.to_s %>'></input>
+      Pick a color: <div class="input-group" id="colorp<%= i.to_s %>">
+                      <input type="text" value="<%= text_color %>" class="form-control" />
+                      <span class="input-group-addon"><i></i></span>
+                    </div>
 
 <%  end %>
     </div>
@@ -50,24 +53,18 @@ end
 
 <script>
 
-$( 'input[id*="colorp"]' ).ColorPicker({
-	onSubmit: function(hsb, hex, rgb, el) {
-		$(el).val(hex);
-		$(el).ColorPickerHide();
-	},
-	onBeforeShow: function () {
-		$(this).ColorPickerSetColor(this.value);
-	}
-})
-.bind('keyup', function(){
-	$(this).ColorPickerSetColor(this.value);
+
+
+
+$(document).ready(function(){
+
+  $("[id^='colorp']").colorpicker({});
 });
 
 
 
 function build_values_form()
 {
-  alert( 'build_values_form' );
 
   var count = $('#count').val();
   var s, v, o;
@@ -98,8 +95,6 @@ function build_values_form()
 
         oReturn[ tag_name ] = oTagProps;
   }
-
-  alert( 'oReturn: ' + JSON.stringify( oReturn ) );
 
   return oReturn;
 }

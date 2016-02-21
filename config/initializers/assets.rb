@@ -11,5 +11,7 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 
 
-Rails.application.config.assets.precompile += %w( colorpicker.js )
-Rails.application.config.assets.precompile += %w( colorpicker.css )
+Rails.application.config.assets.precompile += %w( bootstrap-colorpicker.js )
+Rails.application.config.assets.precompile += %w( bootstrap-colorpicker.css )
+Rails.application.config.assets.precompile += %w( bootstrap.js )
+Rails.application.config.assets.precompile += %w( bootstrap.css )
