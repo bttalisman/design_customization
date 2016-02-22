@@ -56,10 +56,16 @@ class DesignTemplatesController < ApplicationController
       end
     end
 
+
+
+    # this action executes in response to an ajax call from the Design Template
+    # editor
     def set_tag_settings
 
       logger.info "DESIGN_TEMPLATES_CONTROLLER - SET_TAG_SETTINGS!!!!!!!!!!"
 
+      #  expecting something like { 'extracted_settings' => arbitrary settings depending on tags,
+      #  'general_settings' => settings every DesignTemplate has }
       myHashString = request.body.read.to_s
       myHash = JSON.parse myHashString
       logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - myHashString: " + myHashString
@@ -82,8 +88,6 @@ class DesignTemplatesController < ApplicationController
 
     end
 
-
-
     def new
       @design_template = DesignTemplate.new
     end
@@ -101,15 +105,16 @@ class DesignTemplatesController < ApplicationController
 
       if @design_template.save
 
-        logger.info "DESIGN_TEMPLATES_CONTROLLER - create - SUCCESS!"
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - create - SUCCESS! About to procdess the AI file."
         process_original
 
         if( stayAfterSave == 'true') then
+          # This action was called because the user wants to edit the extracted settings
+          # We've got to save and process first.
           redirect_to action: 'edit', :notice => "Set your prefs!", :id => @design_template.id
         else
           redirect_to design_templates_path, :notice => "This template was saved."
         end
-
 
       else
 
@@ -123,25 +128,17 @@ class DesignTemplatesController < ApplicationController
 
     def force_process
       logger.info "DESIGN_TEMPLATES_CONTROLLER - force_process"
-
       @design_template = DesignTemplate.find( params[ :id ] )
-
       process_original
-
       redirect_to @design_template, :notice => "This template was processed."
-
     end
 
 
     def destroy
-
       logger.info "DESIGN_TEMPLATES_CONTROLLER - destroy"
       @design_template = DesignTemplate.find( params[ :id ] )
-
       @design_template.destroy
-
       redirect_to :design_templates
-
     end
 
 
@@ -149,34 +146,29 @@ class DesignTemplatesController < ApplicationController
     private
 
 
-
-
     def process_original
 
       file = @design_template.original_file
       logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - file: " + file.to_s
-#      source_path = Rails.root.to_s + "/" + file.path
-      source_path = file.path
 
+      source_path = file.path
       source_folder = File.dirname( source_path )
       config_file = source_folder + "/config_extract_tags.jsn"
 
       logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - source_path: " + source_path.to_s
       logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - config_file: " + config_file.to_s
 
-
       config = {}
       config[ 'source file' ] = source_path
       config[ 'script file' ] = @@path_to_extract_script
       config[ 'output folder' ] = source_folder   # the prompts file goes right next to the original file
 
-
       File.open( config_file,"w" ) do |f|
         f.write( config.to_json )
       end
 
-      # the illustrator scripts dont get much in the way of input, so all output
-      # is placed in a subfolder of the folder containing the original file, and later
+      # the illustrator scripts place all output
+      # in a subfolder of the folder containing the original file, and later
       # moved to wherever
       ai_output_folder = source_folder + "/output"
       FileUtils.mkdir_p( ai_output_folder ) unless File.directory?( ai_output_folder )
@@ -184,12 +176,11 @@ class DesignTemplatesController < ApplicationController
       sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
       logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - sys_com: " + sys_com.to_s
 
-      system( sys_com )
+
+      results = system( sys_com )
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - results: " + results.to_s
 
     end
-
-
-
 
 
     def design_template_params

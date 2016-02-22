@@ -1,27 +1,28 @@
 
-<h4><%= @design_template.name %> Settings</h4>
+<h3><%= @design_template.name %> Settings</h3>
 
 <%
 if ( @tags != nil ) then
 
-  puts '@values: ' + @values.to_s
-  puts '@tags: ' + @tags.to_s
+  logger.info 'TAGS.html.erb - @values: ' + @values.to_s
+  logger.info 'TAGS.html.erb - @tags: ' + @tags.to_s
 
   i = 0
   @tags.each { |t|
 
-#    t = t.strip # todo, do i need to do this here?
-    logger.info 't: ' + t
+    logger.info 'TAGS.html.erb - t: ' + t
 
     if( @values != nil ) then
+
+      # we'll try to look up any previously set values for this tag.
+
       tagProps = @values[ t.to_s ]
-      puts 'tagProps: ' + tagProps.to_s
+      logger.info 'TAGS.html.erb - tagProps: ' + tagProps.to_s
 
       if( tagProps != nil ) then
         prompt = tagProps[ 'prompt' ]
         max_length = tagProps[ 'max_length' ]
         pick_color = tagProps[ 'pick_color' ]
-
       else
         prompt = ''
         max_length = ''
@@ -31,18 +32,31 @@ if ( @tags != nil ) then
     end
 
 %>
-    <div><b>Tag:</b> <%= t %></div>
-    <div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'>
 
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Prompt</span>
-        <input type="text" value='<%= prompt %>' id='prompt<%= i.to_s %>' class="form-control" placeholder="Enter a prompt" aria-describedby="basic-addon1">
-      </div>
+<div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'></div>
 
-      Max Length: <input type='number' value='<%= max_length %>' id='maxl<%= i.to_s %>'></input><br>
-      Pick Color? <input type='checkbox' <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input><br>
-    </div>
-    <hr />
+<div class="panel panel-default">
+  <div class="panel-heading"><%= t %></div>
+  <div class="panel-body">
+
+
+    <label for="prompt<%= i.to_s %>">Prompt</label>
+    <input type="text" class="form-control input-lg" value='<%= prompt %>' id='prompt<%= i.to_s %>' placeholder="Enter a prompt">
+
+    <br><br>
+
+    <label for="maxl<%= i.to_s %>">Max Length</label>
+    <input type='number' class="form-control" value='<%= max_length %>' id='maxl<%= i.to_s %>'></input>
+
+    <br><br>
+
+    <label for="colorp<%= i.to_s %>">Choose the color?</label>
+    <input type='checkbox' class="form-control" <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input>
+
+
+  </div>
+</div>
+
 <%
     i += 1
   }
@@ -55,6 +69,7 @@ end
 
 <script>
 
+  // Builds json object with all setting values set on this page
   function build()
   {
 
@@ -65,11 +80,9 @@ end
     var returnSettings, tagName, tagSettings;
 
     o = $( '#count' );
-
     count = parseInt( o.val() );
 
     returnSettings = {};
-
 
     for( var i = 0; i < count; i++ )
     {

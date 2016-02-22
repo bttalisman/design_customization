@@ -12,7 +12,10 @@
 
 
   <%= stylesheet_link_tag    'bootstrap-colorpicker.css', media: 'all', 'data-turbolinks-track' => true %>
-  <%= stylesheet_link_tag    'bootstrap.css', media: 'all', 'data-turbolinks-track' => true %>
+
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
 
 
 </head>
@@ -39,26 +42,19 @@ puts "params[:controller]: " + params[:controller]
       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         New <span class="caret"></span>
       </a>
-      <ul class="dropdown-menu">
 
+      <ul class="dropdown-menu">
         <li><%= link_to "Template", new_design_template_path %></li>
         <li><%= link_to "Version", new_version_path %></li>
-
-
       </ul>
 
     </li>
 
 </ul>
 
-
-
-
-
-
-
-<%= yield %>
-
+<div style='margin-top:20px;'>
+  <%= yield %>
+</div>
 
 </div>
 </body>

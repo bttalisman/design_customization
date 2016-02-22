@@ -7,37 +7,42 @@
   <div class='container'>
 
     <div style='flex:1;'>
-
       <p>
         Name: <input type='text' id='template_name' value='<%= @design_template.name %>'></input>
       </p>
 
+      <%= button_to "Delete", {:controller => :design_templates,
+            :action => 'destroy', :id => @design_template.id }, :method => :delete, 'class' => 'btn' %>
+
+      <a class='btn' href='http://localhost:3000/force_process?id=<%= @design_template.id %>'>Force Processing</a>
+
+      <button class='btn' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</button>
+
+      <a class='btn' href='http://localhost:3000/design_templates/<%= @design_template.id %>'>Cancel</a>
+
 
     </div>
 
-    <div id='panel_container' style='flex:1;'></div>
+    <div id='panel_container' style='flex:1;' ></div>
 
   </div>
 
   <input name='panel_data' id='tags_data' style='display:none;'></input>
 
-  <button onclick='update_template( <%= @design_template.id %> ); return false;'>Update</button>
 
 </form>
 
-
-<%= button_to "delete", {:controller => :design_templates,
-      :action => 'destroy', :id => @design_template.id }, :method => :delete %>
 
 
 
 <script>
 
+  // This function is called when the user clicks save.  Data from the form
+  // is gathered and posted to the design_template controller.
   function update_template( templateId )
   {
 
     var extractedSettings = build();
-
     var oToSend = {};
 
     // We stuff our own data in there too
@@ -67,20 +72,18 @@
 
   function getTemplateHTML( templateId )
   {
-
     var o;
     var uri;
 
 
-    if( templateId == null )
-    {
-      o = $('#version_design_template_id');
-      templateId = o.val();
-    }
-
+    // TODO, why is this here?
+//    if( templateId == null )
+//    {
+//      o = $('#version_design_template_id');
+//      templateId = o.val();
+//    }
 
     uri = "http://localhost:3000/partials/tags/" + templateId
-
 
     $.get( uri, function(data, status)
       {
@@ -89,7 +92,11 @@
   }
 
 
-  getTemplateHTML( <%= @design_template.id %> );
+
+  $(document).ready(function(){
+    getTemplateHTML( <%= @design_template.id %> );
+  });
+
 
 
 </script>

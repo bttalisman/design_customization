@@ -6,7 +6,6 @@ class VersionsController < ApplicationController
     @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
     @@path_to_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplace.jsx"
 
-
     @@versions_folder = Rails.root.to_s + "/public/system/versions/"
 
 
@@ -25,32 +24,20 @@ class VersionsController < ApplicationController
 
       @design_templates = DesignTemplate.all
       @design_template_id = @design_template.id
-
-
-      values_string = @version.values
-
-      if( values_string != '' ) then
-        @values = JSON.parse values_string
-      end
-
+      @values = get_values_object( @version )
       @root_folder = Rails.root.to_s
-
     end
 
 
     def update
       @version = Version.find( params[ :id ] )
       @version.update( version_params )
-
       @version.values = params[ 'prompt_data' ]
-
 
       logger.info "VERSIONS_CONTROLLER - UPDATE - version_params: " + version_params.to_s
 
       if @version.save
-
         process_version
-
         redirect_to versions_path, :notice => "This version was saved."
       else
         render "new"
@@ -63,31 +50,22 @@ class VersionsController < ApplicationController
       @design_templates = DesignTemplate.all
       @design_template_id = params['template_id']
       @root_folder = Rails.root.to_s
-
     end
 
 
     def create
-
       @version = Version.new( version_params )
-
       @version.values = params[ 'prompt_data' ]
-
 
       logger.info "VERSION_CONTROLLER - create"
       logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
       logger.info "VERSION_CONTROLLER - create - version values: " + @version.values
 
-
-
       if @version.save
 
         # after we save, we can use the id to specify the output folder path.
-
         process_version
-
         redirect_to versions_path, :notice => "This version was saved."
-
       else
         render "new"
       end
@@ -117,9 +95,7 @@ class VersionsController < ApplicationController
 
       logger.info "VERSIONS_CONTROLLER - destroy"
       @version = Version.find( params[ :id ] )
-
       @version.destroy
-
       redirect_to :versions
 
     end
@@ -133,8 +109,6 @@ class VersionsController < ApplicationController
     end
 
 
-
-
     def process_version
 
       # we're nothing without a template
@@ -146,11 +120,9 @@ class VersionsController < ApplicationController
 
 
       source_file = @version.design_template.original_file
-#      source_path = Rails.root.to_s + "/" + source_file.path
       source_path = source_file.path
       source_folder = File.dirname( source_path )
 
-#      temp_values_file = source_folder + "/" + File.basename( source_file.path, '.ai' ) + "_data.jsn"
       temp_values_file = path_to_data_file( @version.design_template )
 
       # we'll create a temporary file containing necessary info, sitting right next to the
@@ -160,9 +132,7 @@ class VersionsController < ApplicationController
           f.write( @version.values.to_s )
       end
 
-
       # create a config file that tells run_AI_script what it needs
-
       config_file = version_output_folder + "/config_search_replace.jsn"
 
       config = {}
@@ -174,25 +144,17 @@ class VersionsController < ApplicationController
         f.write( config.to_json )
       end
 
-
       # And run it!
 
       sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
       runai = params[ 'runai' ]
-
       logger.info "VERSIONS_CONTROLLER - process_version - runai: " + runai.to_s
 
       if runai == 'on' then
-
         logger.info "VERSIONS_CONTROLLER - process_version - about to run sys_com: " + sys_com.to_s
         # run the ruby script. AI should generate output files to the output folder
         system( sys_com )
-
-
-
-
         logger.info "VERSIONS_CONTROLLER - process_version - output_folder_path: " + @version.output_folder_path
-
 
         if( @version.output_folder_path != '' ) then
 
