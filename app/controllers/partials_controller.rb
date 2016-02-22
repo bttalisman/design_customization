@@ -53,6 +53,7 @@ class PartialsController < ApplicationController
 
 
     prompts_string = @design_template.prompts
+    logger.info "PARTIALS_CONTROLLER - values - prompts_string: " + prompts_string.to_s    
     @prompts = JSON.parse( prompts_string )
     logger.info "PARTIALS_CONTROLLER - values - @prompts: " + @prompts.to_s
 

@@ -100,6 +100,8 @@ class VersionsController < ApplicationController
       @design_template = @version.design_template
       @root_folder = Rails.root.to_s
 
+      @version_folder = get_version_folder( @version )
+      @data_file = path_to_data_file( @design_template )
 
       logger.info "version_controller - show - @version: " + @version.to_s
       logger.info "version_controller - show - @design_template: " + @design_template.to_s
@@ -140,8 +142,8 @@ class VersionsController < ApplicationController
         return
       end
 
-      version_output_folder = @@versions_folder + @version.id.to_s
-      FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
+      version_output_folder = get_version_folder( @version )
+
 
       source_file = @version.design_template.original_file
 #      source_path = Rails.root.to_s + "/" + source_file.path
@@ -186,19 +188,30 @@ class VersionsController < ApplicationController
         # run the ruby script. AI should generate output files to the output folder
         system( sys_com )
 
-        # copy these files to the user's requested output folder
-        user_out_folder = Rails.root.to_s + "/" + @version.output_folder_path
 
-        logger.info "VERSIONS_CONTROLLER - process_version - user_out_folder: " + user_out_folder.to_s
 
-        FileUtils.mkdir_p( user_out_folder ) unless File.directory?( user_out_folder )
 
-        wildcard = version_output_folder + "/*.ai"
-        Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+        logger.info "VERSIONS_CONTROLLER - process_version - output_folder_path: " + @version.output_folder_path
 
-        wildcard = version_output_folder + "/*.jpg"
-        Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
 
+        if( @version.output_folder_path != '' ) then
+
+          logger.info "VERSIONS_CONTROLLER - process_version - About to copy to user's requested output folder."
+
+          # copy these files to the user's requested output folder
+          user_out_folder = Rails.root.to_s + "/" + @version.output_folder_path
+
+          logger.info "VERSIONS_CONTROLLER - process_version - user_out_folder: " + user_out_folder.to_s
+
+          FileUtils.mkdir_p( user_out_folder ) unless File.directory?( user_out_folder )
+
+          wildcard = version_output_folder + "/*.ai"
+          Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+
+          wildcard = version_output_folder + "/*.jpg"
+          Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+
+        end
 
       end
 

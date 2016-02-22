@@ -1,6 +1,5 @@
-<h1>Enter Values!</h1>
 
-<h4>For <%= @design_template.name %> template</h4>
+<h4><%= @design_template.name %> Settings</h4>
 
 <%
 if @prompts then
@@ -33,8 +32,8 @@ if @prompts then
 <%
     if( pick_color != '' ) then
 %>
-      Pick a color: <div class="input-group" id="colorp<%= i.to_s %>">
-                      <input type="text" value="<%= text_color %>" class="form-control" />
+      Pick a color: <div class="input-group" id="colorpicker<%= i.to_s %>">
+                      <input type="text" id="color_val<%= i.to_s %>" value="<%= text_color %>" class="form-control" />
                       <span class="input-group-addon"><i></i></span>
                     </div>
 
@@ -58,7 +57,7 @@ end
 
 $(document).ready(function(){
 
-  $("[id^='colorp']").colorpicker({});
+  $("[id^='colorpicker']").colorpicker({});
 });
 
 
@@ -84,7 +83,7 @@ function build_values_form()
         rep_text = o.val();
         tag_name = o.attr( 'data-tag-name' );
 
-        s = '#colorp' + i;
+        s = '#color_val' + i;
         o = $(s);
         text_color = o.val();
 

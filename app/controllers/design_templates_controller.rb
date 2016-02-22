@@ -58,12 +58,19 @@ class DesignTemplatesController < ApplicationController
 
     def set_tag_settings
 
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - SET_TAG_SETTINGS!!!!!!!!!!"
+
       myHashString = request.body.read.to_s
       myHash = JSON.parse myHashString
       logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - myHashString: " + myHashString
 
+      extractedObject = myHash[ 'extracted_settings' ]
+      extractedString = extractedObject.to_json
+
       @design_template = DesignTemplate.find( params[ :id ] )
-      @design_template.prompts = myHashString
+      @design_template.prompts = extractedString
+
+      @design_template.name = myHash[ 'general_settings' ][ 'template_name' ]
 
       if @design_template.save
         logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings - SUCCESS!"

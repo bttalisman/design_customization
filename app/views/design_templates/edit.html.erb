@@ -9,12 +9,13 @@
     <div style='flex:1;'>
 
       <p>
-        Name: <input type='text' name='design_template[name]' value='<%= @design_template.name %>'></input>
+        Name: <input type='text' id='template_name' value='<%= @design_template.name %>'></input>
       </p>
+
 
     </div>
 
-    <div id='panel_container' style='flex:1; background:pink; '></div>
+    <div id='panel_container' style='flex:1;'></div>
 
   </div>
 
@@ -35,7 +36,16 @@
   function update_template( templateId )
   {
 
-    var settings = build();
+    var extractedSettings = build();
+
+    var oToSend = {};
+
+    // We stuff our own data in there too
+    var oGeneralSettings = {};
+    oGeneralSettings[ 'template_name' ] = $('#template_name').val();
+
+    oToSend['extracted_settings'] = extractedSettings;
+    oToSend['general_settings'] = oGeneralSettings;
 
     var uri = "http://localhost:3000/design_templates/" + templateId + "/tag_settings/";
 
@@ -43,7 +53,7 @@
                 url: uri,
                 type: 'post',
                 dataType: 'application/json',
-                data: JSON.stringify( settings ),
+                data: JSON.stringify( oToSend ),
                 success: function (data) {
                 },
                 error: function(xhr, status, error) {

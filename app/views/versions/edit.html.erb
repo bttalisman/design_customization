@@ -57,23 +57,26 @@ function getTemplateHTML( templateId, useVersion )
 
 <form action='update' id='version_form'>
 
-  <div class='container'>
+  <div class='container' style='width:100%;'>
 
-    <div style='flex:1'>
+    <div style='flex:1;'>
 
-      <p>
-        <b>Name:</b> <input type='text' name='version[name]' value='<%= @version.name %>'></input>
-      </p>
+      <div>
+        <b>Name</b>
+        <input type='text' name='version[name]' value='<%= @version.name %>'></input>
+      </div>
 
-      <p>
-        <b>Output Folder:</b> <%= @root_folder + "/" %> <input type='text' name='version[output_folder_path]' value='<%= @version.output_folder_path %>'></input>
-      </p>
+      <div>
+        <b>Output Folder</b>
+        <%= @root_folder + "/" %> <input type='text' name='version[output_folder_path]' value='<%= @version.output_folder_path %>'></input>
+      </div>
 
-      <b>Run AI</b> <input type='checkbox' name='runai' id='runai'></input>
+      <div>
+        <b>Run AI</b> <input type='checkbox' name='runai' id='runai'></input>
+      </div>
 
 
-
-      <p>
+      <div>
         <b>Template:</b>
           <select name='version[design_template_id]' id='version_design_template_id' onchange='getTemplateHTML( null, false );'>
 
@@ -94,19 +97,22 @@ function getTemplateHTML( templateId, useVersion )
 <%          }
 %>
           </select>
-      </p>
+      </div>
 
     </div>
 
-    <div id='values_container' style='flex:1'></div>
+    <div id='values_container' style='flex:1; '></div>
 
   </div>
 
   <input name='prompt_data' id='prompt_data' style='display:none;'></input>
 
-  <button id='update' onclick='create_version();'>Update</button>
 
-  <%= button_to "delete", {:controller => :versions,
-        :action => 'destroy', :id => @version.id }, :method => :delete %>
+
+  <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
+
+  <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+
+
 
 </form>

@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get 'home/index'
 
 
-  root 'home#index'
+  root 'design_templates#index'
 
   get 'edit' => 'home#edit'
 
@@ -23,7 +23,8 @@ Rails.application.routes.draw do
 
 
   post '/design_templates/:id/tag_settings' => 'design_templates#set_tag_settings'
-  post 'force_process' => 'design_templates#force_process'
+  get 'force_process' => 'design_templates#force_process'
+
 
   resources :design_templates
   resources :versions

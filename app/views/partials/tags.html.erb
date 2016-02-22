@@ -1,16 +1,16 @@
-<h2>Enter Info about extracted tags!</h2>
 
-<h4>For <%= @design_template.name %> template</h4>
+<h4><%= @design_template.name %> Settings</h4>
 
 <%
 if ( @tags != nil ) then
 
   puts '@values: ' + @values.to_s
+  puts '@tags: ' + @tags.to_s
 
   i = 0
   @tags.each { |t|
 
-    t = t.strip
+#    t = t.strip # todo, do i need to do this here?
     logger.info 't: ' + t
 
     if( @values != nil ) then
@@ -31,12 +31,18 @@ if ( @tags != nil ) then
     end
 
 %>
-    <h3><%= t %></h3>
+    <div><b>Tag:</b> <%= t %></div>
     <div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'>
-      Prompt: <input type='text' value='<%= prompt %>' id='prompt<%= i.to_s %>'></input><br>
+
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Prompt</span>
+        <input type="text" value='<%= prompt %>' id='prompt<%= i.to_s %>' class="form-control" placeholder="Enter a prompt" aria-describedby="basic-addon1">
+      </div>
+
       Max Length: <input type='number' value='<%= max_length %>' id='maxl<%= i.to_s %>'></input><br>
       Pick Color? <input type='checkbox' <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input><br>
     </div>
+    <hr />
 <%
     i += 1
   }

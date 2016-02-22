@@ -1,6 +1,17 @@
 module ApplicationHelper
 
 
+  @@versions_folder = Rails.root.to_s + "/public/system/versions/"
+
+
+  def get_version_folder( version )
+
+    version_output_folder = @@versions_folder + version.id.to_s
+    FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
+
+    return version_output_folder
+
+  end
 
 
 
