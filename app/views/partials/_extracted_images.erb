@@ -1,0 +1,106 @@
+
+<h4><%= @design_template.name %> Images</h4>
+
+<%
+if ( @images != nil ) then
+
+  logger.info '_extracted_images.html.erb - @values: ' + @values.to_s
+  logger.info '_extracted_images.html.erb - @images: ' + @images.to_s
+
+  i = 0
+  @images.each { |image|
+
+    logger.info '_extracted_images.html.erb - image: ' + image
+
+    if( @values != nil ) then
+
+      # we'll try to look up any previously set values for this image.
+
+      imageProps = @values[ 'image_settings' ][ image.to_s ]
+      logger.info '_extracted_images.html.erb - imageProps: ' + imageProps.to_s
+
+      if( imageProps != nil ) then
+        replaceImage = imageProps[ 'replace_image' ]
+      else
+        replaceImage = ''
+      end
+
+    end
+%>
+    <div id='image<%= i.to_s %>' data-image-name='<%= image.to_s %>'></div>
+
+      <div class="panel panel-default">
+          <div class="panel-heading"><%= image %></div>
+          <div class="panel-body">
+
+            <label for="replace_image<%= i.to_s %>">Replace this image?</label>
+            <input type='checkbox' class="form-control" <%= replaceImage %> value='true' id='replace_image<%= i.to_s %>'></input>
+
+          </div>
+      </div>
+
+<%
+    i += 1
+  } # each tag
+%>
+
+
+  <input type='hidden' id='image_count' value='<%= i.to_s %>'></input>
+<%
+end
+%>
+
+<script>
+
+  // Builds json object with all setting values set on this page
+  function build_images()
+  {
+
+    var o;
+    var s;
+    var count;
+    var replaceImage;
+    var returnSettings, imageName, imageSettings;
+
+
+    o = $( '#image_count' );
+    count = parseInt( o.val() );
+
+    returnSettings = {};
+
+    for( var i = 0; i < count; i++ )
+    {
+
+      s = '#image' + i;
+      o = $( s );
+
+      imageName = o.attr( 'data-image-name' ).trim();
+
+      imageSettings = {};
+
+
+      s = '#replace_image' + i;
+      o = $( s );
+
+      replaceImage = o.is(":checked");
+
+      if( replaceImage )
+      {
+        imageSettings[ 'replace_image' ] = 'checked';
+      } else {
+        imageSettings[ 'replace_image' ] = '';
+      }
+
+
+      returnSettings[ imageName ] = imageSettings;
+
+    }
+
+    alert( 'returnSettings: ' + JSON.stringify( returnSettings ) );
+
+    return returnSettings;
+
+  }
+
+
+</script>

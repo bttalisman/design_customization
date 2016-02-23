@@ -4,14 +4,14 @@ class DesignTemplatesController < ApplicationController
 
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
-    @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
+    @@path_to_extract_tags_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
+    @@path_to_extract_images_script = Rails.root.to_s + "/bin/illustrator_processing/extractImages.jsx"
     @@path_to_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplace.jsx"
 
 
     def index
       @design_templates = DesignTemplate.all
     end
-
 
 
     def show
@@ -35,6 +35,7 @@ class DesignTemplatesController < ApplicationController
 
       @design_template = DesignTemplate.find( params[ :id ] )
       @tags = get_tags_array( @design_template )
+      @images = get_images_array( @design_template )
 
     end
 
@@ -148,19 +149,34 @@ class DesignTemplatesController < ApplicationController
 
     def process_original
 
+      extract_tags
+      extract_images
+
+    end
+
+
+
+
+
+    def extract_tags
+
+      # Extract tags
+
       file = @design_template.original_file
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - file: " + file.to_s
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_tags - file: " + file.to_s
 
       source_path = file.path
       source_folder = File.dirname( source_path )
       config_file = source_folder + "/config_extract_tags.jsn"
 
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - source_path: " + source_path.to_s
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - config_file: " + config_file.to_s
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_tags - source_path: " + source_path.to_s
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_tags - config_file: " + config_file.to_s
 
       config = {}
+
+
       config[ 'source file' ] = source_path
-      config[ 'script file' ] = @@path_to_extract_script
+      config[ 'script file' ] = @@path_to_extract_tags_script
       config[ 'output folder' ] = source_folder   # the prompts file goes right next to the original file
 
       File.open( config_file,"w" ) do |f|
@@ -174,13 +190,57 @@ class DesignTemplatesController < ApplicationController
       FileUtils.mkdir_p( ai_output_folder ) unless File.directory?( ai_output_folder )
 
       sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - sys_com: " + sys_com.to_s
-
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_tags - sys_com: " + sys_com.to_s
 
       results = system( sys_com )
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - process_original - results: " + results.to_s
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_tags - results: " + results.to_s
+
+
 
     end
+
+
+    def extract_images
+
+      # Extract tags
+
+      file = @design_template.original_file
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_images - file: " + file.to_s
+
+      source_path = file.path
+      source_folder = File.dirname( source_path )
+      config_file = source_folder + "/config_extract_images.jsn"
+
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_images - source_path: " + source_path.to_s
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_images - config_file: " + config_file.to_s
+
+      config = {}
+
+
+      config[ 'source file' ] = source_path
+      config[ 'script file' ] = @@path_to_extract_images_script
+      config[ 'output folder' ] = source_folder   # the prompts file goes right next to the original file
+
+      File.open( config_file,"w" ) do |f|
+        f.write( config.to_json )
+      end
+
+      # the illustrator scripts place all output
+      # in a subfolder of the folder containing the original file, and later
+      # moved to wherever
+      ai_output_folder = source_folder + "/output"
+      FileUtils.mkdir_p( ai_output_folder ) unless File.directory?( ai_output_folder )
+
+      sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_images - sys_com: " + sys_com.to_s
+
+      results = system( sys_com )
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_images - results: " + results.to_s
+
+    end
+
+
+
 
 
     def design_template_params

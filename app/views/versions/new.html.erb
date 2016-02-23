@@ -4,12 +4,12 @@
 
 function create_version()
 {
-    var oReturn = build_values_form();
+    var oReturn = build();
 
     alert( 'oReturn: ' + JSON.stringify( oReturn ) );
 
 
-    $('#prompt_data').attr( 'value', JSON.stringify( oReturn ) );
+    $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
 
     var form = $('#version_form');
     form.submit();
@@ -28,7 +28,7 @@ function changeTemplate( id )
     id = o.val();
   }
 
-  var uri = "http://localhost:3000/partials/values/" + id;
+  var uri = "http://localhost:3000/partials/version_settings/" + id;
 
   $.get( uri, function(data, status)
     {
@@ -95,7 +95,7 @@ function changeTemplate( id )
 
   </div>
 
-  <input name='prompt_data' id='prompt_data' style='display:none;'></input>
+  <input name='version_data' id='version_data' style='display:none;'></input>
 
   <button id='create' onclick='create_version();'>Create</button>
 

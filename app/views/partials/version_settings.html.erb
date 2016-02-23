@@ -1,0 +1,44 @@
+
+<h3>Version Settings</h3><br>
+using the <%= @design_template.name %> Template<br>
+
+<%
+
+  @tag_settings = @prompts[ 'tag_settings' ]
+  @image_settings = @prompts[ 'image_settings' ]
+
+  if( @tag_settings != nil ) then
+    if( @tag_settings.length > 0 ) then
+%>
+<%=   render :partial => "version_tags" %>
+<%
+    end
+  end
+
+  if( @image_settings != nil ) then
+    if( @image_settings.length > 0 ) then
+%>
+<%=   render :partial => "version_images" %>
+<%
+    end
+  end
+%>
+
+
+
+<script>
+
+  function build()
+  {
+
+    var oTags = build_tag_values();
+    var oImages = build_image_values();
+
+    oReturn = {};
+    oReturn[ 'tag_settings' ] = oTags;
+    oReturn[ 'image_settings' ] = oImages;
+
+    return oReturn;
+  }
+
+</script>

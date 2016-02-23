@@ -3,7 +3,8 @@ class VersionsController < ApplicationController
     include ApplicationHelper
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
-    @@path_to_extract_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
+    @@path_to_extract_tags_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
+    @@path_to_extract_images_script = Rails.root.to_s + "/bin/illustrator_processing/extractImages.jsx"
     @@path_to_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplace.jsx"
 
     @@versions_folder = Rails.root.to_s + "/public/system/versions/"
@@ -32,9 +33,10 @@ class VersionsController < ApplicationController
     def update
       @version = Version.find( params[ :id ] )
       @version.update( version_params )
-      @version.values = params[ 'prompt_data' ]
+      @version.values = params[ 'version_data' ]
 
       logger.info "VERSIONS_CONTROLLER - UPDATE - version_params: " + version_params.to_s
+      logger.info "VERSIONS_CONTROLLER - UPDATE - params[ 'version_data' ]: " + params[ 'version_data' ].to_s
 
       if @version.save
         process_version
@@ -55,7 +57,7 @@ class VersionsController < ApplicationController
 
     def create
       @version = Version.new( version_params )
-      @version.values = params[ 'prompt_data' ]
+      @version.values = params[ 'version_data' ]
 
       logger.info "VERSION_CONTROLLER - create"
       logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s

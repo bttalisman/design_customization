@@ -1,0 +1,38 @@
+
+<h3><%= @design_template.name %> Settings</h3>
+
+
+<%
+  if( @tags != nil ) then
+    if( @tags.length > 0 ) then
+%>
+<%=   render :partial => "extracted_tags" %>
+<%
+    end
+  end
+
+  if( @images != nil ) then
+    if( @images.length > 0 ) then
+%>
+<%=   render :partial => "extracted_images" %>
+<%
+    end
+  end
+%>
+
+<script>
+
+  function build()
+  {
+
+    var oTags = build_tags();
+    var oImages = build_images();
+
+    oReturn = {};
+    oReturn[ 'tag_settings' ] = oTags;
+    oReturn[ 'image_settings' ] = oImages;
+
+    return oReturn;
+  }
+
+</script>

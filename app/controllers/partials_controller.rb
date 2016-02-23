@@ -7,11 +7,12 @@ class PartialsController < ApplicationController
 
   # This action presents the tags extracted from the AI file, with any
   # tag-specific options, for use when creating or editing a DesignTemplate
-  def tags
+  def extracted_settings
 
     template_id = params[ :id ]
     @design_template = DesignTemplate.find( template_id )
     @tags = get_tags_array( @design_template )
+    @images = get_images_array( @design_template )
 
     # If the user has set options regarding tags extracted from an AI file they
     # go in @values
@@ -19,9 +20,10 @@ class PartialsController < ApplicationController
       @values = JSON.parse( @design_template.prompts )
     end
 
-    logger.info "PARTIALS_CONTROLLER - tags - template_id: " + template_id.to_s
-    logger.info "PARTIALS_CONTROLLER - tags - @tags: " + @tags.to_s
-    logger.info "PARTIALS_CONTROLLER - tags - @values: " + @values.to_s
+    logger.info "PARTIALS_CONTROLLER - extracted_settings - template_id: " + template_id.to_s
+    logger.info "PARTIALS_CONTROLLER - extracted_settings - @tags: " + @tags.to_s
+    logger.info "PARTIALS_CONTROLLER - extracted_settings - @images: " + @images.to_s
+    logger.info "PARTIALS_CONTROLLER - extracted_settings - @values: " + @values.to_s
 
   end
 
@@ -29,13 +31,13 @@ class PartialsController < ApplicationController
 
   # This action presents each tag with ui for setting version-specific options
   # for use in creating a Version tied to a DesignTemplate
-  def values
+  def version_settings
 
     id = params[ :id ]
-    logger.info "PARTIALS_CONTROLLER - values - id: " + id.to_s
+    logger.info "PARTIALS_CONTROLLER - version_settings - id: " + id.to_s
 
     version_id = params[ :version_id ]
-    logger.info "PARTIALS_CONTROLLER - values - version_id: " + version_id.to_s
+    logger.info "PARTIALS_CONTROLLER - version_settings - version_id: " + version_id.to_s
 
 
     @design_template = DesignTemplate.find( id )
@@ -45,11 +47,17 @@ class PartialsController < ApplicationController
     end
 
     if( version != nil ) then
-      @values = get_values_object( version )
+      values = get_values_object( version )
+
+      if( values != nil ) then
+        @image_values = values[ 'image_settings' ]
+        @tag_values = values[ 'tag_settings' ]
+      end
+
     end
 
     @prompts = get_prompts_object( @design_template )
-  
+
   end
 
 end
