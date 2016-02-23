@@ -6,6 +6,8 @@ class VersionsController < ApplicationController
     @@path_to_extract_tags_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
     @@path_to_extract_images_script = Rails.root.to_s + "/bin/illustrator_processing/extractImages.jsx"
     @@path_to_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplace.jsx"
+    @@path_to_image_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplaceImages.jsx"
+
 
     @@versions_folder = Rails.root.to_s + "/public/system/versions/"
 
@@ -134,29 +136,81 @@ class VersionsController < ApplicationController
           f.write( @version.values.to_s )
       end
 
-      # create a config file that tells run_AI_script what it needs
-      config_file = version_output_folder + "/config_search_replace.jsn"
+      runTagsReplace = true
+      runImagesReplace = true
+      copyOutput = true
 
-      config = {}
-      config[ 'source file' ] = source_path
-      config[ 'script file' ] = @@path_to_search_replace_script
-      config[ 'output folder' ] = version_output_folder
 
-      File.open( config_file, "w" ) do |f|
-        f.write( config.to_json )
+      if( runTagsReplace ) then
+
+        logger.info "VERSIONS_CONTROLLER - about to run tags replacement."
+
+        # create a config file that tells run_AI_script what it needs
+        config_file = version_output_folder + "/config_search_replace.jsn"
+
+        config = {}
+        config[ 'source file' ] = source_path
+        config[ 'script file' ] = @@path_to_search_replace_script
+        config[ 'output folder' ] = version_output_folder
+
+        File.open( config_file, "w" ) do |f|
+          f.write( config.to_json )
+        end
+
+        # And run it!
+
+        sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
+        runai = params[ 'runai' ]
+        logger.info "VERSIONS_CONTROLLER - process_version - runai: " + runai.to_s
+
+        if runai == 'on' then
+          logger.info "VERSIONS_CONTROLLER - process_version - about to run sys_com: " + sys_com.to_s
+          # run the ruby script. AI should generate output files to the output folder
+          system( sys_com )
+          logger.info "VERSIONS_CONTROLLER - process_version - output_folder_path: " + @version.output_folder_path
+
+        end
+
+      end  # runTagsReplace
+
+
+
+      if( runImagesReplace ) then
+
+        logger.info "VERSIONS_CONTROLLER - about to run images replacement."
+
+        # create a config file that tells run_AI_script what it needs
+        config_file = version_output_folder + "/config_image_search_replace.jsn"
+
+        config = {}
+        config[ 'source file' ] = source_path
+        config[ 'script file' ] = @@path_to_image_search_replace_script
+        config[ 'output folder' ] = version_output_folder
+
+        File.open( config_file, "w" ) do |f|
+          f.write( config.to_json )
+        end
+
+        # And run it!
+
+        sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
+        runai = params[ 'runai' ]
+        logger.info "VERSIONS_CONTROLLER - process_version - runai: " + runai.to_s
+
+        if runai == 'on' then
+          logger.info "VERSIONS_CONTROLLER - process_version - about to run sys_com: " + sys_com.to_s
+          # run the ruby script. AI should generate output files to the output folder
+          system( sys_com )
+          logger.info "VERSIONS_CONTROLLER - process_version - output_folder_path: " + @version.output_folder_path
+
+        end
+
       end
 
-      # And run it!
 
-      sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
-      runai = params[ 'runai' ]
-      logger.info "VERSIONS_CONTROLLER - process_version - runai: " + runai.to_s
 
-      if runai == 'on' then
-        logger.info "VERSIONS_CONTROLLER - process_version - about to run sys_com: " + sys_com.to_s
-        # run the ruby script. AI should generate output files to the output folder
-        system( sys_com )
-        logger.info "VERSIONS_CONTROLLER - process_version - output_folder_path: " + @version.output_folder_path
+
+      if( runai == 'on' ) then
 
         if( @version.output_folder_path != '' ) then
 
@@ -175,9 +229,9 @@ class VersionsController < ApplicationController
           wildcard = version_output_folder + "/*.jpg"
           Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
 
-        end
+        end # user has an output folder set
 
-      end
+      end # runai is on
 
     end
 

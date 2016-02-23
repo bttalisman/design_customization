@@ -3,12 +3,15 @@
 using the <%= @design_template.name %> Template<br>
 
 <%
+  rendering_tags_form = false
+  rendering_images_form = false
 
   @tag_settings = @prompts[ 'tag_settings' ]
   @image_settings = @prompts[ 'image_settings' ]
 
   if( @tag_settings != nil ) then
     if( @tag_settings.length > 0 ) then
+      rendering_tags_form = true
 %>
 <%=   render :partial => "version_tags" %>
 <%
@@ -17,6 +20,7 @@ using the <%= @design_template.name %> Template<br>
 
   if( @image_settings != nil ) then
     if( @image_settings.length > 0 ) then
+      rendering_images_form = true
 %>
 <%=   render :partial => "version_images" %>
 <%
@@ -30,9 +34,22 @@ using the <%= @design_template.name %> Template<br>
 
   function build()
   {
+    oTags = {};
+    oImages = {};
 
-    var oTags = build_tag_values();
-    var oImages = build_image_values();
+<%
+    if( rendering_tags_form ) then
+%>
+      oTags = build_tag_values();
+<%
+    end %>
+
+<%
+    if( rendering_images_form ) then
+%>
+      oImages = build_image_values();
+<%
+    end %>
 
     oReturn = {};
     oReturn[ 'tag_settings' ] = oTags;
