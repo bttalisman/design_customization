@@ -111,6 +111,8 @@ function getTemplateHTML( templateId, useVersion )
 
   <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
 
+  <a class='btn btn-default' href='http://localhost:3000/versions/<%= @version.id %>'>Cancel</a>
+
   <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
 
 
