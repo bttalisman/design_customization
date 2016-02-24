@@ -41,9 +41,14 @@
   // is gathered and posted to the design_template controller.
   function update_template( templateId )
   {
+    alert( 'update_template' );
 
-    var extractedSettings = build();
+    alert( 'about to call build_template_settings' );    
+    var extractedSettings = build_template_settings();
     var oToSend = {};
+
+    alert( 'extractedSettings: ' + JSON.stringify(extractedSettings) );
+
 
     // We stuff our own data in there too
     var oGeneralSettings = {};
@@ -53,6 +58,8 @@
     oToSend['general_settings'] = oGeneralSettings;
 
     var uri = "http://localhost:3000/design_templates/" + templateId + "/tag_settings/";
+
+    alert( 'about to post' );
 
     $.ajax({
                 url: uri,
@@ -83,7 +90,7 @@
 //      templateId = o.val();
 //    }
 
-    uri = "http://localhost:3000/partials/tags/" + templateId
+    uri = "http://localhost:3000/partials/extracted_settings/" + templateId
 
     $.get( uri, function(data, status)
       {

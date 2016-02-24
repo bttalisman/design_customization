@@ -6,8 +6,8 @@ Rails.application.routes.draw do
 
   get 'edit' => 'home#edit'
 
-  get '/partials/values/:id' => 'partials#values'
-  get '/partials/tags/:id' => 'partials#tags'
+  get '/partials/version_settings/:id' => 'partials#version_settings'
+  get '/partials/extracted_settings/:id' => 'partials#extracted_settings'
 
 
   get '/versions/create' => 'versions#create'

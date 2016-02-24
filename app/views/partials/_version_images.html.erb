@@ -1,0 +1,86 @@
+<h4>Version Images</h4><br>
+
+<%
+logger.info '_VERSION_IMAGES.html.erb - @image_values: ' + @image_values.to_s
+logger.info '_VERSION_IMAGES.html.erb - @image_settings: ' + @image_settings.to_s
+
+
+i = 0
+
+@image_settings.each { |image|
+
+  logger.info '_VERSION_IMAGES.html.erb - image: ' + image.to_s
+
+  image_settings = image[1]
+
+  if( image_settings['replace_image'] == '' ) then
+    next
+  end
+
+  image_name = image[ 0 ]
+
+  logger.info '_VERSION_IMAGES.html.erb - image_name: ' + image_name.to_s
+
+  replacement_path = ''
+  if( @image_values ) then
+    vals = @image_values[ image_name ]
+    if( vals ) then
+      replacement_path = vals[ 'replacement_path' ]
+    end
+  end
+
+%>
+  <div style='margin-top:30px;'>
+    Image: <%= image_name %>
+    <input type='text' value='<%= replacement_path %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input><br>
+  </div>
+
+<%
+  i += 1
+} # each image
+
+%>
+
+<input type='hidden' id='image_count' value='<%= i.to_s %>'></input>
+
+<script>
+
+
+  $(document).ready(function(){
+
+    $("[id^='colorpicker']").colorpicker({});
+  });
+
+
+
+  function build_image_values()
+  {
+
+    var count = $('#image_count').val();
+    var s, v, o;
+    var rep_path;
+    var text_color;
+
+    var oReturn;
+    var oImageProps;
+    oReturn = {};
+
+    var image_name;
+
+    for( var i = 0; i < count; i++ )
+    {
+          s = '#replacement_path' + i;
+          o = $(s);
+          rep_path = o.val();
+          image_name = o.attr( 'data-image-name' );
+
+          oImageProps = {};
+          oImageProps[ 'replacement_path' ] = rep_path;
+
+          oReturn[ image_name ] = oImageProps;
+    }
+
+    return oReturn;
+  }
+
+</script>

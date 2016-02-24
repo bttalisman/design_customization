@@ -15,17 +15,14 @@ module ApplicationHelper
 
 
 
-  def path_to_data_file( design_template )
+  def path_to_data_file( path_to_ai_file )
 
-    file = design_template.original_file
-#    source_path = Rails.root.to_s + "/" + file.path
-    source_path = file.path.to_s
+    source_folder = File.dirname( path_to_ai_file )
+    base_name = File.basename( path_to_ai_file, '.ai' )
 
-    source_folder = File.dirname( source_path )
-    data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_data.jsn"
+    data_file = source_folder + "/" + base_name +  "_data.jsn"
 
     data_file
-
   end
 
 
@@ -41,6 +38,20 @@ module ApplicationHelper
 
     data_file
   end
+
+
+  # the path to the images file is based on the path to the original ai file.
+  def path_to_images_file( design_template )
+
+    file = design_template.original_file
+    source_path = file.path.to_s
+
+    source_folder = File.dirname( source_path )
+    data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_images.jsn"
+
+    data_file
+  end
+
 
 
 
@@ -76,7 +87,28 @@ module ApplicationHelper
   end
 
 
+  # This method assumes that there is a file cotaining a json array of the names
+  # of all images extracted from the DesignTemplate's associated AI file.
+  def get_images_array( design_template )
 
+    images_file = path_to_images_file( design_template )
+    exists = File.exist?( images_file )
+
+    logger.info "APPLICATION_HELPER - get_images_array - exists: " + exists.to_s
+
+    images_string = ''
+    images = nil
+
+    if exists then
+      File.open( images_file,"r" ) do |f|
+        images_string = f.read()
+      end
+      images = JSON.parse( images_string )
+    end
+
+    images
+
+  end
 
 
   def get_values_object( version )
@@ -84,8 +116,10 @@ module ApplicationHelper
     values_string = version.values
     logger.info "APPLICATION_HELPER - get_values_object - values_string: " + values_string.to_s
 
-    if( values_string != '' ) then
-      values = JSON.parse values_string
+    if( values_string != nil ) then
+      if( values_string != '' ) then
+        values = JSON.parse values_string
+      end
     end
 
     values
