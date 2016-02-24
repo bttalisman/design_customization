@@ -113,12 +113,24 @@ class VersionsController < ApplicationController
     end
 
 
-    def process_version
+    def write_temp_data_file
+      logger.info "VERSIONS_CONTROLLER - write_temp_data_file"
+      temp_values_file = path_to_data_file( @version.design_template )
 
-      # we're nothing without a template
-      if @version.design_template == nil then
-        return
+      # we'll create a temporary file containing necessary info, sitting right next to the
+            # original ai file.
+      File.open( temp_values_file, "w" ) do |f|
+          f.write( @version.values.to_s )
       end
+    end
+
+
+
+
+
+    def run_tags_replace( config )
+
+      logger.info "VERSIONS_CONTROLLER - run_tags_replace - config: " + config.to_s
 
       version_output_folder = get_version_folder( @version )
 
@@ -127,86 +139,89 @@ class VersionsController < ApplicationController
       source_path = source_file.path
       source_folder = File.dirname( source_path )
 
-      temp_values_file = path_to_data_file( @version.design_template )
+      write_temp_data_file
 
-      # we'll create a temporary file containing necessary info, sitting right next to the
-      # original ai file.
+      # create a config file that tells run_AI_script what it needs
+      config_file = version_output_folder + "/config_search_replace.jsn"
 
-      File.open( temp_values_file, "w" ) do |f|
-          f.write( @version.values.to_s )
+      File.open( config_file, "w" ) do |f|
+        f.write( config.to_json )
       end
 
-      runTagsReplace = true
-      runImagesReplace = true
-      copyOutput = true
+      # And run it!
 
+      sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
+      runai = params[ 'runai' ]
+      logger.info "VERSIONS_CONTROLLER - run_tags_replace - runai: " + runai.to_s
 
-      if( runTagsReplace ) then
-
-        logger.info "VERSIONS_CONTROLLER - about to run tags replacement."
-
-        # create a config file that tells run_AI_script what it needs
-        config_file = version_output_folder + "/config_search_replace.jsn"
-
-        config = {}
-        config[ 'source file' ] = source_path
-        config[ 'script file' ] = @@path_to_search_replace_script
-        config[ 'output folder' ] = version_output_folder
-
-        File.open( config_file, "w" ) do |f|
-          f.write( config.to_json )
-        end
-
-        # And run it!
-
-        sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
-        runai = params[ 'runai' ]
-        logger.info "VERSIONS_CONTROLLER - process_version - runai: " + runai.to_s
-
-        if runai == 'on' then
-          logger.info "VERSIONS_CONTROLLER - process_version - about to run sys_com: " + sys_com.to_s
-          # run the ruby script. AI should generate output files to the output folder
-          system( sys_com )
-          logger.info "VERSIONS_CONTROLLER - process_version - output_folder_path: " + @version.output_folder_path
-
-        end
-
-      end  # runTagsReplace
-
-
-
-      if( runImagesReplace ) then
-
-        logger.info "VERSIONS_CONTROLLER - about to run images replacement."
-
-        # create a config file that tells run_AI_script what it needs
-        config_file = version_output_folder + "/config_image_search_replace.jsn"
-
-        config = {}
-        config[ 'source file' ] = source_path
-        config[ 'script file' ] = @@path_to_image_search_replace_script
-        config[ 'output folder' ] = version_output_folder
-
-        File.open( config_file, "w" ) do |f|
-          f.write( config.to_json )
-        end
-
-        # And run it!
-
-        sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
-        runai = params[ 'runai' ]
-        logger.info "VERSIONS_CONTROLLER - process_version - runai: " + runai.to_s
-
-        if runai == 'on' then
-          logger.info "VERSIONS_CONTROLLER - process_version - about to run sys_com: " + sys_com.to_s
-          # run the ruby script. AI should generate output files to the output folder
-          system( sys_com )
-          logger.info "VERSIONS_CONTROLLER - process_version - output_folder_path: " + @version.output_folder_path
-
-        end
+      if runai == 'on' then
+        logger.info "VERSIONS_CONTROLLER - run_tags_replace - about to run sys_com: " + sys_com.to_s
+        # run the ruby script. AI should generate output files to the output folder
+        system( sys_com )
+        logger.info "VERSIONS_CONTROLLER - run_tags_replace - output_folder_path: " + @version.output_folder_path
 
       end
 
+    end
+
+
+
+
+    def run_images_replace( config )
+
+      logger.info "VERSIONS_CONTROLLER - run_images_replace - config: " + config.to_s
+
+      version_output_folder = get_version_folder( @version )
+
+      write_temp_data_file
+
+      # create a config file that tells run_AI_script what it needs
+      config_file = version_output_folder + "/config_image_search_replace.jsn"
+
+      File.open( config_file, "w" ) do |f|
+        f.write( config.to_json )
+      end
+
+      # And run it!
+
+      sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
+      runai = params[ 'runai' ]
+      logger.info "VERSIONS_CONTROLLER - run_images_replace - runai: " + runai.to_s
+
+      if runai == 'on' then
+        logger.info "VERSIONS_CONTROLLER - run_images_replace - about to run sys_com: " + sys_com.to_s
+        # run the ruby script. AI should generate output files to the output folder
+        system( sys_com )
+        logger.info "VERSIONS_CONTROLLER - run_images_replace - output_folder_path: " + @version.output_folder_path
+      end
+
+    end
+
+
+
+    def process_version
+
+      # we're nothing without a template
+      if @version.design_template == nil then
+        return
+      end
+
+
+
+      config = {}
+      config[ 'source file' ] = source_path
+      config[ 'script file' ] = @@path_to_search_replace_script
+      config[ 'output folder' ] = version_output_folder
+
+      run_tags_replace( config )
+
+
+      config = {}
+      config[ 'source file' ] = source_path
+      config[ 'script file' ] = @@path_to_image_search_replace_script
+      config[ 'output folder' ] = version_output_folder
+
+      run_images_replace( config )
 
 
 
