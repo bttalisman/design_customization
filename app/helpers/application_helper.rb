@@ -15,17 +15,14 @@ module ApplicationHelper
 
 
 
-  def path_to_data_file( design_template )
+  def path_to_data_file( path_to_ai_file )
 
-    file = design_template.original_file
-#    source_path = Rails.root.to_s + "/" + file.path
-    source_path = file.path.to_s
+    source_folder = File.dirname( path_to_ai_file )
+    base_name = File.basename( path_to_ai_file, '.ai' )
 
-    source_folder = File.dirname( source_path )
-    data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_data.jsn"
+    data_file = source_folder + "/" + base_name +  "_data.jsn"
 
     data_file
-
   end
 
 
@@ -124,7 +121,7 @@ module ApplicationHelper
         values = JSON.parse values_string
       end
     end
-    
+
     values
   end
 
