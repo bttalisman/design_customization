@@ -4,6 +4,15 @@ module ApplicationHelper
   @@versions_folder = Rails.root.to_s + "/public/system/versions/"
 
 
+
+  def is_json?( s )
+    begin
+      !!JSON.parse(s)
+    rescue
+      false
+    end
+  end
+
   def get_version_folder( version )
 
     version_output_folder = @@versions_folder + version.id.to_s
@@ -116,10 +125,8 @@ module ApplicationHelper
     values_string = version.values
     logger.info "APPLICATION_HELPER - get_values_object - values_string: " + values_string.to_s
 
-    if( values_string != nil ) then
-      if( values_string != '' ) then
-        values = JSON.parse values_string
-      end
+    if( is_json?( values_string ) ) then
+      values = JSON.parse values_string
     end
 
     values
@@ -129,7 +136,10 @@ module ApplicationHelper
   def get_prompts_object( design_template )
 
       prompts_string = design_template.prompts
-      prompts = JSON.parse( prompts_string )
+
+      if( is_json?( prompts_string ) ) then
+        prompts = JSON.parse( prompts_string )
+      end
 
       logger.info "APPLICATION_HELPER - get_prompts_object - prompts_string: " + prompts_string.to_s
       logger.info "APPLICATION_HELPER - get_prompts_object - prompts: " + prompts.to_s

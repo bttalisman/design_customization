@@ -49,27 +49,30 @@ function changeTemplate( id )
 
 <form action='create' id='version_form'>
 
-  <div class='container'>
+  <div class='container' style='width: 100%;'>
 
     <div style='flex:1'>
 
 
-      <div>
-        Name: <input type='text' name='version[name]'></input>
+      <div class="form-group">
+        <label for="version[name]">Name</label>        
+        <input type='text' name='version[name]'></input>
       </div>
 
-      <div>
-        Output Folder: <input type='text' name='version[output_folder_path]'></input>
+      <div class="form-group">
+        <label for="version[output_folder_path]">Output Folder</label>
+        <input type='text' name='version[output_folder_path]'></input>
       </div>
 
-      <div>
-        Run AI <input type='checkbox' name='runai' id='runai'></input>
+      <div class="form-group">
+        <label for="runai">Run Illustrator?</label>
+        <input type='checkbox' name='runai' id='runai'></input>
       </div>
 
 
-      <div>
-          <select name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
-
+        <div class="form-group">
+          <label for="version_design_template_id">Template:</label>
+          <select class="form-control" name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
             <option value="" disabled selected>Select a Template</option>
 
 <%          @design_templates.each { |t|
@@ -87,7 +90,11 @@ function changeTemplate( id )
 <%          }
 %>
           </select>
-      </div>
+        </div>
+
+
+      <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
+
 
     </div>
 
@@ -97,6 +104,5 @@ function changeTemplate( id )
 
   <input name='version_data' id='version_data' style='display:none;'></input>
 
-  <button id='create' onclick='create_version();'>Create</button>
 
 </form>

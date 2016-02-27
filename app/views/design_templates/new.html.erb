@@ -3,19 +3,41 @@
 <%=
 form_for @design_template, html: { multipart: true } do |form|
 %>
-  <p>
-    <%= form.label :name %><br/>
-    <%= form.text_field :name %><br/>
-  </p>
 
-  <p>
-    <%= form.file_field :original_file %>
-  </p>
+<div class='container' style='width:100%;'>
 
-  <input name='stayAfterSave' id='stayAfterSave' style='display:none;'></input>
+  <div style='flex:1;'>
 
-  <button onclick='setPrefs();'>Set Prefs</button><br>
-  <button onclick='save();'>Save</button><br>
+    <p>
+      <%= form.label :name %><br/>
+      <%= form.text_field :name %><br/>
+    </p>
+
+
+    <div id='selected_file_name' style='display: none;'></div>
+
+    <span class="btn btn-default fileinput-button" id='file_input_container'>
+          <span>Select file</span>
+          <input type="file" onchange='fileInputChange( event );' name="design_template[original_file]" id="design_template_original_file">
+    </span>
+
+
+
+    <input name='stayAfterSave' id='stayAfterSave' style='display:none;'></input>
+
+    <div style='width: 100%;'>
+      <button class='btn btn-default' id='set_prefs' onclick='setPrefs();' style='display: none;'>Set Preferences</button>
+      <button class='btn btn-default' onclick='save();'>Save</button>
+      <a class='btn btn-default' href='http://localhost:3000/design_templates'>Cancel</a>
+    </div>
+
+
+  </div>
+
+
+  <div id='panel_container' style='flex:1;' ></div>
+
+</div>
 
 <%
 end
@@ -23,6 +45,10 @@ end
 
 
 <script>
+
+
+
+
 
   function save()
   {
@@ -33,5 +59,32 @@ end
   {
     $('#stayAfterSave').val( 'true');
   }
+
+
+
+  function fileInputChange( event )
+  {
+    var filePath = event.target.value;
+    filePath = filePath.replace(/.*[\/\\]/, '');
+
+    if( filePath != '' )
+    {
+      var $FileName = $('#selected_file_name');
+      $FileName.text( filePath );
+      $FileName.show();
+
+      $('#file_input_container').hide();
+
+      $('#set_prefs').show();
+    }
+  }
+
+  $(document).ready(function(){
+
+
+  });
+
+
+
 
 </script>
