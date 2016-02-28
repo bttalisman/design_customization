@@ -5,15 +5,21 @@
 i = 0
 @tag_settings.each { |tag|
 
+  # these properties are stored with the template, they tell us how to ask
+  # for specifics from the use creating a version.
   tag_name = tag[ 0 ]
   prompt = tag[ 1 ]['prompt']
   max_length = tag[ 1 ]['max_length']
+  min_length = tag[ 1 ]['min_length']
   pick_color = tag[ 1 ]['pick_color']
 
   if( @tag_values ) then
     val = @tag_values[ tag_name ]
 
     if( val != nil ) then
+
+      # these properties are the users' previously set answers to the questions asked
+      # when creating a version
       replacement_text = val['replacement_text']
       text_color = val['text_color']
     end
@@ -23,11 +29,17 @@ i = 0
   logger.info '_VERSION_TAGS.html.erb - tag_name: ' + tag_name.to_s
   logger.info '_VERSION_TAGS.html.erb - pick_color: ' + pick_color.to_s
   logger.info '_VERSION_TAGS.html.erb - max_length: ' + max_length.to_s
+  logger.info '_VERSION_TAGS.html.erb - min_length: ' + min_length.to_s
+
+  pattern = '.{' + min_length.to_s + ',' + max_length.to_s + '}'
+  logger.info '_VERSION_TAGS.html.erb - pattern: ' + pattern.to_s
+
+  req_title = min_length.to_s + " to " + max_length.to_s + " characters."
 
 
 %>
   <div style='margin-top:30px;'>
-<%= prompt %>: <input type='text' value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-tag-name='<%= tag_name %>' maxlength='<%= max_length %>'></input><br>
+<%= prompt %>: <input type='text' pattern='<%= pattern %>' required value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>' data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' ></input><br>
 <%
     if( pick_color != '' ) then
 %>
@@ -54,6 +66,50 @@ i = 0
 
     $("[id^='colorpicker']").colorpicker({});
   });
+
+
+  function validate_tag_values()
+  {
+    var count = $('#tag_count').val();
+    var s, v, o;
+    var rep_text;
+    var text_color;
+    var minl, maxl;
+    var len;
+    var oReturn;
+    var oTagProps;
+    oReturn = {};
+
+    var bValid = true;
+
+    for( var i = 0; i < count; i++ )
+    {
+      s = '#replacement_text' + i;
+      o = $(s);
+      rep_text = o.val();
+      tag_name = o.attr( 'data-tag-name' );
+
+      minl = parseInt( o.attr( 'data-minl' ) );
+      maxl = parseInt( o.attr( 'data-maxl' ) );
+
+      len = rep_text.length;
+
+
+      if( ( len < minl ) || ( len > maxl ) )
+      {
+        bValid = false;
+      }
+
+      s = '#color_val' + i;
+      o = $(s);
+      text_color = o.val();
+
+    }
+
+    return bValid;
+  }
+
+
 
 
 

@@ -88,7 +88,10 @@ module ApplicationHelper
       File.open( tags_file,"r" ) do |f|
         tags_string = f.read()
       end
-      tags = JSON.parse( tags_string )
+
+      if is_json?( tags_string ) then       
+        tags = JSON.parse( tags_string )
+      end
     end
 
     tags
@@ -112,7 +115,10 @@ module ApplicationHelper
       File.open( images_file,"r" ) do |f|
         images_string = f.read()
       end
-      images = JSON.parse( images_string )
+
+      if is_json?( images_string ) then
+        images = JSON.parse( images_string )
+      end
     end
 
     images

@@ -4,12 +4,24 @@
 
   function create_version()
   {
-    var oReturn = build();
 
-    $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
+    if( validate() )
+    {
 
-    var form = $('#version_form');
-    form.submit();
+      var oReturn = build();
+
+      $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
+
+      var form = $('#version_form');
+      form.submit();
+
+    }
+    else
+    {
+
+      alert( 'failed validation!' );
+    }
+
   }
 
 
@@ -47,9 +59,9 @@
 
 
 
-    $(document).ready(function(){
-      getTemplateHTML( <%= @design_template.id %>, true );
-    });
+  $(document).ready(function(){
+    getTemplateHTML( <%= @design_template.id %>, true );
+  });
 
 
 
@@ -65,7 +77,7 @@
 
   <div class='container' style='width:100%;'>
 
-    <div style='flex:1;'>
+    <div style='flex:1; margin: 30px;'>
 
       <div class="form-group">
         <label for="version[name]">Name</label>
@@ -88,7 +100,7 @@
       <div class='form-group'>
         <label for="version_design_template_id">Template</label>
 
-          <select name='version[design_template_id]' class="form-control" id='version_design_template_id' onchange='getTemplateHTML( null, false );'>
+          <select style='width: 200px;' name='version[design_template_id]' class="form-control" id='version_design_template_id' onchange='getTemplateHTML( null, false );'>
 
             <option value="" disabled selected>Select a Template</option>
 
@@ -115,7 +127,7 @@
 
     </div>
 
-    <div id='values_container' style='flex:1; '></div>
+    <div id='values_container' style='flex:1; margin: 30px;'></div>
 
   </div>
 

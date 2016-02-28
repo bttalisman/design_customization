@@ -1,6 +1,4 @@
 
-<h3>Version Settings</h3><br>
-using the <%= @design_template.name %> Template<br>
 
 <%
   rendering_tags_form = false
@@ -31,6 +29,35 @@ using the <%= @design_template.name %> Template<br>
 
 
 <script>
+
+
+  function validate()
+  {
+
+    var bReturn = true;
+    <%
+    if( rendering_tags_form ) then
+    %>
+        if( !validate_tag_values() )
+        {
+          bReturn = false;
+        }
+    <%
+    end %>
+
+    <%
+    if( rendering_images_form ) then
+    %>
+      if( !validate_image_values() )
+      {
+        bReturn = false;
+      }
+    <%
+    end %>
+
+    return bReturn;  
+  }
+
 
   function build()
   {

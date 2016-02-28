@@ -7,7 +7,7 @@ class PartialsController < ApplicationController
 
   # This action presents the tags extracted from the AI file, with any
   # tag-specific options, for use when creating or editing a DesignTemplate
-  def extracted_settings
+  def design_template_settings
 
     template_id = params[ :id ]
     @design_template = DesignTemplate.find( template_id )
@@ -16,14 +16,16 @@ class PartialsController < ApplicationController
 
     # If the user has set options regarding tags extracted from an AI file they
     # go in @values
-    if ( @design_template.prompts != nil ) then
+    if( is_json?( @design_template.prompts ) ) then
       @values = JSON.parse( @design_template.prompts )
+    else
+      logger.info "PARTIALS_CONTROLLER - extracted_settings - BAD json!!!"
     end
 
-    logger.info "PARTIALS_CONTROLLER - extracted_settings - template_id: " + template_id.to_s
-    logger.info "PARTIALS_CONTROLLER - extracted_settings - @tags: " + @tags.to_s
-    logger.info "PARTIALS_CONTROLLER - extracted_settings - @images: " + @images.to_s
-    logger.info "PARTIALS_CONTROLLER - extracted_settings - @values: " + @values.to_s
+    logger.info "PARTIALS_CONTROLLER - design_template_settings - template_id: " + template_id.to_s
+    logger.info "PARTIALS_CONTROLLER - design_template_settings - @tags: " + @tags.to_s
+    logger.info "PARTIALS_CONTROLLER - design_template_settings - @images: " + @images.to_s
+    logger.info "PARTIALS_CONTROLLER - design_template_settings - @values: " + @values.to_s
 
   end
 
