@@ -39,14 +39,13 @@
       templateId = o.val();
     }
 
-
     if( useVersion )
     {
-      uri = "http://localhost:3000/partials/version_settings/" + templateId + "?version_id=" + <%= @version.id %>;
+      uri = "<%= get_local_host %>/partials/version_settings/" + templateId + "?version_id=" + <%= @version.id %>;
     }
     else
     {
-      uri = "http://localhost:3000/partials/version_settings/" + templateId;
+      uri = "<%= get_local_host %>/partials/version_settings/" + templateId;
     }
 
 

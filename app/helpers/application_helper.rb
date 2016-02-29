@@ -89,7 +89,7 @@ module ApplicationHelper
         tags_string = f.read()
       end
 
-      if is_json?( tags_string ) then       
+      if is_json?( tags_string ) then
         tags = JSON.parse( tags_string )
       end
     end
@@ -99,11 +99,16 @@ module ApplicationHelper
   end
 
 
-  # This method assumes that there is a file cotaining a json array of the names
+  # This method assumes that there is a file containing a json array of the names
   # of all images extracted from the DesignTemplate's associated AI file.
   def get_images_array( design_template )
 
+    logger.info "APPLICATION_HELPER - get_images_array()"
+
+
     images_file = path_to_images_file( design_template )
+    logger.info "APPLICATION_HELPER - get_images_array() - images_file: " + images_file.to_s
+
     exists = File.exist?( images_file )
 
     logger.info "APPLICATION_HELPER - get_images_array - exists: " + exists.to_s
@@ -126,6 +131,8 @@ module ApplicationHelper
   end
 
 
+  # A version's values is an object describing all extensible settings, set by the
+  # user when creating a version
   def get_values_object( version )
 
     values_string = version.values
@@ -139,6 +146,8 @@ module ApplicationHelper
   end
 
 
+  # a design_template's prompts object describes any extensible settings
+  # presented by versions of this template
   def get_prompts_object( design_template )
 
       prompts_string = design_template.prompts

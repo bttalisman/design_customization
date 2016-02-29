@@ -52,17 +52,23 @@ if ( @tags != nil ) then
             <br><br>
 
 
-            <label for="minl<%= i.to_s %>">Min Length</label>
-            <input type='number' class="form-control" value='<%= min_length %>' id='minl<%= i.to_s %>'></input>
+            <div>
+              <div style='float: left; width: 33%'>
+                <label for="minl<%= i.to_s %>">Min Length</label>
+                <input type='number' style='width: 100px;' class="form-control" value='<%= min_length %>' id='minl<%= i.to_s %>'></input>
+              </div>
+              <div style='float: left; width: 33%'>
+                <label for="maxl<%= i.to_s %>">Max Length</label>
+                <input type='number' style='width: 100px;' class="form-control" value='<%= max_length %>' id='maxl<%= i.to_s %>'></input>
+              </div>
+              <div style='float: left; width: 33%'>
+                <label for="colorp<%= i.to_s %>">Choose the color?</label>
+                <input type='checkbox' class="form-control" <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input>
+              </div>
 
-
-            <label for="maxl<%= i.to_s %>">Max Length</label>
-            <input type='number' class="form-control" value='<%= max_length %>' id='maxl<%= i.to_s %>'></input>
+            </div>
 
             <br><br>
-
-            <label for="colorp<%= i.to_s %>">Choose the color?</label>
-            <input type='checkbox' class="form-control" <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input>
 
 
           </div>

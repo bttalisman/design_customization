@@ -6,12 +6,21 @@ i = 0
 @tag_settings.each { |tag|
 
   # these properties are stored with the template, they tell us how to ask
-  # for specifics from the use creating a version.
+  # for specifics from the user creating a version.
   tag_name = tag[ 0 ]
+
   prompt = tag[ 1 ]['prompt']
   max_length = tag[ 1 ]['max_length']
   min_length = tag[ 1 ]['min_length']
   pick_color = tag[ 1 ]['pick_color']
+
+  if( !max_length ) then
+    max_length = ''
+  end
+  if( !min_length ) then
+    min_length = ''
+  end
+
 
   if( @tag_values ) then
     val = @tag_values[ tag_name ]
@@ -31,15 +40,28 @@ i = 0
   logger.info '_VERSION_TAGS.html.erb - max_length: ' + max_length.to_s
   logger.info '_VERSION_TAGS.html.erb - min_length: ' + min_length.to_s
 
-  pattern = '.{' + min_length.to_s + ',' + max_length.to_s + '}'
-  logger.info '_VERSION_TAGS.html.erb - pattern: ' + pattern.to_s
+  if( (max_length != '') || (min_length != '') ) then
+    if( max_length == '' ) then
+      title = '(Please enter at least ' + min_length + ' characters.)'
+    elsif( min_length == '' ) then
+      title = '(Please enter at most ' + max_length + ' characters.)'
+    else
+      title = '(Please enter between ' + min_length.to_s + ' and ' + max_length.to_s + ' characters.)'
+    end
+  else
+    title = ''
+  end
 
-  req_title = min_length.to_s + " to " + max_length.to_s + " characters."
-
+  logger.info '_VERSION_TAGS.html.erb - pattern: ' + title.to_s
 
 %>
   <div style='margin-top:30px;'>
-<%= prompt %>: <input type='text' pattern='<%= pattern %>' required value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>' data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' ></input><br>
+<%= prompt %>: <input type='text' required value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>' data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' ></input><br>
+
+
+  <%= title %>
+  </div>
+  <div style='margin-top:30px'>
 <%
     if( pick_color != '' ) then
 %>

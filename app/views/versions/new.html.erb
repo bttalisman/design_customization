@@ -28,7 +28,7 @@ function changeTemplate( id )
     id = o.val();
   }
 
-  var uri = "http://localhost:3000/partials/version_settings/" + id;
+  var uri = "<%= get_local_host %>/partials/version_settings/" + id;
 
   $.get( uri, function(data, status)
     {
@@ -55,13 +55,13 @@ function changeTemplate( id )
 
 
       <div class="form-group">
-        <label for="version[name]">Name</label>        
+        <label for="version[name]">Name</label>
         <input type='text' name='version[name]'></input>
       </div>
 
       <div class="form-group">
         <label for="version[output_folder_path]">Output Folder</label>
-        <input type='text' name='version[output_folder_path]'></input>
+        <%= @root_folder + "/" %> <input type='text' name='version[output_folder_path]'></input>
       </div>
 
       <div class="form-group">
@@ -72,7 +72,7 @@ function changeTemplate( id )
 
         <div class="form-group">
           <label for="version_design_template_id">Template:</label>
-          <select class="form-control" name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
+          <select class="form-control" style='width: 200px;' name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
             <option value="" disabled selected>Select a Template</option>
 
 <%          @design_templates.each { |t|

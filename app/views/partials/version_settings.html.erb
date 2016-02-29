@@ -4,8 +4,10 @@
   rendering_tags_form = false
   rendering_images_form = false
 
-  @tag_settings = @prompts[ 'tag_settings' ]
-  @image_settings = @prompts[ 'image_settings' ]
+  if( @prompts != nil ) then
+    @tag_settings = @prompts[ 'tag_settings' ]
+    @image_settings = @prompts[ 'image_settings' ]
+  end
 
   if( @tag_settings != nil ) then
     if( @tag_settings.length > 0 ) then
@@ -55,7 +57,7 @@
     <%
     end %>
 
-    return bReturn;  
+    return bReturn;
   }
 
 

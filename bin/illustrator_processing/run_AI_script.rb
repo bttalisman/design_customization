@@ -5,6 +5,7 @@ require 'FileUtils'
 ASCode = <<-EOD
     on run
     		tell application "Adobe Illustrator"
+
     			activate
 
           open "<<source>>"

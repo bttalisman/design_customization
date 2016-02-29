@@ -14,6 +14,7 @@ class PartialsController < ApplicationController
     @tags = get_tags_array( @design_template )
     @images = get_images_array( @design_template )
 
+
     # If the user has set options regarding tags extracted from an AI file they
     # go in @values
     if( is_json?( @design_template.prompts ) ) then
@@ -26,6 +27,9 @@ class PartialsController < ApplicationController
     logger.info "PARTIALS_CONTROLLER - design_template_settings - @tags: " + @tags.to_s
     logger.info "PARTIALS_CONTROLLER - design_template_settings - @images: " + @images.to_s
     logger.info "PARTIALS_CONTROLLER - design_template_settings - @values: " + @values.to_s
+    logger.info "PARTIALS_CONTROLLER - design_template_settings - @images.length: " + @images.length.to_s
+    logger.info "PARTIALS_CONTROLLER - design_template_settings - @tags.length: " + @tags.length.to_s
+
 
   end
 
@@ -43,6 +47,17 @@ class PartialsController < ApplicationController
 
 
     @design_template = DesignTemplate.find( id )
+    @tags = get_tags_array( @design_template )
+    @images = get_images_array( @design_template )
+
+
+    logger.info "PARTIALS_CONTROLLER - version_settings - @tags: " + @tags.to_s
+    logger.info "PARTIALS_CONTROLLER - version_settings - @images: " + @images.to_s
+    logger.info "PARTIALS_CONTROLLER - version_settings - @images.length: " + @images.length.to_s
+    logger.info "PARTIALS_CONTROLLER - version_settings - @tags.length: " + @tags.length.to_s
+
+
+
 
     if( version_id != nil ) then
       version = Version.find( version_id )
