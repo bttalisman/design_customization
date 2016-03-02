@@ -34,7 +34,10 @@ class DesignTemplatesController < ApplicationController
       logger.info "DESIGN_TEMPLATES_CONTROLLER - edit! - params: " + params.to_s
 
       @design_template = DesignTemplate.find( params[ :id ] )
+
+      # this is an array of tag names, extracted from the AI file
       @tags = get_tags_array( @design_template )
+      # this is an array of image names, extracted from the AI file
       @images = get_images_array( @design_template )
 
     end

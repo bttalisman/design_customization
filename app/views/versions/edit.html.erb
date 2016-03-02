@@ -9,8 +9,28 @@
     {
 
       var oReturn = build();
-
       $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
+
+
+
+      var $pathInput = $('#version_output_folder_path');
+      var userSpecFolder = $pathInput.val();
+
+      // If the version, as saved in db, has no output path, but the user just entered
+      // a path, then we'll append the appropriate prefix
+      if( ( '<%= @version.output_folder_path %>' == '' ) && (userSpecFolder != '') )
+      {
+        // now we're gonna sneak in and append the beginning to this path
+        var fullPath = '<%= @root_folder %>' + '/' + userSpecFolder;
+        // and make sure it ends with a '/'
+        var c = fullPath.slice(-1);
+        if( c != '/' )
+        {
+          fullPath = fullPath + '/';
+        }
+        $pathInput.val( fullPath );
+      }
+
 
       var form = $('#version_form');
       form.submit();
@@ -83,11 +103,9 @@
         <input type='text' name='version[name]' id='version[name]' value='<%= @version.name %>'></input>
       </div>
 
-
-
       <div class="form-group">
         <label for="version[output_folder_path]">Output Folder</label>
-        <%= @root_folder + "/" %> <input type='text' name='version[output_folder_path]' value='<%= @version.output_folder_path %>'></input>
+        <%= @output_folder_base %> <input type='text' name='version[output_folder_path]' id='version_output_folder_path' value='<%= @version.output_folder_path %>'></input>
       </div>
 
       <div class='form-group'>

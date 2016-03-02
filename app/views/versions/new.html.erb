@@ -8,15 +8,30 @@ function create_version()
 
     $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
 
-    var form = $('#version_form');
 
-    alert( "about to submit form" );
+    var $pathInput = $('#version_output_folder_path');
+    var userSpecFolder = $pathInput.val();
+
+    if( userSpecFolder != '' )
+    {
+      // now we're gonna sneak in and append the beginning to this path
+      var fullPath = '<%= @root_folder %>' + '/' + userSpecFolder;
+      // and make sure it ends with a '/'
+      var c = fullPath.slice(-1);
+      if( c != '/' )
+      {
+        fullPath = fullPath + '/';
+      }
+      $pathInput.val( fullPath );
+    }
+
+    var form = $('#version_form');
     form.submit();
 }
 
 function validate()
 {
-  alert( 'validate()' );
+  // todo - validate stuff
   return false;
 }
 
@@ -61,7 +76,7 @@ function changeTemplate( id )
 
       <div class="form-group">
         <label for="version[output_folder_path]">Output Folder</label>
-        <%= @root_folder + "/" %> <input type='text' name='version[output_folder_path]'></input>
+        <%= @root_folder + "/" %> <input type='text' id='version_output_folder_path' name='version[output_folder_path]'></input>
       </div>
 
       <div class="form-group">
