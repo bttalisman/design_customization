@@ -4,21 +4,21 @@
 
 <form action='update' id='design_template_form'>
 
-  <div class='container'>
+  <div class='container' style='width:100%;'>
 
     <div style='flex:1;'>
-      <p>
-        Name: <input type='text' id='template_name' value='<%= @design_template.name %>'></input>
-      </p>
+      <div class='form-group'>
+        <label for="template_name">Name</label>
+        <input type='text' id='template_name' value='<%= @design_template.name %>'></input>
+      </div>
 
-      <%= button_to "Delete", {:controller => :design_templates,
-            :action => 'destroy', :id => @design_template.id }, :method => :delete, 'class' => 'btn btn-default' %>
 
-      <a class='btn btn-default' href='http://localhost:3000/force_process?id=<%= @design_template.id %>'>Force Processing</a>
-
+      <a class='btn btn-default' href='<%= get_local_host %>/force_process?id=<%= @design_template.id %>'>Force Processing</a>
       <button class='btn btn-default' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</button>
+      <a class='btn btn-default' href='<%= get_local_host %>/design_templates/<%= @design_template.id %>'>Cancel</a>
 
-      <a class='btn btn-default' href='http://localhost:3000/design_templates/<%= @design_template.id %>'>Cancel</a>
+      <a class="btn btn-default" href="/design_templates/<%= @design_template.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+
 
 
     </div>
@@ -41,14 +41,9 @@
   // is gathered and posted to the design_template controller.
   function update_template( templateId )
   {
-    alert( 'update_template' );
 
-    alert( 'about to call build_template_settings' );    
     var extractedSettings = build_template_settings();
     var oToSend = {};
-
-    alert( 'extractedSettings: ' + JSON.stringify(extractedSettings) );
-
 
     // We stuff our own data in there too
     var oGeneralSettings = {};
@@ -57,9 +52,7 @@
     oToSend['extracted_settings'] = extractedSettings;
     oToSend['general_settings'] = oGeneralSettings;
 
-    var uri = "http://localhost:3000/design_templates/" + templateId + "/tag_settings/";
-
-    alert( 'about to post' );
+    var uri = '<%= get_local_host %>' + "/design_templates/" + templateId + "/tag_settings/";
 
     $.ajax({
                 url: uri,
@@ -67,8 +60,10 @@
                 dataType: 'application/json',
                 data: JSON.stringify( oToSend ),
                 success: function (data) {
+                  alert( 'success getting : ' + data );
                 },
                 error: function(xhr, status, error) {
+                  // todo - why never success?
                 }
             });
 
@@ -82,15 +77,16 @@
     var o;
     var uri;
 
+    // If both of these arrays have no elements, then either the file contained
+    // nothing to extract, or there is no file.
+<%  if (@images.length == 0) && (@tags.length == 0) then %>
+      $('#panel_container').html( '<b>This Illustrator file is not a template.</b>' );
+      return;
+<%  end %>
 
-    // TODO, why is this here?
-//    if( templateId == null )
-//    {
-//      o = $('#version_design_template_id');
-//      templateId = o.val();
-//    }
 
-    uri = "http://localhost:3000/partials/extracted_settings/" + templateId
+
+    uri = '<%= get_local_host %>' + '/partials/extracted_settings/' + templateId
 
     $.get( uri, function(data, status)
       {

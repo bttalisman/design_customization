@@ -2,52 +2,89 @@
 <script>
 
 
-function create_version()
-{
-  var oReturn = build();
-
-  $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
-
-  var form = $('#version_form');
-  form.submit();
-}
-
-
-
-function getTemplateHTML( templateId, useVersion )
-{
-
-  var o;
-  var uri;
-
-
-  if( templateId == null )
+  function create_version()
   {
-    o = $('#version_design_template_id');
-    templateId = o.val();
-  }
 
-
-  if( useVersion )
-  {
-    uri = "http://localhost:3000/partials/version_settings/" + templateId + "?version_id=" + <%= @version.id %>;
-  }
-  else
-  {
-    uri = "http://localhost:3000/partials/version_settings/" + templateId;
-  }
-
-
-  $.get( uri, function(data, status)
+    if( validate() )
     {
-        $('#values_container').html( data );
-    } );
-}
+
+      var oReturn = build();
+      $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
+
+
+
+      var $pathInput = $('#version_output_folder_path');
+      var userSpecFolder = $pathInput.val();
+
+      // If the version, as saved in db, has no output path, but the user just entered
+      // a path, then we'll append the appropriate prefix
+      if( ( '<%= @version.output_folder_path %>' == '' ) && (userSpecFolder != '') )
+      {
+        // now we're gonna sneak in and append the beginning to this path
+        var fullPath = '<%= @root_folder %>' + '/' + userSpecFolder;
+        // and make sure it ends with a '/'
+        var c = fullPath.slice(-1);
+        if( c != '/' )
+        {
+          fullPath = fullPath + '/';
+        }
+        $pathInput.val( fullPath );
+      }
+
+
+      var form = $('#version_form');
+      form.submit();
+
+    }
+    else
+    {
+
+      alert( 'failed validation!' );
+    }
+
+  }
+
+
+
+  function getTemplateHTML( templateId, useVersion )
+  {
+
+    var o;
+    var uri;
+
+
+    if( templateId == null )
+    {
+      o = $('#version_design_template_id');
+      templateId = o.val();
+    }
+
+    if( useVersion )
+    {
+      uri = "<%= get_local_host %>/partials/version_settings/" + templateId + "?version_id=" + <%= @version.id %>;
+    }
+    else
+    {
+      uri = "<%= get_local_host %>/partials/version_settings/" + templateId;
+    }
+
+
+    $.get( uri, function(data, status)
+      {
+          $('#values_container').html( data );
+      } );
+  }
+
+
+
+
+  $(document).ready(function(){
+    getTemplateHTML( <%= @design_template.id %>, true );
+  });
+
+
 
 </script>
-
-
-
 
 
 
@@ -59,26 +96,28 @@ function getTemplateHTML( templateId, useVersion )
 
   <div class='container' style='width:100%;'>
 
-    <div style='flex:1;'>
+    <div style='flex:1; margin: 30px;'>
 
-      <div>
-        <b>Name</b>
-        <input type='text' name='version[name]' value='<%= @version.name %>'></input>
+      <div class="form-group">
+        <label for="version[name]">Name</label>
+        <input type='text' name='version[name]' id='version[name]' value='<%= @version.name %>'></input>
       </div>
 
-      <div>
-        <b>Output Folder</b>
-        <%= @root_folder + "/" %> <input type='text' name='version[output_folder_path]' value='<%= @version.output_folder_path %>'></input>
+      <div class="form-group">
+        <label for="version[output_folder_path]">Output Folder</label>
+        <%= @output_folder_base %> <input type='text' name='version[output_folder_path]' id='version_output_folder_path' value='<%= @version.output_folder_path %>'></input>
       </div>
 
-      <div>
-        <b>Run AI</b> <input type='checkbox' name='runai' id='runai'></input>
+      <div class='form-group'>
+        <label for="runai">Run Illustrator</label>
+        <input type='checkbox' name='runai' id='runai'></input>
       </div>
 
 
-      <div>
-        <b>Template:</b>
-          <select name='version[design_template_id]' id='version_design_template_id' onchange='getTemplateHTML( null, false );'>
+      <div class='form-group'>
+        <label for="version_design_template_id">Template</label>
+
+          <select style='width: 200px;' name='version[design_template_id]' class="form-control" id='version_design_template_id' onchange='getTemplateHTML( null, false );'>
 
             <option value="" disabled selected>Select a Template</option>
 
@@ -86,9 +125,6 @@ function getTemplateHTML( templateId, useVersion )
 
               if ( t.id == @design_template_id.to_i ) then
                 selected = true
-%>
-                <script> getTemplateHTML( <%= t.id.to_s %>, true ); </script>
-<%
               else
                 selected = false
               end
@@ -99,22 +135,20 @@ function getTemplateHTML( templateId, useVersion )
           </select>
       </div>
 
+
+        <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
+        <a class='btn btn-default' href='http://localhost:3000/versions/<%= @version.id %>'>Cancel</a>
+        <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+
+
+
     </div>
 
-    <div id='values_container' style='flex:1; '></div>
+
+    <div id='values_container' style='flex:1; margin: 30px;'></div>
 
   </div>
 
   <input name='version_data' id='version_data' style='display:none;'></input>
-
-
-
-  <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
-
-  <a class='btn btn-default' href='http://localhost:3000/versions/<%= @version.id %>'>Cancel</a>
-
-  <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
-
-
 
 </form>

@@ -5,6 +5,7 @@ require 'FileUtils'
 ASCode = <<-EOD
     on run
     		tell application "Adobe Illustrator"
+
     			activate
 
           open "<<source>>"
@@ -34,12 +35,16 @@ def move_all( dir, dest )
     puts "RUN_AI_SCRIPT - move_all - dir: " + dir
     puts "RUN_AI_SCRIPT - move_all - dest: " + dest
 
-
+    unless File.directory?(dest)
+      puts "RUN_AI_SCRIPT - move_all - calling mkdir"
+      FileUtils.mkdir_p(dest)
+    end
 
 	  Dir.entries(dir).each do |name|
 
         puts "RUN_AI_SCRIPT - name: " + name
 
+        # skip folders
         next if File.directory? name
 
 	      from_path = File.join(dir, name)
@@ -65,9 +70,19 @@ source_file = config_hash[ "source file" ]
 script_file = config_hash[ "script file" ]
 output_folder = config_hash[ "output folder" ]
 
+source_folder = File.dirname( source_file )
+temp_output_folder = source_folder + '/output/'
+
+unless File.directory?(temp_output_folder)
+  puts "RUN_AI_SCRIPT - creating temp output folder."
+  FileUtils.mkdir_p(temp_output_folder)
+end
+
 puts "RUN_AI_SCRIPT - source_file: " + source_file.to_s
 puts "RUN_AI_SCRIPT - script_file: " + script_file.to_s
 puts "RUN_AI_SCRIPT - output_folder: " + output_folder.to_s
+puts "RUN_AI_SCRIPT - source_folder: " + source_folder.to_s
+puts "RUN_AI_SCRIPT - temp_output_folder: " + temp_output_folder.to_s
 
 
 
@@ -78,7 +93,6 @@ ASCode.gsub! '<<script>>', script_file
 
 
 # Run the applescript
-
 osascript ASCode;
 
 

@@ -26,10 +26,12 @@ if ( @tags != nil ) then
         if( tagProps != nil ) then
           prompt = tagProps[ 'prompt' ]
           max_length = tagProps[ 'max_length' ]
+          min_length = tagProps[ 'min_length']
           pick_color = tagProps[ 'pick_color' ]
         else
           prompt = ''
           max_length = ''
+          min_length = ''
           pick_color = ''
         end
 
@@ -49,13 +51,24 @@ if ( @tags != nil ) then
 
             <br><br>
 
-            <label for="maxl<%= i.to_s %>">Max Length</label>
-            <input type='number' class="form-control" value='<%= max_length %>' id='maxl<%= i.to_s %>'></input>
+
+            <div>
+              <div style='float: left; width: 33%'>
+                <label for="minl<%= i.to_s %>">Min Length</label>
+                <input type='number' style='width: 100px;' class="form-control" value='<%= min_length %>' id='minl<%= i.to_s %>'></input>
+              </div>
+              <div style='float: left; width: 33%'>
+                <label for="maxl<%= i.to_s %>">Max Length</label>
+                <input type='number' style='width: 100px;' class="form-control" value='<%= max_length %>' id='maxl<%= i.to_s %>'></input>
+              </div>
+              <div style='float: left; width: 33%'>
+                <label for="colorp<%= i.to_s %>">Choose the color?</label>
+                <input type='checkbox' class="form-control" <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input>
+              </div>
+
+            </div>
 
             <br><br>
-
-            <label for="colorp<%= i.to_s %>">Choose the color?</label>
-            <input type='checkbox' class="form-control" <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input>
 
 
           </div>
@@ -76,6 +89,15 @@ end
 
 <script>
 
+
+  function validate_tag_values()
+  {
+    alert( 'validate tags' );
+
+    return true;
+  }
+
+
   // Builds json object with all setting values set on this page
   function build_tags_data()
   {
@@ -83,7 +105,7 @@ end
     var o;
     var s;
     var count;
-    var prompt, maxl, colorp;
+    var prompt, maxl, minl, colorp;
     var returnSettings, tagName, tagSettings;
 
     o = $( '#tag_count' );
@@ -113,6 +135,13 @@ end
       o = $( s );
       maxl = o.val();
       tagSettings[ 'max_length' ] = maxl;
+
+
+      s = '#minl' + i;
+      o = $( s );
+      minl = o.val();
+      tagSettings[ 'min_length' ] = minl;
+
 
       s = '#colorp' + i;
       o = $( s );

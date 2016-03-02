@@ -4,6 +4,15 @@ module ApplicationHelper
   @@versions_folder = Rails.root.to_s + "/public/system/versions/"
 
 
+
+  def is_json?( s )
+    begin
+      !!JSON.parse(s)
+    rescue
+      false
+    end
+  end
+
   def get_version_folder( version )
 
     version_output_folder = @@versions_folder + version.id.to_s
@@ -73,13 +82,16 @@ module ApplicationHelper
     logger.info "APPLICATION_HELPER - get_tags_array - exists: " + exists.to_s
 
     tags_string = ''
-    tags = nil
+    tags = []
 
     if exists then
       File.open( tags_file,"r" ) do |f|
         tags_string = f.read()
       end
-      tags = JSON.parse( tags_string )
+
+      if is_json?( tags_string ) then
+        tags = JSON.parse( tags_string )
+      end
     end
 
     tags
@@ -87,23 +99,31 @@ module ApplicationHelper
   end
 
 
-  # This method assumes that there is a file cotaining a json array of the names
+  # This method assumes that there is a file containing a json array of the names
   # of all images extracted from the DesignTemplate's associated AI file.
   def get_images_array( design_template )
 
+    logger.info "APPLICATION_HELPER - get_images_array()"
+
+
     images_file = path_to_images_file( design_template )
+    logger.info "APPLICATION_HELPER - get_images_array() - images_file: " + images_file.to_s
+
     exists = File.exist?( images_file )
 
     logger.info "APPLICATION_HELPER - get_images_array - exists: " + exists.to_s
 
     images_string = ''
-    images = nil
+    images = []
 
     if exists then
       File.open( images_file,"r" ) do |f|
         images_string = f.read()
       end
-      images = JSON.parse( images_string )
+
+      if is_json?( images_string ) then
+        images = JSON.parse( images_string )
+      end
     end
 
     images
@@ -111,25 +131,30 @@ module ApplicationHelper
   end
 
 
+  # A version's values is an object describing all extensible settings, set by the
+  # user when creating a version
   def get_values_object( version )
 
     values_string = version.values
     logger.info "APPLICATION_HELPER - get_values_object - values_string: " + values_string.to_s
 
-    if( values_string != nil ) then
-      if( values_string != '' ) then
-        values = JSON.parse values_string
-      end
+    if( is_json?( values_string ) ) then
+      values = JSON.parse values_string
     end
 
     values
   end
 
 
+  # a design_template's prompts object describes any extensible settings
+  # presented by versions of this template
   def get_prompts_object( design_template )
 
       prompts_string = design_template.prompts
-      prompts = JSON.parse( prompts_string )
+
+      if( is_json?( prompts_string ) ) then
+        prompts = JSON.parse( prompts_string )
+      end
 
       logger.info "APPLICATION_HELPER - get_prompts_object - prompts_string: " + prompts_string.to_s
       logger.info "APPLICATION_HELPER - get_prompts_object - prompts: " + prompts.to_s

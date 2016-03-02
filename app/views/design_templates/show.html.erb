@@ -1,10 +1,8 @@
 <h1><%= @design_template.name.to_s %> Template</h1>
 
-<p>File: <%= image_tag @design_template.original_file.url %></p>
-<p>Source Folder: <%= @folder %></p>
-<p>Prompts: <%= @design_template.prompts %></p>
 
-
+<label>Original File</label> <%= image_tag @design_template.original_file.url %><br>
+<label>Source Folder</label> <%= @folder %><br>
 
 <%
 if (@versions.length > 0) then
@@ -23,4 +21,4 @@ if (@versions.length > 0) then
 end
 %>
 
-<a class='btn' href='<%= edit_design_template_path %>'>Edit</a>
+<a class='btn btn-default' href='<%= edit_design_template_path %>'>Edit this Template</a>

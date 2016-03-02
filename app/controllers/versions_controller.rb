@@ -29,6 +29,15 @@ class VersionsController < ApplicationController
       @design_template_id = @design_template.id
       @values = get_values_object( @version )
       @root_folder = Rails.root.to_s
+
+
+      # this is the prefix that the ui will append to any folder path specified by the user
+      if( @version.output_folder_path == '' ) then
+        @output_folder_base = @root_folder + '/'
+      else
+        @output_folder_base = ''
+      end
+
     end
 
 
@@ -37,8 +46,18 @@ class VersionsController < ApplicationController
       @version.update( version_params )
       @version.values = params[ 'version_data' ]
 
+      @design_template = @version.design_template
+      # this is an array of tag names, extracted from the AI file
+      @tags = get_tags_array( @design_template )
+      # this is an array of image names, extracted from the AI file
+      @images = get_images_array( @design_template )
+
+
       logger.info "VERSIONS_CONTROLLER - UPDATE - version_params: " + version_params.to_s
       logger.info "VERSIONS_CONTROLLER - UPDATE - params[ 'version_data' ]: " + params[ 'version_data' ].to_s
+      logger.info "VERSIONS_CONTROLLER - UPDATE - @images: " + @images.to_s
+      logger.info "VERSIONS_CONTROLLER - UPDATE - @tags: " + @tags.to_s
+
 
       if @version.save
         process_version
@@ -61,9 +80,19 @@ class VersionsController < ApplicationController
       @version = Version.new( version_params )
       @version.values = params[ 'version_data' ]
 
+      @design_template = @version.design_template
+      # this is an array of tag names, extracted from the AI file
+      @tags = get_tags_array( @design_template )
+      # this is an array of image names, extracted from the AI file
+      @images = get_images_array( @design_template )
+
       logger.info "VERSION_CONTROLLER - create"
       logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
       logger.info "VERSION_CONTROLLER - create - version values: " + @version.values
+      logger.info "VERSION_CONTROLLER - create - @tags: " + @tags.to_s
+      logger.info "VERSION_CONTROLLER - create - @images: " + @images.to_s
+
+
 
       if @version.save
 
@@ -83,7 +112,10 @@ class VersionsController < ApplicationController
       @root_folder = Rails.root.to_s
 
       @version_folder = get_version_folder( @version )
-      @data_file = path_to_data_file( @version.design_template.original_file.path )
+
+      if( @design_template != nil ) then
+        @data_file = path_to_data_file( @version.design_template.original_file.path )
+      end
 
       logger.info "version_controller - show - @version: " + @version.to_s
       logger.info "version_controller - show - @design_template: " + @design_template.to_s
@@ -136,12 +168,12 @@ class VersionsController < ApplicationController
 
       logger.info "VERSIONS_CONTROLLER - run_tags_replace - config: " + config.to_s
 
-      version_output_folder = get_version_folder( @version )
-
+      # this will put an appropriately named data file right next to the source file
       write_temp_data_file( config['source file'] )
 
       # create a config file that tells run_AI_script what it needs
-      config_file = version_output_folder + "/config_search_replace.jsn"
+      version_output_folder = get_version_folder( @version )
+      config_file = version_output_folder + "/config_tags_search_replace.jsn"
 
       File.open( config_file, "w" ) do |f|
         f.write( config.to_json )
@@ -150,14 +182,10 @@ class VersionsController < ApplicationController
       # And run it!
 
       sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
-      runai = params[ 'runai' ]
-      logger.info "VERSIONS_CONTROLLER - run_tags_replace - runai: " + runai.to_s
 
-      if runai == 'on' then
-        logger.info "VERSIONS_CONTROLLER - run_tags_replace - about to run sys_com: " + sys_com.to_s
-        # run the ruby script. AI should generate output files to the output folder
-        system( sys_com )
-      end
+      logger.info "VERSIONS_CONTROLLER - run_tags_replace - about to run sys_com: " + sys_com.to_s
+      # run the ruby script. AI should generate output files to the output folder
+      system( sys_com )
 
     end
 
@@ -168,11 +196,11 @@ class VersionsController < ApplicationController
 
       logger.info "VERSIONS_CONTROLLER - run_images_replace - config: " + config.to_s
 
-      version_output_folder = get_version_folder( @version )
-
+      # this will put an appropriately named data file right next to the source file
       write_temp_data_file( config['source file'] )
 
       # create a config file that tells run_AI_script what it needs
+      version_output_folder = get_version_folder( @version )
       config_file = version_output_folder + "/config_image_search_replace.jsn"
 
       File.open( config_file, "w" ) do |f|
@@ -182,14 +210,10 @@ class VersionsController < ApplicationController
       # And run it!
 
       sys_com = "ruby " + @@path_to_runner_script + " '" + config_file + "'"
-      runai = params[ 'runai' ]
-      logger.info "VERSIONS_CONTROLLER - run_images_replace - runai: " + runai.to_s
 
-      if runai == 'on' then
-        logger.info "VERSIONS_CONTROLLER - run_images_replace - about to run sys_com: " + sys_com.to_s
-        # run the ruby script. AI should generate output files to the output folder
-        system( sys_com )
-      end
+      logger.info "VERSIONS_CONTROLLER - run_images_replace - about to run sys_com: " + sys_com.to_s
+      # run the ruby script. AI should generate output files to the output folder
+      system( sys_com )
 
     end
 
@@ -197,72 +221,110 @@ class VersionsController < ApplicationController
 
     def process_version
 
-      # we're nothing without a template
-      if @version.design_template == nil then
+      runai = params['runai']
+
+      if (@version.design_template == nil) then
+        logger.info "VERSIONS_CONTROLLER - process_version - NOT PROCESSING, no template."
+        return
+      end
+
+      if (runai != 'on') then
+        logger.info "VERSIONS_CONTROLLER - process_version - NOT PROCESSING, runai not on."
+        return
+      end
+
+      if ( (@images.length == 0) && (@tags.length == 0) ) then
+        logger.info "VERSIONS_CONTROLLER - process_version - NOT PROCESSING, no images and no tags."
         return
       end
 
 
-      source_file = @version.design_template.original_file
-      source_path = source_file.path
+      original_file = @version.design_template.original_file
+      original_file_path = original_file.path
 
-      source_file_base_name = File.basename( source_path, '.ai' )
-      source_folder = File.dirname( source_path )
+      original_file_name = File.basename( original_file_path )
+      original_file_base_name = File.basename( original_file_path, '.ai' )
+      original_folder = File.dirname( original_file_path )
 
-      intermediate_output = source_folder + '/' + source_file_base_name + '_mod.ai'
-
-
-      logger.info "VERSIONS_CONTROLLER - process_version - intermediate_output: " + intermediate_output.to_s
-
-
-      config = {}
-      config[ 'source file' ] = source_path
-      config[ 'script file' ] = @@path_to_search_replace_script
-      config[ 'output folder' ] = source_folder
-
-      run_tags_replace( config )
+      version_folder = get_version_folder( @version )
+      version_file_path = version_folder + '/' + original_file_name
 
 
-      int_file_exist = File.exist?( intermediate_output )
-      logger.info "VERSIONS_CONTROLLER - process_version - int_file_exist: " + int_file_exist.to_s
+      # copy the original file to the version folder, same name
+      logger.info "VERSIONS_CONTROLLER - process_version - about to copy original file."
+      FileUtils.cp( original_file_path, version_file_path )
 
 
-      if( int_file_exist ) then
-
-        config = {}
-        config[ 'source file' ] = intermediate_output
-        config[ 'script file' ] = @@path_to_image_search_replace_script
-        config[ 'output folder' ] = source_folder
-
-        run_images_replace( config )
-
+      if( @version.output_folder_path != '' ) then
+        # the user has specified an output folder
+        logger.info "VERSIONS_CONTROLLER - process_version - user specified output folder."
+        output_folder = @version.output_folder_path
+      else
+        # the user has not specified an output folder, we'll just use the version folder
+        logger.info "VERSIONS_CONTROLLER - process_version - NO user specified output folder."
+        output_folder = version_folder + '/'
       end
 
 
-      runai = params['runai']
+      intermediate_output = output_folder + original_file_base_name + '_mod.ai'
 
-      if( runai == 'on' ) then
 
-        if( @version.output_folder_path != '' ) then
+      logger.info "VERSIONS_CONTROLLER - process_version - output_folder: " + output_folder.to_s
+      logger.info "VERSIONS_CONTROLLER - process_version - intermediate_output: " + intermediate_output.to_s
 
-          logger.info "VERSIONS_CONTROLLER - process_version - About to copy to user's requested output folder."
+      int_file_exist = false
 
-          # copy these files to the user's requested output folder
-          user_out_folder = Rails.root.to_s + "/" + @version.output_folder_path
 
-          logger.info "VERSIONS_CONTROLLER - process_version - user_out_folder: " + user_out_folder.to_s
+      if( @tags.length > 0 ) then
+        # we should replace tags
 
-          FileUtils.mkdir_p( user_out_folder ) unless File.directory?( user_out_folder )
+        config = {}
+        config[ 'source file' ] = version_file_path
+        config[ 'script file' ] = @@path_to_search_replace_script
+        config[ 'output folder' ] = output_folder
 
-          wildcard = source_folder + "/*.ai"
-          Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+        run_tags_replace( config )
 
-          wildcard = source_folder + "/*.jpg"
-          Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+        # unless something went wrong, this should exist
+        int_file_exist = File.exist?( intermediate_output )
+        logger.info "VERSIONS_CONTROLLER - process_version - int_file_exist: " + int_file_exist.to_s
 
-        end # user has an output folder set
+      end # there are tags to replace
 
-      end # runai is on
+
+      if( @images.length > 0 ) then
+        # we should replace images
+
+        if( int_file_exist ) then
+          config = {}
+          config[ 'source file' ] = intermediate_output
+          config[ 'script file' ] = @@path_to_image_search_replace_script
+          config[ 'output folder' ] = output_folder
+        else
+          # the intermediate file does not exist, but we should still
+          # replace images
+          config = {}
+          config[ 'source file' ] = version_file_path
+          config[ 'script file' ] = @@path_to_image_search_replace_script
+          config[ 'output folder' ] = output_folder
+        end
+
+        run_images_replace( config )
+
+      end # there are images to replace
+
+
+      #if( @version.output_folder_path != '' ) then
+      #  logger.info "VERSIONS_CONTROLLER - process_version - About to copy to user's requested output folder."
+        # copy these files to the user's requested output folder
+      #  user_out_folder = Rails.root.to_s + "/" + @version.output_folder_path
+      #  logger.info "VERSIONS_CONTROLLER - process_version - user_out_folder: " + user_out_folder.to_s
+      #  FileUtils.mkdir_p( user_out_folder ) unless File.directory?( user_out_folder )
+      #  wildcard = source_folder + "/*.ai"
+      #  Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+      #  wildcard = source_folder + "/*.jpg"
+      #  Dir.glob( wildcard ) { |f| FileUtils.cp File.expand_path(f), user_out_folder }
+      #end # user has an output folder set
 
     end
 

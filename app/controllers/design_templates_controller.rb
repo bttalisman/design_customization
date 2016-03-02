@@ -34,7 +34,10 @@ class DesignTemplatesController < ApplicationController
       logger.info "DESIGN_TEMPLATES_CONTROLLER - edit! - params: " + params.to_s
 
       @design_template = DesignTemplate.find( params[ :id ] )
+
+      # this is an array of tag names, extracted from the AI file
       @tags = get_tags_array( @design_template )
+      # this is an array of image names, extracted from the AI file
       @images = get_images_array( @design_template )
 
     end
@@ -68,8 +71,14 @@ class DesignTemplatesController < ApplicationController
       #  expecting something like { 'extracted_settings' => arbitrary settings depending on tags,
       #  'general_settings' => settings every DesignTemplate has }
       myHashString = request.body.read.to_s
-      myHash = JSON.parse myHashString
       logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - myHashString: " + myHashString
+
+      if( is_json?( myHashString ) ) then
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - good JSON!"
+        myHash = JSON.parse myHashString
+      else
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - BAD JSON!"
+      end
 
       extractedObject = myHash[ 'extracted_settings' ]
       extractedString = extractedObject.to_json
