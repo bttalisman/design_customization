@@ -1,17 +1,17 @@
 <h1>New Template</h1>
 
 <%=
-form_for @design_template, html: { multipart: true } do |form|
+form_for @design_template, html: { multipart: true, :onsubmit => 'return validate();'  } do |form|
 %>
 
 <div class='container' style='width:100%;'>
 
   <div style='flex:1;'>
 
-    <p>
-      <%= form.label :name %><br/>
-      <%= form.text_field :name %><br/>
-    </p>
+    <div class="form-group">
+      <label for="design_template[name]">Name</label>
+      <input type='text' id='design_template_name' name='design_template[name]'></input>
+    </div>
 
 
     <div id='selected_file_name' style='display: none;'></div>
@@ -26,9 +26,8 @@ form_for @design_template, html: { multipart: true } do |form|
     <input name='stayAfterSave' id='stayAfterSave' style='display:none;'></input>
 
     <div style='width: 100%;'>
-      <button class='btn btn-default' id='set_prefs' onclick='setPrefs();' style='display: none;'>Set Preferences</button>
-      <button class='btn btn-default' onclick='save();'>Save</button>
-      <a class='btn btn-default' href='http://localhost:3000/design_templates'>Cancel</a>
+      <button class='btn btn-default' id='set_prefs' onclick='setPrefs();' style='display: none;'>Save and Set Preferences</button>
+      <a class='btn btn-default' href='<%= get_local_host %>/design_templates'>Cancel</a>
     </div>
 
 
@@ -46,12 +45,9 @@ end
 
 <script>
 
-
-
-
-
   function save()
   {
+    // I took this option out, used to be u could save without setting prefs
     $('#stayAfterSave').val( 'false');
   }
 
@@ -60,6 +56,20 @@ end
     $('#stayAfterSave').val( 'true');
   }
 
+  function validate()
+  {
+    var bValid = true;
+
+    var dtName = $('#design_template_name').val();
+
+    if( dtName == '' )
+    {
+      alert( 'Please enter a name for this template.' );
+      bValid = false;
+    }
+
+    return bValid;
+  }
 
 
   function fileInputChange( event )

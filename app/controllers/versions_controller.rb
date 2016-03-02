@@ -83,7 +83,10 @@ class VersionsController < ApplicationController
       @root_folder = Rails.root.to_s
 
       @version_folder = get_version_folder( @version )
-      @data_file = path_to_data_file( @version.design_template.original_file.path )
+
+      if( @design_template != nil ) then
+        @data_file = path_to_data_file( @version.design_template.original_file.path )
+      end
 
       logger.info "version_controller - show - @version: " + @version.to_s
       logger.info "version_controller - show - @design_template: " + @design_template.to_s
@@ -226,6 +229,8 @@ class VersionsController < ApplicationController
       int_file_exist = File.exist?( intermediate_output )
       logger.info "VERSIONS_CONTROLLER - process_version - int_file_exist: " + int_file_exist.to_s
 
+
+      # todo - only do this if there are images associated with this template
 
       if( int_file_exist ) then
 

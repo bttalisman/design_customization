@@ -82,7 +82,7 @@ module ApplicationHelper
     logger.info "APPLICATION_HELPER - get_tags_array - exists: " + exists.to_s
 
     tags_string = ''
-    tags = nil
+    tags = []
 
     if exists then
       File.open( tags_file,"r" ) do |f|
@@ -114,7 +114,7 @@ module ApplicationHelper
     logger.info "APPLICATION_HELPER - get_images_array - exists: " + exists.to_s
 
     images_string = ''
-    images = nil
+    images = []
 
     if exists then
       File.open( images_file,"r" ) do |f|

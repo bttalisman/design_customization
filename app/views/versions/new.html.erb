@@ -6,21 +6,25 @@ function create_version()
 {
     var oReturn = build();
 
-    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
-
-
     $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
 
     var form = $('#version_form');
+
+    alert( "about to submit form" );
     form.submit();
 }
 
-
+function validate()
+{
+  alert( 'validate()' );
+  return false;
+}
 
 function changeTemplate( id )
 {
 
   var o;
+
 
   if( id == null )
   {
@@ -41,13 +45,9 @@ function changeTemplate( id )
 
 
 
-
-
-
-
 <h1>New Version</h1>
 
-<form action='create' id='version_form'>
+<form action='create' id='version_form' onsubmit='return validate();'>
 
   <div class='container' style='width: 100%;'>
 
@@ -92,8 +92,8 @@ function changeTemplate( id )
           </select>
         </div>
 
-
-      <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
+        <a class='btn btn-default' href='<%= get_local_host %>/versions'>Cancel</a>
+        <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
 
 
     </div>
