@@ -4,13 +4,13 @@
 <%
 if ( @tags != nil ) then
 
-  logger.info '_extracted_tags.html.erb - @values: ' + @values.to_s
-  logger.info '_extracted_tags.html.erb - @tags: ' + @tags.to_s
+  logger.info '_design_template_tags.html.erb - @values: ' + @values.to_s
+  logger.info '_design_template_tags.html.erb - @tags: ' + @tags.to_s
 
   i = 0
   @tags.each { |t|
 
-    logger.info '_extracted_tags.html.erb - t: ' + t
+    logger.info '_design_template_tags.html.erb - t: ' + t
 
     if( @values != nil ) then
 
@@ -21,7 +21,7 @@ if ( @tags != nil ) then
       if( all_tag_settings != nil ) then
 
         tagProps = all_tag_settings[ t.to_s ]
-        logger.info '_extracted_tags.html.erb - tagProps: ' + tagProps.to_s
+        logger.info '_design_template_tags.html.erb - tagProps: ' + tagProps.to_s
 
         if( tagProps != nil ) then
           prompt = tagProps[ 'prompt' ]
@@ -79,12 +79,9 @@ if ( @tags != nil ) then
   } # each tag
 %>
 
-
-
-
   <input type='hidden' id='tag_count' value='<%= i.to_s %>'></input>
 <%
-end
+end # @tags is not nil
 %>
 
 <script>
@@ -136,12 +133,10 @@ end
       maxl = o.val();
       tagSettings[ 'max_length' ] = maxl;
 
-
       s = '#minl' + i;
       o = $( s );
       minl = o.val();
       tagSettings[ 'min_length' ] = minl;
-
 
       s = '#colorp' + i;
       o = $( s );
