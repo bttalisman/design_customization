@@ -42,8 +42,8 @@ class PartialsController < ApplicationController
     id = params[ :id ]
     logger.info "PARTIALS_CONTROLLER - version_settings - id: " + id.to_s
 
-    version_id = params[ :version_id ]
-    logger.info "PARTIALS_CONTROLLER - version_settings - version_id: " + version_id.to_s
+    @version_id = params[ :version_id ]
+    logger.info "PARTIALS_CONTROLLER - version_settings - @version_id: " + @version_id.to_s
 
 
     @design_template = DesignTemplate.find( id )
@@ -57,14 +57,14 @@ class PartialsController < ApplicationController
     logger.info "PARTIALS_CONTROLLER - version_settings - @tags.length: " + @tags.length.to_s
 
 
-
-
-    if( version_id != nil ) then
-      version = Version.find( version_id )
+    if( @version_id != nil ) then
+      @version = Version.find( @version_id )
+    else
+      @version_id = '' # if it's nil, make it '' so we can just use it without thinking
     end
 
-    if( version != nil ) then
-      values = get_values_object( version )
+    if( @version != nil ) then
+      values = get_values_object( @version )
 
       if( values != nil ) then
         @image_values = values[ 'image_settings' ]

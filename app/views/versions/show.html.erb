@@ -7,7 +7,19 @@
 
 <div>Version folder: <%= @version_folder.to_s %></div>
 <div>Data File: <%= @data_file.to_s %></div>
+<div>Values: <%= @version.values.to_s %></div>
 
+
+<%
+  if( @replacement_images ) then
+    @replacement_images.each do |i|
+%>
+    <div>Image: <%= i.uploaded_file.to_s %></div>
+
+<%
+    end
+  end
+%>
 
 <br><br>
 <a class='btn btn-default' href='<%= edit_version_path %>'>Edit this Version</a>

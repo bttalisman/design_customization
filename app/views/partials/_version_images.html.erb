@@ -3,6 +3,7 @@
 <%
 logger.info '_VERSION_IMAGES.html.erb - @image_values: ' + @image_values.to_s
 logger.info '_VERSION_IMAGES.html.erb - @image_settings: ' + @image_settings.to_s
+logger.info '_VERSION_IMAGES.html.erb - @version: ' + @version.to_s
 
 
 i = 0
@@ -11,7 +12,7 @@ i = 0
 
   logger.info '_VERSION_IMAGES.html.erb - image: ' + image.to_s
 
-  image_settings = image[1]
+  image_settings = image[ 1 ]
 
   if( image_settings['replace_image'] == '' ) then
     next
@@ -21,24 +22,39 @@ i = 0
 
   logger.info '_VERSION_IMAGES.html.erb - image_name: ' + image_name.to_s
 
-  replacement_path = ''
-  if( @image_values ) then
-    vals = @image_values[ image_name ]
-    if( vals ) then
-      replacement_path = vals[ 'replacement_path' ]
-    end
-  end
+  replacement_path = get_local_image_path( image_name, @version )
+
+%>
+
+
+<%=
+form_for ReplacementImage.new, html: { multipart: true } do |form|
 
 %>
   <div style='margin-top:30px;'>
-    Image: <%= image_name %>
+    <%= image_name %>
     <input type='text' value='<%= replacement_path %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input><br>
   </div>
+
+  <span class="btn btn-default fileinput-button" id='file_input_container'>
+    <span>Upload</span>
+    <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image[uploaded_file]" id="replacement_image_uploaded_file" onchange='fileInputChange( this );' >
+  </span>
+
+  <input style='display:none;' name='version_id' value='<%= @version_id %>'></input>
+  <input style='display:none;' name='image_name' value='<%= image_name %>'></input>
+
+
+  <%=
+  form.submit "DO" %>
+
+<%
+end %>
+
 
 <%
   i += 1
 } # each image
-
 %>
 
 <input type='hidden' id='image_count' value='<%= i.to_s %>'></input>
@@ -46,8 +62,33 @@ i = 0
 <script>
 
 
-  $(document).ready(function(){
 
+  function fileInputChange( element )
+  {
+
+    var s, e, inputId;
+    var filePath = event.target.value;
+    filePath = filePath.replace(/.*[\/\\]/, '');
+
+    s = '#' + element.id;
+    e = $( s );
+
+    inputId = e.attr( 'data-input-id' );
+
+    s = '#' + inputId;
+    e = $( s );
+
+
+    if( filePath != '' )
+    {
+      e.val( filePath );
+
+    }
+  }
+
+
+
+  $(document).ready(function(){
     $("[id^='colorpicker']").colorpicker({});
   });
 
@@ -75,7 +116,7 @@ i = 0
 
     for( var i = 0; i < count; i++ )
     {
-          s = '#replacement_path' + i;
+          s = '#upload' + i;
           o = $(s);
           rep_path = o.val();
           image_name = o.attr( 'data-image-name' );

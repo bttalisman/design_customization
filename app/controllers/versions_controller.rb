@@ -73,6 +73,10 @@ class VersionsController < ApplicationController
       @design_templates = DesignTemplate.all
       @design_template_id = params['template_id']
       @root_folder = Rails.root.to_s
+
+
+
+
     end
 
 
@@ -88,7 +92,7 @@ class VersionsController < ApplicationController
 
       logger.info "VERSION_CONTROLLER - create"
       logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
-      logger.info "VERSION_CONTROLLER - create - version values: " + @version.values
+      logger.info "VERSION_CONTROLLER - create - version values: " + @version.values.to_s
       logger.info "VERSION_CONTROLLER - create - @tags: " + @tags.to_s
       logger.info "VERSION_CONTROLLER - create - @images: " + @images.to_s
 
@@ -110,6 +114,7 @@ class VersionsController < ApplicationController
       @version = Version.find( params[ :id ] )
       @design_template = @version.design_template
       @root_folder = Rails.root.to_s
+      @replacement_images = @version.replacement_images
 
       @version_folder = get_version_folder( @version )
 
@@ -119,6 +124,9 @@ class VersionsController < ApplicationController
 
       logger.info "version_controller - show - @version: " + @version.to_s
       logger.info "version_controller - show - @design_template: " + @design_template.to_s
+      logger.info "version_controller - show - @replacement_images: " + @replacement_images.to_s
+      logger.info "version_controller - show - @replacement_images.length: " + @replacement_images.length.to_s
+
 
       if @design_template == nil then
         @design_template = DesignTemplate.new

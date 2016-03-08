@@ -136,14 +136,53 @@ module ApplicationHelper
   def get_values_object( version )
 
     values_string = version.values
+
+#    values = { 'tag_settings' => nil, 'image_settings' => nil }
+
     logger.info "APPLICATION_HELPER - get_values_object - values_string: " + values_string.to_s
 
     if( is_json?( values_string ) ) then
       values = JSON.parse values_string
+    else
+      logger.info "APPLICATION_HELPER - get_values_object - INVALID JSON!!"
     end
 
     values
   end
+
+
+  def get_local_image_path( image_name, version )
+
+    logger.info "APPLICATION_HELPER - get_local_image_path!!"
+
+    values = get_values_object( version )
+
+    if( values != nil ) then
+      image_values = values[ 'image_settings' ]
+    end
+
+    replacement_path = ''
+    if( image_values ) then
+      vals = image_values[ image_name ]
+      if( vals ) then
+
+        rep_id = vals[ 'replacement_image_id' ]
+
+        if( rep_id ) then
+
+          ri = ReplacementImage.find( rep_id )
+
+          if( ri ) then
+            replacement_path = ri.uploaded_file.url
+          end
+
+        end
+      end
+    end
+
+    replacement_path
+  end
+
 
 
   # a design_template's prompts object describes any extensible settings

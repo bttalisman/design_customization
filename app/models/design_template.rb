@@ -7,7 +7,6 @@ class DesignTemplate < ActiveRecord::Base
       :path => ":rails_root/public/system/:class/:attachment/:id_partition/:filename",
       :url => "/system/:class/:attachment/:id_partition/:basename.:extension"
 
-
     validates_attachment_content_type :original_file,
       :content_type => 'application/postscript'
 

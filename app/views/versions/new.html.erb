@@ -62,12 +62,13 @@ function changeTemplate( id )
 
 <h1>New Version</h1>
 
-<form action='create' id='version_form' onsubmit='return validate();'>
+<%=
+form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  } do |form|
+%>
 
   <div class='container' style='width: 100%;'>
 
     <div style='flex:1'>
-
 
       <div class="form-group">
         <label for="version[name]">Name</label>
@@ -113,11 +114,13 @@ function changeTemplate( id )
 
     </div>
 
+
+<%
+  end # Forms cannot be nested, so we have to close this form before opening the values_container
+%>
+
     <div id='values_container' style='flex:1'></div>
 
   </div>
 
   <input name='version_data' id='version_data' style='display:none;'></input>
-
-
-</form>

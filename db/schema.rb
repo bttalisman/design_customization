@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160214000826) do
+ActiveRecord::Schema.define(version: 20160307182452) do
 
 # Could not dump table "design_templates" because of following NoMethodError
 #   undefined method `[]' for nil:NilClass
+
+  create_table "replacement_images", force: :cascade do |t|
+    t.integer  "version_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "uploaded_file_file_name"
+    t.string   "uploaded_file_content_type"
+    t.integer  "uploaded_file_file_size"
+    t.datetime "uploaded_file_updated_at"
+  end
 
 # Could not dump table "versions" because of following NoMethodError
 #   undefined method `[]' for nil:NilClass

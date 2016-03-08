@@ -1,0 +1,2 @@
+module ReplacementImagesHelper
+end

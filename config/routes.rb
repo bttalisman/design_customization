@@ -9,25 +9,25 @@ Rails.application.routes.draw do
   get '/partials/version_settings/:id' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
 
-
   get '/versions/create' => 'versions#create'
   get '/versions/:id/update' => 'versions#update'
-
 
   post '/design_templates/create' => 'design_templates#create'
   get '/design_templates/:id/edit' => 'design_templates#edit'
   get '/design_templates/:id/update' => 'design_templates#update'
   get '/design_templates/edit' => 'design_templates#edit'
   post '/design_templates/:id/update' => 'design_templates#update'
-
-
-
   post '/design_templates/:id/tag_settings' => 'design_templates#set_tag_settings'
+
   get 'force_process' => 'design_templates#force_process'
+
+
+  post '/replacement_images/create' => 'replacement_images#create'
 
 
   resources :design_templates
   resources :versions
+  resources :replacement_images
 
 
 
