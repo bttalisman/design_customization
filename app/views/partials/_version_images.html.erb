@@ -22,15 +22,21 @@ i = 0
 
   logger.info '_VERSION_IMAGES.html.erb - image_name: ' + image_name.to_s
 
-  replacement_path = get_local_image_path( image_name, @version )
+  replacement_path = ''
+  replacement_image_id = ''
+
+  if( @version ) then
+    replacement_path = get_local_image_path( image_name, @version )
+    replacement_image_id = get_replacement_image_id( image_name, @version )
+  end
+
+
+  form_id = 'imageform' + i.to_s
 
 %>
 
+<div name='boobaa'>
 
-<%=
-form_for ReplacementImage.new, html: { multipart: true } do |form|
-
-%>
   <div style='margin-top:30px;'>
     <%= image_name %>
     <input type='text' value='<%= replacement_path %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input><br>
@@ -38,28 +44,24 @@ form_for ReplacementImage.new, html: { multipart: true } do |form|
 
   <span class="btn btn-default fileinput-button" id='file_input_container'>
     <span>Upload</span>
-    <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image[uploaded_file]" id="replacement_image_uploaded_file" onchange='fileInputChange( this );' >
+    <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image<%= i.to_s %>[uploaded_file]" id="replacement_image_uploaded_file<%= i.to_s %>" onchange='fileInputChange( this );' >
   </span>
 
-  <input style='display:none;' name='version_id' value='<%= @version_id %>'></input>
-  <input style='display:none;' name='image_name' value='<%= image_name %>'></input>
+  <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id' value='<%= @version_id %>'></input>
+  <input style='display:none;' id='image_name<%= i.to_s %>' name='image_name' value='<%= image_name %>'></input>
+  <input style='display:none;' id='replacement_image_id<%= i.to_s %>' name='replacement_image_id' value='<%= replacement_image_id %>'></input>
 
 
-  <%=
-  form.submit "DO" %>
-
-<%
-end %>
-
+</div>
 
 <%
   i += 1
 } # each image
 %>
 
-<input type='hidden' id='image_count' value='<%= i.to_s %>'></input>
+  <input type='hidden' name='image_count' id='image_count' value='<%= i.to_s %>'></input>
 
-<script>
+  <script>
 
 
 
@@ -77,7 +79,6 @@ end %>
 
     s = '#' + inputId;
     e = $( s );
-
 
     if( filePath != '' )
     {
@@ -100,6 +101,8 @@ end %>
     return true;
   }
 
+
+
   function build_image_values()
   {
 
@@ -112,17 +115,23 @@ end %>
     var oImageProps;
     oReturn = {};
 
-    var image_name;
+    var image_name, replacement_image_id;
+
+
+    alert( 'build_image_values() - count: ' + count );
 
     for( var i = 0; i < count; i++ )
     {
-          s = '#upload' + i;
+          s = '#image_name' + i;
           o = $(s);
-          rep_path = o.val();
-          image_name = o.attr( 'data-image-name' );
+          image_name = o.val();
+
+          s = '#replacement_image_id' + i;
+          o = $(s);
+          replacement_image_id = o.val();
 
           oImageProps = {};
-          oImageProps[ 'replacement_path' ] = rep_path;
+          oImageProps[ 'replacement_image_id' ] = replacement_image_id;
 
           oReturn[ image_name ] = oImageProps;
     }

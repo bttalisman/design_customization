@@ -4,7 +4,14 @@
 
 function create_version()
 {
+
+    alert( 'new.html.erb - create_version() - about to submit.');
+
+    submitImageForms();
+
     var oReturn = build();
+    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
+
 
     $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
 
@@ -47,7 +54,8 @@ function changeTemplate( id )
     id = o.val();
   }
 
-  var uri = "<%= get_local_host %>/partials/version_settings/" + id;
+  var uri = "<%= get_local_host %>/partials/version_settings/" + id + "?version_id=" + <%= @version.id %>;
+
 
   $.get( uri, function(data, status)
     {
@@ -115,11 +123,11 @@ form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  }
     </div>
 
 
-<%
-  end # Forms cannot be nested, so we have to close this form before opening the values_container
-%>
-
     <div id='values_container' style='flex:1'></div>
+
+
+<%
+  end %>
 
   </div>
 

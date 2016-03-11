@@ -151,6 +151,30 @@ module ApplicationHelper
   end
 
 
+  def get_replacement_image_id( image_name, version )
+
+        logger.info "APPLICATION_HELPER - get_replacement_image_id!!"
+
+        values = get_values_object( version )
+
+        if( values != nil ) then
+          image_values = values[ 'image_settings' ]
+        end
+
+        rep_id = ''
+
+        if( image_values ) then
+          vals = image_values[ image_name ]
+          if( vals ) then
+
+            rep_id = vals[ 'replacement_image_id' ]
+
+          end
+        end
+
+        rep_id
+  end
+
   def get_local_image_path( image_name, version )
 
     logger.info "APPLICATION_HELPER - get_local_image_path!!"

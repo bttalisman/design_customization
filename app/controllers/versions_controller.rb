@@ -53,6 +53,32 @@ class VersionsController < ApplicationController
       @images = get_images_array( @design_template )
 
 
+
+
+      image_count = params[ 'image_count' ]
+
+      if( image_count != '' ) then
+        image_count = image_count.to_i
+      else
+        image_count = 0
+      end
+
+      image_count.times do |i|
+        
+        p_name = 'replacement_image' + i.to_s
+        replacement_image = params[ p_name ]
+
+        logger.info "VERSIONS_CONTROLLER - UPDATE - replacement_image: " + replacement_image.to_s
+
+        myFile = replacement_image[ 'uploaded_file' ]
+
+        o = { 'uploaded_file' => myFile }
+        @replacement_image = @version.replacement_images.create( o )
+
+      end
+
+
+      logger.info "VERSIONS_CONTROLLER - UPDATE - image_count: " + image_count.to_s
       logger.info "VERSIONS_CONTROLLER - UPDATE - version_params: " + version_params.to_s
       logger.info "VERSIONS_CONTROLLER - UPDATE - params[ 'version_data' ]: " + params[ 'version_data' ].to_s
       logger.info "VERSIONS_CONTROLLER - UPDATE - @images: " + @images.to_s
@@ -70,18 +96,31 @@ class VersionsController < ApplicationController
 
     def new
       @version = Version.new
+
+      @version.name = '<none>'
+
+      if @version.save
+        # we need to save every version so we can get it's id.
+        # todo, can we delete these if they don't get used?
+        logger.info "VERSIONS_CONTROLLER - NEW - version saved"
+      else
+        logger.info "VERSIONS_CONTROLLER - NEW - version NOT saved"
+      end
+
+
       @design_templates = DesignTemplate.all
       @design_template_id = params['template_id']
       @root_folder = Rails.root.to_s
-
-
-
 
     end
 
 
     def create
-      @version = Version.new( version_params )
+
+      logger.info "VERSIONS_CONTROLLER - CREATE"
+
+      @version = Version.find( params[ :id ] )
+
       @version.values = params[ 'version_data' ]
 
       @design_template = @version.design_template

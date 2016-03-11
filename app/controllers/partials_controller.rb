@@ -36,7 +36,8 @@ class PartialsController < ApplicationController
 
 
   # This action presents each tag with ui for setting version-specific options
-  # for use in creating a Version tied to a DesignTemplate
+  # for use in creating a Version tied to a DesignTemplate.  It is called whenever
+  # the user changes the DesignTemplate associated with this version.
   def version_settings
 
     id = params[ :id ]
@@ -63,7 +64,22 @@ class PartialsController < ApplicationController
       @version_id = '' # if it's nil, make it '' so we can just use it without thinking
     end
 
+    logger.info "PARTIALS_CONTROLLER - version_settings - @version: " + @version.to_s
+
     if( @version != nil ) then
+
+      # we've got to update this version to reflect the new DesignTemplate, and we've got to
+      # do this because the version has to be saved and ready if the user tries to attach
+      # a file to it.
+      o = { 'design_template_id' => @design_template.id.to_s }
+      @version.update( o )
+
+      if @version.save
+        logger.info "PARTIALS_CONTROLLER - version_settings - VERSION SAVED!"
+      else
+        logger.info "PARTIALS_CONTROLLER - version_settings - VERSION NOT SAVED!"
+      end
+
       values = get_values_object( @version )
 
       if( values != nil ) then

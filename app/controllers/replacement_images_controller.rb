@@ -12,8 +12,12 @@ class ReplacementImagesController < ApplicationController
 
     logger.info "REPLACEMENT_IMAGES_CONTROLLER - create!"
 
+    logger.info "REPLACEMENT_IMAGES_CONTROLLER - replacement_image_params: " + replacement_image_params.to_s
+
     version_id = params[ 'version_id' ]
     image_name = params[ 'image_name' ]
+
+    logger.info "REPLACEMENT_IMAGES_CONTROLLER - version_id: " + version_id
 
     version = Version.find( version_id )
 
@@ -21,7 +25,6 @@ class ReplacementImagesController < ApplicationController
 
     logger.info "REPLACEMENT_IMAGES_CONTROLLER - version_id: " + version_id.to_s
 
-#    @replacement_image = ReplacementImage.new( replacement_image_params )
 
     if @replacement_image.save
       logger.info "REPLACEMENT_IMAGES_CONTROLLER - replacement_image saved!"
@@ -39,7 +42,10 @@ class ReplacementImagesController < ApplicationController
     settings = {}
     settings[ 'replacement_image_id' ] = @replacement_image.id
     image_settings[ image_name ] = settings
-    
+
+
+    logger.info "REPLACEMENT_IMAGES_CONTROLLER - values.to_json: " + values.to_json
+
     version.values = values.to_json
 
     if version.save

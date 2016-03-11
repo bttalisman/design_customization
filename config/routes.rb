@@ -11,6 +11,10 @@ Rails.application.routes.draw do
 
   get '/versions/create' => 'versions#create'
   get '/versions/:id/update' => 'versions#update'
+  post '/versions/create' => 'versions#create'
+  post '/versions/:id/update' => 'versions#update'
+
+
 
   post '/design_templates/create' => 'design_templates#create'
   get '/design_templates/:id/edit' => 'design_templates#edit'
@@ -23,6 +27,7 @@ Rails.application.routes.draw do
 
 
   post '/replacement_images/create' => 'replacement_images#create'
+  post '/replacement_images/' => 'replacement_images#create'
 
 
   resources :design_templates

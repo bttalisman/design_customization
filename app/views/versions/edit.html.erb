@@ -2,12 +2,14 @@
 <script>
 
 
+  // this is called when the user creates or updates a Version
   function create_version()
   {
 
     if( validate() )
     {
 
+      // this funtion is defined in the version_settings.html.erb controlled by partials controller
       var oReturn = build();
       $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
 
@@ -51,7 +53,6 @@
     var o;
     var uri;
 
-
     if( templateId == null )
     {
       o = $('#version_design_template_id');
@@ -70,7 +71,7 @@
 
     $.get( uri, function(data, status)
       {
-          $('#values_container').html( data );
+        $('#values_container').html( data );
       } );
   }
 
@@ -91,7 +92,12 @@
 
 <h1>Edit Version</h1>
 
-<form action='update' id='version_form'>
+
+
+<%=
+form_for @version, html: { multipart: true, id: 'version_form' } do |form|
+%>
+
 
   <div class='container' style='width:100%;'>
 
@@ -150,4 +156,6 @@
 
   <input name='version_data' id='version_data' style='display:none;'></input>
 
-</form>
+
+<%
+end %>
