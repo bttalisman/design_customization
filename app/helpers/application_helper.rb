@@ -208,6 +208,29 @@ module ApplicationHelper
   end
 
 
+  def add_replacement_image_to_version( ri, image_name, version )
+
+    # todo, can this be part of a constructor?
+
+    values = get_values_object( version )
+
+    image_settings = values[ 'image_settings' ]
+
+    settings = {}
+    settings[ 'replacement_image_id' ] = ri.id
+    image_settings[ image_name ] = settings
+
+
+    logger.info "APPLICATION_HELPER - add_replacement_image_to_version() - values.to_json: " + values.to_json
+
+    version.values = values.to_json
+
+    if version.save
+      logger.info "APPLICATION_HELPER - add_replacement_image_to_version() - version saved!"
+    end
+
+  end
+
 
   # a design_template's prompts object describes any extensible settings
   # presented by versions of this template

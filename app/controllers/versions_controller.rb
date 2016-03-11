@@ -64,17 +64,26 @@ class VersionsController < ApplicationController
       end
 
       image_count.times do |i|
-        
+
         p_name = 'replacement_image' + i.to_s
         replacement_image = params[ p_name ]
 
+        p_name = 'image_name' + i.to_s
+        image_name = params[ p_name ]
+
         logger.info "VERSIONS_CONTROLLER - UPDATE - replacement_image: " + replacement_image.to_s
+        logger.info "VERSIONS_CONTROLLER - UPDATE - image_name: " + image_name.to_s
+
 
         myFile = replacement_image[ 'uploaded_file' ]
 
         o = { 'uploaded_file' => myFile }
         @replacement_image = @version.replacement_images.create( o )
 
+        @replacement_image.save
+
+        add_replacement_image_to_version( @replacement_image, image_name, @version )
+        
       end
 
 

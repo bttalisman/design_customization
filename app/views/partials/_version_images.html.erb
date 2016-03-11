@@ -35,7 +35,6 @@ i = 0
 
 %>
 
-<div name='boobaa'>
 
   <div style='margin-top:30px;'>
     <%= image_name %>
@@ -47,12 +46,10 @@ i = 0
     <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image<%= i.to_s %>[uploaded_file]" id="replacement_image_uploaded_file<%= i.to_s %>" onchange='fileInputChange( this );' >
   </span>
 
-  <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id' value='<%= @version_id %>'></input>
-  <input style='display:none;' id='image_name<%= i.to_s %>' name='image_name' value='<%= image_name %>'></input>
-  <input style='display:none;' id='replacement_image_id<%= i.to_s %>' name='replacement_image_id' value='<%= replacement_image_id %>'></input>
+  <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id<%= i.to_s %>' value='<%= @version_id %>'></input>
+  <input style='display:none;' id='image_name<%= i.to_s %>' name='image_name<%= i.to_s %>' value='<%= image_name %>'></input>
+  <input style='display:none;' id='replacement_image_id<%= i.to_s %>' name='replacement_image_id<%= i.to_s %>' value='<%= replacement_image_id %>'></input>
 
-
-</div>
 
 <%
   i += 1

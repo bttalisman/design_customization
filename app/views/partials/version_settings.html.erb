@@ -61,17 +61,11 @@
   }
 
 
-  function submitImageForms()
-  {
-
-
-
-    $("[id*='imageform']").trigger( "submit" );
-  }
-
 
   function build()
   {
+    alert( 'build()' );
+    
     oTags = {};
     oImages = {};
 
@@ -93,7 +87,7 @@
     oReturn[ 'tag_settings' ] = oTags;
     oReturn[ 'image_settings' ] = oImages;
 
-//    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
+    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
 
     return oReturn;
   }

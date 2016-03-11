@@ -7,8 +7,6 @@ function create_version()
 
     alert( 'new.html.erb - create_version() - about to submit.');
 
-    submitImageForms();
-
     var oReturn = build();
     alert( 'oReturn: ' + JSON.stringify( oReturn ) );
 
@@ -38,8 +36,10 @@ function create_version()
 
 function validate()
 {
+  alert( 'validate()' );
+
   // todo - validate stuff
-  return false;
+  return true;
 }
 
 function changeTemplate( id )
@@ -124,11 +124,10 @@ form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  }
 
 
     <div id='values_container' style='flex:1'></div>
+    <input name='version_data' id='version_data' style='display:none;'></input>
 
 
 <%
   end %>
 
   </div>
-
-  <input name='version_data' id='version_data' style='display:none;'></input>
