@@ -74,16 +74,18 @@ class VersionsController < ApplicationController
         logger.info "VERSIONS_CONTROLLER - UPDATE - replacement_image: " + replacement_image.to_s
         logger.info "VERSIONS_CONTROLLER - UPDATE - image_name: " + image_name.to_s
 
+        if( replacement_image ) then
+          myFile = replacement_image[ 'uploaded_file' ]
 
-        myFile = replacement_image[ 'uploaded_file' ]
+          if( myFile ) then
+            o = { 'uploaded_file' => myFile }
+            @replacement_image = @version.replacement_images.create( o )
 
-        o = { 'uploaded_file' => myFile }
-        @replacement_image = @version.replacement_images.create( o )
+            @replacement_image.save
 
-        @replacement_image.save
-
-        add_replacement_image_to_version( @replacement_image, image_name, @version )
-        
+            add_replacement_image_to_version( @replacement_image, image_name, @version )
+          end
+        end
       end
 
 

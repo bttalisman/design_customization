@@ -175,39 +175,66 @@ module ApplicationHelper
         rep_id
   end
 
-  def get_local_image_path( image_name, version )
 
-    logger.info "APPLICATION_HELPER - get_local_image_path!!"
+def get_uploaded_file( image_name, version )
 
-    values = get_values_object( version )
+  logger.info "APPLICATION_HELPER - get_uploaded_file !!"
 
-    if( values != nil ) then
-      image_values = values[ 'image_settings' ]
+  values = get_values_object( version )
+
+  if( values != nil ) then
+    image_values = values[ 'image_settings' ]
+  end
+
+  if( image_values ) then
+    vals = image_values[ image_name ]
+    if( vals ) then
+
+      rep_id = vals[ 'replacement_image_id' ]
+
+      if( rep_id ) then
+
+        ri = ReplacementImage.find( rep_id )
+
+      end
     end
 
-    replacement_path = ''
-    if( image_values ) then
-      vals = image_values[ image_name ]
-      if( vals ) then
+  end
 
-        rep_id = vals[ 'replacement_image_id' ]
+  if( ri ) then
+    ri.uploaded_file
+  end
+end
 
-        if( rep_id ) then
 
-          ri = ReplacementImage.find( rep_id )
 
-          if( ri ) then
-            replacement_path = ri.uploaded_file.url
-          end
+  def get_uploaded_file_name( image_name, version )
 
-        end
-      end
+    uploaded_file = get_uploaded_file( image_name, version )
+
+    if( uploaded_file ) then
+      file_name = uploaded_file.original_filename
+    end
+
+    file_name
+  end
+
+
+  def get_local_image_path( image_name, version )
+
+    uploaded_file = get_uploaded_file( image_name, version )
+
+    if( uploaded_file ) then
+      replacement_path = uploaded_file.path
     end
 
     replacement_path
   end
 
 
+  # a version's values object matches image tags to replacement_images.  this method
+  # gets that version's values, and updates it with the id of the replacement_image, as well
+  # as the path to the local file, as this is needed by the AI script.
   def add_replacement_image_to_version( ri, image_name, version )
 
     # todo, can this be part of a constructor?
@@ -218,6 +245,8 @@ module ApplicationHelper
 
     settings = {}
     settings[ 'replacement_image_id' ] = ri.id
+    settings[ 'path' ] = ri.uploaded_file.path
+
     image_settings[ image_name ] = settings
 
 

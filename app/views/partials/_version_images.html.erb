@@ -23,10 +23,13 @@ i = 0
   logger.info '_VERSION_IMAGES.html.erb - image_name: ' + image_name.to_s
 
   replacement_path = ''
+  raplacement_name = ''
+
   replacement_image_id = ''
 
   if( @version ) then
     replacement_path = get_local_image_path( image_name, @version )
+    replacement_name = get_uploaded_file_name( image_name, @version )
     replacement_image_id = get_replacement_image_id( image_name, @version )
   end
 
@@ -38,7 +41,7 @@ i = 0
 
   <div style='margin-top:30px;'>
     <%= image_name %>
-    <input type='text' value='<%= replacement_path %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input><br>
+    <input type='text' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input><br>
   </div>
 
   <span class="btn btn-default fileinput-button" id='file_input_container'>
@@ -100,6 +103,8 @@ i = 0
 
 
 
+  // When a user updates a Version, this method is called to build a json description
+  // of all version-specific settings.  This json object is stored as the 'values' property
   function build_image_values()
   {
 
