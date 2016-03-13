@@ -144,6 +144,17 @@ class DesignTemplatesController < ApplicationController
     end
 
 
+    def delete_all
+      logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all'
+
+      dts = DesignTemplate.all
+      dts.each { |d|
+        d.delete
+      }
+      render nothing: true
+    end
+
+
     def destroy
       logger.info "DESIGN_TEMPLATES_CONTROLLER - destroy"
       @design_template = DesignTemplate.find( params[ :id ] )

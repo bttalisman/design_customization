@@ -1,0 +1,27 @@
+<script>
+
+  function delete_all_versions()
+  {
+    $.ajax({
+      url: "/versions/delete_all/",
+    }).done(function() {
+    });
+  }
+
+
+  function delete_all_templates()
+  {
+    $.ajax({
+      url: "/design_templates/delete_all/",
+    }).done(function() {
+    });
+  }
+
+</script>
+
+
+
+<a class='btn btn-default' onclick='delete_all_versions();'>Delete ALL Versions</a>
+
+
+<a class='btn btn-default' onclick='delete_all_templates();'>Delete ALL Templates</a>

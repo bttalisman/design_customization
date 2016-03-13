@@ -11,6 +11,16 @@ class VersionsController < ApplicationController
 
     @@versions_folder = Rails.root.to_s + "/public/system/versions/"
 
+    def delete_all
+      logger.info 'VERSIONS_CONTROLLER - delete_all'
+
+      versions = Version.all
+      versions.each { |v|
+        v.delete
+      }
+
+      render nothing: true
+    end
 
     def index
       @versions = Version.all

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   root 'design_templates#index'
 
-  get 'edit' => 'home#edit'
+  get '/tools' => 'home#tools'
 
   get '/partials/version_settings/:id' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
@@ -13,8 +13,7 @@ Rails.application.routes.draw do
   get '/versions/:id/update' => 'versions#update'
   post '/versions/create' => 'versions#create'
   post '/versions/:id/update' => 'versions#update'
-
-
+  get '/versions/delete_all' => 'versions#delete_all'
 
   post '/design_templates/create' => 'design_templates#create'
   get '/design_templates/:id/edit' => 'design_templates#edit'
@@ -22,6 +21,8 @@ Rails.application.routes.draw do
   get '/design_templates/edit' => 'design_templates#edit'
   post '/design_templates/:id/update' => 'design_templates#update'
   post '/design_templates/:id/tag_settings' => 'design_templates#set_tag_settings'
+  get '/design_templates/delete_all' => 'design_templates#delete_all'
+
 
   get 'force_process' => 'design_templates#force_process'
 
