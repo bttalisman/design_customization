@@ -1,6 +1,8 @@
 class PartialsController < ApplicationController
 
   include ApplicationHelper
+  include DesignTemplatesHelper
+  include VersionsHelper
 
   layout 'partials'
 

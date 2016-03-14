@@ -2,6 +2,7 @@ class VersionsController < ApplicationController
 
     include ApplicationHelper
     include VersionsHelper
+    include DesignTemplatesHelper
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
     @@path_to_extract_tags_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"
@@ -10,7 +11,6 @@ class VersionsController < ApplicationController
     @@path_to_image_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplaceImages.jsx"
 
 
-    @@versions_folder = Rails.root.to_s + "/public/system/versions/"
 
     def delete_all
       logger.info 'VERSIONS_CONTROLLER - delete_all'
@@ -62,6 +62,11 @@ class VersionsController < ApplicationController
 
       @version = Version.find( params[ :id ] )
       @version.update( version_params )
+
+
+      set_tag_values( @version, params )
+
+      # todo Set values??  images are done later, set the tag values?
 
       @design_template = @version.design_template
       # this is an array of tag names, extracted from the AI file
@@ -220,7 +225,8 @@ class VersionsController < ApplicationController
     private
 
     def version_params
-       params.require(:version).permit( :output_folder_path, :values, :name, :design_template_id )
+       #params.require(:version).permit( :output_folder_path, :values, :name, :design_template_id )
+       params.require(:version).permit!
     end
 
     # This method writes the current version's values string to a file sitting right
