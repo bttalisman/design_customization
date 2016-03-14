@@ -1,6 +1,7 @@
 class VersionsController < ApplicationController
 
     include ApplicationHelper
+    include VersionsHelper
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
     @@path_to_extract_tags_script = Rails.root.to_s + "/bin/illustrator_processing/extractTags.jsx"

@@ -1,6 +1,7 @@
 class DesignTemplatesController < ApplicationController
 
     include ApplicationHelper
+    include DesignTemplatesHelper
 
 
     @@path_to_runner_script = Rails.root.to_s + "/bin/illustrator_processing/run_AI_script.rb"
