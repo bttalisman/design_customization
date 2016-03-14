@@ -11,15 +11,10 @@ class ReplacementImage < ActiveRecord::Base
     :content_type => 'image/jpeg'
 
 
-    def get_file_name
-      extension = File.extname(uploaded_file_file_name).downcase
-      fileNameOnly = File.basename(uploaded_file_file_name).downcase
-
-      fileNameOnly
-    end
-
-
-
-
+  def get_file_name
+    extension = File.extname(uploaded_file_file_name).downcase
+    fileNameOnly = File.basename(uploaded_file_file_name).downcase
+    fileNameOnly
+  end
 
 end

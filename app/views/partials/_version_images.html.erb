@@ -1,3 +1,8 @@
+<!-- This partial generates the html prompting the user for specifics on how images
+should be dealt with for a version.  This file must coordinate with the _design_template_images partial.
+For example, the design template images partial asks, should this image be replaced? and the version
+images partial says, ok, this image is getting replaced, what should I replace it with? -->
+
 <h4>Version Images</h4><br>
 
 <%
@@ -15,6 +20,7 @@ i = 0
   image_settings = image[ 1 ]
 
   if( image_settings['replace_image'] == '' ) then
+    # this image shouldn't be replaced
     next
   end
 
@@ -32,9 +38,6 @@ i = 0
     replacement_name = get_uploaded_file_name( image_name, @version )
     replacement_image_id = get_replacement_image_id( image_name, @version )
   end
-
-
-  form_id = 'imageform' + i.to_s
 
 %>
 
@@ -83,7 +86,6 @@ i = 0
     if( filePath != '' )
     {
       e.val( filePath );
-
     }
   }
 
@@ -96,8 +98,7 @@ i = 0
 
   function validate_image_values()
   {
-    alert( 'validate_image_values()' );
-
+    // No validation at this time.  
     return true;
   }
 
@@ -120,22 +121,22 @@ i = 0
     var image_name, replacement_image_id;
 
 
-    alert( 'build_image_values() - count: ' + count );
+    console.log( 'build_image_values() - count: ' + count );
 
     for( var i = 0; i < count; i++ )
     {
-          s = '#image_name' + i;
-          o = $(s);
-          image_name = o.val();
+      s = '#image_name' + i;
+      o = $(s);
+      image_name = o.val();
 
-          s = '#replacement_image_id' + i;
-          o = $(s);
-          replacement_image_id = o.val();
+      s = '#replacement_image_id' + i;
+      o = $(s);
+      replacement_image_id = o.val();
 
-          oImageProps = {};
-          oImageProps[ 'replacement_image_id' ] = replacement_image_id;
+      oImageProps = {};
+      oImageProps[ 'replacement_image_id' ] = replacement_image_id;
 
-          oReturn[ image_name ] = oImageProps;
+      oReturn[ image_name ] = oImageProps;
     }
 
     return oReturn;

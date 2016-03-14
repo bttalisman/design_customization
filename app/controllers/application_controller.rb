@@ -6,12 +6,10 @@ class ApplicationController < ActionController::Base
   @@local_host = nil
 
   def get_local_host
-
     if @@local_host == nil then
       @@local_host = request.protocol + request.host + ':' + request.port.to_s
       logger.info "ApplicationController - GET_LOCAL_HOST - Setting localhost to: " + @@local_host
     end
-
     @@local_host
   end
 

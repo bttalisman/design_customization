@@ -3,8 +3,6 @@ module ApplicationHelper
 
   @@versions_folder = Rails.root.to_s + "/public/system/versions/"
 
-
-
   def is_json?( s )
     begin
       !!JSON.parse(s)
@@ -13,24 +11,19 @@ module ApplicationHelper
     end
   end
 
-  def get_version_folder( version )
 
+  def get_version_folder( version )
     version_output_folder = @@versions_folder + version.id.to_s
     FileUtils.mkdir_p( version_output_folder ) unless File.directory?( version_output_folder )
-
     return version_output_folder
-
   end
 
 
 
   def path_to_data_file( path_to_ai_file )
-
     source_folder = File.dirname( path_to_ai_file )
     base_name = File.basename( path_to_ai_file, '.ai' )
-
     data_file = source_folder + "/" + base_name +  "_data.jsn"
-
     data_file
   end
 
@@ -38,30 +31,22 @@ module ApplicationHelper
 
   # the path to the tags file is based on the path to the original ai file.
   def path_to_tags_file( design_template )
-
     file = design_template.original_file
     source_path = file.path.to_s
-
     source_folder = File.dirname( source_path )
     data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_tags.jsn"
-
     data_file
   end
 
 
   # the path to the images file is based on the path to the original ai file.
   def path_to_images_file( design_template )
-
     file = design_template.original_file
     source_path = file.path.to_s
-
     source_folder = File.dirname( source_path )
     data_file = source_folder + "/" + File.basename( source_path, '.ai' ) +  "_images.jsn"
-
     data_file
   end
-
-
 
 
   def tags_file_exist?( design_template )
@@ -79,7 +64,7 @@ module ApplicationHelper
     tags_file = path_to_tags_file( design_template )
     exists = File.exist?( tags_file )
 
-    logger.info "APPLICATION_HELPER - get_tags_array - exists: " + exists.to_s
+    #logger.info "APPLICATION_HELPER - get_tags_array - exists: " + exists.to_s
 
     tags_string = ''
     tags = []
@@ -103,15 +88,13 @@ module ApplicationHelper
   # of all images extracted from the DesignTemplate's associated AI file.
   def get_images_array( design_template )
 
-    logger.info "APPLICATION_HELPER - get_images_array()"
-
-
+    #logger.info "APPLICATION_HELPER - get_images_array()"
     images_file = path_to_images_file( design_template )
-    logger.info "APPLICATION_HELPER - get_images_array() - images_file: " + images_file.to_s
+    #logger.info "APPLICATION_HELPER - get_images_array() - images_file: " + images_file.to_s
 
     exists = File.exist?( images_file )
 
-    logger.info "APPLICATION_HELPER - get_images_array - exists: " + exists.to_s
+    #logger.info "APPLICATION_HELPER - get_images_array - exists: " + exists.to_s
 
     images_string = ''
     images = []
@@ -137,9 +120,7 @@ module ApplicationHelper
 
     values_string = version.values
 
-#    values = { 'tag_settings' => nil, 'image_settings' => nil }
-
-    logger.info "APPLICATION_HELPER - get_values_object - values_string: " + values_string.to_s
+    #logger.info "APPLICATION_HELPER - get_values_object - values_string: " + values_string.to_s
 
     if( is_json?( values_string ) ) then
       values = JSON.parse values_string
@@ -153,58 +134,57 @@ module ApplicationHelper
 
   def get_replacement_image_id( image_name, version )
 
-        logger.info "APPLICATION_HELPER - get_replacement_image_id!!"
+    #logger.info "APPLICATION_HELPER - get_replacement_image_id!!"
 
-        values = get_values_object( version )
+    values = get_values_object( version )
 
-        if( values != nil ) then
-          image_values = values[ 'image_settings' ]
-        end
+    if( values != nil ) then
+      image_values = values[ 'image_settings' ]
+    end
 
-        rep_id = ''
+    rep_id = ''
 
-        if( image_values ) then
-          vals = image_values[ image_name ]
-          if( vals ) then
-
-            rep_id = vals[ 'replacement_image_id' ]
-
-          end
-        end
-
-        rep_id
-  end
-
-
-def get_uploaded_file( image_name, version )
-
-  logger.info "APPLICATION_HELPER - get_uploaded_file !!"
-
-  values = get_values_object( version )
-
-  if( values != nil ) then
-    image_values = values[ 'image_settings' ]
-  end
-
-  if( image_values ) then
-    vals = image_values[ image_name ]
-    if( vals ) then
-
-      rep_id = vals[ 'replacement_image_id' ]
-
-      if( rep_id ) then
-
-        ri = ReplacementImage.find( rep_id )
-
+    if( image_values ) then
+      vals = image_values[ image_name ]
+      if( vals ) then
+        rep_id = vals[ 'replacement_image_id' ]
       end
     end
 
+    rep_id
   end
 
-  if( ri ) then
-    ri.uploaded_file
+
+  # A version associates image_names with actual uploaded files
+  def get_uploaded_file( image_name, version )
+
+    logger.info "APPLICATION_HELPER - get_uploaded_file !!"
+
+    values = get_values_object( version )
+
+    if( values != nil ) then
+      image_values = values[ 'image_settings' ]
+    end
+
+    if( image_values ) then
+      vals = image_values[ image_name ]
+      if( vals ) then
+
+        rep_id = vals[ 'replacement_image_id' ]
+
+        if( rep_id ) then
+
+          ri = ReplacementImage.find( rep_id )
+
+        end
+      end
+
+    end
+
+    if( ri ) then
+      ri.uploaded_file
+    end
   end
-end
 
 
 
@@ -240,7 +220,6 @@ end
     # todo, can this be part of a constructor?
 
     values = get_values_object( version )
-
     image_settings = values[ 'image_settings' ]
 
     settings = {}
@@ -248,7 +227,6 @@ end
     settings[ 'path' ] = ri.uploaded_file.path
 
     image_settings[ image_name ] = settings
-
 
     logger.info "APPLICATION_HELPER - add_replacement_image_to_version() - values.to_json: " + values.to_json
 
@@ -262,19 +240,20 @@ end
 
 
   # a design_template's prompts object describes any extensible settings
-  # presented by versions of this template
+  # presented by versions of this template, such as replace this image?, allow
+  # users to set the color of this text?
   def get_prompts_object( design_template )
 
-      prompts_string = design_template.prompts
+    prompts_string = design_template.prompts
 
-      if( is_json?( prompts_string ) ) then
-        prompts = JSON.parse( prompts_string )
-      end
+    if( is_json?( prompts_string ) ) then
+      prompts = JSON.parse( prompts_string )
+    end
 
-      logger.info "APPLICATION_HELPER - get_prompts_object - prompts_string: " + prompts_string.to_s
-      logger.info "APPLICATION_HELPER - get_prompts_object - prompts: " + prompts.to_s
+    #logger.info "APPLICATION_HELPER - get_prompts_object - prompts_string: " + prompts_string.to_s
+    #logger.info "APPLICATION_HELPER - get_prompts_object - prompts: " + prompts.to_s
 
-      prompts
+    prompts
   end
 
 

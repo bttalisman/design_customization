@@ -13,9 +13,6 @@ class ReplacementImagesController < ApplicationController
 
 
 
-
-
-
   def replacement_image_params
     params.require( :replacement_image ).permit( :uploaded_file )
   end

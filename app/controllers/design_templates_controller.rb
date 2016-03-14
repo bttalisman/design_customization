@@ -32,7 +32,6 @@ class DesignTemplatesController < ApplicationController
     def edit
 
       logger.info "DESIGN_TEMPLATES_CONTROLLER - edit! - params: " + params.to_s
-
       @design_template = DesignTemplate.find( params[ :id ] )
 
       # this is an array of tag names, extracted from the AI file
@@ -63,21 +62,22 @@ class DesignTemplatesController < ApplicationController
 
 
     # this action executes in response to an ajax call from the Design Template
-    # editor
-    def set_tag_settings
+    # editor, the body of the post made contains JSON describing all extensible
+    # settings
+    def all_settings
 
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - SET_TAG_SETTINGS!!!!!!!!!!"
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - ALL_SETTINGS!!!!!!!!!!"
 
       #  expecting something like { 'extracted_settings' => arbitrary settings depending on tags,
       #  'general_settings' => settings every DesignTemplate has }
       myHashString = request.body.read.to_s
-      logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - myHashString: " + myHashString
+      logger.info "DESIGN_TEMPLATES_CONTROLLER - all_settings! - myHashString: " + myHashString
 
       if( is_json?( myHashString ) ) then
-        logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - good JSON!"
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - all_settings! - good JSON!"
         myHash = JSON.parse myHashString
       else
-        logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings! - BAD JSON!"
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - all_settings! - BAD JSON!"
       end
 
       extractedObject = myHash[ 'extracted_settings' ]
@@ -89,9 +89,9 @@ class DesignTemplatesController < ApplicationController
       @design_template.name = myHash[ 'general_settings' ][ 'template_name' ]
 
       if @design_template.save
-        logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings - SUCCESS!"
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - all_settings - SUCCESS!"
       else
-        logger.info "DESIGN_TEMPLATES_CONTROLLER - set_tag_settings - FAILURE!"
+        logger.info "DESIGN_TEMPLATES_CONTROLLER - all_settings - FAILURE!"
       end
 
       render nothing: true

@@ -1,3 +1,6 @@
+<!-- This partial generates the html prompting the user for specifics on how versions
+of this template will ask about each tag extracted from the original file.  For example,
+can the color be set for this tag? -->
 
 <h4><%= @design_template.name %> Tags</h4>
 
@@ -109,8 +112,6 @@ end # @tags is not nil
     count = parseInt( o.val() );
 
     returnSettings = {};
-
-//    alert( 'count: ' + count );
 
     for( var i = 0; i < count; i++ )
     {

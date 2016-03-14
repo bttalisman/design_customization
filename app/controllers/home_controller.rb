@@ -5,7 +5,6 @@ class HomeController < ApplicationController
 
 
   def tools
-    logger.info "HOMECONTROLLER - tools action!"
   end
 
 end

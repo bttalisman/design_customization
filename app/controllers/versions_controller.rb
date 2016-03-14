@@ -40,11 +40,12 @@ class VersionsController < ApplicationController
       @values = get_values_object( @version )
       @root_folder = Rails.root.to_s
 
-
       # this is the prefix that the ui will append to any folder path specified by the user
       if( @version.output_folder_path == '' ) then
+        # the user didn't specify an output folder, so the base is the root rails folder
         @output_folder_base = @root_folder + '/'
       else
+        # the user did specify, so the base is just nothing
         @output_folder_base = ''
       end
 
@@ -52,18 +53,20 @@ class VersionsController < ApplicationController
 
 
     def update
+
+      logger.info ""
+      logger.info ""
+      logger.info "VERSION_COTROLLER - UPDATE"
+      logger.info "VERSION_COTROLLER - UPDATE - version_params: " + version_params.to_s
+
       @version = Version.find( params[ :id ] )
       @version.update( version_params )
-      @version.values = params[ 'version_data' ]
 
       @design_template = @version.design_template
       # this is an array of tag names, extracted from the AI file
       @tags = get_tags_array( @design_template )
       # this is an array of image names, extracted from the AI file
       @images = get_images_array( @design_template )
-
-
-
 
       image_count = params[ 'image_count' ]
 
@@ -73,6 +76,7 @@ class VersionsController < ApplicationController
         image_count = 0
       end
 
+      # get all of the uploaded files, for each create a ReplacementImage, and bind it to the image_name
       image_count.times do |i|
 
         p_name = 'replacement_image' + i.to_s
@@ -81,29 +85,31 @@ class VersionsController < ApplicationController
         p_name = 'image_name' + i.to_s
         image_name = params[ p_name ]
 
-        logger.info "VERSIONS_CONTROLLER - UPDATE - replacement_image: " + replacement_image.to_s
         logger.info "VERSIONS_CONTROLLER - UPDATE - image_name: " + image_name.to_s
+        logger.info "VERSIONS_CONTROLLER - UPDATE - replacement_image: " + replacement_image.to_s
 
         if( replacement_image ) then
           myFile = replacement_image[ 'uploaded_file' ]
+          logger.info "VERSIONS_CONTROLLER - UPDATE - myFile: " + myFile.to_s
 
           if( myFile ) then
             o = { 'uploaded_file' => myFile }
             @replacement_image = @version.replacement_images.create( o )
-
             @replacement_image.save
 
+            # this will set version.values to reflect any user-set properties for this version,
+            # these values will eventually be read by the AI script
             add_replacement_image_to_version( @replacement_image, image_name, @version )
           end
         end
       end
 
 
-      logger.info "VERSIONS_CONTROLLER - UPDATE - image_count: " + image_count.to_s
-      logger.info "VERSIONS_CONTROLLER - UPDATE - version_params: " + version_params.to_s
-      logger.info "VERSIONS_CONTROLLER - UPDATE - params[ 'version_data' ]: " + params[ 'version_data' ].to_s
-      logger.info "VERSIONS_CONTROLLER - UPDATE - @images: " + @images.to_s
-      logger.info "VERSIONS_CONTROLLER - UPDATE - @tags: " + @tags.to_s
+      #logger.info "VERSIONS_CONTROLLER - UPDATE - image_count: " + image_count.to_s
+      #logger.info "VERSIONS_CONTROLLER - UPDATE - version_params: " + version_params.to_s
+      #logger.info "VERSIONS_CONTROLLER - UPDATE - params[ 'version_data' ]: " + params[ 'version_data' ].to_s
+      #logger.info "VERSIONS_CONTROLLER - UPDATE - @images: " + @images.to_s
+      #logger.info "VERSIONS_CONTROLLER - UPDATE - @tags: " + @tags.to_s
 
 
       if @version.save
@@ -128,11 +134,9 @@ class VersionsController < ApplicationController
         logger.info "VERSIONS_CONTROLLER - NEW - version NOT saved"
       end
 
-
       @design_templates = DesignTemplate.all
       @design_template_id = params['template_id']
       @root_folder = Rails.root.to_s
-
     end
 
 
@@ -155,8 +159,6 @@ class VersionsController < ApplicationController
       logger.info "VERSION_CONTROLLER - create - version values: " + @version.values.to_s
       logger.info "VERSION_CONTROLLER - create - @tags: " + @tags.to_s
       logger.info "VERSION_CONTROLLER - create - @images: " + @images.to_s
-
-
 
       if @version.save
 
@@ -196,12 +198,10 @@ class VersionsController < ApplicationController
 
 
     def destroy
-
       logger.info "VERSIONS_CONTROLLER - destroy"
       @version = Version.find( params[ :id ] )
       @version.destroy
       redirect_to :versions
-
     end
 
 
@@ -212,13 +212,10 @@ class VersionsController < ApplicationController
        params.require(:version).permit( :output_folder_path, :values, :name, :design_template_id )
     end
 
-
-
     # This method writes the current version's values string to a file sitting right
     # next to an AI file, named with _data.jsn.
     def write_temp_data_file( path_to_ai_file )
       logger.info "VERSIONS_CONTROLLER - write_temp_data_file - path_to_ai_file: " + path_to_ai_file.to_s
-
       temp_values_file = path_to_data_file( path_to_ai_file )
 
       # we'll create a temporary file containing necessary info, sitting right next to the
