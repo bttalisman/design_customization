@@ -18,7 +18,14 @@ module ApplicationHelper
     return version_output_folder
   end
 
-
+  def guarantee_final_slash( folder_path )
+    logger.info "GUARANTEE_FINAL_SLASH - folder_path: " + folder_path
+    f = folder_path
+    if( folder_path[-1, 1] != '/') then
+      logger.info "GUARANTEE_FINAL_SLASH - appending!!"
+      f = folder_path + '/'
+    end
+  end
 
   def path_to_data_file( path_to_ai_file )
     source_folder = File.dirname( path_to_ai_file )
@@ -153,6 +160,15 @@ module ApplicationHelper
 
     rep_id
   end
+
+  def get_replacement_image( image_name, version )
+    id = get_replacement_image_id( image_name, version )
+    if( id != '' ) then
+      ri = ReplacementImage.find( id )
+    end
+    ri
+  end
+
 
 
   # A version associates image_names with actual uploaded files

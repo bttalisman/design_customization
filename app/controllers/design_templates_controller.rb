@@ -168,19 +168,12 @@ class DesignTemplatesController < ApplicationController
 
 
     def process_original
-
       extract_tags
       extract_images
-
     end
 
 
-
-
-
     def extract_tags
-
-      # Extract tags
 
       file = @design_template.original_file
       logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_tags - file: " + file.to_s
@@ -215,14 +208,10 @@ class DesignTemplatesController < ApplicationController
       results = system( sys_com )
       logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_tags - results: " + results.to_s
 
-
-
     end
 
 
     def extract_images
-
-      # Extract tags
 
       file = @design_template.original_file
       logger.info "DESIGN_TEMPLATES_CONTROLLER - extract_images - file: " + file.to_s

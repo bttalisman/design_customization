@@ -1,3 +1,6 @@
+<!-- This partial generates the html prompting the user for specifics on how versions
+of this template will ask about each image extracted from the original file.  For example,
+should this extracted image be replaced? -->
 
 <h4><%= @design_template.name %> Images</h4>
 
@@ -82,11 +85,9 @@ end #imags is not nil
 
       s = '#image' + i;
       o = $( s );
-
       imageName = o.attr( 'data-image-name' ).trim();
 
       imageSettings = {};
-
 
       s = '#replace_image' + i;
       o = $( s );
@@ -100,12 +101,9 @@ end #imags is not nil
         imageSettings[ 'replace_image' ] = '';
       }
 
-
       returnSettings[ imageName ] = imageSettings;
 
     }
-
-//    alert( 'returnSettings: ' + JSON.stringify( returnSettings ) );
 
     return returnSettings;
 

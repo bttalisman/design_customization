@@ -93,6 +93,16 @@ class VersionsController < ApplicationController
           logger.info "VERSIONS_CONTROLLER - UPDATE - myFile: " + myFile.to_s
 
           if( myFile ) then
+
+            # get any replacement_image already associated with this image_name,
+            # and destroy it.
+            # No need to modify the version.values, we're just about to replace that entry
+
+            ri = get_replacement_image( image_name, @version )
+            if( ri ) then
+              ri.destroy
+            end
+
             o = { 'uploaded_file' => myFile }
             @replacement_image = @version.replacement_images.create( o )
             @replacement_image.save
@@ -290,11 +300,11 @@ class VersionsController < ApplicationController
       if( @version.output_folder_path != '' ) then
         # the user has specified an output folder
         logger.info "VERSIONS_CONTROLLER - process_version - user specified output folder."
-        output_folder = @version.output_folder_path
+        output_folder = guarantee_final_slash( @version.output_folder_path )
       else
         # the user has not specified an output folder, we'll just use the version folder
         logger.info "VERSIONS_CONTROLLER - process_version - NO user specified output folder."
-        output_folder = version_folder + '/'
+        output_folder = guarantee_final_slash( version_folder )
       end
 
       intermediate_output = output_folder + original_file_base_name + '_mod.ai'
