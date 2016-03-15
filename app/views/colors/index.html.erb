@@ -1,0 +1,11 @@
+
+<ul>
+<%
+@colors.each { |c|
+
+%>
+  <li><%= link_to c.hex_code, c %></li>
+<%
+}
+%>
+</ul>

@@ -1,0 +1,14 @@
+<h1>New Color</h1>
+
+<%=
+form_for @color do |form|
+%>
+
+  <label for="color[hex_code]">Hex Code</label>
+  <input type='text' id='color_hex_code' name='color[hex_code]'></input>
+
+  <%= form.submit %>
+
+<%
+end
+%>

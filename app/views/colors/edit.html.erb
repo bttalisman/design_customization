@@ -1,0 +1,16 @@
+<h1>Edit Color</h1>
+
+
+
+<form action='update' id='color_form'>
+
+  <div class='container' style='width:100%;'>
+
+    <label for="template_name">Hex Code</label>
+    <input type='text' id='hex_code' name='color[hex_code]' value='<%= @color.hex_code %>'></input>
+
+    <input type='submit' class='btn btn-default' value='Ok'></input>
+
+  </div>
+
+</form>

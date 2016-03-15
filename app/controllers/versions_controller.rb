@@ -64,10 +64,17 @@ class VersionsController < ApplicationController
       @version.update( version_params )
 
 
+      # extract the tag-related settings from the parameters object, and set
+      # this version's values property.  This is done independently of image-relate
+      # settings.
       set_tag_values( @version, params )
 
-      # todo Set values??  images are done later, set the tag values?
 
+
+
+
+      # methodize image-related settings
+      
       @design_template = @version.design_template
       # this is an array of tag names, extracted from the AI file
       @tags = get_tags_array( @design_template )
