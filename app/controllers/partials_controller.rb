@@ -52,6 +52,7 @@ class PartialsController < ApplicationController
     @design_template = DesignTemplate.find( id )
     @tags = get_tags_array( @design_template )
     @images = get_images_array( @design_template )
+    @colors = Color.all
 
 
     logger.info "PARTIALS_CONTROLLER - version_settings - @tags: " + @tags.to_s

@@ -88,21 +88,12 @@
 
 
 
-
-
 <h1>Edit Version</h1>
-
-
-
 <%=
 form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 %>
-
-
   <div class='container' style='width:100%;'>
-
     <div style='flex:1; margin: 30px;'>
-
       <div class="form-group">
         <label for="version[name]">Name</label>
         <input type='text' name='version[name]' id='version[name]' value='<%= @version.name %>'></input>
@@ -117,7 +108,6 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
         <label for="runai">Run Illustrator</label>
         <input type='checkbox' name='runai' id='runai'></input>
       </div>
-
 
       <div class='form-group'>
         <label for="version_design_template_id">Template</label>

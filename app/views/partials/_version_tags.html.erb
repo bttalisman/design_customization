@@ -37,6 +37,7 @@ i = 0
 
   logger.info '_VERSION_TAGS.html.erb - tag_name: ' + tag_name.to_s
   logger.info '_VERSION_TAGS.html.erb - pick_color: ' + pick_color.to_s
+  logger.info '_VERSION_TAGS.html.erb - text_color: ' + text_color.to_s
   logger.info '_VERSION_TAGS.html.erb - max_length: ' + max_length.to_s
   logger.info '_VERSION_TAGS.html.erb - min_length: ' + min_length.to_s
 
@@ -56,19 +57,22 @@ i = 0
 
 %>
   <div style='margin-top:30px;'>
-<%= prompt %>: <input type='text' required value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>' data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' ></input><br>
-
-
-  <%= title %>
+    <%= prompt %>: <input type='text' required value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>' data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' ></input><br>
+    <%= title %>
   </div>
   <div style='margin-top:30px'>
 <%
     if( pick_color != '' ) then
 %>
-      Pick a color: <div class="input-group" id="colorpicker<%= i.to_s %>">
-                      <input type="text" id="color_val<%= i.to_s %>" value="<%= text_color %>" class="form-control" />
-                      <span class="input-group-addon"><i></i></span>
-                    </div>
+      Pick a color:
+        <div class="input-group" id="colorpicker<%= i.to_s %>">
+          <select id="color_val<%= i.to_s %>" class="form-control">
+<%=         @colors.each do |c| %>
+              <option value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
+<%          end %>
+          </select>
+          <span class="input-group-addon"><i></i></span>
+        </div>
 
 <%  end %>
   </div>
@@ -82,13 +86,6 @@ i = 0
 <input type='hidden' id='tag_count' value='<%= i.to_s %>'></input>
 
 <script>
-
-
-  $(document).ready(function(){
-
-    $("[id^='colorpicker']").colorpicker({});
-  });
-
 
   function validate_tag_values()
   {

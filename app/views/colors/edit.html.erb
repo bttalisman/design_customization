@@ -6,11 +6,27 @@
 
   <div class='container' style='width:100%;'>
 
-    <label for="template_name">Hex Code</label>
-    <input type='text' id='hex_code' name='color[hex_code]' value='<%= @color.hex_code %>'></input>
 
-    <input type='submit' class='btn btn-default' value='Ok'></input>
+      <label for="colorpicker">Pick a Color</label>
+
+      <div class="input-group" id="colorpicker">
+        <input type="text" id="color_val" name='color[hex_code]' value='<%= @color.hex_code %>' class="form-control" />
+        <span class="input-group-addon"><i></i></span>
+      </div>
+
+    <input class='btn btn-default' type='submit' value='Ok'></input>
 
   </div>
 
 </form>
+
+
+
+<script>
+
+  $(document).ready(function(){
+
+    $("[id^='color_val']").colorpicker({});
+  });
+
+</script>

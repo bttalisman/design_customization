@@ -17,11 +17,27 @@
     });
   }
 
+
+    function delete_all_colors()
+    {
+      $.ajax({
+        url: "/colors/delete_all/",
+      }).done(function() {
+      });
+    }
+
+
+
 </script>
 
 
 
 <a class='btn btn-default' onclick='delete_all_versions();'>Delete ALL Versions</a>
 
+</br>
 
 <a class='btn btn-default' onclick='delete_all_templates();'>Delete ALL Templates</a>
+
+</br>
+
+<a class='btn btn-default' onclick='delete_all_colors();'>Delete ALL Colors</a>

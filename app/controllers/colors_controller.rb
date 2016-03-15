@@ -71,6 +71,16 @@ class ColorsController < ApplicationController
 
 
 
+  def delete_all
+    logger.info 'COLORS_CONTROLLER - delete_all'
+    cs = Color.all
+    cs.each { |c|
+      c.delete
+    }
+    render nothing: true
+  end
+
+
   def color_params
        params.require( :color ).permit( :hex_code )
   end

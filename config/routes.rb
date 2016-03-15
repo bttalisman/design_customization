@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get '/tools' => 'home#tools'
 
   get "/colors/:id/update" => 'colors#update'
-
+  get '/colors/delete_all' => 'colors#delete_all'
 
 
   get '/partials/version_settings/:id' => 'partials#version_settings'
