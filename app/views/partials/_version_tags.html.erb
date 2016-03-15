@@ -87,6 +87,25 @@ i = 0
 
 <script>
 
+  $(document).ready(function() {
+
+
+      $("#color_val0").select2({
+        templateResult: formatColor
+      });
+
+
+  });
+
+  function formatColor (color) {
+  if (!color.id) { return color.text; }
+  var $color = $(
+    '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div>' + color.text + '</span>'
+  );
+  return $color;
+};
+
+
   function validate_tag_values()
   {
     var count = $('#tag_count').val();
