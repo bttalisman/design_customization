@@ -74,7 +74,7 @@ class VersionsController < ApplicationController
 
 
       # methodize image-related settings
-      
+
       @design_template = @version.design_template
       # this is an array of tag names, extracted from the AI file
       @tags = get_tags_array( @design_template )
@@ -321,7 +321,7 @@ class VersionsController < ApplicationController
         output_folder = guarantee_final_slash( version_folder )
       end
 
-      intermediate_output = output_folder + original_file_base_name + '_mod.ai'
+      intermediate_output = output_folder.to_s + original_file_base_name.to_s + '_mod.ai'
 
 
       logger.info "VERSIONS_CONTROLLER - process_version - output_folder: " + output_folder.to_s

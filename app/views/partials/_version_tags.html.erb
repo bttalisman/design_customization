@@ -13,6 +13,7 @@ i = 0
   max_length = tag[ 1 ]['max_length']
   min_length = tag[ 1 ]['min_length']
   pick_color = tag[ 1 ]['pick_color']
+  text_color = '#0000ff'
 
   if( !max_length ) then
     max_length = ''
@@ -71,7 +72,7 @@ i = 0
               <option value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
 <%          end %>
           </select>
-          <span class="input-group-addon"><i></i></span>
+          <div id='swatch<%= i.to_s %>' style='display:inline-block; height:30px; width:30px; background:<%= text_color %>'></div>
         </div>
 
 <%  end %>
@@ -88,22 +89,33 @@ i = 0
 <script>
 
   $(document).ready(function() {
+    $("[id^='color_val']").select2({
+      templateResult: formatColor
+    });
 
-
-      $("#color_val0").select2({
-        templateResult: formatColor
-      });
-
-
+    $("[id^='colorpicker']").each( bindSwatch );
   });
 
+  function bindSwatch( ) {
+    $(this).children( 'select' ).change( { swatch:$(this).children('div') }, changeTextColor );
+  }
+
   function formatColor (color) {
-  if (!color.id) { return color.text; }
-  var $color = $(
-    '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div>' + color.text + '</span>'
-  );
-  return $color;
-};
+    if (!color.id) { return color.text; }
+    var $color = $(
+      '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div>' + color.text + '</span>'
+    );
+    return $color;
+  };
+
+
+  function changeTextColor( event )
+  {
+    var swatch = event.data.swatch;
+    var select = event.target;
+    var val = select.value;
+    swatch.css( 'background', val );
+  }
 
 
   function validate_tag_values()
