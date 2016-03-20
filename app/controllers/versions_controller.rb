@@ -150,7 +150,7 @@ class VersionsController < ApplicationController
       @version.name = '<none>'
 
       if @version.save
-        # we need to save every version so we can get it's id.
+        # we need to save every version so we can get its id.
         # todo, can we delete these if they don't get used?
         logger.info "VERSIONS_CONTROLLER - NEW - version saved"
       else
@@ -165,32 +165,34 @@ class VersionsController < ApplicationController
 
     def create
 
-      logger.info "VERSIONS_CONTROLLER - CREATE"
+#  this never gets called because the new version page uses UPDATE because the version needs to be saved so files can be attached
 
-      @version = Version.find( params[ :id ] )
+#      logger.info "VERSIONS_CONTROLLER - CREATE"
 
-      @version.values = params[ 'version_data' ]
+#      @version = Version.find( params[ :id ] )
 
-      @design_template = @version.design_template
+#      @version.values = params[ 'version_data' ]
+
+#      @design_template = @version.design_template
       # this is an array of tag names, extracted from the AI file
-      @tags = get_tags_array( @design_template )
+#      @tags = get_tags_array( @design_template )
       # this is an array of image names, extracted from the AI file
-      @images = get_images_array( @design_template )
+#      @images = get_images_array( @design_template )
 
-      logger.info "VERSION_CONTROLLER - create"
-      logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
-      logger.info "VERSION_CONTROLLER - create - version values: " + @version.values.to_s
-      logger.info "VERSION_CONTROLLER - create - @tags: " + @tags.to_s
-      logger.info "VERSION_CONTROLLER - create - @images: " + @images.to_s
+#      logger.info "VERSION_CONTROLLER - create"
+#      logger.info "VERSION_CONTROLLER - create - version_params: " + version_params.to_s
+#      logger.info "VERSION_CONTROLLER - create - version values: " + @version.values.to_s
+#      logger.info "VERSION_CONTROLLER - create - @tags: " + @tags.to_s
+#      logger.info "VERSION_CONTROLLER - create - @images: " + @images.to_s
 
-      if @version.save
+#      if @version.save
 
         # after we save, we can use the id to specify the output folder path.
-        process_version
-        redirect_to versions_path, :notice => "This version was saved."
-      else
-        render "new"
-      end
+#        process_version
+#        redirect_to versions_path, :notice => "This version was saved."
+#      else
+#        render "new"
+#      end
 
     end
 
@@ -321,10 +323,9 @@ class VersionsController < ApplicationController
         output_folder = guarantee_final_slash( version_folder )
       end
 
-      intermediate_output = output_folder.to_s + original_file_base_name.to_s + '_mod.ai'
-
-
       logger.info "VERSIONS_CONTROLLER - process_version - output_folder: " + output_folder.to_s
+      logger.info "VERSIONS_CONTROLLER - process_version - original_file_base_name: " + original_file_base_name.to_s
+      intermediate_output = output_folder.to_s + original_file_base_name.to_s + '_mod.ai'
       logger.info "VERSIONS_CONTROLLER - process_version - intermediate_output: " + intermediate_output.to_s
 
       int_file_exist = false

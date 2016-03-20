@@ -70,6 +70,13 @@ class ColorsController < ApplicationController
   end
 
 
+  def destroy
+    logger.info "COLORSS_CONTROLLER - destroy"
+    @color = Color.find( params[ :id ] )
+    @color.destroy
+    redirect_to :colors
+  end
+
 
   def delete_all
     logger.info 'COLORS_CONTROLLER - delete_all'

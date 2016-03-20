@@ -1,37 +1,34 @@
 
-<script>
+<!-- New Version -->
 
+<script>
 
 function create_version()
 {
+  alert( 'new.html.erb - create_version() - about to submit.');
 
-    alert( 'new.html.erb - create_version() - about to submit.');
+  var oReturn = build();
+  alert( 'oReturn: ' + JSON.stringify( oReturn ) );
+  $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
 
-    var oReturn = build();
-    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
+  var $pathInput = $('#version_output_folder_path');
+  var userSpecFolder = $pathInput.val();
 
+  if( userSpecFolder != '' )
+  {
+    var fullPath = userSpecFolder;
 
-    $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
-
-
-    var $pathInput = $('#version_output_folder_path');
-    var userSpecFolder = $pathInput.val();
-
-    if( userSpecFolder != '' )
+    // and make sure it ends with a '/'
+    var c = fullPath.slice(-1);
+    if( c != '/' )
     {
-      // now we're gonna sneak in and append the beginning to this path
-      var fullPath = '<%= @root_folder %>' + '/' + userSpecFolder;
-      // and make sure it ends with a '/'
-      var c = fullPath.slice(-1);
-      if( c != '/' )
-      {
-        fullPath = fullPath + '/';
-      }
-      $pathInput.val( fullPath );
+      fullPath = fullPath + '/';
     }
+    $pathInput.val( fullPath );
+  }
 
-    var form = $('#version_form');
-    form.submit();
+  var form = $('#version_form');
+  form.submit();
 }
 
 function validate()
@@ -65,11 +62,6 @@ function changeTemplate( id )
 
 </script>
 
-
-
-
-<h1>New Version</h1>
-
 <%=
 form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  } do |form|
 %>
@@ -78,28 +70,26 @@ form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  }
 
     <div style='flex:1'>
 
-      <div class="form-group">
-        <label for="version[name]">Name</label>
-        <input type='text' name='version[name]'></input>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Name</span>
+        <input type='text' class="form-control" name='version[name]' aria-describedby="basic-addon1"></input>
       </div>
 
-      <div class="form-group">
-        <label for="version[output_folder_path]">Output Folder</label>
-        <%= @root_folder + "/" %> <input type='text' id='version_output_folder_path' name='version[output_folder_path]'></input>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Folder</span>
+        <input type='text' class="form-control" id='version_output_folder_path' value='<%= @root_folder + "/" %>' name='version[output_folder_path]'></input>
       </div>
 
-      <div class="form-group">
-        <label for="runai">Run Illustrator?</label>
-        <input type='checkbox' name='runai' id='runai'></input>
+      <div class="input-group" style='margin-bottom:5px;'>
+        <span class="input-group-addon" style='margin-right:5px;' id="basic-addon2">Run Illustrator?</span><input type='checkbox' name='runai' aria-describedby="basic-addon2" id='runai'></input>
       </div>
 
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Template</span>
+        <select class="form-control" style='width: 200px;' name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
+          <option value="" disabled selected>Select a Template</option>
 
-        <div class="form-group">
-          <label for="version_design_template_id">Template:</label>
-          <select class="form-control" style='width: 200px;' name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
-            <option value="" disabled selected>Select a Template</option>
-
-<%          @design_templates.each { |t|
+<%        @design_templates.each { |t|
 
               if ( t.id == @design_template_id.to_i ) then
                 selected = true
@@ -111,14 +101,13 @@ form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  }
               end
 %>
               <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
-<%          }
+<%        }
 %>
-          </select>
-        </div>
+        </select>
+      </div>
 
-        <a class='btn btn-default' href='<%= get_local_host %>/versions'>Cancel</a>
-        <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
-
+      <a class='btn btn-default' href='<%= get_local_host %>/versions'>Cancel</a>
+      <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
 
     </div>
 

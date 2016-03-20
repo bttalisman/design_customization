@@ -2,7 +2,7 @@
 of this template will ask about each tag extracted from the original file.  For example,
 can the color be set for this tag? -->
 
-<h4><%= @design_template.name %> Tags</h4>
+<h4><%= @design_template.name %> Text Replacement</h4>
 
 <%
 if ( @tags != nil ) then
@@ -42,40 +42,38 @@ if ( @tags != nil ) then
 
     end # there are set values
 %>
+    <br><br>
     <div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'></div>
 
-      <div class="panel panel-default">
-          <div class="panel-heading"><%= t %></div>
-          <div class="panel-body">
+    <div class="panel panel-default">
+        <div class="panel-heading"><%= t %></div>
+        <div class="panel-body" style='height:160px;'> <!-- todo - why? -->
 
+          <label for="prompt<%= i.to_s %>">Prompt</label>
+          <input type="text" class="form-control input-lg" value='<%= prompt %>' id='prompt<%= i.to_s %>' placeholder="Enter a prompt">
 
-            <label for="prompt<%= i.to_s %>">Prompt</label>
-            <input type="text" class="form-control input-lg" value='<%= prompt %>' id='prompt<%= i.to_s %>' placeholder="Enter a prompt">
+          <br><br>
 
-            <br><br>
-
-
-            <div>
-              <div style='float: left; width: 33%'>
-                <label for="minl<%= i.to_s %>">Min Length</label>
-                <input type='number' style='width: 100px;' class="form-control" value='<%= min_length %>' id='minl<%= i.to_s %>'></input>
-              </div>
-              <div style='float: left; width: 33%'>
-                <label for="maxl<%= i.to_s %>">Max Length</label>
-                <input type='number' style='width: 100px;' class="form-control" value='<%= max_length %>' id='maxl<%= i.to_s %>'></input>
-              </div>
-              <div style='float: left; width: 33%'>
-                <label for="colorp<%= i.to_s %>">Choose the color?</label>
-                <input type='checkbox' class="form-control" <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input>
-              </div>
-
+          <div>
+            <div style='float: left; width: 33%'>
+              <label for="minl<%= i.to_s %>">Min Length</label>
+              <input type='number' style='width: 100px;' class="form-control" value='<%= min_length %>' id='minl<%= i.to_s %>'></input>
+            </div>
+            <div style='float: left; width: 33%'>
+              <label for="maxl<%= i.to_s %>">Max Length</label>
+              <input type='number' style='width: 100px;' class="form-control" value='<%= max_length %>' id='maxl<%= i.to_s %>'></input>
+            </div>
+            <div style='float: left; width: 33%'>
+              <label for="colorp<%= i.to_s %>">Choose the color?</label>
+              <input type='checkbox' class="form-control" <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input>
             </div>
 
-            <br><br>
-
-
           </div>
-      </div>
+
+          <br><br>
+
+        </div>
+    </div>
 
 <%
     i += 1
@@ -92,9 +90,26 @@ end # @tags is not nil
 
   function validate_tag_values()
   {
-    alert( 'validate tags' );
+    //alert( '_design_template_tags.erb - validate_tag_values()' );
 
-    return true;
+    var s;
+    o = $( '#tag_count' );
+    count = parseInt( o.val() );
+
+    bValid = true;
+
+    for( var i = 0; i < count; i++ )
+    {
+      s = '#prompt' + i;
+      o = $(s);
+
+      if( o.val() == '' )
+      {
+        bValid = false;
+      }
+    }
+
+    return bValid;
   }
 
 

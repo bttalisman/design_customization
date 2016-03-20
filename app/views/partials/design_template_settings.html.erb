@@ -1,5 +1,5 @@
 
-<h3>Extracted <%= @design_template.name %> Settings</h3>
+<h3><%= @design_template.name %> Settings</h3>
 
 
 <%
@@ -29,6 +29,39 @@
 
 
 <script>
+
+
+
+  function validate()
+  {
+    //alert( 'design_template_settings.html.erb - validate()' );
+
+    var bReturn = true;
+    <%
+    if( rendering_tags_form ) then
+    %>
+        if( !validate_tag_values() )
+        {
+          bReturn = false;
+        }
+    <%
+    end %>
+
+    <%
+    if( rendering_images_form ) then
+    %>
+      if( !validate_image_values() )
+      {
+        bReturn = false;
+      }
+    <%
+    end %>
+
+    return bReturn;
+  }
+
+
+
 
   function build_template_settings()
   {

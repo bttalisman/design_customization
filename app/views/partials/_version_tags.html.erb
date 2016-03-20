@@ -1,5 +1,5 @@
 
-<h4>Version Tags</h4><br>
+<h4>Your Text</h4><br>
 
 <%
 i = 0
@@ -57,26 +57,29 @@ i = 0
   logger.info '_VERSION_TAGS.html.erb - pattern: ' + title.to_s
 
 %>
-  <div style='margin-top:30px;'>
-    <%= prompt %>: <input type='text' required value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>' data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' ></input><br>
-    <%= title %>
-  </div>
-  <div style='margin-top:30px'>
+  <div class='panel panel-default' style='width:300px;'>
+    <div class='panel-body'>
+      <div style='margin-top:30px;'>
+        <input type='text' placeholder='<%= prompt %>' required value='<%= replacement_text %>' id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>' data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' ></input><br>
+        <%= title %>
+      </div>
+      <div style='margin-top:30px'>
 <%
-    if( pick_color != '' ) then
+        if( pick_color != '' ) then
 %>
-      Pick a color:
-        <div class="input-group" id="colorpicker<%= i.to_s %>">
-          <select id="color_val<%= i.to_s %>" class="form-control">
-<%=         @colors.each do |c| %>
-              <option value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
-<%          end %>
-          </select>
-          <div id='swatch<%= i.to_s %>' style='display:inline-block; height:30px; width:30px; background:<%= text_color %>'></div>
-        </div>
+          Pick a color:<div class="input-group" id="colorpicker<%= i.to_s %>">
+              <select id="color_val<%= i.to_s %>" class="form-control">
+<%=             @colors.each do |c| %>
+                  <option value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
+<%              end %>
+              </select>
+              <div id='swatch<%= i.to_s %>' style='display:inline-block; height:30px; width:30px; background:<%= text_color %>'></div>
+            </div>
 
-<%  end %>
-  </div>
+<%      end # pick a color %>
+    </div>
+  </div> <!-- panel-body -->
+</div> <!-- panel -->
 
 <%
   i += 1
@@ -160,9 +163,7 @@ i = 0
   }
 
 
-
-
-
+  // called from versions/edit.html.erb, and version/new.html.erb
   function build_tag_values()
   {
     var count = $('#tag_count').val();

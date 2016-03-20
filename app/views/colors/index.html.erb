@@ -1,11 +1,8 @@
 
 <ul>
 <%
-@colors.each { |c|
-
-%>
-  <li style='height:30px;'><%= link_to c.hex_code, c %> <div style='display:inline-block; height:20px; width:20px; background:<%= c.hex_code %>'></div></li>
+  @colors.each { |c| %>
+    <li style='height:30px;'><%= link_to c.hex_code, c %> <div style='display:inline-block; height:20px; width:20px; background:<%= c.hex_code %>'></div></li>
 <%
-}
-%>
+  } %>
 </ul>

@@ -1,22 +1,12 @@
-<h1>Edit Color</h1>
-
-
 
 <form action='update' id='color_form'>
 
-  <div class='container' style='width:100%;'>
-
-
-      <label for="colorpicker">Pick a Color</label>
-
-      <div class="input-group" id="colorpicker">
-        <input type="text" id="color_val" name='color[hex_code]' value='<%= @color.hex_code %>' class="form-control" />
-        <span class="input-group-addon"><i></i></span>
-      </div>
-
-    <input class='btn btn-default' type='submit' value='Ok'></input>
-
+  <div class="input-group" id="new_color_picker_container">
+    <input type="text" id="color_val" name='color[hex_code]' value="<%= @color.hex_code %>" class="form-control" />
+    <span class="input-group-addon"><i></i></span>
   </div>
+
+  <input class='btn btn-default' type='submit' value='Ok'></input>
 
 </form>
 
@@ -26,7 +16,7 @@
 
   $(document).ready(function(){
 
-    $("[id^='color_val']").colorpicker({});
+    $("#new_color_picker_container").colorpicker({});
   });
 
 </script>

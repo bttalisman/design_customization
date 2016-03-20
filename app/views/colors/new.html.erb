@@ -4,15 +4,13 @@
 form_for @color do |form|
 %>
 
-  <label for="colorpicker">Pick a Color</label>
-
-  <div class="input-group" id="colorpicker">
-    <input type="text" id="color_val" name='color[hex_code]' value="" class="form-control" />
+  <div class="input-group" id="new_color_picker_container">
+    <input type="text" id="color_val" name='color[hex_code]' value="#000000" class="form-control" />
     <span class="input-group-addon"><i></i></span>
   </div>
 
-
-  <%= form.submit %>
+<%=
+  form.submit %>
 
 <%
 end
@@ -21,8 +19,7 @@ end
 <script>
 
   $(document).ready(function(){
-
-    $("[id^='colorpicker']").colorpicker({});
+    $("#new_color_picker_container").colorpicker();
   });
 
 </script>

@@ -1,6 +1,6 @@
+<!-- Edit Version -->
 
 <script>
-
 
   // this is called when the user creates or updates a Version
   function create_version()
@@ -76,19 +76,12 @@
   }
 
 
-
-
   $(document).ready(function(){
     getTemplateHTML( <%= @design_template.id %>, true );
   });
 
-
-
 </script>
 
-
-
-<h1>Edit Version</h1>
 <%=
 form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 %>
@@ -131,9 +124,9 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
       </div>
 
 
-        <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
-        <a class='btn btn-default' href='http://localhost:3000/versions/<%= @version.id %>'>Cancel</a>
-        <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+      <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
+      <a class='btn btn-default' href='<%= get_local_host %>/versions/<%= @version.id %>'>Cancel</a>
+      <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
 
 
 

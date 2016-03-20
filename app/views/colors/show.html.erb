@@ -1,3 +1,4 @@
 <h1><%= @color.hex_code.to_s %></h1>
 
 <a class='btn btn-default' href='<%= edit_color_path %>'>Edit this Color</a>
+<a class="btn btn-default" href="/colors/<%= @color.id %>"  data-method="delete" rel="nofollow">Delete</a>

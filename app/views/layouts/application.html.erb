@@ -28,6 +28,8 @@
 
 <div class='container-fluid'>
 
+
+
 <% flash.each do |key, value| %>
 <p><%= value %></p>
 <% end %>
@@ -37,8 +39,6 @@
   <li role="presentation" class='<%= if params[:controller] == 'versions' then 'active' end %>' ><a href="<%= versions_path %>">Versions</a></li>
   <li role="presentation" class='<%= if params[:controller] == 'colors' then 'active' end %>' ><a href="<%= colors_path %>">Colors</a></li>
   <li role="presentation" class='<%= if params[:controller] == 'home' then 'active' end %>' ><a href="/tools">Tools</a></li>
-
-
 
   <li role="presentation" class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -60,5 +60,9 @@
 </div>
 
 </div>
+
+
+
+
 </body>
 </html>

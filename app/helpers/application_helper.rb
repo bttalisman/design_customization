@@ -12,7 +12,7 @@ module ApplicationHelper
   end
 
   def guarantee_final_slash( folder_path )
-    logger.info "APPLICATION_HELPER - guarantee_final_slash() - folder_path: " + folder_path
+#    logger.info "APPLICATION_HELPER - guarantee_final_slash() - folder_path: " + folder_path
     f = folder_path
     if( folder_path[-1, 1] != '/') then
       logger.info "GUARANTEE_FINAL_SLASH - appending!!"

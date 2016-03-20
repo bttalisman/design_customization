@@ -37,34 +37,45 @@
   function update_template( templateId )
   {
 
-    var extractedSettings = build_template_settings();
-    var oToSend = {};
 
-    // We stuff our own data in there too
-    var oGeneralSettings = {};
-    oGeneralSettings[ 'template_name' ] = $('#template_name').val();
+    if( validate() )
+    {
 
-    // the number and type of these settings depends on what was extracted from the original file
-    oToSend['extracted_settings'] = extractedSettings;
-    // these are always the same
-    oToSend['general_settings'] = oGeneralSettings;
+      var extractedSettings = build_template_settings();
+      var oToSend = {};
 
-    var uri = '<%= get_local_host %>' + "/design_templates/" + templateId + "/settings/";
+      // We stuff our own data in there too
+      var oGeneralSettings = {};
+      oGeneralSettings[ 'template_name' ] = $('#template_name').val();
 
-    $.ajax({
-        url: uri,
-        type: 'post',
-        dataType: 'application/json',
-        data: JSON.stringify( oToSend ),
-        success: function (data) {
-            alert( 'success getting : ' + data );
-        },
-            error: function(xhr, status, error) {
-            // todo - why never success?
-        }
-    });
+      // the number and type of these settings depends on what was extracted from the original file
+      oToSend['extracted_settings'] = extractedSettings;
+      // these are always the same
+      oToSend['general_settings'] = oGeneralSettings;
 
-    window.location = 'http://localhost:3000'
+      var uri = '<%= get_local_host %>' + "/design_templates/" + templateId + "/settings/";
+
+      $.ajax({
+          url: uri,
+          type: 'post',
+          dataType: 'application/json',
+          data: JSON.stringify( oToSend ),
+          success: function (data) {
+              alert( 'success getting : ' + data );
+          },
+              error: function(xhr, status, error) {
+              // todo - why never success?
+          }
+      });
+
+      window.location = '<%= get_local_host %>'
+
+    }
+    else
+    {
+      // validation failed
+      alert( 'Please enter a prompt.' );
+    }
 
   }
 
