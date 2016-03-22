@@ -9,7 +9,6 @@ Rails.application.routes.draw do
   get "/colors/:id/update" => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'
 
-
   get '/partials/version_settings/:id' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
 
@@ -18,6 +17,7 @@ Rails.application.routes.draw do
   post '/versions/create' => 'versions#create'
   post '/versions/:id/update' => 'versions#update'
   get '/versions/delete_all' => 'versions#delete_all'
+  get '/versions/:id/cancel' => 'versions#cancel'
 
   post '/design_templates/create' => 'design_templates#create'
   get '/design_templates/:id/edit' => 'design_templates#edit'

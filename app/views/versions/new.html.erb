@@ -41,10 +41,7 @@
 
   function changeTemplate( id )
   {
-
     var o;
-
-
     if( id == null )
     {
       o = $('#version_design_template_id');
@@ -52,11 +49,9 @@
     }
 
     var uri = "<%= get_local_host %>/partials/version_settings/" + id + "?version_id=" + <%= @version.id %>;
-
-
     $.get( uri, function(data, status)
       {
-          $('#values_container').html( data );
+        $('#values_container').html( data );
       } );
   }
 
@@ -67,11 +62,9 @@
 form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  } do |form|
 %>
 
-
 <div class='row'>
   <div class='col col-md-1'></div>
   <div class='col col-md-4'>
-
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -101,11 +94,9 @@ form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  }
 <%            @design_templates.each { |t|
 
                 if ( t.id == @design_template_id.to_i ) then
-                  selected = true
-%>
+                  selected = true %>
                   <script> changeTemplate( <%= t.id.to_s %> ); </script>
-<%
-                else
+<%              else
                   selected = false
                 end
 %>
@@ -123,7 +114,7 @@ form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  }
 
         <div class='spacer'></div>
 
-        <a class='btn btn-default' href='<%= get_local_host %>/versions'>Cancel</a>
+        <a class='btn btn-default' href='<%= get_local_host %>/versions/<%= @version_id %>/cancel'>Cancel</a>
         <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
 
       </div> <!-- / panel body -->
