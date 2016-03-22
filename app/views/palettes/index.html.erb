@@ -1,0 +1,8 @@
+
+<ul>
+<%
+  @palettes.each { |p| %>
+    <li style='height:30px;'><%= link_to p.name, [:edit, p] %> <div style='display:inline-block; height:20px; width:20px;'></div></li>
+<%
+  } %>
+</ul>

@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   get "/colors/:id/update" => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'
 
+  get "/palettes/:id/update" => 'palettes#update'
+  get '/palettes/delete_all' => 'palettes#delete_all'
+
   get '/partials/version_settings/:id' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
 
@@ -38,6 +41,7 @@ Rails.application.routes.draw do
   resources :design_templates
   resources :versions
   resources :colors
+  resources :palettes
   resources :replacement_images
 
 

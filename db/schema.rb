@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160315160509) do
+ActiveRecord::Schema.define(version: 20160322183718) do
 
   create_table "colors", force: :cascade do |t|
     t.string   "hex_code"
@@ -21,6 +21,12 @@ ActiveRecord::Schema.define(version: 20160315160509) do
 
 # Could not dump table "design_templates" because of following NoMethodError
 #   undefined method `[]' for nil:NilClass
+
+  create_table "palettes", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "replacement_images", force: :cascade do |t|
     t.integer  "version_id"

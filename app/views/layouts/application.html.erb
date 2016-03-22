@@ -39,6 +39,7 @@
   <li role="presentation" class='<%= if params[:controller] == 'design_templates' then 'active' end %>' ><a href="<%= design_templates_path %>">Templates</a></li>
   <li role="presentation" class='<%= if params[:controller] == 'versions' then 'active' end %>' ><a href="<%= versions_path %>">Versions</a></li>
   <li role="presentation" class='<%= if params[:controller] == 'colors' then 'active' end %>' ><a href="<%= colors_path %>">Colors</a></li>
+  <li role="presentation" class='<%= if params[:controller] == 'palettes' then 'active' end %>' ><a href="<%= palettes_path %>">Palettes</a></li>
   <li role="presentation" class='<%= if params[:controller] == 'home' then 'active' end %>' ><a href="/tools">Tools</a></li>
 
   <li role="presentation" class="dropdown">
@@ -50,6 +51,8 @@
         <li><%= link_to "Template", new_design_template_path %></li>
         <li><%= link_to "Version", new_version_path %></li>
         <li><%= link_to "Color", new_color_path %></li>
+        <li><%= link_to "Palette", new_palette_path %></li>
+
       </ul>
 
     </li>

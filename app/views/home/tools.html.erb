@@ -18,13 +18,23 @@
   }
 
 
-    function delete_all_colors()
-    {
-      $.ajax({
-        url: "/colors/delete_all/",
-      }).done(function() {
-      });
-    }
+
+  function delete_all_palettes()
+  {
+    $.ajax({
+      url: "/palettes/delete_all/",
+    }).done(function() {
+    });
+  }
+
+
+  function delete_all_colors()
+  {
+    $.ajax({
+      url: "/colors/delete_all/",
+    }).done(function() {
+    });
+  }
 
 
 
@@ -41,3 +51,7 @@
 </br>
 
 <a class='btn btn-default' onclick='delete_all_colors();'>Delete ALL Colors</a>
+
+</br>
+
+<a class='btn btn-default' onclick='delete_all_palettes();'>Delete ALL Palettes</a>

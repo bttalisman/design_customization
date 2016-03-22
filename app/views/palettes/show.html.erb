@@ -1,0 +1,4 @@
+<h1><%= @palette.name.to_s %></h1>
+
+<a class='btn btn-default' href='<%= edit_palette_path %>'>Edit this Palette</a>
+<a class="btn btn-default" href="/palettes/<%= @palette.id %>"  data-method="delete" rel="nofollow">Delete</a>
