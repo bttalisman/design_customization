@@ -3,13 +3,10 @@ should be dealt with for a version.  This file must coordinate with the _design_
 For example, the design template images partial asks, should this image be replaced? and the version
 images partial says, ok, this image is getting replaced, what should I replace it with? -->
 
-<h4>Version Images</h4><br>
-
 <%
 logger.info '_VERSION_IMAGES.html.erb - @image_values: ' + @image_values.to_s
 logger.info '_VERSION_IMAGES.html.erb - @image_settings: ' + @image_settings.to_s
 logger.info '_VERSION_IMAGES.html.erb - @version: ' + @version.to_s
-
 
 i = 0
 
@@ -30,7 +27,6 @@ i = 0
 
   replacement_path = ''
   raplacement_name = ''
-
   replacement_image_id = ''
 
   if( @version ) then
@@ -42,27 +38,29 @@ i = 0
 %>
 
 
-  <div style='margin-top:30px;'>
-    <%= image_name %>
-    <input type='text' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input><br>
+<div class="panel panel-success">
+  <div class="panel-heading"><h3 class='panel-title'><%= image_name %> - Upload an Image</h3></div>
+  <div class="panel-body">
+
+    <input type='text' style='float:left; width:80%;' class='form-control' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
+
+    <span style='float:left;' class="btn btn-default fileinput-button" id='file_input_container'>
+      <span>Upload</span>
+      <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image<%= i.to_s %>[uploaded_file]" id="replacement_image_uploaded_file<%= i.to_s %>" onchange='fileInputChange( this );' >
+    </span>
+
+    <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id<%= i.to_s %>' value='<%= @version_id %>'></input>
+    <input style='display:none;' id='image_name<%= i.to_s %>' name='image_name<%= i.to_s %>' value='<%= image_name %>'></input>
+    <input style='display:none;' id='replacement_image_id<%= i.to_s %>' name='replacement_image_id<%= i.to_s %>' value='<%= replacement_image_id %>'></input>
+
   </div>
-
-  <span class="btn btn-default fileinput-button" id='file_input_container'>
-    <span>Upload</span>
-    <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image<%= i.to_s %>[uploaded_file]" id="replacement_image_uploaded_file<%= i.to_s %>" onchange='fileInputChange( this );' >
-  </span>
-
-  <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id<%= i.to_s %>' value='<%= @version_id %>'></input>
-  <input style='display:none;' id='image_name<%= i.to_s %>' name='image_name<%= i.to_s %>' value='<%= image_name %>'></input>
-  <input style='display:none;' id='replacement_image_id<%= i.to_s %>' name='replacement_image_id<%= i.to_s %>' value='<%= replacement_image_id %>'></input>
-
-
+</div>
 <%
   i += 1
 } # each image
 %>
 
-  <input type='hidden' name='image_count' id='image_count' value='<%= i.to_s %>'></input>
+<input type='hidden' name='image_count' id='image_count' value='<%= i.to_s %>'></input>
 
   <script>
 

@@ -2,8 +2,6 @@
 of this template will ask about each image extracted from the original file.  For example,
 should this extracted image be replaced? -->
 
-<h4><%= @design_template.name %> Images</h4>
-
 <%
 if ( @images != nil ) then
 
@@ -33,15 +31,17 @@ if ( @images != nil ) then
 %>
     <div id='image<%= i.to_s %>' data-image-name='<%= image.to_s %>'></div>
 
-      <div class="panel panel-default">
-          <div class="panel-heading"><%= image %></div>
-          <div class="panel-body">
+    <div class="panel panel-success">
+        <div class="panel-heading"><h3 class='panel-title'><%= image %> - Image Replacement</h3></div>
+        <div class="panel-body">
 
-            <label for="replace_image<%= i.to_s %>">Replace this image?</label>
-            <input type='checkbox' class="form-control" <%= replaceImage %> value='true' id='replace_image<%= i.to_s %>'></input>
+          <label class='checkbox-label'>
+            Replace this image?
+            <input type='checkbox' class='checkbox-input' value='true' <%= replaceImage %> id='replace_image<%= i.to_s %>' <%= replaceImage %> ></input>
+          </label>
 
-          </div>
-      </div>
+        </div>
+    </div>
 
 <%
     i += 1

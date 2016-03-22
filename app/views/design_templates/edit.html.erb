@@ -1,32 +1,44 @@
-<h1>Edit Template</h1>
-
 
 
 <form action='update' id='design_template_form'>
 
-  <div class='container' style='width:100%;'>
 
-    <div style='flex:1;'>
-      <div class='form-group'>
-        <label for="template_name">Name</label>
-        <input type='text' id='template_name' value='<%= @design_template.name %>'></input>
-      </div>
+  <div class='row'>
+    <div class='col col-md-1'></div>
+    <div class='col col-md-4'>
 
-      <a class='btn btn-default' href='<%= get_local_host %>/force_process?id=<%= @design_template.id %>'>Force Processing</a>
-      <button class='btn btn-default' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</button>
-      <a class='btn btn-default' href='<%= get_local_host %>/design_templates/<%= @design_template.id %>'>Cancel</a>
-      <a class="btn btn-default" href="/design_templates/<%= @design_template.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Edit Template</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class="input-group-addon" id="basic-addon1">Name</span>
+            <input type='text' class='form-control' id='template_name' aria-describedby="basic-addon1" value='<%= @design_template.name %>'></input>
+          </div>
+
+          <a class='btn btn-default' href='<%= get_local_host %>/force_process?id=<%= @design_template.id %>'>Reprocess</a>
+          <a class='btn btn-default' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</a>
+          <a class='btn btn-default' href='<%= get_local_host %>/design_templates/<%= @design_template.id %>'>Cancel</a>
+          <a class="btn btn-default" href="/design_templates/<%= @design_template.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+
+        </div> <!-- /panel body -->
+      </div> <!-- /panel -->
+
+    </div> <!--  -->
+
+    <div class='col-md-1'></div>
+
+    <div class='col-md-5'>
+      <div id='panel_container'></div>
     </div>
 
-    <div id='panel_container' style='flex:1;' ></div>
-
-  </div>
+  </div> <!-- /row -->
 
   <input name='panel_data' id='tags_data' style='display:none;'></input>
 
-
 </form>
-
 
 
 

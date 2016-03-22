@@ -3,120 +3,142 @@
 
 <script>
 
-function create_version()
-{
-  alert( 'new.html.erb - create_version() - about to submit.');
-
-  var oReturn = build();
-  alert( 'oReturn: ' + JSON.stringify( oReturn ) );
-  $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
-
-  var $pathInput = $('#version_output_folder_path');
-  var userSpecFolder = $pathInput.val();
-
-  if( userSpecFolder != '' )
+  function create_version()
   {
-    var fullPath = userSpecFolder;
+    alert( 'new.html.erb - create_version() - about to submit.');
 
-    // and make sure it ends with a '/'
-    var c = fullPath.slice(-1);
-    if( c != '/' )
+    var oReturn = build();
+    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
+    $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
+
+    var $pathInput = $('#version_output_folder_path');
+    var userSpecFolder = $pathInput.val();
+
+    if( userSpecFolder != '' )
     {
-      fullPath = fullPath + '/';
+      var fullPath = userSpecFolder;
+
+      // and make sure it ends with a '/'
+      var c = fullPath.slice(-1);
+      if( c != '/' )
+      {
+        fullPath = fullPath + '/';
+      }
+      $pathInput.val( fullPath );
     }
-    $pathInput.val( fullPath );
+
+    var form = $('#version_form');
+    form.submit();
   }
 
-  var form = $('#version_form');
-  form.submit();
-}
-
-function validate()
-{
-  alert( 'validate()' );
-
-  // todo - validate stuff
-  return true;
-}
-
-function changeTemplate( id )
-{
-
-  var o;
-
-
-  if( id == null )
+  function validate()
   {
-    o = $('#version_design_template_id');
-    id = o.val();
+    alert( 'validate()' );
+
+    // todo - validate stuff
+    return true;
   }
 
-  var uri = "<%= get_local_host %>/partials/version_settings/" + id + "?version_id=" + <%= @version.id %>;
+  function changeTemplate( id )
+  {
+
+    var o;
 
 
-  $.get( uri, function(data, status)
+    if( id == null )
     {
-        $('#values_container').html( data );
-    } );
-}
+      o = $('#version_design_template_id');
+      id = o.val();
+    }
+
+    var uri = "<%= get_local_host %>/partials/version_settings/" + id + "?version_id=" + <%= @version.id %>;
+
+
+    $.get( uri, function(data, status)
+      {
+          $('#values_container').html( data );
+      } );
+  }
 
 </script>
+
 
 <%=
 form_for @version, html: { multipart: true, :onsubmit => 'return validate();'  } do |form|
 %>
 
-  <div class='container' style='width: 100%;'>
 
-    <div style='flex:1'>
+<div class='row'>
+  <div class='col col-md-1'></div>
+  <div class='col col-md-4'>
 
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Name</span>
-        <input type='text' class="form-control" name='version[name]' aria-describedby="basic-addon1"></input>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">New Version</h3>
       </div>
+      <div class="panel-body">
 
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Folder</span>
-        <input type='text' class="form-control" id='version_output_folder_path' value='<%= @root_folder + "/" %>' name='version[output_folder_path]'></input>
-      </div>
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">Name</span>
+          <input type='text' class="form-control" name='version[name]' aria-describedby="basic-addon1"></input>
+        </div>
 
-      <div class="input-group" style='margin-bottom:5px;'>
-        <span class="input-group-addon" style='margin-right:5px;' id="basic-addon2">Run Illustrator?</span><input type='checkbox' name='runai' aria-describedby="basic-addon2" id='runai'></input>
-      </div>
+        <div class='spacer'></div>
 
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Template</span>
-        <select class="form-control" style='width: 200px;' name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
-          <option value="" disabled selected>Select a Template</option>
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">Folder</span>
+          <input type='text' class="form-control" id='version_output_folder_path' value='<%= @root_folder + "/" %>' name='version[output_folder_path]'></input>
+        </div>
 
-<%        @design_templates.each { |t|
+        <div class='spacer'></div>
 
-              if ( t.id == @design_template_id.to_i ) then
-                selected = true
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">Template</span>
+          <select class="form-control" style='width:200px;' name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
+            <option value="" disabled selected>Select a Template</option>
+
+<%            @design_templates.each { |t|
+
+                if ( t.id == @design_template_id.to_i ) then
+                  selected = true
 %>
-                <script> changeTemplate( <%= t.id.to_s %> ); </script>
+                  <script> changeTemplate( <%= t.id.to_s %> ); </script>
 <%
-              else
-                selected = false
-              end
+                else
+                  selected = false
+                end
 %>
-              <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
-<%        }
-%>
-        </select>
-      </div>
+                <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
+<%            } %>
+          </select>
+        </div>
 
-      <a class='btn btn-default' href='<%= get_local_host %>/versions'>Cancel</a>
-      <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
+        <div class='spacer'></div>
 
-    </div>
+        <label class='checkbox-label'>
+          Run Illustrator?
+          <input type='checkbox' name='runai' id='runai' class='checkbox-input' value='true'></input>
+        </label>
 
+        <div class='spacer'></div>
 
-    <div id='values_container' style='flex:1'></div>
+        <a class='btn btn-default' href='<%= get_local_host %>/versions'>Cancel</a>
+        <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
+
+      </div> <!-- / panel body -->
+    </div> <!-- / panel -->
+
+  </div> <!-- / col -->
+
+  <div class='col-md-1'></div>
+
+  <div class='col-md-5'>
+    <div id='values_container'></div>
     <input name='version_data' id='version_data' style='display:none;'></input>
+  </div>
 
+</div> <!-- / row -->
 
 <%
-  end %>
-
-  </div>
+end # form %>

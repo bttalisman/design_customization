@@ -2,8 +2,6 @@
 of this template will ask about each tag extracted from the original file.  For example,
 can the color be set for this tag? -->
 
-<h4><%= @design_template.name %> Text Replacement</h4>
-
 <%
 if ( @tags != nil ) then
 
@@ -42,38 +40,40 @@ if ( @tags != nil ) then
 
     end # there are set values
 %>
-    <br><br>
     <div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'></div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading"><%= t %></div>
-        <div class="panel-body" style='height:160px;'> <!-- todo - why? -->
+    <div class="panel panel-info">
+      <div class="panel-heading"><h3 class='panel-title'><%= t %> - Text Replacement</h3></div>
+      <div class="panel-body" style='height:210;'> <!-- todo - why must i set the height? -->
 
-          <label for="prompt<%= i.to_s %>">Prompt</label>
-          <input type="text" class="form-control input-lg" value='<%= prompt %>' id='prompt<%= i.to_s %>' placeholder="Enter a prompt">
-
-          <br><br>
-
-          <div>
-            <div style='float: left; width: 33%'>
-              <label for="minl<%= i.to_s %>">Min Length</label>
-              <input type='number' style='width: 100px;' class="form-control" value='<%= min_length %>' id='minl<%= i.to_s %>'></input>
-            </div>
-            <div style='float: left; width: 33%'>
-              <label for="maxl<%= i.to_s %>">Max Length</label>
-              <input type='number' style='width: 100px;' class="form-control" value='<%= max_length %>' id='maxl<%= i.to_s %>'></input>
-            </div>
-            <div style='float: left; width: 33%'>
-              <label for="colorp<%= i.to_s %>">Choose the color?</label>
-              <input type='checkbox' class="form-control" <%= pick_color %> value='true' id='colorp<%= i.to_s %>'></input>
-            </div>
-
-          </div>
-
-          <br><br>
-
+        <div class='input-group'>
+          <span class="input-group-addon" id="basic-addon1">Prompt</span>
+          <input type='text' class='form-control' id='prompt<%= i.to_s %>' placeholder="Enter a prompt" aria-describedby="basic-addon1" value='<%= prompt %>'></input>
         </div>
-    </div>
+
+        <div class='spacer'></div>
+
+        <div>
+          <div style='float:left; width:50%;'>
+            <div class='input-group' style='margin-bottom:20px;'>
+              <span class="input-group-addon" id="basic-addon2">Min Length</span>
+              <input type='number' class='form-control' id='minl<%= i.to_s %>' aria-describedby="basic-addon2" value='<%= min_length %>'></input>
+            </div>
+            <div class='input-group' style='margin-bottom:20px;'>
+              <span class="input-group-addon" id="basic-addon3">Max Length</span>
+              <input type='number' class='form-control' id='maxl<%= i.to_s %>' aria-describedby="basic-addon3" value='<%= max_length %>'></input>
+            </div>
+          </div>
+          <div style='float:left; width:50%;'>
+            <label class='checkbox-label' style='margin-left:30px;'>
+              Pick a color?
+              <input type='checkbox' class='checkbox-input' value='true' id='colorp<%= i.to_s %>' <%= pick_color %> ></input>
+            </label>
+          </div>
+        </div>
+
+      </div> <!-- /panel body -->
+    </div> <!-- /panel -->
 
 <%
     i += 1

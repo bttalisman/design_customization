@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   get '/tools' => 'home#tools'
 
   get "/colors/:id/update" => 'colors#update'
-  get "/colors/:id/" => 'colors#edit'
   get '/colors/delete_all' => 'colors#delete_all'
 
 
