@@ -260,13 +260,14 @@ class VersionsController < ApplicationController
   def process_version
 
     runai = params['runai']
+    logger.info "VERSIONS_CONTROLLER - process_version - runai: " + runai.to_s
 
     # bail out for any of these reasons
     if (@version.design_template == nil) then
       logger.info "VERSIONS_CONTROLLER - process_version - NOT PROCESSING, no template."
       return
     end
-    if (runai != 'on') then
+    if (runai != 'true') then
       logger.info "VERSIONS_CONTROLLER - process_version - NOT PROCESSING, runai not on."
       return
     end
