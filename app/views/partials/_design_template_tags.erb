@@ -13,6 +13,15 @@ if ( @tags != nil ) then
 
     logger.info '_design_template_tags.html.erb - t: ' + t
 
+    offer_pal_enabled = ''
+    prompt = ''
+    max_length = ''
+    min_length = ''
+    pick_color = ''
+    use_palette = ''
+    palette_id = ''
+    select_pal = ''
+
     if( @values != nil ) then
 
       # we'll try to look up any previously set values for this tag.
@@ -29,11 +38,16 @@ if ( @tags != nil ) then
           max_length = tagProps[ 'max_length' ]
           min_length = tagProps[ 'min_length']
           pick_color = tagProps[ 'pick_color' ]
-        else
-          prompt = ''
-          max_length = ''
-          min_length = ''
-          pick_color = ''
+          use_palette = tagProps[ 'use_palette' ]
+          palette_id = tagProps[ 'palette_id' ]
+        end
+
+        if( pick_color != 'checked' ) then
+          offer_pal_enabled = 'disabled'
+        end
+
+        if( use_palette != 'checked' ) then
+          select_pal = 'disabled'
         end
 
       end # there are tag settings
@@ -50,27 +64,58 @@ if ( @tags != nil ) then
           <span class="input-group-addon" id="basic-addon1">Prompt</span>
           <input type='text' class='form-control' id='prompt<%= i.to_s %>' placeholder="Enter a prompt" aria-describedby="basic-addon1" value='<%= prompt %>'></input>
         </div>
-
         <div class='spacer'></div>
 
         <div>
-          <div style='float:left; width:50%;'>
+          <div style='width:45%; float:left;'>
             <div class='input-group' style='margin-bottom:20px;'>
               <span class="input-group-addon" id="basic-addon2">Min Length</span>
               <input type='number' class='form-control' id='minl<%= i.to_s %>' aria-describedby="basic-addon2" value='<%= min_length %>'></input>
             </div>
+          </div>
+          <div style='width:45%; float:right;'>
             <div class='input-group' style='margin-bottom:20px;'>
               <span class="input-group-addon" id="basic-addon3">Max Length</span>
               <input type='number' class='form-control' id='maxl<%= i.to_s %>' aria-describedby="basic-addon3" value='<%= max_length %>'></input>
             </div>
           </div>
-          <div style='float:left; width:50%;'>
+        </div>
+        <div class='spacer'></div>
+
+        <div class='clearfix'>
+          <div style='float:left; width:45%;'>
             <label class='checkbox-label' style='margin-left:30px;'>
               Pick a color?
-              <input type='checkbox' class='checkbox-input' value='true' id='colorp<%= i.to_s %>' <%= pick_color %> ></input>
+              <input type='checkbox' data-use-pal-id='use_pal<%= i.to_s %>' data-sel-id='select_pal<%= i.to_s %>' id='colorp<%= i.to_s %>' onchange='toggle_pick_color( event );' class='checkbox-input' value='true' <%= pick_color %> ></input>
+            </label>
+          </div>
+          <div style='float:right; width:45%;'>
+            <label class='checkbox-label disabled' style='margin-left:30px;'>
+              Offer a Palette?
+              <input type='checkbox' data-sel-id='select_pal<%= i.to_s %>' onchange='toggle_use_palette( event );' class='checkbox-input' value='true' id='use_pal<%= i.to_s %>' <%= use_palette %> <%= offer_pal_enabled %> ></input>
             </label>
           </div>
         </div>
+        <div class='spacer'></div>
+
+        <div>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon4">Palette</span>
+            <select <%= select_pal %> id='select_pal<%= i.to_s %>' class="form-control" style='width:200px;' aria-describedby="basic-addon4">
+              <option value="" disabled selected>Select a Palette</option>
+<%            @palettes.each { |p|
+                if ( p.id.to_s == palette_id ) then
+                  selected = true
+                else
+                  selected = false
+                end %>
+                <option <%= if selected then 'selected="selected"' end %> value='<%= p.id.to_s %>'><%= p.name %></option>
+<%            } %>
+            </select>
+          </div>
+        </div>
+        <div class='spacer'></div>
+
 
       </div> <!-- /panel body -->
     </div> <!-- /panel -->
@@ -86,6 +131,41 @@ end # @tags is not nil
 %>
 
 <script>
+
+
+  function toggle_use_palette( event )
+  {
+    var target = $(event.target);
+    var sel_id = target.attr( 'data-sel-id' );
+    var s, o;
+    s = '#' + sel_id;
+    o = $(s);
+    o.prop( 'disabled', !target.is(':checked') );
+
+    if( !target.is(':checked') ) {
+      o.val( '' );
+    }
+  }
+
+  function toggle_pick_color( event )
+  {
+    var target = $(event.target);
+    var use_pal_id = target.attr( 'data-use-pal-id' );
+    var sel_pal_id = target.attr( 'data-sel-id' );
+
+    var s, o;
+    s = '#' + use_pal_id;
+    o = $(s);
+    o.prop( 'disabled', !target.is(':checked') );
+
+    if( !target.is(':checked') ) {
+      o.prop( 'checked', false );
+
+      s = '#' + sel_pal_id;
+      o = $(s);
+      o.val( '' );
+    }
+  }
 
 
   function validate_tag_values()
@@ -132,7 +212,7 @@ end # @tags is not nil
     {
 
       s = '#tag' + i;
-      o = $( s );
+      o = $(s);
 
       tagName = o.attr( 'data-tag-name' ).trim();
 
@@ -140,22 +220,22 @@ end # @tags is not nil
       returnSettings[ tagName ] = tagSettings;
 
       s = '#prompt' + i;
-      o = $( s );
+      o = $(s);
       prompt = o.val();
       tagSettings[ 'prompt' ] = prompt;
 
       s = '#maxl' + i;
-      o = $( s );
+      o = $(s);
       maxl = o.val();
       tagSettings[ 'max_length' ] = maxl;
 
       s = '#minl' + i;
-      o = $( s );
+      o = $(s);
       minl = o.val();
       tagSettings[ 'min_length' ] = minl;
 
       s = '#colorp' + i;
-      o = $( s );
+      o = $(s);
       colorp = o.is(":checked");
 
       if( colorp )
@@ -164,6 +244,23 @@ end # @tags is not nil
       } else {
         tagSettings[ 'pick_color' ] = '';
       }
+
+
+      s = '#use_pal' + i;
+      o = $(s);
+      use_pal = o.is(":checked");
+
+      if( use_pal )
+      {
+        tagSettings[ 'use_palette' ] = 'checked';
+      } else {
+        tagSettings[ 'use_palette' ] = '';
+      }
+
+      s = '#select_pal' + i;
+      o = $(s);
+      palette_id = o.val();
+      tagSettings[ 'palette_id' ] = palette_id;
 
     }
 

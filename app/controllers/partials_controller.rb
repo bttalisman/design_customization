@@ -15,6 +15,7 @@ class PartialsController < ApplicationController
     @design_template = DesignTemplate.find( template_id )
     @tags = get_tags_array( @design_template )
     @images = get_images_array( @design_template )
+    @palettes = Palette.all
 
 
     # If the user has set options regarding tags extracted from an AI file they
@@ -53,6 +54,7 @@ class PartialsController < ApplicationController
     @tags = get_tags_array( @design_template )
     @images = get_images_array( @design_template )
     @colors = Color.all
+    @palettes = Palette.all
 
 
     logger.info "PARTIALS_CONTROLLER - version_settings - @tags: " + @tags.to_s
