@@ -5,20 +5,16 @@
 <label>Source Folder</label> <%= @folder %><br>
 
 <%
-if (@versions.length > 0) then
-%>
+if (@versions.length > 0) then %>
   <h3>Versions</h3>
-
   <ul>
 <%
   @versions.each do |v| %>
     <li> <%= link_to v.name, v %> </li>
 <%
-  end
-%>
+  end %>
   </ul>
 <%
-end
-%>
+end %>
 
 <a class='btn btn-default' href='<%= edit_design_template_path %>'>Edit this Template</a>

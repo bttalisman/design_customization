@@ -1,3 +1,59 @@
+<script>
+
+  function add_color( color_id )
+  {
+    var uri = '<%= get_local_host %>/palettes/<%= @palette.id %>/add?color_id=' + color_id;
+    var s;
+
+    $.get( uri, function(data, status)
+      {
+      });
+
+    s = '#color' + color_id;
+    var c = $('#my_colors_list').find( s );
+    c.show();
+
+    s = '#star' + color_id;
+    $(s).show();
+
+  }
+
+  function remove_all()
+  {
+    var uri = '<%= get_local_host %>/palettes/<%= @palette.id %>/remove_all';
+
+    $.get( uri, function(data, status)
+      {
+      });
+
+    $('#my_colors_list').empty();
+    $('[ id^="star" ]').hide();
+  }
+
+
+  function remove_color( color_id )
+  {
+    var uri = '<%= get_local_host %>/palettes/<%= @palette.id %>/remove?color_id=' + color_id;
+    var s;
+
+    $.get( uri, function(data, status)
+      {
+      });
+
+    s = '#color' + color_id;
+    $('#my_colors_list').find( s ).hide();
+
+    s = '#star' + color_id;
+    $( s ).hide();
+  }
+
+
+  $(document).ready(function(){
+  });
+
+</script>
+
+
 
 <form action='update' id='palette_form'>
 
@@ -5,16 +61,67 @@
     <input type="text" id="" name='palette[name]' value="<%= @palette.name %>" class="form-control" />
   </div>
 
+
+  <div class='row'>
+
+    <div class='col col-md-1'></div>
+
+    <div class='col col-md-3'>
+      <h3>All Colors</h3>
+<%
+      if (@all_colors.length > 0) then %>
+        <ul id='all_colors_list' style='width:170px;'>
+<%
+        i = 0
+        @all_colors.each do |c|
+          display = 'none'
+          if( @my_colors.include?( c ) ) then
+            display = 'inline-block'
+          end %>
+          <li style='height:30px;' data-color-id='<%= c.id %>'>
+            <div style='width:20px; height:20px; float:left; margin-right:5px;'><%= image_tag("star.png", id:'star' + c.id.to_s, height:'20', width:'20', style:'display:' + display ) %></div>
+            <a onclick='add_color( "<%= c.id %>" );'><%= c.hex_code%></a>
+            <div id='swatch<%= i.to_s %>' style='display:inline-block; float:right; height:27px; width:27px; background:<%= c.hex_code %>'></div>
+          </li>
+<%
+          i += 1
+        end %>
+        </ul>
+<%
+      end %>
+    </div>
+
+    <div class='col col-md-1'></div>
+
+    <div class='col col-md-3'>
+      <h3>My Colors</h3>
+<%
+      i = 0
+      if (@all_colors.length > 0) then %>
+        <ul id='my_colors_list' style='width:125px;'>
+<%
+        @all_colors.each do |c|
+          display = 'none'
+          if( @my_colors.include?( c ) ) then
+            display = 'block'
+          end
+%>
+          <li style='height:30px; display:<%= display %>;' id='color<%= c.id %>'> <a onclick='remove_color( "<%= c.id %>" );'><%= c.hex_code%> </a>
+            <div id='swatch<%= i.to_s %>' style='display:inline-block; float:right; height:27px; width:27px; background:<%= c.hex_code %>'></div>
+          </li>
+<%
+          i += 1
+        end %>
+        </ul>
+<%
+      end %>
+    </div>
+  </div>
+
+
+
+
   <input class='btn btn-default' type='submit' value='Ok'></input>
+  <a onclick='remove_all();' class='btn btn-default'>Remove All Colors</a>
 
 </form>
-
-
-
-<script>
-
-  $(document).ready(function(){
-
-  });
-
-</script>

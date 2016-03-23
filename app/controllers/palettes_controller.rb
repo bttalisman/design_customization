@@ -7,25 +7,26 @@ class PalettesController < ApplicationController
 
   def show
     @palette = Palette.find( params[ :id ] )
+    @all_colors = Color.all
+    @my_colors = @palette.colors
   end
 
 
 
   def edit
-
     logger.info "PALETTES_CONTROLLER - edit! - params: " + params.to_s
     @palette = Palette.find( params[ :id ] )
+    @all_colors = Color.all
+    @my_colors = @palette.colors
 
+    logger.info "PALETTES_CONTROLLER - @my_colors: " + JSON.pretty_generate(JSON.parse(@my_colors.to_json))
   end
 
 
   def update
-
     logger.info "PALETTES_CONTROLLER - update! - params: " + params.to_s
-
     @palette = Palette.find( params[ :id ] )
     @palette.update( palette_params )
-
     logger.info "PALETTES_CONTROLLER - update - about to save."
     if @palette.save
       logger.info "PALETTES_CONTROLLER - update - SUCCESS!"
@@ -37,7 +38,28 @@ class PalettesController < ApplicationController
   end
 
 
+  def add
+    logger.info "PALETTES_CONTROLLER - add! - params: " + params.to_s
+    palette = Palette.find( params[ :id ] )
+    color = Color.find( params[ :color_id ] )
+    palette.colors << color
+    render nothing: true
+  end
 
+  def remove
+    logger.info "PALETTES_CONTROLLER - remove! - params: " + params.to_s
+    palette = Palette.find( params[ :id ] )
+    color = Color.find( params[ :color_id ] )
+    palette.colors.delete( color )
+    render nothing: true
+  end
+
+  def remove_all
+    logger.info "PALETTES_CONTROLLER - remove_all! - params: " + params.to_s
+    palette = Palette.find( params[ :id ] )
+    palette.colors.delete_all()
+    render nothing: true
+  end
 
 
   def new

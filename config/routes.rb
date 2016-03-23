@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   get '/colors/delete_all' => 'colors#delete_all'
 
   get "/palettes/:id/update" => 'palettes#update'
+  get "/palettes/:id/add" => 'palettes#add'
+  get "/palettes/:id/remove" => 'palettes#remove'
+  get "/palettes/:id/remove_all" => 'palettes#remove_all'
   get '/palettes/delete_all' => 'palettes#delete_all'
 
   get '/partials/version_settings/:id' => 'partials#version_settings'

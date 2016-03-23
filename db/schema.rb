@@ -11,12 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160322183718) do
+ActiveRecord::Schema.define(version: 20160322193719) do
 
   create_table "colors", force: :cascade do |t|
     t.string   "hex_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "palette_id"
+  end
+
+  add_index "colors", ["palette_id"], name: "index_colors_on_palette_id"
+
+  create_table "colors_palettes", id: false, force: :cascade do |t|
+    t.integer "color_id",   null: false
+    t.integer "palette_id", null: false
   end
 
 # Could not dump table "design_templates" because of following NoMethodError
@@ -26,7 +34,10 @@ ActiveRecord::Schema.define(version: 20160322183718) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "color_id"
   end
+
+  add_index "palettes", ["color_id"], name: "index_palettes_on_color_id"
 
   create_table "replacement_images", force: :cascade do |t|
     t.integer  "version_id"
