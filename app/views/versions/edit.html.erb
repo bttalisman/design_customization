@@ -98,19 +98,19 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Name</span>
-            <input type='text' class="form-control" name='version[name]' aria-describedby="basic-addon1"></input>
+            <input type='text' class="form-control" name='version[name]' value='<%= @version.name %>' aria-describedby="basic-addon1"></input>
           </div>
           <div class='spacer'></div>
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Folder</span>
-            <input type='text' class="form-control" id='version_output_folder_path' value='<%= @root_folder + "/" %>' name='version[output_folder_path]'></input>
+            <input type='text' class="form-control" id='version_output_folder_path' value='<%= @version.output_folder_path %>' name='version[output_folder_path]'></input>
           </div>
           <div class='spacer'></div>
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Template</span>
-            <select class="form-control" style='width:200px;' name='version[design_template_id]' id='version_design_template_id'>
+            <select class="form-control" disabled style='width:200px;' name='version[design_template_id]' id='version_design_template_id'>
               <option value="" disabled selected>Select a Template</option>
 
   <%            @design_templates.each { |t|
