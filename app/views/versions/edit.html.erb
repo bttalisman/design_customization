@@ -85,60 +85,72 @@
 <%=
 form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 %>
-  <div class='container' style='width:100%;'>
-    <div style='flex:1; margin: 30px;'>
-      <div class="form-group">
-        <label for="version[name]">Name</label>
-        <input type='text' name='version[name]' id='version[name]' value='<%= @version.name %>'></input>
-      </div>
 
-      <div class="form-group">
-        <label for="version[output_folder_path]">Output Folder</label>
-        <%= @output_folder_base %> <input type='text' name='version[output_folder_path]' id='version_output_folder_path' value='<%= @version.output_folder_path %>'></input>
-      </div>
+  <div class='row'>
+    <div class='col col-md-1'></div>
+    <div class='col col-md-4'>
 
-      <div class='form-group'>
-        <label for="runai">Run Illustrator</label>
-        <input type='checkbox' name='runai' id='runai' value='true'></input>
-      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Edit Version</h3>
+        </div>
+        <div class="panel-body">
 
-      <div class='form-group'>
-        <label for="version_design_template_id">Template</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Name</span>
+            <input type='text' class="form-control" name='version[name]' aria-describedby="basic-addon1"></input>
+          </div>
+          <div class='spacer'></div>
 
-          <select style='width: 200px;' name='version[design_template_id]' class="form-control" id='version_design_template_id' onchange='getTemplateHTML( null, false );'>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Folder</span>
+            <input type='text' class="form-control" id='version_output_folder_path' value='<%= @root_folder + "/" %>' name='version[output_folder_path]'></input>
+          </div>
+          <div class='spacer'></div>
 
-            <option value="" disabled selected>Select a Template</option>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Template</span>
+            <select class="form-control" style='width:200px;' name='version[design_template_id]' id='version_design_template_id'>
+              <option value="" disabled selected>Select a Template</option>
 
-<%          @design_templates.each { |t|
+  <%            @design_templates.each { |t|
 
-              if ( t.id == @design_template_id.to_i ) then
-                selected = true
-              else
-                selected = false
-              end
-%>
-              <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
-<%          }
-%>
-          </select>
-      </div>
+                  if ( t.id == @design_template_id.to_i ) then
+                    selected = true %>
+  <%              else
+                    selected = false
+                  end
+  %>
+                  <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
+  <%            } %>
+            </select>
+          </div>
+          <div class='spacer'></div>
+
+          <label class='checkbox-label'>
+            Run Illustrator?
+            <input type='checkbox' name='runai' id='runai' class='checkbox-input' value='true'></input>
+          </label>
+          <div class='spacer'></div>
 
 
-      <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
-      <a class='btn btn-default' href='<%= get_local_host %>/versions/<%= @version.id %>'>Cancel</a>
-      <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+          <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
+          <a class='btn btn-default' href='<%= get_local_host %>/versions/<%= @version.id %>'>Cancel</a>
+          <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
 
+        </div> <!-- / panel body -->
+      </div> <!-- / panel -->
+    </div>  <!-- / col -->
 
+    <div class='col col-md-1'></div>
 
+    <div class='col col-md-5'>
+      <div id='values_container'></div>
     </div>
 
-
-    <div id='values_container' style='flex:1; margin: 30px;'></div>
-
-  </div>
+  </div> <!-- / row -->
 
   <input name='version_data' id='version_data' style='display:none;'></input>
-
 
 <%
 end %>
