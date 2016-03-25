@@ -12,7 +12,7 @@ i = 0
   max_length = tag[ 1 ]['max_length']
   min_length = tag[ 1 ]['min_length']
   pick_color = tag[ 1 ]['pick_color']
-  text_color = '#0000ff'
+  text_color = ''
 
   if( !max_length ) then
     max_length = ''
@@ -70,11 +70,12 @@ i = 0
 <%    if( pick_color != '' ) then %>
         <div id='colorpicker_container<%= i.to_s %>' style='display:inline-block;'>
           <div class='input-group' style='float:left; width:90%;'>
-            <span class="input-group-addon" id="basic-addon1">Pick a Color</span>
+            <span class="input-group-addon" id="basic-addon1">Text Color</span>
             <select id="color_val<%= i.to_s %>" style='width:98%;' aria-describedby="basic-addon1" class="form-control">
-<%=             @colors.each do |c| %>
-                  <option value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
-<%              end %>
+              <option disabled selected='selected'>Pick a Color</option>
+<%=           @palettes[ tag_name ].each do |c| %>
+                <option value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
+<%            end %>
             </select>
           </div>
           <div id='swatch<%= i.to_s %>' style='display:inline-block; float:left; height:27px; width:27px; background:<%= text_color %>'></div>

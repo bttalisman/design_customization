@@ -40,16 +40,7 @@ class VersionsController < ApplicationController
     @design_template_id = @design_template.id
     @values = get_values_object( @version )
     @root_folder = Rails.root.to_s
-
-    # this is the prefix that the ui will append to any folder path specified by the user
-    if( @version.output_folder_path == '' ) then
-      # the user didn't specify an output folder, so the base is the root rails folder
-      @output_folder_base = @root_folder + '/'
-    else
-      # the user did specify, so the base is just nothing
-      @output_folder_base = ''
-    end
-
+    
   end
 
 
@@ -69,8 +60,6 @@ class VersionsController < ApplicationController
     # settings.
     set_tag_values( @version, params )
 
-
-    # methodize image-related settings
 
     @design_template = @version.design_template
     # this is an array of tag names, extracted from the AI file
@@ -142,26 +131,21 @@ class VersionsController < ApplicationController
 
   def new
     @version = Version.new
-    @version.name = '<none>'
-
-    if @version.save
-      # we need to save every version so we can get its id.
-      # todo, can we delete these if they don't get used?
-      logger.info "VERSIONS_CONTROLLER - NEW - version saved"
-    else
-      logger.info "VERSIONS_CONTROLLER - NEW - version NOT saved"
-    end
-
-    @version_id = @version.id
     @design_templates = DesignTemplate.all
-    @design_template_id = params['template_id']
     @root_folder = Rails.root.to_s
   end
 
 
   def create
-    # this never gets called. The new version page uses UPDATE
-    # because the version needs to be saved so files can be attached
+    logger.info "VERSIONS_CONTROLLER - CREATE"
+    @version = Version.new( version_params )
+
+    if @version.save
+      redirect_to action: 'edit', :id => @version.id
+    else
+      logger.info "VERSION_CONTROLLER - create - FAILURE!"
+      render "new"
+    end
   end
 
 

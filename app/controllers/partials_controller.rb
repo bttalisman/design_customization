@@ -37,6 +37,33 @@ class PartialsController < ApplicationController
   end
 
 
+  def get_palettes( template )
+
+    palettes = {}
+    prompts = get_prompts_object( template )
+    tag_settings = prompts[ 'tag_settings' ]
+
+    tag_settings.each { |t|
+
+      use_palette = t[ 1 ][ 'use_palette' ]
+      palette_id = t[ 1 ][ 'palette_id' ]
+
+      logger.info "PARTIALS_CONTROLLER - get_palettes - t: " + t.to_s
+      logger.info "PARTIALS_CONTROLLER - get_palettes - use_palette: " + use_palette.to_s
+
+      if( use_palette == 'checked' ) then
+        palette = Palette.find( palette_id )
+        palettes[ t[0] ] = palette.colors
+      else
+        palettes[ t[0] ] = Color.all
+      end
+    }
+
+    logger.info "PARTIALS_CONTROLLER - get_palettes - palettes: " + palettes.to_s
+
+    palettes
+  end
+
 
   # This action presents each tag with ui for setting version-specific options
   # for use in creating a Version tied to a DesignTemplate.  It is called whenever
@@ -54,7 +81,7 @@ class PartialsController < ApplicationController
     @tags = get_tags_array( @design_template )
     @images = get_images_array( @design_template )
     @colors = Color.all
-    @palettes = Palette.all
+    @palettes = get_palettes( @design_template )
 
 
     logger.info "PARTIALS_CONTROLLER - version_settings - @tags: " + @tags.to_s

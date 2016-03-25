@@ -5,30 +5,11 @@
 
   function create_version()
   {
-    alert( 'new.html.erb - create_version() - about to submit.');
-
-    var oReturn = build();
-    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
-    $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
-
-    var $pathInput = $('#version_output_folder_path');
-    var userSpecFolder = $pathInput.val();
-
-    if( userSpecFolder != '' )
+    if( validate() )
     {
-      var fullPath = userSpecFolder;
-
-      // and make sure it ends with a '/'
-      var c = fullPath.slice(-1);
-      if( c != '/' )
-      {
-        fullPath = fullPath + '/';
-      }
-      $pathInput.val( fullPath );
+      var form = $('#version_form');
+      form.submit();
     }
-
-    var form = $('#version_form');
-    form.submit();
   }
 
   function validate()
@@ -39,21 +20,6 @@
     return true;
   }
 
-  function changeTemplate( id )
-  {
-    var o;
-    if( id == null )
-    {
-      o = $('#version_design_template_id');
-      id = o.val();
-    }
-
-    var uri = "<%= get_local_host %>/partials/version_settings/" + id + "?version_id=" + <%= @version.id %>;
-    $.get( uri, function(data, status)
-      {
-        $('#values_container').html( data );
-      } );
-  }
 
 </script>
 
@@ -88,7 +54,7 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 
         <div class="input-group">
           <span class="input-group-addon" id="basic-addon1">Template</span>
-          <select class="form-control" style='width:200px;' name='version[design_template_id]' id='version_design_template_id' onchange='changeTemplate();'>
+          <select class="form-control" style='width:200px;' name='version[design_template_id]' id='version_design_template_id'>
             <option value="" disabled selected>Select a Template</option>
 
 <%            @design_templates.each { |t|
@@ -107,15 +73,8 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 
         <div class='spacer'></div>
 
-        <label class='checkbox-label'>
-          Run Illustrator?
-          <input type='checkbox' name='runai' id='runai' class='checkbox-input' value='true'></input>
-        </label>
-
-        <div class='spacer'></div>
-
         <a class='btn btn-default' href='<%= get_local_host %>/versions/<%= @version_id %>/cancel'>Cancel</a>
-        <button class='btn btn-default' id='create' onclick='create_version();'>Create</button>
+        <button class='btn btn-default' id='create' onclick='create_version();'>Create and Complete</button>
 
       </div> <!-- / panel body -->
     </div> <!-- / panel -->

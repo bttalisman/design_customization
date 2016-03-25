@@ -14,6 +14,7 @@ if ( @tags != nil ) then
     logger.info '_design_template_tags.html.erb - t: ' + t
 
     offer_pal_enabled = ''
+    label_class = ''
     prompt = ''
     max_length = ''
     min_length = ''
@@ -44,6 +45,7 @@ if ( @tags != nil ) then
 
         if( pick_color != 'checked' ) then
           offer_pal_enabled = 'disabled'
+          label_class = 'disabled'
         end
 
         if( use_palette != 'checked' ) then
@@ -86,11 +88,11 @@ if ( @tags != nil ) then
           <div style='float:left; width:45%;'>
             <label class='checkbox-label' style='margin-left:30px;'>
               Pick a color?
-              <input type='checkbox' data-use-pal-id='use_pal<%= i.to_s %>' data-sel-id='select_pal<%= i.to_s %>' id='colorp<%= i.to_s %>' onchange='toggle_pick_color( event );' class='checkbox-input' value='true' <%= pick_color %> ></input>
+              <input type='checkbox' data-label-id='label<%= i.to_s %>' data-use-pal-id='use_pal<%= i.to_s %>' data-sel-id='select_pal<%= i.to_s %>' id='colorp<%= i.to_s %>' onchange='toggle_pick_color( event );' class='checkbox-input' value='true' <%= pick_color %> ></input>
             </label>
           </div>
           <div style='float:right; width:45%;'>
-            <label class='checkbox-label disabled' style='margin-left:30px;'>
+            <label class='checkbox-label <%= label_class %>' id='label<%= i.to_s %>' style='margin-left:30px;'>
               Offer a Palette?
               <input type='checkbox' data-sel-id='select_pal<%= i.to_s %>' onchange='toggle_use_palette( event );' class='checkbox-input' value='true' id='use_pal<%= i.to_s %>' <%= use_palette %> <%= offer_pal_enabled %> ></input>
             </label>
@@ -152,6 +154,8 @@ end # @tags is not nil
     var target = $(event.target);
     var use_pal_id = target.attr( 'data-use-pal-id' );
     var sel_pal_id = target.attr( 'data-sel-id' );
+    var label_id = target.attr( 'data-label-id' );
+
 
     var s, o;
     s = '#' + use_pal_id;
@@ -161,9 +165,19 @@ end # @tags is not nil
     if( !target.is(':checked') ) {
       o.prop( 'checked', false );
 
+      s = '#' + label_id;
+      o = $(s);
+      o.addClass( 'disabled' );
+
       s = '#' + sel_pal_id;
       o = $(s);
       o.val( '' );
+    }
+    else
+    {
+      s = '#' + label_id;
+      o = $(s);
+      o.removeClass( 'disabled' );
     }
   }
 
