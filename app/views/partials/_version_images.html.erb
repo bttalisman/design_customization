@@ -36,25 +36,23 @@ i = 0
   end
 
 %>
+  <div class="panel panel-success">
+    <div class="panel-heading"><h3 class='panel-title'><%= image_name %> - Upload an Image</h3></div>
+    <div class="panel-body">
 
+      <input type='text' disabled style='float:left; width:80%;' class='form-control' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
 
-<div class="panel panel-success">
-  <div class="panel-heading"><h3 class='panel-title'><%= image_name %> - Upload an Image</h3></div>
-  <div class="panel-body">
+      <span style='float:left;' class="btn btn-default fileinput-button" id='file_input_container'>
+        <span>Upload</span>
+        <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image<%= i.to_s %>[uploaded_file]" id="replacement_image_uploaded_file<%= i.to_s %>" onchange='fileInputChange( this );' >
+      </span>
 
-    <input type='text' style='float:left; width:80%;' class='form-control' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
+      <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id<%= i.to_s %>' value='<%= @version_id %>'></input>
+      <input style='display:none;' id='image_name<%= i.to_s %>' name='image_name<%= i.to_s %>' value='<%= image_name %>'></input>
+      <input style='display:none;' id='replacement_image_id<%= i.to_s %>' name='replacement_image_id<%= i.to_s %>' value='<%= replacement_image_id %>'></input>
 
-    <span style='float:left;' class="btn btn-default fileinput-button" id='file_input_container'>
-      <span>Upload</span>
-      <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image<%= i.to_s %>[uploaded_file]" id="replacement_image_uploaded_file<%= i.to_s %>" onchange='fileInputChange( this );' >
-    </span>
-
-    <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id<%= i.to_s %>' value='<%= @version_id %>'></input>
-    <input style='display:none;' id='image_name<%= i.to_s %>' name='image_name<%= i.to_s %>' value='<%= image_name %>'></input>
-    <input style='display:none;' id='replacement_image_id<%= i.to_s %>' name='replacement_image_id<%= i.to_s %>' value='<%= replacement_image_id %>'></input>
-
+    </div>
   </div>
-</div>
 <%
   i += 1
 } # each image
@@ -88,7 +86,20 @@ i = 0
 
   function validate_image_values()
   {
-    // No validation at this time.
+    var count = $('#image_count').val();
+    var s, o;
+
+    for( var i = 0; i < count; i++ )
+    {
+      s = '#replacement_path' + i;
+      o = $(s);
+      if( o.val() == '' )
+      {
+        alert( 'Please upload a file.' );
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -98,7 +109,6 @@ i = 0
   // of all version-specific settings.  This json object is stored as the 'values' property
   function build_image_values()
   {
-
     var count = $('#image_count').val();
     var s, v, o;
     var rep_path;
@@ -109,7 +119,6 @@ i = 0
     oReturn = {};
 
     var image_name, replacement_image_id;
-
 
     console.log( 'build_image_values() - count: ' + count );
 

@@ -33,16 +33,14 @@
 <script>
 
 
-  function validate()
+  function validate_version_settings()
   {
-
-    var bReturn = true;
     <%
     if( rendering_tags_form ) then
     %>
         if( !validate_tag_values() )
         {
-          bReturn = false;
+          return false;
         }
     <%
     end %>
@@ -52,12 +50,12 @@
     %>
       if( !validate_image_values() )
       {
-        bReturn = false;
+        return false;
       }
     <%
     end %>
 
-    return bReturn;
+    return true;
   }
 
 

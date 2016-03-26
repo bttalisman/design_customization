@@ -32,15 +32,15 @@ if ( @images != nil ) then
     <div id='image<%= i.to_s %>' data-image-name='<%= image.to_s %>'></div>
 
     <div class="panel panel-success">
-        <div class="panel-heading"><h3 class='panel-title'><%= image %> - Image Replacement</h3></div>
-        <div class="panel-body">
+      <div class="panel-heading"><h3 class='panel-title'><%= image %> - Image Replacement</h3></div>
+      <div class="panel-body">
 
-          <label class='checkbox-label'>
-            Replace this image?
-            <input type='checkbox' class='checkbox-input' value='true' <%= replaceImage %> id='replace_image<%= i.to_s %>' <%= replaceImage %> ></input>
-          </label>
+        <label class='checkbox-label'>
+          Replace this image?
+          <input type='checkbox' class='checkbox-input' value='true' <%= replaceImage %> id='replace_image<%= i.to_s %>' <%= replaceImage %> ></input>
+        </label>
 
-        </div>
+      </div>
     </div>
 
 <%
@@ -58,8 +58,7 @@ end #imags is not nil
 
   function validate_image_values()
   {
-    alert( '_design_template_images.erb - validate_image_values()' );
-
+    // not really anything to do here.
     return true;
   }
 
@@ -67,13 +66,11 @@ end #imags is not nil
   // Builds json object with all setting values set on this page
   function build_images()
   {
-
     var o;
     var s;
     var count;
     var replaceImage;
     var returnSettings, imageName, imageSettings;
-
 
     o = $( '#image_count' );
     count = parseInt( o.val() );
@@ -102,7 +99,6 @@ end #imags is not nil
       }
 
       returnSettings[ imageName ] = imageSettings;
-
     }
 
     return returnSettings;

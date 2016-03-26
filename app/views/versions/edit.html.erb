@@ -2,13 +2,25 @@
 
 <script>
 
+
+  function validate()
+  {
+
+    if( $('#version_name').val() == '' )
+    {
+      alert( "Please enter a name for this version." );
+      return false;
+    }
+
+    return validate_version_settings();
+  }
+
   // this is called when the user creates or updates a Version
   function create_version()
   {
 
     if( validate() )
     {
-
       // this funtion is defined in the version_settings.html.erb controlled by partials controller
       var oReturn = build();
       $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
@@ -32,17 +44,9 @@
         $pathInput.val( fullPath );
       }
 
-
       var form = $('#version_form');
       form.submit();
-
     }
-    else
-    {
-
-      alert( 'failed validation!' );
-    }
-
   }
 
 
@@ -98,7 +102,7 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Name</span>
-            <input type='text' class="form-control" name='version[name]' value='<%= @version.name %>' aria-describedby="basic-addon1"></input>
+            <input type='text' class="form-control" id='version_name' name='version[name]' value='<%= @version.name %>' aria-describedby="basic-addon1"></input>
           </div>
           <div class='spacer'></div>
 
@@ -134,7 +138,7 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
           <div class='spacer'></div>
 
 
-          <a class="btn btn-default" id='update' onclick='create_version();'>Update</a>
+          <a class="btn btn-default" id='update' onclick='create_version(); return false;'>Update</a>
           <a class='btn btn-default' href='<%= get_local_host %>/versions/<%= @version.id %>'>Cancel</a>
           <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
 

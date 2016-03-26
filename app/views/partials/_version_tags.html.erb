@@ -138,8 +138,6 @@ i = 0
     var oTagProps;
     oReturn = {};
 
-    var bValid = true;
-
     for( var i = 0; i < count; i++ )
     {
       s = '#replacement_text' + i;
@@ -147,24 +145,49 @@ i = 0
       rep_text = o.val();
       tag_name = o.attr( 'data-tag-name' );
 
+      if( rep_text == '' )
+      {
+        alert( 'Please enter replacement text.' );
+        return false;
+      }
+
       minl = parseInt( o.attr( 'data-minl' ) );
       maxl = parseInt( o.attr( 'data-maxl' ) );
-
       len = rep_text.length;
 
-
-      if( ( len < minl ) || ( len > maxl ) )
+      if( !isNaN( minl) )
       {
-        bValid = false;
+        // there is a minl
+        if( len < minl )
+        {
+          alert( 'This text is too short!' );
+          return false;
+        }
       }
+
+      if( !isNaN( maxl ) )
+      {
+        // there is a maxl
+        if( len > maxl )
+        {
+          alert( 'This text is too long!' );
+          return false;
+        }
+      }
+
 
       s = '#color_val' + i;
       o = $(s);
       text_color = o.val();
+      if( text_color == null )
+      {
+        alert( 'Please pick a color.' );
+        return false;
+      }
 
     }
 
-    return bValid;
+    return true;
   }
 
 
@@ -184,21 +207,20 @@ i = 0
 
     for( var i = 0; i < count; i++ )
     {
-          s = '#replacement_text' + i;
-          o = $(s);
-          rep_text = o.val();
-          tag_name = o.attr( 'data-tag-name' );
+      s = '#replacement_text' + i;
+      o = $(s);
+      rep_text = o.val();
+      tag_name = o.attr( 'data-tag-name' );
 
-          s = '#color_val' + i;
-          o = $(s);
-          text_color = o.val();
+      s = '#color_val' + i;
+      o = $(s);
+      text_color = o.val();
 
-          oTagProps = {};
-          oTagProps[ 'replacement_text' ] = rep_text;
-          oTagProps[ 'text_color' ] = text_color;
+      oTagProps = {};
+      oTagProps[ 'replacement_text' ] = rep_text;
+      oTagProps[ 'text_color' ] = text_color;
 
-
-          oReturn[ tag_name ] = oTagProps;
+      oReturn[ tag_name ] = oTagProps;
     }
 
     return oReturn;

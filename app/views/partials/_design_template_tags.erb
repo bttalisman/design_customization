@@ -156,22 +156,27 @@ end # @tags is not nil
     var sel_pal_id = target.attr( 'data-sel-id' );
     var label_id = target.attr( 'data-label-id' );
 
-
     var s, o;
     s = '#' + use_pal_id;
     o = $(s);
     o.prop( 'disabled', !target.is(':checked') );
 
     if( !target.is(':checked') ) {
+      //  if pick color checkbox is unchecked
+
+      // uncheck the use palette checkbox
       o.prop( 'checked', false );
 
+      // disable the label
       s = '#' + label_id;
       o = $(s);
       o.addClass( 'disabled' );
 
+      // set the value and disable the select
       s = '#' + sel_pal_id;
       o = $(s);
       o.val( '' );
+      o.prop( 'disabled', true );
     }
     else
     {
@@ -184,8 +189,6 @@ end # @tags is not nil
 
   function validate_tag_values()
   {
-    //alert( '_design_template_tags.erb - validate_tag_values()' );
-
     var s;
     o = $( '#tag_count' );
     count = parseInt( o.val() );
@@ -199,8 +202,23 @@ end # @tags is not nil
 
       if( o.val() == '' )
       {
-        bValid = false;
+        alert( 'Please enter a prompt.' );
+        return false;
       }
+
+      s = '#use_pal' + i;
+      o = $(s);
+      if( o.is(":checked") )
+      {
+        s = '#select_pal' + i;
+        o = $(s);
+        if( o.val() == null )
+        {
+          alert( "Please select a palette." );
+          return false;
+        }
+      }
+
     }
 
     return bValid;

@@ -3,7 +3,7 @@
 
 <script>
 
-  function create_version()
+  function create_version( )
   {
     if( validate() )
     {
@@ -14,10 +14,25 @@
 
   function validate()
   {
-    alert( 'validate()' );
+    bValid = true;
+    var o, s;
 
-    // todo - validate stuff
-    return true;
+    s = '#version_name';
+    o = $(s);
+    if( o.val() == '' ) {
+      alert( "Please enter a name." );
+      bValid = false;
+    }
+
+    s = '#version_design_template_id';
+    o = $(s);
+    if( o.val() == null )
+    {
+      alert( "Please select a template." );
+      bValid = false;
+    }
+
+    return bValid;
   }
 
 
@@ -40,7 +55,7 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 
         <div class="input-group">
           <span class="input-group-addon" id="basic-addon1">Name</span>
-          <input type='text' class="form-control" name='version[name]' aria-describedby="basic-addon1"></input>
+          <input type='text' class="form-control" id='version_name' name='version[name]' aria-describedby="basic-addon1"></input>
         </div>
 
         <div class='spacer'></div>
@@ -74,7 +89,7 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
         <div class='spacer'></div>
 
         <a class='btn btn-default' href='<%= get_local_host %>/versions/<%= @version_id %>/cancel'>Cancel</a>
-        <button class='btn btn-default' id='create' onclick='create_version();'>Create and Complete</button>
+        <a class='btn btn-default' id='create' onclick='create_version(); return false;'>Create and Complete</a>
 
       </div> <!-- / panel body -->
     </div> <!-- / panel -->
