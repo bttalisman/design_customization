@@ -12,7 +12,6 @@
 <%=
         form_for @design_template, html: { multipart: true, :onsubmit => 'return validate();'  } do |form|
 %>
-
           <div class='input-group' style='margin-bottom:20px;'>
             <span class="input-group-addon" id="basic-addon1">Name</span>
             <input type='text' class='form-control' id='design_template_name' name='design_template[name]' aria-describedby="basic-addon1" value='<%= @design_template.name %>'></input>

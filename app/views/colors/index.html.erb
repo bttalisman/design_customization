@@ -1,8 +1,13 @@
 
-<ul>
 <%
-  @colors.each { |c| %>
-    <li style='height:30px;'><%= link_to c.hex_code, [:edit, c] %> <div style='display:inline-block; height:20px; width:20px; background:<%= c.hex_code %>'></div></li>
+@colors.each { |c| %>
+  <a href='<%= get_local_host %>/colors/<%= c.id %>/edit'>
+  <div class='color-item' style='background:<%= c.hex_code %>'>
+    <div class='outline-text' style='margin:auto; width:60%;'>
+      <%= c.hex_code %>
+    </div>
+  </div>
+  </a>
+
 <%
-  } %>
-</ul>
+} %>

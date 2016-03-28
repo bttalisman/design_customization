@@ -1,22 +1,48 @@
 
 <form action='update' id='color_form'>
 
-  <div class="input-group" id="new_color_picker_container">
-    <input type="text" id="color_val" name='color[hex_code]' value="<%= @color.hex_code %>" class="form-control" />
-    <span class="input-group-addon"><i></i></span>
-  </div>
 
-  <input class='btn btn-default' type='submit' value='Ok'></input>
+  <div class='row'>
+    <div class='col col-md-1'></div>
+    <div class='col col-md-4'>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Edit Color</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+              <input type="text" id="hex_code" name='color[hex_code]' class="form-control" data-control="hue" value="<%= @color.hex_code %>">
+          </div>
+          <div class='spacer'></div>
+
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class="input-group-addon" id="basic-addon1">Description</span>
+            <input type='text' class='form-control' id='color_description' name='color[description]' value='<%= @color.description %>' aria-describedby="basic-addon1" ></input>
+          </div>
+          <div class='spacer'></div>
+
+
+          <input type='submit' class='btn btn-default'></input>
+          <a class='btn btn-default' href='/colors'>Cancel</a>
+          <a class="btn btn-default" href="/colors/<%= @color.id %>"  data-method="delete" rel="nofollow">Delete</a>
+
+        </div> <!-- / panel body -->
+      </div> <!-- / panel -->
+    </div> <!-- / col -->
+  </div> <!-- / row -->
 
 </form>
-
 
 
 <script>
 
   $(document).ready(function(){
 
-    $("#new_color_picker_container").colorpicker({});
+    $('#hex_code').minicolors( {
+        theme: 'bootstrap'
+    });
+
   });
 
 </script>

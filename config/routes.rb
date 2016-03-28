@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   get '/partials/version_settings/:id' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
+  get '/partials/quick_new' => 'partials#quick_new'
 
   get '/versions/create' => 'versions#create'
   get '/versions/:id/update' => 'versions#update'
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
   post '/versions/:id/update' => 'versions#update'
   get '/versions/delete_all' => 'versions#delete_all'
   get '/versions/:id/cancel' => 'versions#cancel'
+  get '/versions/quick_new' => 'versions#quick_new'
 
   post '/design_templates/create' => 'design_templates#create'
   get '/design_templates/:id/edit' => 'design_templates#edit'

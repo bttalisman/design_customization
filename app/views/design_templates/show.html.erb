@@ -1,20 +1,49 @@
-<h1><%= @design_template.name.to_s %> Template</h1>
 
+  <div class='row'>
+    <div class='col col-md-1'></div>
+    <div class='col col-md-4'>
 
-<label>Original File</label> <%= image_tag @design_template.original_file.url %><br>
-<label>Source Folder</label> <%= @folder %><br>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= @design_template.name.to_s %> Template</h3>
+        </div>
+        <div class="panel-body">
 
-<%
-if (@versions.length > 0) then %>
-  <h3>Versions</h3>
-  <ul>
-<%
-  @versions.each do |v| %>
-    <li> <%= link_to v.name, v %> </li>
-<%
-  end %>
-  </ul>
-<%
-end %>
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class="input-group-addon" id="basic-addon1">Original File</span>
+            <input type='text' disabled class='form-control' aria-describedby="basic-addon1" title='<%= @design_template.original_file.url %>' value='<%= @design_template.original_file.url %>'></input>
+          </div>
 
-<a class='btn btn-default' href='<%= edit_design_template_path %>'>Edit this Template</a>
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class="input-group-addon" id="basic-addon2">Source Folder</span>
+            <input type='text' disabled class='form-control' aria-describedby="basic-addon2" title='<%= @folder %>' value='<%= @folder %>'></input>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-btn">
+              <a class='btn btn-default' href='<%= get_local_host %>/versions/quick_new?template_id=<%= @design_template.id %>'>Quick Version</a><br>
+            </div><!-- /btn-group -->
+            <input disabled class='form-control' title='<%= @quick_new_partial_url %>' value='<%= @quick_new_partial_url %>'></input>
+          </div><!-- /input-group -->
+          
+          <div class='spacer'></div>
+
+<%        if (@versions.length > 0) then %>
+            <h4>Versions</h4>
+            <ul class='list-group'>
+<%
+              @versions.each do |v| %>
+                <li class='list-group-item'> <%= link_to v.name, v %> </li>
+<%
+              end %>
+            </ul>
+<%
+          end %>
+
+          <div class='spacer'></div>
+
+          <a class='btn btn-default' href='<%= edit_design_template_path %>'>Edit this Template</a>
+        </div> <!-- /panel body -->
+      </div> <!-- /panel -->
+    </div> <!-- /col -->
+  </div> <!-- /row -->

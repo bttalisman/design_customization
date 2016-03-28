@@ -9,7 +9,7 @@ class VersionsController < ApplicationController
   @@path_to_extract_images_script = Rails.root.to_s + "/bin/illustrator_processing/extractImages.jsx"
   @@path_to_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplace.jsx"
   @@path_to_image_search_replace_script = Rails.root.to_s + "/bin/illustrator_processing/searchAndReplaceImages.jsx"
-
+  @@path_to_quick_version_root = Rails.root.to_s + "/versions"
 
 
   def delete_all
@@ -40,9 +40,8 @@ class VersionsController < ApplicationController
     @design_template_id = @design_template.id
     @values = get_values_object( @version )
     @root_folder = Rails.root.to_s
-    
-  end
 
+  end
 
   def update
 
@@ -129,11 +128,34 @@ class VersionsController < ApplicationController
   end
 
 
+
   def new
+    logger.info "VERSIONS_CONTROLLER - NEW"
     @version = Version.new
     @design_templates = DesignTemplate.all
     @root_folder = Rails.root.to_s
   end
+
+
+
+  def quick_new
+    logger.info "VERSIONS_CONTROLLER - QUICK_NEW"
+    template_id = params[ :template_id ]
+    @design_template = DesignTemplate.find( template_id )
+
+    config_hash = { :design_template_id => template_id }
+
+    @version = Version.new( config_hash )
+    @version.save
+
+    version_folder_path = @@path_to_quick_version_root + "/template_" + @design_template.id.to_s + "/version_" + @version.id.to_s + "/"
+    version_name = @design_template.name + "_" + @version.id.to_s
+
+    @version.name = version_name
+    @version.output_folder_path = version_folder_path
+    @version.save
+  end
+
 
 
   def create

@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160322193719) do
+ActiveRecord::Schema.define(version: 20160328234324) do
 
   create_table "colors", force: :cascade do |t|
     t.string   "hex_code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.integer  "palette_id"
+    t.string   "description"
   end
 
   add_index "colors", ["palette_id"], name: "index_colors_on_palette_id"

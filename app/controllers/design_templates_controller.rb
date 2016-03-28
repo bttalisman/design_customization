@@ -20,12 +20,12 @@ class DesignTemplatesController < ApplicationController
       @versions = @design_template.versions
 
       file = @design_template.original_file
-
       if( file.path != nil ) then
         source_path = file.path
         @folder = File.dirname( source_path.to_s )
       end
 
+      @quick_new_partial_url = get_local_host + '/partials/quick_new?template_id=' + @design_template.id.to_s
     end
 
 

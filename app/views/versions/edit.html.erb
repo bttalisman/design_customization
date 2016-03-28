@@ -108,7 +108,7 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 
           <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Folder</span>
-            <input type='text' class="form-control" id='version_output_folder_path' value='<%= @version.output_folder_path %>' name='version[output_folder_path]'></input>
+            <input type='text' class="form-control" id='version_output_folder_path' title='<%= @version.output_folder_path %>' value='<%= @version.output_folder_path %>' name='version[output_folder_path]'></input>
           </div>
           <div class='spacer'></div>
 
