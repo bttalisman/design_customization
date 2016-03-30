@@ -23,9 +23,21 @@ class VersionsController < ApplicationController
     render nothing: true
   end
 
+
   def index
-    @versions = Version.all
+    versions = Version.all
+    @versions = Array.new
+
+    versions.each { |v|
+      o = { :name => v.name.to_s,
+        :template => v.design_template.name.to_s,
+        :tags => has_tags?( v.design_template ).to_s,
+        :images => has_images?( v.design_template ).to_s
+      }
+      @versions << o
+    }
   end
+
 
   def edit
     @version = Version.find( params[ :id ] )

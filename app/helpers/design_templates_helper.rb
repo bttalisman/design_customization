@@ -56,6 +56,24 @@ module DesignTemplatesHelper
   end
 
 
+
+    def has_tags?( design_template )
+      a = get_tags_array( design_template )
+      if( a.length > 0 ) then
+        return true
+      end
+      return false
+    end
+
+
+  def has_images?( design_template )
+    a = get_images_array( design_template )
+    if( a.length > 0 ) then
+      return true
+    end
+    return false
+  end
+
   # This method assumes that there is a file containing a json array of the names
   # of all images extracted from the DesignTemplate's associated AI file.
   def get_images_array( design_template )
