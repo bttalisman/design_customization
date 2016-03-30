@@ -25,12 +25,6 @@
 
 <div class='container-fluid'>
 
-
-
-<% flash.each do |key, value| %>
-<p><%= value %></p>
-<% end %>
-
 <ul class="nav nav-tabs">
   <li role="presentation" class='<%= if params[:controller] == 'design_templates' then 'active' end %>' ><a href="<%= design_templates_path %>">Templates</a></li>
   <li role="presentation" class='<%= if params[:controller] == 'versions' then 'active' end %>' ><a href="<%= versions_path %>">Versions</a></li>
@@ -48,7 +42,6 @@
         <li><%= link_to "Version", new_version_path %></li>
         <li><%= link_to "Color", new_color_path %></li>
         <li><%= link_to "Palette", new_palette_path %></li>
-
       </ul>
 
     </li>

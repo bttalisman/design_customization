@@ -1,15 +1,39 @@
-<h1>New Palette</h1>
 
 <%=
 form_for @palette do |form|
 %>
 
-  <div class="input-group">
-    Name <input type="text" id="" name='palette[name]' class="form-control" />
-  </div>
+<div class='row'>
+  <div class='col col-md-1'></div>
+  <div class='col col-md-4'>
 
-<%=
-  form.submit %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">New Palette</h3>
+      </div>
+      <div class="panel-body">
+
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">Name</span>
+          <input type='text' class="form-control" id='palette_name' name='palette[name]' aria-describedby="basic-addon1"></input>
+        </div>
+
+        <div class='spacer'></div>
+
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon2">Description</span>
+          <input type='text' class="form-control" id='palette_description' name='palette[description]' aria-describedby="basic-addon2"></input>
+        </div>
+
+        <div class='spacer'></div>
+
+      </div> <!-- / body -->
+    </div> <!-- / panel -->
+
+    <input class='btn btn-default' type='submit' value='Ok'></input>
+
+  </div> <!-- / col -->
+</div> <!-- /row -->
 
 <%
 end

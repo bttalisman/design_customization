@@ -78,8 +78,15 @@ class PartialsController < ApplicationController
       logger.info "PARTIALS_CONTROLLER - get_palettes - use_palette: " + use_palette.to_s
 
       if( use_palette == 'checked' ) then
-        palette = Palette.find( palette_id )
-        palettes[ t[0] ] = palette.colors
+
+        begin
+          palette = Palette.find( palette_id )
+          palettes[ t[0] ] = palette.colors
+
+        rescue ActiveRecord::RecordNotFound
+          palettes[ t[0] ] = Color.all
+        end
+
       else
         palettes[ t[0] ] = Color.all
       end

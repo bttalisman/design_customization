@@ -1,20 +1,31 @@
-<h1><%= @palette.name.to_s %></h1>
 
+<div class='row'>
+  <div class='col col-md-1'></div>
+  <div class='col col-md-4'>
 
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= @palette.name.to_s %></h3>
+      </div>
+      <div class="panel-body">
 <%
-if (@my_colors.length > 0) then %>
-  <h3>Colors</h3>
-  <ul style='width:150px;'>
+        if (@my_colors.length > 0) then %>
 <%
-  @my_colors.each do |c| %>
-    <li style='height:30px;'> <%= link_to c.hex_code, c %> <div style='display:inline-block; float:right; height:27px; width:27px; background:<%= c.hex_code %>'></div></li>
+          @my_colors.each do |c| %>
+            <div class='color-item' title='<%= c.hex_code %>' id='all_color<%= c.id %>' style='background:<%= c.hex_code %>;'>
+            </div>
 <%
-  end %>
-  </ul>
-<%
-end %>
+          end %>
+<%      end %>
+      </div> <!-- / body -->
+    </div>  <!-- / panel -->
 
 
+    <a class='btn btn-default' href='<%= edit_palette_path %>'>Edit this Palette</a>
+    <a class="btn btn-default" href="/palettes/<%= @palette.id %>"  data-confirm='Are you sure?' data-method="delete" rel="nofollow">Delete</a>
 
-<a class='btn btn-default' href='<%= edit_palette_path %>'>Edit this Palette</a>
-<a class="btn btn-default" href="/palettes/<%= @palette.id %>"  data-method="delete" rel="nofollow">Delete</a>
+
+  </div> <!-- / col -->
+
+
+</div> <!-- / row -->

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160328234324) do
+ActiveRecord::Schema.define(version: 20160330172456) do
 
   create_table "colors", force: :cascade do |t|
     t.string   "hex_code"
@@ -33,9 +33,10 @@ ActiveRecord::Schema.define(version: 20160328234324) do
 
   create_table "palettes", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.integer  "color_id"
+    t.string   "description"
   end
 
   add_index "palettes", ["color_id"], name: "index_palettes_on_color_id"

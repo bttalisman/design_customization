@@ -2,12 +2,8 @@
 <%
 @colors.each { |c| %>
   <a href='<%= get_local_host %>/colors/<%= c.id %>/edit'>
-  <div class='color-item' style='background:<%= c.hex_code %>'>
-    <div class='outline-text' style='margin:auto; width:60%;'>
-      <%= c.hex_code %>
+    <div class='color-item' title='<%= c.hex_code %>' style='background:<%= c.hex_code %>'>
     </div>
-  </div>
   </a>
-
 <%
 } %>

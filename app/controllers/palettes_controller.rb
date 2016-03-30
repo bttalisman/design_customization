@@ -12,7 +12,6 @@ class PalettesController < ApplicationController
   end
 
 
-
   def edit
     logger.info "PALETTES_CONTROLLER - edit! - params: " + params.to_s
     @palette = Palette.find( params[ :id ] )
@@ -109,7 +108,7 @@ class PalettesController < ApplicationController
 
 
   def palette_params
-       params.require( :palette ).permit( :name )
+       params.require( :palette ).permit( :name, :description )
   end
 
 
