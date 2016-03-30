@@ -1,17 +1,214 @@
 
-<ul>
-<%
-@design_templates.each { |t|
 
-  if t.name == '' then
-    name = "<none>"
-  else
-    name = t.name
-  end
+<div class='row'>
 
-%>
-  <li><%= link_to name, t %></li>
-<%
-}
-%>
-</ul>
+  <div class='col col-md-1'></div>
+  <div class='col col-md-7'>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><a onclick='toggle_name();'>Name</a></th>
+          <th><a onclick='toggle_tags();'>Tags?</a></th>
+          <th><a onclick='toggle_images();'>Images?</a></th>
+        </tr>
+      </thead>
+      <tbody>
+    <%
+        i = 0
+        @design_templates.each { |t| %>
+          <tr>
+            <td onclick='show_template( "<%= t[:id]%>" );' id='name<%= i.to_s %>'>
+              <%= t[:name] %>
+            </td>
+            <td id='tags<%= i.to_s %>'>
+              <%= t[:tags] %>
+            </td>
+            <td id='images<%= i.to_s %>'>
+              <%= t[:images] %>
+            </td>
+          </tr>
+    <%    i += 1
+        } %>
+      </tbody>
+    </table>
+  </div> <!-- / col -->
+
+  <div class='col col-md-3'>
+  </div>
+
+  <div class='col col-md-1'>
+  </div>
+
+</div> <!-- / row -->
+
+
+
+
+
+<div style='display:none' id='templates'><%= @design_templates.to_json %></div>
+
+
+<script>
+
+  var NAME_FLIP = true;
+  var TAGS_FLIP = true;
+  var IMAGES_FLIP = true;
+
+
+  function show_template( id )
+  {
+    window.location = '/design_templates/' + id;
+  }
+
+
+  function get_templates()
+  {
+    var templates_element = $('#templates');
+    var templates_text = templates_element.text();
+    var templates_array = JSON.parse( templates_text );
+    return templates_array;
+  }
+
+
+  function put_templates( array )
+  {
+    var templates_element = $('#templates');
+    templates_element.text( JSON.stringify( array ) );
+  }
+
+
+  function my_sort( obj1, obj2, key, flip )
+  {
+    var o1, o2;
+
+    if( flip )
+    {
+      o1 = obj1;
+      o2 = obj2;
+    }
+    else
+    {
+      o1 = obj2;
+      o2 = obj1;
+    }
+
+    var s1 = '';
+    if( o1[key] != null ) {
+      s1 = o1[key].toLowerCase(); }
+
+    var s2 = '';
+    if( o2[key] != null ) {
+      s2 = o2[key].toLowerCase(); }
+
+    var comp;
+    if( s1 < s2 )
+    {
+      comp = -1;
+    }
+    else if( s1 > s2 )
+    {
+      comp = 1;
+    }
+    else
+    {
+      // the names are equal
+      comp = 0;
+    }
+
+    return comp;
+  }
+
+
+  function toggle_name()
+  {
+    var templates = get_templates();
+    NAME_FLIP = !NAME_FLIP;
+
+    templates.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'name', NAME_FLIP )
+    });
+
+    put_templates( templates );
+    drawPage();
+  }
+
+
+
+  function toggle_tags()
+  {
+    var templates = get_templates();
+    TAGS_FLIP = !TAGS_FLIP;
+
+    templates.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'tags', TAGS_FLIP )
+    });
+
+    put_templates( templates );
+    drawPage();
+  }
+
+
+
+  function toggle_images()
+  {
+    var templates = get_templates();
+    IMAGES_FLIP = !IMAGES_FLIP;
+
+    templates.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'images', IMAGES_FLIP )
+    });
+
+    put_templates( templates );
+    drawPage();
+  }
+
+
+  function fill_container( )
+  {
+    var templates = get_templates();
+    var o, s, el;
+    var d;
+    var container_index = 0;
+
+
+    for( var i = 0; i < templates.length; i++ )
+    {
+      o = templates[i];
+
+      s = '#name' + container_index.toString();
+      el = $(s);
+      el.text( o['name'] );
+      el.attr( 'onclick', 'show_template("' + o['id'] + '")' );
+
+      s = '#tags' + container_index.toString();
+      el = $(s);
+      el.text( o['tags'] );
+
+      s = '#images' + container_index.toString();
+      el = $(s);
+      el.text( o['images'] );
+
+      container_index++;
+    }
+  }
+
+
+  function drawPage()
+  {
+    fill_container();
+  }
+
+
+  $(document).ready( function() {
+
+    // clicks data are probably what the user is here for
+    toggle_name();
+
+  });
+
+
+
+</script>

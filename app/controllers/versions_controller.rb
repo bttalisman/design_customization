@@ -32,7 +32,9 @@ class VersionsController < ApplicationController
       o = { :name => v.name.to_s,
         :template => v.design_template.name.to_s,
         :tags => has_tags?( v.design_template ).to_s,
-        :images => has_images?( v.design_template ).to_s
+        :images => has_images?( v.design_template ).to_s,
+        :id => v.id.to_s,
+        :template_id => v.design_template.id.to_s
       }
       @versions << o
     }

@@ -18,10 +18,10 @@
         i = 0
         @versions.each { |v| %>
           <tr>
-            <td id='name<%= i.to_s %>'>
+            <td onclick='show_version( "<%= v[:id]%>" );' id='name<%= i.to_s %>'>
               <%= v[:name] %>
             </td>
-            <td id='template<%= i.to_s %>'>
+            <td onclick='show_template( "<%= v[:template_id]%>" );' id='template<%= i.to_s %>'>
               <%= v[:template] %>
             </td>
             <td id='tags<%= i.to_s %>'>
@@ -60,6 +60,18 @@
   var IMAGES_FLIP = true;
 
 
+  function show_version( id )
+  {
+    window.location = '/versions/' + id;
+  }
+
+
+  function show_template( id )
+  {
+    window.location = '/design_templates/' + id;
+  }
+
+
   function get_versions()
   {
     var versions_element = $('#versions');
@@ -74,7 +86,6 @@
     var versions_element = $('#versions');
     versions_element.text( JSON.stringify( array ) );
   }
-
 
 
   function my_sort( obj1, obj2, key, flip )
@@ -201,10 +212,12 @@
       s = '#name' + container_index.toString();
       el = $(s);
       el.text( o['name'] );
+      el.attr( 'onclick', 'show_version("' + o['id'] + '")' );
 
       s = '#template' + container_index.toString();
       el = $(s);
       el.text( o['template'] );
+      el.attr( 'onclick', 'show_template("' + o['template_id'] + '")' );
 
       s = '#tags' + container_index.toString();
       el = $(s);

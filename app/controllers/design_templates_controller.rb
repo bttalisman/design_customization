@@ -11,7 +11,17 @@ class DesignTemplatesController < ApplicationController
 
 
     def index
-      @design_templates = DesignTemplate.all
+      templates = DesignTemplate.all
+      @design_templates = Array.new
+
+      templates.each { |t|
+        o = { :name => t.name.to_s,
+          :tags => has_tags?( t ).to_s,
+          :images => has_images?( t ).to_s,
+          :id => t.id.to_s
+        }
+        @design_templates << o
+      }
     end
 
 
