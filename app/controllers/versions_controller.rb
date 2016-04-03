@@ -111,9 +111,11 @@ class VersionsController < ApplicationController
           # No need to modify the version.values, we're just about to replace that entry
 
           ri = get_replacement_image( image_name, @version )
+          logger.info "VERSIONS_CONTROLLER - UPDATE - ri: " + ri.to_s          
           if( ri ) then
             ri.destroy
           end
+
 
           o = { 'uploaded_file' => myFile }
           @replacement_image = @version.replacement_images.create( o )
@@ -135,9 +137,9 @@ class VersionsController < ApplicationController
 
     if @version.save
       process_version
-      redirect_to versions_path, :notice => "This version was saved."
+      redirect_to versions_path
     else
-      render "new"
+      redirect_to versions_path
     end
   end
 

@@ -2,6 +2,18 @@ class PalettesController < ApplicationController
 
   def index
     @palettes = Palette.all
+
+    palettes = Palette.all
+    @palettes = Array.new
+
+    palettes.each { |p|
+      o = { :name => p.name.to_s,
+        :description => p.description.to_s,
+        :id => p.id.to_s        
+      }
+      @palettes << o
+    }
+
   end
 
 

@@ -18,6 +18,8 @@ Rails.application.config.assets.precompile += %w( bootstrap.css )
 Rails.application.config.assets.precompile += %w( bootstrap-responsive.css )
 Rails.application.config.assets.precompile += %w( select2.js )
 Rails.application.config.assets.precompile += %w( select2.css )
+Rails.application.config.assets.precompile += %w( util.css )
+
 
 Rails.application.config.assets.precompile += %w( star.png )
 Rails.application.config.assets.precompile += %w( jquery.minicolors.png )

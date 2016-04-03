@@ -22,7 +22,7 @@ module VersionsHelper
     if( is_json?( values_string ) ) then
       values = JSON.parse values_string
     else
-      logger.info "APPLICATION_HELPER - get_values_object - INVALID JSON!!"
+      logger.info "VERSIONS_HELPER - get_values_object - INVALID JSON!!"
     end
 
     values
@@ -31,7 +31,7 @@ module VersionsHelper
 
   def get_replacement_image_id( image_name, version )
 
-    #logger.info "APPLICATION_HELPER - get_replacement_image_id!!"
+    logger.info "VERSIONS_HELPER - get_replacement_image_id()!!"
 
     values = get_values_object( version )
 
@@ -52,6 +52,7 @@ module VersionsHelper
   end
 
   def get_replacement_image( image_name, version )
+    logger.info "VERSIONS_HELPER - get_replacement_image()!!"
     id = get_replacement_image_id( image_name, version )
     if( id != '' ) then
       ri = ReplacementImage.find( id )
@@ -64,7 +65,7 @@ module VersionsHelper
   # A version associates image_names with actual uploaded files
   def get_uploaded_file( image_name, version )
 
-    logger.info "APPLICATION_HELPER - get_uploaded_file !!"
+    logger.info "VERSIONS_HELPER - get_uploaded_file !!"
 
     values = get_values_object( version )
 
@@ -143,6 +144,9 @@ module VersionsHelper
   # as the path to the local file, as this is needed by the AI script.
   def add_replacement_image_to_version( ri, image_name, version )
 
+    logger.info "VERSIONS_HELPER - add_replacement_image_to_version()"
+    logger.info "VERSIONS_HELPER - add_replacement_image_to_version() - ri: " + ri.to_s
+
     # todo, can this be part of a constructor?
 
     values = get_values_object( version )
@@ -154,12 +158,12 @@ module VersionsHelper
 
     image_settings[ image_name ] = settings
 
-    logger.info "APPLICATION_HELPER - add_replacement_image_to_version() - values.to_json: " + values.to_json
+    logger.info "VERSIONS_HELPER - add_replacement_image_to_version() - values.to_json: " + values.to_json
 
     version.values = values.to_json
 
     if version.save
-      logger.info "APPLICATION_HELPER - add_replacement_image_to_version() - version saved!"
+      logger.info "VERSIONS_HELPER - add_replacement_image_to_version() - version saved!"
     end
 
   end

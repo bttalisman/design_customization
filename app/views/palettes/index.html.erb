@@ -1,8 +1,148 @@
 
-<ul>
+<div class='row'>
+
+  <div class='col col-md-1'></div>
+  <div class='col col-md-7'>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><a onclick='toggle_name();'>Name</a></th>
+          <th><a onclick='toggle_description();'>Description</a></th>
+        </tr>
+      </thead>
+      <tbody>
+
 <%
-  @palettes.each { |p| %>
-    <li style='height:30px;'><%= link_to p.name, [:edit, p] %> <div style='display:inline-block; height:20px; width:20px;'></div></li>
-<%
-  } %>
-</ul>
+        i = 0
+        @palettes.each { |p| %>
+          <tr>
+            <td onclick='show_palette( "<%= p[:id]%>" );' id='name<%= i.to_s %>'>
+              <%= p[:name] %>
+            </td>
+
+            <td id='description<%= i.to_s %>'>
+              <%= p[:description] %>
+            </td>
+          </tr>
+<%        i += 1
+        } %>
+      </tbody>
+    </table>
+  </div> <!-- / col -->
+
+  <div class='col col-md-3'>
+  </div>
+
+  <div class='col col-md-1'>
+  </div>
+
+</div> <!-- / row -->
+
+
+
+<div style='display:none' id='palettes'><%= @palettes.to_json %></div>
+
+
+<script>
+
+  var NAME_FLIP = true;
+  var DESCRIPTION_FLIP = true;
+
+
+  function show_palette( id )
+  {
+    window.location = '/palettes/' + id;
+  }
+
+
+
+  function get_palettes()
+  {
+    var element = $('#palettes');
+    var text = element.text();
+    var array = JSON.parse( text );
+    return array;
+  }
+
+
+  function put_palettes( array )
+  {
+    var element = $('#palettes');
+    element.text( JSON.stringify( array ) );
+  }
+
+
+  function toggle_name()
+  {
+    var palettes = get_palettes();
+    NAME_FLIP = !NAME_FLIP;
+
+    palettes.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'name', NAME_FLIP )
+    });
+
+    put_palettes( palettes );
+    drawPage();
+  }
+
+
+  function toggle_description()
+  {
+    var palettes = get_palettes();
+    DESCRIPTION_FLIP = !DESCRIPTION_FLIP;
+
+    palettes.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'description', DESCRIPTION_FLIP )
+    });
+
+    put_palettes( palettes );
+    drawPage();
+  }
+
+
+
+
+  function fill_container( )
+  {
+
+    var palettes = get_palettes();
+    var o, s, el;
+    var d;
+
+    var container_index = 0;
+
+
+    for( var i = 0; i < palettes.length; i++ )
+    {
+      o = palettes[i];
+
+      s = '#name' + container_index.toString();
+      el = $(s);
+      el.text( o['name'] );
+      el.attr( 'onclick', 'show_palette("' + o['id'] + '")' );
+
+      s = '#description' + container_index.toString();
+      el = $(s);
+      el.text( o['description'] );
+
+      container_index++;
+    }
+  }
+
+
+  function drawPage()
+  {
+    fill_container();
+  }
+
+
+  $(document).ready( function() {
+    // clicks data are probably what the user is here for
+    toggle_name();
+  });
+
+
+
+</script>

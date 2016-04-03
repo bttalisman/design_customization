@@ -8,7 +8,7 @@ class ReplacementImage < ActiveRecord::Base
     :url => "/system/:class/:attachment/:id_partition/:basename.:extension"
 
   validates_attachment_content_type :uploaded_file,
-    :content_type => 'image/jpeg'
+    :content_type => ['image/jpeg', 'image/png']
 
 
   def get_file_name
