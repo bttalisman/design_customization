@@ -1,6 +1,14 @@
 
-<!-- New Version -->
-
+<!-- This page, and versions/quick_new.html.erb, both play the same role as
+  versions/new.html.erb.  They both offer a pared down UI, obtaining only
+  that info a customer will need to provide to generate the final AI file.  other
+  information such as the name of the version and the output folder is filled in
+  by the controller.  The difference between the file in partials/ and the
+  file in the versions/ view folder is that they use different layouts.  The
+  views/ file uses the application layout for people running the rails app,
+  the partials file uses the partials layout for customers, as
+  this html is ajaxed into the main web site. -->
+  
 <script>
 
   $(document).ready(function(){

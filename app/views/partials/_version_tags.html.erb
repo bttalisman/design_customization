@@ -1,4 +1,7 @@
-
+<!-- This partial generates the html prompting the user for specifics on how tags
+should be dealt with for a version.  This file must coordinate with the _design_template_tags partial.
+For example, the design template tags partial asks, can the user set the color on this tag? and the version
+tags partial says, ok, color can be set for this tag, what color should it be? -->
 
 <%
 i = 0
@@ -53,7 +56,7 @@ i = 0
     title = ''
   end
 
-  logger.info '_VERSION_TAGS.html.erb - pattern: ' + title.to_s
+  logger.info '_VERSION_TAGS.html.erb - title: ' + title.to_s
 
 %>
 
@@ -74,7 +77,7 @@ i = 0
             <select id="color_val<%= i.to_s %>" style='width:98%;' aria-describedby="basic-addon1" class="form-control">
               <option disabled selected='selected'>Pick a Color</option>
 <%=           @palettes[ tag_name ].each do |c| %>
-                <option value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
+                <option title='<%= c.description %>' value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
 <%            end %>
             </select>
           </div>
@@ -111,7 +114,7 @@ i = 0
   function formatColor (color) {
     if (!color.id) { return color.text; }
     var $color = $(
-      '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div>' + color.text + '</span>'
+      '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div><div style="height:20px; margin-left:5px; display:inline-block; vertical-align:top;">' + color.text + '</div></span>'
     );
     return $color;
   };

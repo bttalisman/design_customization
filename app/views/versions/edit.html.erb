@@ -5,44 +5,25 @@
 
   function validate()
   {
-
     if( $('#version_name').val() == '' )
     {
       alert( "Please enter a name for this version." );
       return false;
     }
-
-    return validate_version_settings();
+    return validate_version_settings();  // call into the partials/version_settings UI
   }
 
   // this is called when the user creates or updates a Version
   function create_version()
   {
-
     if( validate() )
     {
-      // this funtion is defined in the version_settings.html.erb controlled by partials controller
+      // this function is defined in the version_settings.html.erb controlled by partials controller
       var oReturn = build();
       $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
 
-
       var $pathInput = $('#version_output_folder_path');
       var userSpecFolder = $pathInput.val();
-
-      // If the version, as saved in db, has no output path, but the user just entered
-      // a path, then we'll append the appropriate prefix
-      if( ( '<%= @version.output_folder_path %>' == '' ) && (userSpecFolder != '') )
-      {
-        // now we're gonna sneak in and append the beginning to this path
-        var fullPath = '<%= @root_folder %>' + '/' + userSpecFolder;
-        // and make sure it ends with a '/'
-        var c = fullPath.slice(-1);
-        if( c != '/' )
-        {
-          fullPath = fullPath + '/';
-        }
-        $pathInput.val( fullPath );
-      }
 
       var form = $('#version_form');
       form.submit();
@@ -56,12 +37,6 @@
 
     var o;
     var uri;
-
-    if( templateId == null )
-    {
-      o = $('#version_design_template_id');
-      templateId = o.val();
-    }
 
     if( useVersion )
     {
@@ -118,13 +93,11 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
               <option value="" disabled selected>Select a Template</option>
 
   <%            @design_templates.each { |t|
-
                   if ( t.id == @design_template_id.to_i ) then
                     selected = true %>
   <%              else
                     selected = false
-                  end
-  %>
+                  end %>
                   <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
   <%            } %>
             </select>

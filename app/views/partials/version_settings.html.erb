@@ -1,4 +1,7 @@
 
+<!-- This page is at the top of those settings responsible for building a
+version of a design_template.  All subpages included within provide UI for the
+customer to specify the ultimate appearance of a design.  -->
 
 <%
   rendering_tags_form = false
@@ -29,9 +32,7 @@
 %>
 
 
-
 <script>
-
 
   function validate_version_settings()
   {
@@ -67,18 +68,13 @@
     oImages = {};
 
 <%
-    if( rendering_tags_form ) then
-%>
+    if( rendering_tags_form ) then %>
       oTags = build_tag_values();
-<%
-    end %>
+<%  end %>
 
-<%
-    if( rendering_images_form ) then
-%>
+<%  if( rendering_images_form ) then %>
       oImages = build_image_values();
-<%
-    end %>
+<%  end %>
 
     oReturn = {};
     oReturn[ 'tag_settings' ] = oTags;
