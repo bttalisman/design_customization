@@ -87,7 +87,7 @@
           success: function (data) {
               alert( 'success getting : ' + data );
           },
-              error: function(xhr, status, error) {
+          error: function(xhr, status, error) {
               // todo - why never success?
           }
       });
@@ -124,7 +124,6 @@
   $(document).ready(function(){
     getTemplateHTML( <%= @design_template.id %> );
   });
-
 
 
 </script>

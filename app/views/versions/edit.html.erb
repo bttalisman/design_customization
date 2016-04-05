@@ -31,22 +31,11 @@
   }
 
 
-
-  function getTemplateHTML( templateId, useVersion )
+  function getTemplateHTML( templateId )
   {
-
     var o;
     var uri;
-
-    if( useVersion )
-    {
-      uri = "<%= get_local_host %>/partials/version_settings/" + templateId + "?version_id=" + <%= @version.id %>;
-    }
-    else
-    {
-      uri = "<%= get_local_host %>/partials/version_settings/" + templateId;
-    }
-
+    uri = "<%= get_local_host %>/partials/version_settings/" + templateId + "?version_id=" + <%= @version.id %>;
 
     $.get( uri, function(data, status)
       {
@@ -56,7 +45,7 @@
 
 
   $(document).ready(function(){
-    getTemplateHTML( <%= @design_template.id %>, true );
+    getTemplateHTML( <%= @design_template.id %> );
   });
 
 </script>
