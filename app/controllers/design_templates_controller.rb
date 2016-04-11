@@ -18,7 +18,8 @@ class DesignTemplatesController < ApplicationController
         o = { :name => t.name.to_s,
           :tags => has_tags?( t ).to_s,
           :images => has_images?( t ).to_s,
-          :id => t.id.to_s
+          :id => t.id.to_s,
+          :created => t.created_at.to_s
         }
         @design_templates << o
       }

@@ -34,7 +34,8 @@ class VersionsController < ApplicationController
         :tags => has_tags?( v.design_template ).to_s,
         :images => has_images?( v.design_template ).to_s,
         :id => v.id.to_s,
-        :template_id => v.design_template.id.to_s
+        :template_id => v.design_template.id.to_s,
+        :created => v.created_at.to_s
       }
       @versions << o
     }
@@ -111,7 +112,7 @@ class VersionsController < ApplicationController
           # No need to modify the version.values, we're just about to replace that entry
 
           ri = get_replacement_image( image_name, @version )
-          logger.info "VERSIONS_CONTROLLER - UPDATE - ri: " + ri.to_s          
+          logger.info "VERSIONS_CONTROLLER - UPDATE - ri: " + ri.to_s
           if( ri ) then
             ri.destroy
           end

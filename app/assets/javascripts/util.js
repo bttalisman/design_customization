@@ -1,6 +1,5 @@
 
 
-
   function my_sort( obj1, obj2, key, flip )
   {
     var o1, o2;
@@ -17,11 +16,11 @@
     }
 
     var s1 = '';
-    if( o1[key] != null ) {
+    if( o1[key] !== null ) {
       s1 = o1[key].toLowerCase(); }
 
     var s2 = '';
-    if( o2[key] != null ) {
+    if( o2[key] !== null ) {
       s2 = o2[key].toLowerCase(); }
 
     var comp;

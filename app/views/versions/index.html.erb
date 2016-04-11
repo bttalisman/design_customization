@@ -9,6 +9,7 @@
         <tr>
           <th><a onclick='toggle_name();'>Version Name</a></th>
           <th><a onclick='toggle_template();'>Template</a></th>
+          <th><a onclick='toggle_created();'>Created</a></th>
           <th><a onclick='toggle_tags();'>Tags?</a></th>
           <th><a onclick='toggle_images();'>Images?</a></th>
         </tr>
@@ -23,6 +24,9 @@
             </td>
             <td onclick='show_template( "<%= v[:template_id]%>" );' id='template<%= i.to_s %>'>
               <%= v[:template] %>
+            </td>
+            <td id='created<%= i.to_s %>'>
+              <%= v[:created] %>
             </td>
             <td id='tags<%= i.to_s %>'>
               <%= v[:tags] %>
@@ -58,6 +62,7 @@
   var TEMPLATE_FLIP = true;
   var TAGS_FLIP = true;
   var IMAGES_FLIP = true;
+  var CREATED_FLIP = true;
 
 
   function show_version( id )
@@ -95,7 +100,7 @@
 
     versions.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'name', NAME_FLIP )
+      return my_sort( obj1, obj2, 'name', NAME_FLIP );
     });
 
     put_versions( versions );
@@ -110,13 +115,27 @@
 
     versions.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'template', TEMPLATE_FLIP )
+      return my_sort( obj1, obj2, 'template', TEMPLATE_FLIP );
     });
 
     put_versions( versions );
     drawPage();
   }
 
+
+  function toggle_created()
+  {
+    var versions = get_versions();
+    CREATED_FLIP = !CREATED_FLIP;
+
+    versions.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'created', CREATED_FLIP );
+    });
+
+    put_versions( versions );
+    drawPage();
+  }
 
 
   function toggle_tags()
@@ -126,7 +145,7 @@
 
     versions.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'tags', TAGS_FLIP )
+      return my_sort( obj1, obj2, 'tags', TAGS_FLIP );
     });
 
     put_versions( versions );
@@ -142,7 +161,7 @@
 
     versions.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'images', IMAGES_FLIP )
+      return my_sort( obj1, obj2, 'images', IMAGES_FLIP );
     });
 
     put_versions( versions );
@@ -169,21 +188,25 @@
 
       s = '#name' + container_index.toString();
       el = $(s);
-      el.text( o['name'] );
-      el.attr( 'onclick', 'show_version("' + o['id'] + '")' );
+      el.text( o.name );
+      el.attr( 'onclick', 'show_version("' + o.id + '")' );
 
       s = '#template' + container_index.toString();
       el = $(s);
-      el.text( o['template'] );
-      el.attr( 'onclick', 'show_template("' + o['template_id'] + '")' );
+      el.text( o.template );
+      el.attr( 'onclick', 'show_template("' + o.template_id + '")' );
 
       s = '#tags' + container_index.toString();
       el = $(s);
-      el.text( o['tags'] );
+      el.text( o.tags );
+
+      s = '#created' + container_index.toString();
+      el = $(s);
+      el.text( o.created );
 
       s = '#images' + container_index.toString();
       el = $(s);
-      el.text( o['images'] );
+      el.text( o.images );
 
       container_index++;
     }

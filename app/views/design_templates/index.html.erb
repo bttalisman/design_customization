@@ -8,6 +8,7 @@
       <thead>
         <tr>
           <th><a onclick='toggle_name();'>Template Name</a></th>
+          <th><a onclick='toggle_created();'>Created</a></th>
           <th><a onclick='toggle_tags();'>Tags?</a></th>
           <th><a onclick='toggle_images();'>Images?</a></th>
         </tr>
@@ -19,6 +20,9 @@
           <tr>
             <td onclick='show_template( "<%= t[:id]%>" );' id='name<%= i.to_s %>'>
               <%= t[:name] %>
+            </td>
+            <td id='created<%= i.to_s %>'>
+              <%= t[:created] %>
             </td>
             <td id='tags<%= i.to_s %>'>
               <%= t[:tags] %>
@@ -41,10 +45,6 @@
 
 </div> <!-- / row -->
 
-
-
-
-
 <div style='display:none' id='templates'><%= @design_templates.to_json %></div>
 
 
@@ -53,6 +53,7 @@
   var NAME_FLIP = true;
   var TAGS_FLIP = true;
   var IMAGES_FLIP = true;
+  var CREATED_FLIP = true;
 
 
   function show_template( id )
@@ -84,7 +85,7 @@
 
     templates.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'name', NAME_FLIP )
+      return my_sort( obj1, obj2, 'name', NAME_FLIP );
     });
 
     put_templates( templates );
@@ -92,6 +93,19 @@
   }
 
 
+  function toggle_created()
+  {
+    var templates = get_templates();
+    CREATED_FLIP = !CREATED_FLIP;
+
+    templates.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'created', CREATED_FLIP );
+    });
+
+    put_templates( templates );
+    drawPage();
+  }
 
   function toggle_tags()
   {
@@ -100,13 +114,12 @@
 
     templates.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'tags', TAGS_FLIP )
+      return my_sort( obj1, obj2, 'tags', TAGS_FLIP );
     });
 
     put_templates( templates );
     drawPage();
   }
-
 
 
   function toggle_images()
@@ -116,7 +129,7 @@
 
     templates.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'images', IMAGES_FLIP )
+      return my_sort( obj1, obj2, 'images', IMAGES_FLIP );
     });
 
     put_templates( templates );
@@ -138,16 +151,20 @@
 
       s = '#name' + container_index.toString();
       el = $(s);
-      el.text( o['name'] );
-      el.attr( 'onclick', 'show_template("' + o['id'] + '")' );
+      el.text( o.name );
+      el.attr( 'onclick', 'show_template("' + o.id + '")' );
 
       s = '#tags' + container_index.toString();
       el = $(s);
-      el.text( o['tags'] );
+      el.text( o.tags );
+
+      s = '#created' + container_index.toString();
+      el = $(s);
+      el.text( o.created );
 
       s = '#images' + container_index.toString();
       el = $(s);
-      el.text( o['images'] );
+      el.text( o.images );
 
       container_index++;
     }
