@@ -35,7 +35,7 @@
   {
     var o;
     var uri;
-    uri = "<%= get_local_host %>/partials/version_settings/" + templateId + "?version_id=" + <%= @version.id %>;
+    uri = "<%= local_host %>/partials/version_settings/" + templateId + "?version_id=" + <%= @version.id %>;
 
     $.get( uri, function(data, status)
       {
@@ -101,7 +101,7 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 
 
           <a class="btn btn-default" id='update' onclick='create_version(); return false;'>Update</a>
-          <a class='btn btn-default' href='<%= get_local_host %>/versions/<%= @version.id %>'>Cancel</a>
+          <a class='btn btn-default' href='<%= local_host %>/versions/<%= @version.id %>'>Cancel</a>
           <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
 
         </div> <!-- / panel body -->

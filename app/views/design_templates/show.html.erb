@@ -21,11 +21,11 @@
 
           <div class="input-group">
             <div class="input-group-btn">
-              <a class='btn btn-default' href='<%= get_local_host %>/versions/quick_new?template_id=<%= @design_template.id %>'>Quick Version</a><br>
+              <a class='btn btn-default' href='<%= local_host %>/versions/quick_new?template_id=<%= @design_template.id %>'>Quick Version</a><br>
             </div><!-- /btn-group -->
             <input disabled class='form-control' title='<%= @quick_new_partial_url %>' value='<%= @quick_new_partial_url %>'></input>
           </div><!-- /input-group -->
-          
+
           <div class='spacer'></div>
 
 <%        if (@versions.length > 0) then %>

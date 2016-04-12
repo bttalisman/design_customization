@@ -8,7 +8,7 @@
   views/ file uses the application layout for people running the rails app,
   the partials file uses the partials layout for customers, as
   this html is ajaxed into the main web site. -->
-  
+
 <script>
 
   $(document).ready(function(){
@@ -20,7 +20,7 @@
   //  we need to clean up.
   function cancel()
   {
-    uri = "<%= get_local_host %>/versions/<%= @version.id %>/cancel";
+    uri = "<%= local_host %>/versions/<%= @version.id %>/cancel";
     $.get( uri, function(data, status)
       {
         $('#values_container').html( data );
@@ -31,7 +31,7 @@
   {
     var o;
     var uri;
-    uri = "<%= get_local_host %>/partials/version_settings/" + templateId;
+    uri = "<%= local_host %>/partials/version_settings/" + templateId;
     $.get( uri, function(data, status)
       {
         $('#values_container').html( data );
@@ -79,7 +79,7 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
         <input type='text' style='display:none;' class="form-control" id='version_output_folder_path' value='<%= @version.output_folder_path %>' name='version[output_folder_path]'></input>
         <input type='checkbox' style='display:none;' checked name='runai' id='runai' class='checkbox-input' value='true'></input>
 
-        <a class='btn btn-default' onclick='cancel();' href='<%= get_local_host %>/design_templates/'>Cancel</a>
+        <a class='btn btn-default' onclick='cancel();' href='<%= local_host %>/design_templates/'>Cancel</a>
         <a class='btn btn-default' id='create' onclick='create_version(); return false;'>Create</a>
 
       </div> <!-- / panel body -->

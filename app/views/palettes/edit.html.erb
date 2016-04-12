@@ -19,7 +19,7 @@
 
   function add_color( color_id )
   {
-    var uri = '<%= get_local_host %>/palettes/<%= @palette.id %>/add?color_id=' + color_id;
+    var uri = '<%= local_host %>/palettes/<%= @palette.id %>/add?color_id=' + color_id;
     var s, o;
 
     $.get( uri, function(data, status) {});
@@ -38,7 +38,7 @@
   function remove_color( color_id )
   {
     var s;
-    var uri = '<%= get_local_host %>/palettes/<%= @palette.id %>/remove?color_id=' + color_id;
+    var uri = '<%= local_host %>/palettes/<%= @palette.id %>/remove?color_id=' + color_id;
     $.get( uri, function(data, status) {});
 
     s = '#my_color' + color_id;
@@ -121,7 +121,7 @@
 
             <div class='spacer'></div>
             <input class='btn btn-default' type='submit' value='Ok'></input>
-            <a class='btn btn-default' href='<%= get_local_host %>/palettes/<%= @palette.id %>'>Cancel</a>
+            <a class='btn btn-default' href='<%= local_host %>/palettes/<%= @palette.id %>'>Cancel</a>
 
         </form>
 

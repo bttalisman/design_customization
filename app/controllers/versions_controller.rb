@@ -304,7 +304,6 @@ class VersionsController < ApplicationController
     original_file_path = original_file.path
     original_file_name = File.basename( original_file_path )
     original_file_base_name = File.basename( original_file_path, '.ai' )
-    original_folder = File.dirname( original_file_path )
 
     version_folder = get_version_folder( @version )
     version_file_path = version_folder + '/' + original_file_name

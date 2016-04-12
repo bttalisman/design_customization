@@ -17,9 +17,9 @@
             <input type='text' class='form-control' id='design_template_name' aria-describedby="basic-addon1" value='<%= @design_template.name %>'></input>
           </div>
 
-          <a class='btn btn-default' href='<%= get_local_host %>/force_process?id=<%= @design_template.id %>'>Reprocess</a>
+          <a class='btn btn-default' href='<%= local_host %>/force_process?id=<%= @design_template.id %>'>Reprocess</a>
           <a class='btn btn-default' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</a>
-          <a class='btn btn-default' href='<%= get_local_host %>/design_templates/<%= @design_template.id %>'>Cancel</a>
+          <a class='btn btn-default' href='<%= local_host %>/design_templates/<%= @design_template.id %>'>Cancel</a>
           <a class="btn btn-default" href="/design_templates/<%= @design_template.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
 
         </div> <!-- /panel body -->
@@ -77,7 +77,7 @@
       // these are always the same
       oToSend['general_settings'] = oGeneralSettings;
 
-      var uri = '<%= get_local_host %>' + "/design_templates/" + templateId + "/settings/";
+      var uri = '<%= local_host %>' + "/design_templates/" + templateId + "/settings/";
 
       $.ajax({
           url: uri,
@@ -92,7 +92,7 @@
           }
       });
 
-      window.location = '<%= get_local_host %>'
+      window.location = '<%= local_host %>'
 
     }
   }
@@ -112,7 +112,7 @@
       return;
 <%  end %>
 
-    uri = '<%= get_local_host %>' + '/partials/extracted_settings/' + templateId
+    uri = '<%= local_host %>' + '/partials/extracted_settings/' + templateId
 
     $.get( uri, function(data, status)
     {

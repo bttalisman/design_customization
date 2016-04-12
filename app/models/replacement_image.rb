@@ -12,7 +12,6 @@ class ReplacementImage < ActiveRecord::Base
 
 
   def get_file_name
-    extension = File.extname(uploaded_file_file_name).downcase
     fileNameOnly = File.basename(uploaded_file_file_name).downcase
     fileNameOnly
   end

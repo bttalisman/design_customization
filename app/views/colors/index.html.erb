@@ -7,7 +7,7 @@
 
 <%
     @colors.each { |c| %>
-      <a href='<%= get_local_host %>/colors/<%= c.id %>/'>
+      <a href='<%= local_host %>/colors/<%= c.id %>/'>
         <div class='color-item' title='<%= c.hex_code %> - <%= c.description %>' style='background:<%= c.hex_code %>'>
         </div>
       </a>
@@ -16,4 +16,4 @@
   </div>
 
   <div class='col col-md-1'></div>
-</div>  
+</div>
