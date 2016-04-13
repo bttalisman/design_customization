@@ -3,7 +3,7 @@ of this template will ask about each image extracted from the original file.  Fo
 should this extracted image be replaced? -->
 
 <%
-if ( @images != nil ) then
+if !@images.nil?
 
   logger.info '_design_template_images.html.erb - @values: ' + @values.to_s
   logger.info '_design_template_images.html.erb - @images: ' + @images.to_s
@@ -13,7 +13,7 @@ if ( @images != nil ) then
 
     logger.info '_design_template_images.html.erb - image: ' + image.to_s
 
-    if( (@values != nil) && (image != '') ) then
+    if !@values.nil? && (image != '')
 
       # we'll try to look up any previously set values for this image.
 
@@ -21,19 +21,19 @@ if ( @images != nil ) then
 
       logger.info '_design_template_images.html.erb - imageProps: ' + imageProps.to_s
 
-      if( imageProps != nil ) then
+      if !imageProps.nil?
         replaceImage = imageProps[ 'replace_image' ]
       else
         replaceImage = ''
       end
 
-    end
+    end # @values not nil
 %>
     <div id='image<%= i.to_s %>' data-image-name='<%= image.to_s %>'></div>
 
-    <div class="panel panel-success">
-      <div class="panel-heading"><h3 class='panel-title'><%= image %> - Image Replacement</h3></div>
-      <div class="panel-body">
+    <div class='panel panel-success'>
+      <div class='panel-heading'><h3 class='panel-title'><%= image %> - Image Replacement</h3></div>
+      <div class='panel-body'>
 
         <label class='checkbox-label'>
           Replace this image?
@@ -47,7 +47,6 @@ if ( @images != nil ) then
     i += 1
   } # each tag
 %>
-
 
   <input type='hidden' id='image_count' value='<%= i.to_s %>'></input>
 <%
@@ -89,7 +88,7 @@ end #imags is not nil
       s = '#replace_image' + i;
       o = $( s );
 
-      replaceImage = o.is(":checked");
+      replaceImage = o.is(':checked');
 
       if( replaceImage )
       {

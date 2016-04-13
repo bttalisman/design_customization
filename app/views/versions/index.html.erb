@@ -49,10 +49,6 @@
 
 </div> <!-- / row -->
 
-
-
-
-
 <div style='display:none' id='versions'><%= @versions.to_json %></div>
 
 
@@ -153,7 +149,6 @@
   }
 
 
-
   function toggle_images()
   {
     var versions = get_versions();
@@ -169,18 +164,12 @@
   }
 
 
-
-
-
   function fill_container( )
   {
-
     var versions = get_versions();
     var o, s, el;
     var d;
-
     var container_index = 0;
-
 
     for( var i = 0; i < versions.length; i++ )
     {
@@ -225,7 +214,5 @@
     toggle_name();
 
   });
-
-
 
 </script>

@@ -19,16 +19,16 @@
 
     s = '#version_name';
     o = $(s);
-    if( o.val() == '' ) {
-      alert( "Please enter a name." );
+    if( o.val() === '' ) {
+      alert( 'Please enter a name.' );
       bValid = false;
     }
 
     s = '#version_design_template_id';
     o = $(s);
-    if( o.val() == null )
+    if( o.val() === null )
     {
-      alert( "Please select a template." );
+      alert( 'Please select a template.' );
       bValid = false;
     }
 
@@ -42,44 +42,43 @@
 <%=
 form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 %>
-
   <div class='row'>
     <div class='col col-md-1'></div>
     <div class='col col-md-4'>
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">New Version</h3>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'>New Version</h3>
         </div>
-        <div class="panel-body">
+        <div class='panel-body'>
 
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Name</span>
-            <input type='text' class="form-control" id='version_name' name='version[name]' aria-describedby="basic-addon1"></input>
+          <div class='input-group'>
+            <span class='input-group-addon' id='basic-addon1'>Name</span>
+            <input type='text' class='form-control' id='version_name' name='version[name]' aria-describedby='basic-addon1'></input>
           </div>
 
           <div class='spacer'></div>
 
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Folder</span>
-            <input type='text' class="form-control" id='version_output_folder_path' value='<%= @root_folder.to_s + "/" %>' name='version[output_folder_path]'></input>
+          <div class='input-group'>
+            <span class='input-group-addon' id='basic-addon1'>Folder</span>
+            <input type='text' class='form-control' id='version_output_folder_path' value='<%= @root_folder.to_s + '/' %>' name='version[output_folder_path]'></input>
           </div>
 
           <div class='spacer'></div>
 
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Template</span>
-            <select class="form-control" style='width:200px;' name='version[design_template_id]' id='version_design_template_id'>
-              <option value="" disabled selected>Select a Template</option>
+          <div class='input-group'>
+            <span class='input-group-addon' id='basic-addon1'>Template</span>
+            <select class='form-control' style='width:200px;' name='version[design_template_id]' id='version_design_template_id'>
+              <option value='' disabled selected>Select a Template</option>
 
 <%              @design_templates.each { |t|
-                  if ( t.id == @design_template_id.to_i ) then
+                  if t.id == @design_template_id.to_i
                     selected = true %>
                     <script> changeTemplate( <%= t.id.to_s %> ); </script>
 <%                else
                     selected = false
                   end %>
-                  <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
+                  <option <%= if selected then 'selected='selected'' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
 <%              } %>
             </select>
           </div>

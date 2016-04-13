@@ -1,0 +1,12 @@
+
+Rails:
+  Enabled: true
+
+Style/SpaceInsideParens:
+  Enabled: false
+
+Style/SpaceInsideBrackets:
+  Enabled: false
+
+Style/NegatedIf:
+  Enabled: false

@@ -8,28 +8,25 @@ extracting information. -->
   rendering_tags_form = false
   rendering_images_form = false
 
-  if( @tags != nil ) then
-    if( @tags.length > 0 ) then
+  if !@tags.nil?
+    if !@tags.empty?
       rendering_tags_form = true
 %>
-<%=   render :partial => "design_template_tags" %>
+<%=   render :partial => 'design_template_tags' %>
 <%
     end
   end
 %>
 
 <%
-  if( @images != nil ) then
-    if( @images.length > 0 ) then
+  if !@images.nil?
+    if @images.empty?
       rendering_images_form = true
 %>
-<%=   render :partial => "design_template_images" %>
+<%=   render :partial => 'design_template_images' %>
 <%
     end
-  end
-%>
-
-
+  end %>
 <script>
 
 
@@ -38,7 +35,7 @@ extracting information. -->
   {
     var bReturn = true;
     <%
-    if( rendering_tags_form ) then %>
+    if rendering_tags_form %>
         if( !validate_tag_values() )
         {
           bReturn = false;
@@ -47,7 +44,7 @@ extracting information. -->
     end %>
 
     <%
-    if( rendering_images_form ) then  %>
+    if rendering_images_form %>
       if( !validate_image_values() )
       {
         bReturn = false;
@@ -65,12 +62,11 @@ extracting information. -->
   {
     var oTags = {};
     var oImages = {};
-<%
-    if( rendering_tags_form ) then %>
+<%  if rendering_tags_form %>
       oTags = build_tags_data();
 <%  end %>
 
-<%  if( rendering_images_form ) then %>
+<%  if rendering_images_form %>
       oImages = build_images();
 <%  end %>
 

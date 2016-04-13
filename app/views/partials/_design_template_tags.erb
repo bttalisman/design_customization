@@ -3,7 +3,7 @@ of this template will ask about each tag extracted from the original file.  For 
 can the color be set for this tag? -->
 
 <%
-if ( @tags != nil ) then
+if !@tags.nil?
 
   logger.info '_design_template_tags.html.erb - @values: ' + @values.to_s
   logger.info '_design_template_tags.html.erb - @tags: ' + @tags.to_s
@@ -23,18 +23,18 @@ if ( @tags != nil ) then
     palette_id = ''
     select_pal = ''
 
-    if( @values != nil ) then
+    if !@values.nil?
 
       # we'll try to look up any previously set values for this tag.
 
       all_tag_settings = @values[ 'tag_settings' ]
 
-      if( all_tag_settings != nil ) then
+      if !all_tag_settings.nil?
 
         tagProps = all_tag_settings[ t.to_s ]
         logger.info '_design_template_tags.html.erb - tagProps: ' + tagProps.to_s
 
-        if( tagProps != nil ) then
+        if !tagProps.nil?
           prompt = tagProps[ 'prompt' ]
           max_length = tagProps[ 'max_length' ]
           min_length = tagProps[ 'min_length']
@@ -43,12 +43,12 @@ if ( @tags != nil ) then
           palette_id = tagProps[ 'palette_id' ]
         end
 
-        if( pick_color != 'checked' ) then
+        if pick_color != 'checked'
           offer_pal_enabled = 'disabled'
           label_class = 'disabled'
         end
 
-        if( use_palette != 'checked' ) then
+        if use_palette != 'checked'
           select_pal = 'disabled'
         end
 
@@ -58,27 +58,27 @@ if ( @tags != nil ) then
 %>
     <div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'></div>
 
-    <div class="panel panel-info">
-      <div class="panel-heading"><h3 class='panel-title'><%= t %> - Text Replacement</h3></div>
-      <div class="panel-body" style='height:210;'> <!-- todo - why must i set the height? -->
+    <div class='panel panel-info'>
+      <div class='panel-heading'><h3 class='panel-title'><%= t %> - Text Replacement</h3></div>
+      <div class='panel-body' style='height:210;'> <!-- todo - why must i set the height? -->
 
         <div class='input-group'>
-          <span class="input-group-addon" id="basic-addon1">Prompt</span>
-          <input type='text' class='form-control' id='prompt<%= i.to_s %>' placeholder="Enter a prompt" aria-describedby="basic-addon1" value='<%= prompt %>'></input>
+          <span class='input-group-addon' id='basic-addon1'>Prompt</span>
+          <input type='text' class='form-control' id='prompt<%= i.to_s %>' placeholder='Enter a prompt' aria-describedby='basic-addon1' value='<%= prompt %>'></input>
         </div>
         <div class='spacer'></div>
 
         <div>
           <div style='width:45%; float:left;'>
             <div class='input-group' style='margin-bottom:20px;'>
-              <span class="input-group-addon" id="basic-addon2">Min Length</span>
-              <input type='number' class='form-control' id='minl<%= i.to_s %>' aria-describedby="basic-addon2" value='<%= min_length %>'></input>
+              <span class='input-group-addon' id='basic-addon2'>Min Length</span>
+              <input type='number' class='form-control' id='minl<%= i.to_s %>' aria-describedby='basic-addon2' value='<%= min_length %>'></input>
             </div>
           </div>
           <div style='width:45%; float:right;'>
             <div class='input-group' style='margin-bottom:20px;'>
-              <span class="input-group-addon" id="basic-addon3">Max Length</span>
-              <input type='number' class='form-control' id='maxl<%= i.to_s %>' aria-describedby="basic-addon3" value='<%= max_length %>'></input>
+              <span class='input-group-addon' id='basic-addon3'>Max Length</span>
+              <input type='number' class='form-control' id='maxl<%= i.to_s %>' aria-describedby='basic-addon3' value='<%= max_length %>'></input>
             </div>
           </div>
         </div>
@@ -101,17 +101,17 @@ if ( @tags != nil ) then
         <div class='spacer'></div>
 
         <div>
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon4">Palette</span>
-            <select <%= select_pal %> id='select_pal<%= i.to_s %>' class="form-control" style='width:200px;' aria-describedby="basic-addon4">
-              <option value="" disabled selected>Select a Palette</option>
+          <div class='input-group'>
+            <span class='input-group-addon' id='basic-addon4'>Palette</span>
+            <select <%= select_pal %> id='select_pal<%= i.to_s %>' class='form-control' style='width:200px;' aria-describedby='basic-addon4'>
+              <option value='' disabled selected>Select a Palette</option>
 <%            @palettes.each { |p|
-                if ( p.id.to_s == palette_id ) then
+                if p.id.to_s == palette_id
                   selected = true
                 else
                   selected = false
                 end %>
-                <option <%= if selected then 'selected="selected"' end %> value='<%= p.id.to_s %>'><%= p.name %></option>
+                <option <%= if selected then 'selected='selected'' end %> value='<%= p.id.to_s %>'><%= p.name %></option>
 <%            } %>
             </select>
           </div>
@@ -200,7 +200,7 @@ end # @tags is not nil
       s = '#prompt' + i;
       o = $(s);
 
-      if( o.val() == '' )
+      if( o.val() === '' )
       {
         alert( 'Please enter a prompt.' );
         return false;
@@ -208,17 +208,16 @@ end # @tags is not nil
 
       s = '#use_pal' + i;
       o = $(s);
-      if( o.is(":checked") )
+      if( o.is(':checked') )
       {
         s = '#select_pal' + i;
         o = $(s);
-        if( o.val() == null )
+        if( o.val() === null )
         {
-          alert( "Please select a palette." );
+          alert( 'Please select a palette.' );
           return false;
         }
       }
-
     }
 
     return bValid;
@@ -254,45 +253,44 @@ end # @tags is not nil
       s = '#prompt' + i;
       o = $(s);
       prompt = o.val();
-      tagSettings[ 'prompt' ] = prompt;
+      tagSettings.prompt = prompt;
 
       s = '#maxl' + i;
       o = $(s);
       maxl = o.val();
-      tagSettings[ 'max_length' ] = maxl;
+      tagSettings.max_length = maxl;
 
       s = '#minl' + i;
       o = $(s);
       minl = o.val();
-      tagSettings[ 'min_length' ] = minl;
+      tagSettings.min_length = minl;
 
       s = '#colorp' + i;
       o = $(s);
-      colorp = o.is(":checked");
+      colorp = o.is(':checked');
 
       if( colorp )
       {
-        tagSettings[ 'pick_color' ] = 'checked';
+        tagSettings.pick_color = 'checked';
       } else {
-        tagSettings[ 'pick_color' ] = '';
+        tagSettings.pick_color = '';
       }
-
 
       s = '#use_pal' + i;
       o = $(s);
-      use_pal = o.is(":checked");
+      use_pal = o.is(':checked');
 
       if( use_pal )
       {
-        tagSettings[ 'use_palette' ] = 'checked';
+        tagSettings.use_palette = 'checked';
       } else {
-        tagSettings[ 'use_palette' ] = '';
+        tagSettings.use_palette = '';
       }
 
       s = '#select_pal' + i;
       o = $(s);
       palette_id = o.val();
-      tagSettings[ 'palette_id' ] = palette_id;
+      tagSettings.palette_id = palette_id;
 
     }
 

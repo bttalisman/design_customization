@@ -7,29 +7,24 @@ customer to specify the ultimate appearance of a design.  -->
   rendering_tags_form = false
   rendering_images_form = false
 
-  if( @prompts != nil ) then
+  if !@prompts.nil?
     @tag_settings = @prompts[ 'tag_settings' ]
     @image_settings = @prompts[ 'image_settings' ]
   end
 
-  if( @tag_settings != nil ) then
-    if( @tag_settings.length > 0 ) then
-      rendering_tags_form = true
-%>
-<%=   render :partial => "version_tags" %>
-<%
-    end
+  if !@tag_settings.nil?
+    if !tag_settings.empty?
+      rendering_tags_form = true %>
+<%=   render :partial => 'version_tags' %>
+<%  end
   end
 
-  if( @image_settings != nil ) then
-    if( @image_settings.length > 0 ) then
-      rendering_images_form = true
-%>
-<%=   render :partial => "version_images" %>
-<%
-    end
-  end
-%>
+  if !image_settings.nil?
+    if !@image_settings.empty?
+      rendering_images_form = true %>
+<%=   render :partial => 'version_images' %>
+<%  end
+  end %>
 
 
 <script>
@@ -37,7 +32,7 @@ customer to specify the ultimate appearance of a design.  -->
   function validate_version_settings()
   {
     <%
-    if( rendering_tags_form ) then
+    if rendering_tags_form
     %>
         if( !validate_tag_values() )
         {
@@ -47,7 +42,7 @@ customer to specify the ultimate appearance of a design.  -->
     end %>
 
     <%
-    if( rendering_images_form ) then
+    if rendering_images_form
     %>
       if( !validate_image_values() )
       {
@@ -64,21 +59,20 @@ customer to specify the ultimate appearance of a design.  -->
   function build()
   {
 
-    oTags = {};
-    oImages = {};
+    var oTags = {};
+    var oImages = {};
 
-<%
-    if( rendering_tags_form ) then %>
+<%  if rendering_tags_form %>
       oTags = build_tag_values();
 <%  end %>
 
-<%  if( rendering_images_form ) then %>
+<%  if rendering_images_form %>
       oImages = build_image_values();
 <%  end %>
 
     oReturn = {};
-    oReturn[ 'tag_settings' ] = oTags;
-    oReturn[ 'image_settings' ] = oImages;
+    oReturn.tag_settings = oTags;
+    oReturn.image_settings = oImages;
 
 //    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
 

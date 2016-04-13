@@ -29,7 +29,7 @@ i = 0
   raplacement_name = ''
   replacement_image_id = ''
 
-  if( @version ) then
+  if @version
     replacement_path = get_local_image_path( image_name, @version )
     replacement_name = get_uploaded_file_name( image_name, @version )
     replacement_image_id = get_replacement_image_id( image_name, @version )
@@ -133,7 +133,7 @@ i = 0
       replacement_image_id = o.val();
 
       oImageProps = {};
-      oImageProps[ 'replacement_image_id' ] = replacement_image_id;
+      oImageProps.replacement_image_id = replacement_image_id;
 
       oReturn[ image_name ] = oImageProps;
     }

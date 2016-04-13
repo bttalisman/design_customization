@@ -17,25 +17,23 @@ i = 0
   pick_color = tag[ 1 ]['pick_color']
   text_color = ''
 
-  if( !max_length ) then
+  if( !max_length )
     max_length = ''
   end
-  if( !min_length ) then
+  if( !min_length )
     min_length = ''
   end
 
 
-  if( @tag_values ) then
+  if @tag_values
     val = @tag_values[ tag_name ]
 
-    if( val != nil ) then
-
+    if !val.nil?
       # these properties are the users' previously set answers to the questions asked
       # when creating a version
       replacement_text = val['replacement_text']
       text_color = val['text_color']
     end
-
   end
 
   logger.info '_VERSION_TAGS.html.erb - tag_name: ' + tag_name.to_s
@@ -44,10 +42,10 @@ i = 0
   logger.info '_VERSION_TAGS.html.erb - max_length: ' + max_length.to_s
   logger.info '_VERSION_TAGS.html.erb - min_length: ' + min_length.to_s
 
-  if( (max_length != '') || (min_length != '') ) then
-    if( max_length == '' ) then
+  if (max_length != '') || (min_length != '')
+    if( max_length == '' )
       title = '(Please enter at least ' + min_length + ' characters.)'
-    elsif( min_length == '' ) then
+    elsif( min_length == '' )
       title = '(Please enter at most ' + max_length + ' characters.)'
     else
       title = '(Please enter between ' + min_length.to_s + ' and ' + max_length.to_s + ' characters.)'
@@ -70,7 +68,7 @@ i = 0
 
       <div class='spacer'></div>
 
-<%    if( pick_color != '' ) then %>
+<%    if pick_color != '' %>
         <div id='colorpicker_container<%= i.to_s %>' style='display:inline-block;'>
           <div class='input-group' style='float:left; width:90%;'>
             <span class="input-group-addon" id="basic-addon1">Text Color</span>
@@ -84,7 +82,6 @@ i = 0
           <div id='swatch<%= i.to_s %>' style='display:inline-block; float:left; height:27px; width:27px; background:<%= text_color %>'></div>
         </div>
 <%    end # pick a color %>
-
 
   </div> <!-- panel-body -->
 </div> <!-- panel -->
@@ -117,7 +114,7 @@ i = 0
       '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div><div style="height:20px; margin-left:5px; display:inline-block; vertical-align:top;">' + color.text + '</div></span>'
     );
     return $color;
-  };
+  }
 
 
   function changeTextColor( event )
@@ -148,7 +145,7 @@ i = 0
       rep_text = o.val();
       tag_name = o.attr( 'data-tag-name' );
 
-      if( rep_text == '' )
+      if( rep_text === '' )
       {
         alert( 'Please enter replacement text.' );
         return false;
@@ -182,7 +179,7 @@ i = 0
       s = '#color_val' + i;
       o = $(s);
       text_color = o.val();
-      if( text_color == null )
+      if( text_color === null )
       {
         alert( 'Please pick a color.' );
         return false;
@@ -220,8 +217,8 @@ i = 0
       text_color = o.val();
 
       oTagProps = {};
-      oTagProps[ 'replacement_text' ] = rep_text;
-      oTagProps[ 'text_color' ] = text_color;
+      oTagProps.replacement_text = rep_text;
+      oTagProps.text_color = text_color;
 
       oReturn[ tag_name ] = oTagProps;
     }
