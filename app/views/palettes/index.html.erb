@@ -12,8 +12,7 @@
       </thead>
       <tbody>
 
-<%
-        i = 0
+<%      i = 0
         @palettes.each { |p| %>
           <tr>
             <td onclick='show_palette( "<%= p[:id]%>" );' id='name<%= i.to_s %>'>
@@ -38,23 +37,17 @@
 
 </div> <!-- / row -->
 
-
-
 <div style='display:none' id='palettes'><%= @palettes.to_json %></div>
-
 
 <script>
 
   var NAME_FLIP = true;
   var DESCRIPTION_FLIP = true;
 
-
   function show_palette( id )
   {
     window.location = '/palettes/' + id;
   }
-
-
 
   function get_palettes()
   {
@@ -79,7 +72,7 @@
 
     palettes.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'name', NAME_FLIP )
+      return my_sort( obj1, obj2, 'name', NAME_FLIP );
     });
 
     put_palettes( palettes );
@@ -94,7 +87,7 @@
 
     palettes.sort( function( obj1, obj2 )
     {
-      return my_sort( obj1, obj2, 'description', DESCRIPTION_FLIP )
+      return my_sort( obj1, obj2, 'description', DESCRIPTION_FLIP );
     });
 
     put_palettes( palettes );
@@ -102,17 +95,12 @@
   }
 
 
-
-
   function fill_container( )
   {
-
     var palettes = get_palettes();
     var o, s, el;
     var d;
-
     var container_index = 0;
-
 
     for( var i = 0; i < palettes.length; i++ )
     {
@@ -120,12 +108,12 @@
 
       s = '#name' + container_index.toString();
       el = $(s);
-      el.text( o['name'] );
-      el.attr( 'onclick', 'show_palette("' + o['id'] + '")' );
+      el.text( o.name );
+      el.attr( 'onclick', 'show_palette("' + o.id + '")' );
 
       s = '#description' + container_index.toString();
       el = $(s);
-      el.text( o['description'] );
+      el.text( o.description );
 
       container_index++;
     }

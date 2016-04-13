@@ -9,23 +9,17 @@
       </div>
       <div class="panel-body">
 <%
-        if (@my_colors.length > 0) then %>
-<%
+        if !@my_colors.empty?
           @my_colors.each do |c| %>
             <div class='color-item' title='<%= c.hex_code %>' id='all_color<%= c.id %>' style='background:<%= c.hex_code %>;'>
             </div>
-<%
-          end %>
-<%      end %>
+<%        end
+        end %>
       </div> <!-- / body -->
     </div>  <!-- / panel -->
-
 
     <a class='btn btn-default' href='<%= edit_palette_path %>'>Edit this Palette</a>
     <a class="btn btn-default" href="/palettes/<%= @palette.id %>"  data-confirm='Are you sure?' data-method="delete" rel="nofollow">Delete</a>
 
-
   </div> <!-- / col -->
-
-
 </div> <!-- / row -->

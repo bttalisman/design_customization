@@ -28,17 +28,15 @@
 
           <div class='spacer'></div>
 
-<%        if (@versions.length > 0) then %>
+<%        if @versions.empty? %>
             <h4>Versions</h4>
             <ul class='list-group'>
 <%
               @versions.each do |v| %>
                 <li class='list-group-item'> <%= link_to v.name, v %> </li>
-<%
-              end %>
+<%            end %>
             </ul>
-<%
-          end %>
+<%        end %>
 
           <div class='spacer'></div>
 

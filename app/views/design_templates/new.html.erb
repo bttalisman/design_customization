@@ -10,7 +10,7 @@
       </div>
       <div class="panel-body">
 <%=
-        form_for @design_template, html: { multipart: true, :onsubmit => 'return validate();'  } do |form|
+        form_for @design_template, html: { multipart: true, onsubmit: 'return validate();'  } do |form|
 %>
           <div class='input-group' style='margin-bottom:20px;'>
             <span class="input-group-addon" id="basic-addon1">Name</span>

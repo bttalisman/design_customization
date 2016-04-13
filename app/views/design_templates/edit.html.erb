@@ -48,7 +48,7 @@
   {
     var dtName = $('#design_template_name').val();
 
-    if( (dtName == null) || (dtName == '') )
+    if( (dtName === null) || (dtName === '') )
     {
       alert( 'Please enter a name for this template.' );
       return false;
@@ -70,14 +70,14 @@
 
       // We stuff our own data in there too
       var oGeneralSettings = {};
-      oGeneralSettings[ 'template_name' ] = $('#design_template_name').val();
+      oGeneralSettings.template_name = $('#design_template_name').val();
 
       // the number and type of these settings depends on what was extracted from the original file
-      oToSend['extracted_settings'] = extractedSettings;
+      oToSend.extracted_settings = extractedSettings;
       // these are always the same
-      oToSend['general_settings'] = oGeneralSettings;
+      oToSend.general_settings = oGeneralSettings;
 
-      var uri = '<%= local_host %>' + "/design_templates/" + templateId + "/settings/";
+      var uri = '<%= local_host %>' + '/design_templates/' + templateId + '/settings/';
 
       $.ajax({
           url: uri,
@@ -92,8 +92,7 @@
           }
       });
 
-      window.location = '<%= local_host %>'
-
+      window.location = '<%= local_host %>';
     }
   }
 
@@ -107,12 +106,12 @@
 
     // If both of these arrays have no elements, then either the file contained
     // nothing to extract, or there is no file.
-<%  if (@images.length == 0) && (@tags.length == 0) then %>
+<%  if @images.empty? && @tags.empty? %>
       $('#panel_container').html( '<b>This Illustrator file is not a template.</b>' );
       return;
 <%  end %>
 
-    uri = '<%= local_host %>' + '/partials/extracted_settings/' + templateId
+    uri = '<%= local_host %>' + '/partials/extracted_settings/' + templateId;
 
     $.get( uri, function(data, status)
     {
@@ -121,9 +120,9 @@
   }
 
 
-  $(document).ready(function(){
+  $(document).ready(function() {
     getTemplateHTML( <%= @design_template.id %> );
-  });
+  } );
 
 
 </script>

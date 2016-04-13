@@ -31,7 +31,7 @@
     s = '#border_div' + color_id;
     $(s).css( 'border-color', 'yellow' );
 
-    MY_PALETTE.push( color_id )
+    MY_PALETTE.push( color_id );
   }
 
 
@@ -51,7 +51,6 @@
     if (index > -1) {
         MY_PALETTE.splice(index, 1);
     }
-
   }
 
   function load_colors()
@@ -69,95 +68,87 @@
 </script>
 
 
-  <div class='row'>
+<div class='row'>
 
-    <div class='col col-md-1'></div>
-    <div class='col col-md-4'>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title"><%= @palette.name %></h3>
-        </div>
-        <div class="panel-body">
-          <%
-          if (@all_colors.length > 0) then %>
-            <div id='my_colors_list'>
-      <%
-              @all_colors.each do |c|
-                display = 'none'
-                if( @my_colors.include?( c ) ) then
-                  display = 'block'
-                end
-      %>
-                <a onclick='toggle_color( "<%= c.id %>" );'>
-                  <div class='color-item' title='<%= c.hex_code %>' id='my_color<%= c.id %>' style='background:<%= c.hex_code %>; display:<%= display %>;'>
+  <div class='col col-md-1'></div>
+  <div class='col col-md-4'>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'><%= @palette.name %></h3>
+      </div>
+      <div class='panel-body'>
+        <%
+        if !@all_colors.empty? %>
+          <div id='my_colors_list'>
+    <%
+            @all_colors.each do |c|
+              display = 'none'
+              if( @my_colors.include?( c ) ) then
+                display = 'block'
+              end
+    %>
+              <a onclick='toggle_color( '<%= c.id %>' );'>
+                <div class='color-item' title='<%= c.hex_code %>' id='my_color<%= c.id %>' style='background:<%= c.hex_code %>; display:<%= display %>;'>
+                </div>
+              </a>
+
+    <%      end # each color %>
+          </div>
+    <%  end # there are colors %>
+      </div> <!-- /panel body -->
+    </div> <!-- /panel -->
+
+
+
+    <form action='update' id='palette_form'>
+      <input style='display:none;' name='palette[name]' value='<%= @palette.name %>' \>
+
+      <div class='input-group'>
+        <span class='input-group-addon' id='basic-addon1'>Name</span>
+        <input type='text' value='<%= @palette.name %>' class='form-control' id='palette_name' name='palette[name]' aria-describedby='basic-addon1'></input>
+      </div>
+
+      <div class='spacer'></div>
+
+      <div class='input-group'>
+        <span class='input-group-addon' id='basic-addon2'>Description</span>
+        <input type='text' value='<%= @palette.description %>' class='form-control' id='palette_description' name='palette[description]' aria-describedby='basic-addon2'></input>
+      </div>
+
+      <div class='spacer'></div>
+      <input class='btn btn-default' type='submit' value='Ok'></input>
+      <a class='btn btn-default' href='<%= local_host %>/palettes/<%= @palette.id %>'>Cancel</a>
+
+    </form>
+  </div> <!-- /col -->
+
+  <div class='col-md-1'></div>
+
+  <div class='col-md-5'>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>All Colors</h3>
+      </div>
+      <div class='panel-body'>
+<%
+        if !@all_colors.empty? %>
+          <div id='all_colors_list'>
+<%
+            @all_colors.each do |c|
+              color = 'white'
+              if( @my_colors.include?( c ) ) then
+                color = 'yellow'
+              end %>
+              <div id='border_div<%= c.id.to_s %>' style='display:inline-block; border-style:solid; border-width:2px; border-color:<%= color %>;'>
+                <a onclick='toggle_color( '<%= c.id %>' );'>
+                  <div class='color-item' title='<%= c.hex_code %>' id='all_color<%= c.id %>' style='background:<%= c.hex_code %>;'>
                   </div>
                 </a>
-
-      <%
-              end %>
-            </div>
-      <%
-          end %>
-
-        </div> <!-- /panel body -->
-      </div> <!-- /panel -->
-
-
-
-        <form action='update' id='palette_form'>
-            <input style='display:none;' name='palette[name]' value='<%= @palette.name %>' \>
-
-            <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Name</span>
-              <input type='text' value='<%= @palette.name %>' class="form-control" id='palette_name' name='palette[name]' aria-describedby="basic-addon1"></input>
-            </div>
-
-            <div class='spacer'></div>
-
-            <div class="input-group">
-              <span class="input-group-addon" id="basic-addon2">Description</span>
-              <input type='text' value='<%= @palette.description %>' class="form-control" id='palette_description' name='palette[description]' aria-describedby="basic-addon2"></input>
-            </div>
-
-            <div class='spacer'></div>
-            <input class='btn btn-default' type='submit' value='Ok'></input>
-            <a class='btn btn-default' href='<%= local_host %>/palettes/<%= @palette.id %>'>Cancel</a>
-
-        </form>
-
-
-
-      </div> <!-- /col -->
-
-    <div class='col-md-1'></div>
-
-    <div class='col-md-5'>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">All Colors</h3>
-        </div>
-        <div class="panel-body">
-<%
-          if (@all_colors.length > 0) then %>
-            <div id='all_colors_list'>
-<%
-              @all_colors.each do |c|
-                color = 'white'
-                if( @my_colors.include?( c ) ) then
-                  color = 'yellow'
-                end %>
-                <div id='border_div<%= c.id.to_s %>' style='display:inline-block; border-style:solid; border-width:2px; border-color:<%= color %>;'>
-                  <a onclick='toggle_color( "<%= c.id %>" );'>
-                    <div class='color-item' title='<%= c.hex_code %>' id='all_color<%= c.id %>' style='background:<%= c.hex_code %>;'>
-                    </div>
-                  </a>
-                </div>
-<%             end # each color %>
-            </div>
-<%
-          end # there are colors %>
-        </div> <!-- /panel body -->
-      </div> <!-- /panel -->
-    </div> <!-- /col -->
-
-  </div> <!-- /row -->
+              </div>
+<%          end # each color %>
+          </div>
+<%      end # there are colors %>
+      </div> <!-- /panel body -->
+    </div> <!-- /panel -->
+  </div> <!-- /col -->
+</div> <!-- /row -->
