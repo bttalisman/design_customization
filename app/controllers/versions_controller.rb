@@ -4,17 +4,17 @@ class VersionsController < ApplicationController
   include VersionsHelper
   include DesignTemplatesHelper
 
-  @path_to_runner_script = Rails.root.to_s\
+  @@path_to_runner_script = Rails.root.to_s\
     + '/bin/illustrator_processing/run_AI_script.rb'
-  @path_to_extract_tags_script = Rails.root.to_s\
+  @@path_to_extract_tags_script = Rails.root.to_s\
     + '/bin/illustrator_processing/extractTags.jsx'
-  @path_to_extract_images_script = Rails.root.to_s\
+  @@path_to_extract_images_script = Rails.root.to_s\
     + '/bin/illustrator_processing/extractImages.jsx'
-  @path_to_search_replace_script = Rails.root.to_s\
+  @@path_to_search_replace_script = Rails.root.to_s\
     + '/bin/illustrator_processing/searchAndReplace.jsx'
-  @path_to_image_search_replace_script = Rails.root.to_s\
+  @@path_to_image_search_replace_script = Rails.root.to_s\
     + '/bin/illustrator_processing/searchAndReplaceImages.jsx'
-  @path_to_quick_version_root = Rails.root.to_s + '/versions'
+  @@path_to_quick_version_root = Rails.root.to_s + '/versions'
 
   def delete_all
     logger.info 'VERSIONS_CONTROLLER - delete_all'
@@ -156,7 +156,7 @@ class VersionsController < ApplicationController
     @version = Version.new( config_hash )
     @version.save
 
-    version_folder_path = @path_to_quick_version_root + '/template_'\
+    version_folder_path = @@path_to_quick_version_root + '/template_'\
       + @design_template.id.to_s + '/version_' + @version.id.to_s + '/'
     version_name = @design_template.name + '_' + @version.id.to_s
 
@@ -256,7 +256,7 @@ class VersionsController < ApplicationController
 
     # And run it!
 
-    sys_com = 'ruby ' + @path_to_runner_script + ' "' + config_file + '"'
+    sys_com = 'ruby ' + @@path_to_runner_script + ' "' + config_file + '"'
     logger.info 'VERSIONS_CONTROLLER - run_ai - about to run sys_com: '\
       + sys_com.to_s
     # run the ruby script. AI should generate output files to the output folder
@@ -321,12 +321,12 @@ class VersionsController < ApplicationController
 
     int_file_exist = false
 
-    if @tags.length.empty?
-      # we should replace tags
+    if !@tags.empty?
+      # There are tags to replace, we should replace tags
 
       config = {}
       config[ 'source file' ] = version_file_path
-      config[ 'script file' ] = @path_to_search_replace_script
+      config[ 'script file' ] = @@path_to_search_replace_script
       config[ 'output folder' ] = output_folder
 
       do_run_ai( config )
@@ -338,8 +338,8 @@ class VersionsController < ApplicationController
 
     end # there are tags to replace
 
-    if @images.empty?
-      # we should replace images
+    if !@images.empty?
+      # There are images to replace, we should replace images
 
       config = {}
       if int_file_exist
@@ -349,7 +349,7 @@ class VersionsController < ApplicationController
         # replace images
         config[ 'source file' ] = version_file_path
       end
-      config[ 'script file' ] = @path_to_image_search_replace_script
+      config[ 'script file' ] = @@path_to_image_search_replace_script
       config[ 'output folder' ] = output_folder
 
       do_run_ai( config )

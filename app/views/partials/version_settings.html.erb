@@ -13,13 +13,13 @@ customer to specify the ultimate appearance of a design.  -->
   end
 
   if !@tag_settings.nil?
-    if !tag_settings.empty?
+    if !@tag_settings.empty?
       rendering_tags_form = true %>
 <%=   render :partial => 'version_tags' %>
 <%  end
   end
 
-  if !image_settings.nil?
+  if !@image_settings.nil?
     if !@image_settings.empty?
       rendering_images_form = true %>
 <%=   render :partial => 'version_images' %>

@@ -3,10 +3,17 @@ class DesignTemplatesController < ApplicationController
   include ApplicationHelper
   include DesignTemplatesHelper
 
-  @path_to_runner_script = Rails.root.to_s + '/bin/illustrator_processing/run_AI_script.rb'
-  @path_to_extract_tags_script = Rails.root.to_s + '/bin/illustrator_processing/extractTags.jsx'
-  @path_to_extract_images_script = Rails.root.to_s + '/bin/illustrator_processing/extractImages.jsx'
-  @path_to_search_replace_script = Rails.root.to_s + '/bin/illustrator_processing/searchAndReplace.jsx'
+  @@path_to_runner_script = Rails.root.to_s\
+    + '/bin/illustrator_processing/run_AI_script.rb'
+  @@path_to_extract_tags_script = Rails.root.to_s\
+    + '/bin/illustrator_processing/extractTags.jsx'
+  @@path_to_extract_images_script = Rails.root.to_s\
+    + '/bin/illustrator_processing/extractImages.jsx'
+  @@path_to_search_replace_script = Rails.root.to_s\
+    + '/bin/illustrator_processing/searchAndReplace.jsx'
+  @@path_to_image_search_replace_script = Rails.root.to_s\
+    + '/bin/illustrator_processing/searchAndReplaceImages.jsx'
+  @@path_to_quick_version_root = Rails.root.to_s + '/versions'
 
   def index
     templates = DesignTemplate.all
@@ -75,7 +82,7 @@ class DesignTemplatesController < ApplicationController
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings! - myHashString: ' \
      + my_hash_string
 
-    if is_json?( my_hash_string )
+    if json?( my_hash_string )
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings! - good JSON!'
       my_hash = JSON.parse my_hash_string
     else
@@ -182,7 +189,7 @@ class DesignTemplatesController < ApplicationController
     config = {}
 
     config[ 'source file' ] = source_path
-    config[ 'script file' ] = @path_to_extract_tags_script
+    config[ 'script file' ] = @@path_to_extract_tags_script
     # the prompts file goes right next to the original file
     config[ 'output folder' ] = source_folder
     File.open( config_file, 'w' ) do |f|
@@ -196,7 +203,7 @@ class DesignTemplatesController < ApplicationController
     FileUtils.mkdir_p( ai_output_folder )\
       unless File.directory?( ai_output_folder )
 
-    sys_com = 'ruby ' + @path_to_runner_script + " '" + config_file + "'"
+    sys_com = 'ruby ' + @@path_to_runner_script + " '" + config_file + "'"
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - extract_tags - sys_com: '\
       + sys_com.to_s
 
@@ -222,7 +229,7 @@ class DesignTemplatesController < ApplicationController
     config = {}
 
     config[ 'source file' ] = source_path
-    config[ 'script file' ] = @path_to_extract_images_script
+    config[ 'script file' ] = @@path_to_extract_images_script
     # the prompts file goes right next to the original file
     config[ 'output folder' ] = source_folder
     File.open( config_file, 'w' ) do |f|
@@ -236,7 +243,7 @@ class DesignTemplatesController < ApplicationController
     FileUtils.mkdir_p( ai_output_folder )\
       unless File.directory?( ai_output_folder )
 
-    sys_com = 'ruby ' + @path_to_runner_script + " '" + config_file + "'"
+    sys_com = 'ruby ' + @@path_to_runner_script + " '" + config_file + "'"
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - extract_images - sys_com: '\
       + sys_com.to_s
 

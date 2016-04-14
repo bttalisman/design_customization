@@ -111,7 +111,7 @@ if !@tags.nil?
                 else
                   selected = false
                 end %>
-                <option <%= if selected then 'selected='selected'' end %> value='<%= p.id.to_s %>'><%= p.name %></option>
+                <option <%= if selected then 'selected="selected"' end %> value='<%= p.id.to_s %>'><%= p.name %></option>
 <%            } %>
             </select>
           </div>

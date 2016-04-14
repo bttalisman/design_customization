@@ -6,7 +6,7 @@ class PartialsController < ApplicationController
 
   layout 'partials'
 
-  @path_to_quick_version_root = Rails.root.to_s + '/versions'
+  @@path_to_quick_version_root = Rails.root.to_s + '/versions'
 
   # This action presents the tags extracted from the AI file, with any
   # tag-specific options, for use when creating or editing a DesignTemplate
@@ -19,7 +19,7 @@ class PartialsController < ApplicationController
 
     # If the user has set options regarding tags extracted from an AI file they
     # go in @values
-    if is_json?( @design_template.prompts )
+    if json?( @design_template.prompts )
       @values = JSON.parse( @design_template.prompts )
     else
       logger.info 'PARTIALS_CONTROLLER - design_template_settings - BAD json!!!'

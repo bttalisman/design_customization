@@ -85,7 +85,7 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
                   else
                     selected = false
                   end %>
-                  <option <%= if selected then 'selected='selected'' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
+                  <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
   <%            } %>
             </select>
           </div>
