@@ -12,7 +12,7 @@
         <div class="panel-body">
 
           <div class="form-group">
-              <input type="text" id="hex_code" name='color[hex_code]' class="form-control" data-control="hue" value="<%= @color.hex_code %>">
+            <input type="text" id="hex_code" name='color[hex_code]' class="form-control" data-control="hue" value="<%= @color.hex_code %>">
           </div>
           <div class='spacer'></div>
 
@@ -24,7 +24,7 @@
           <div class='spacer'></div>
 
 
-          <input type='submit' class='btn btn-default'></input>
+          <input type='submit' value='Save' class='btn btn-default'></input>
           <a class='btn btn-default' href='/colors'>Cancel</a>
           <a class="btn btn-default" href="/colors/<%= @color.id %>"  data-method="delete" rel="nofollow">Delete</a>
 
