@@ -29,10 +29,10 @@
               <%= v[:created] %>
             </td>
             <td id='tags<%= i.to_s %>'>
-              <%= v[:tags] %>
+              <%= bool_display_text( v[:tags] ) %>
             </td>
             <td id='images<%= i.to_s %>'>
-              <%= v[:images] %>
+              <%= bool_display_text( v[:images] ) %>
             </td>
           </tr>
     <%    i += 1
