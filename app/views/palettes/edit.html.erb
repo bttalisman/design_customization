@@ -56,7 +56,7 @@
   function load_colors()
   {
 <%  @my_colors.each { |c| %>
-        MY_PALETTE.push( '<%= c.id %>' );
+      MY_PALETTE.push( '<%= c.id %>' );
 <%  } %>
   }
 
@@ -84,8 +84,7 @@
             @all_colors.each do |c|
               display = 'none'
               display = 'block' if( @my_colors.include?( c ) )
-              id = 'my_color' + c.id.to_s
-    %>
+              id = 'my_color' + c.id.to_s %>
               <a onclick='toggle_color( "<%= c.id %>" );'>
                 <%= swatch( c, { display: display, id: id } ).html_safe %>
               </a>
@@ -95,7 +94,6 @@
     <%  end # there are colors %>
       </div> <!-- /panel body -->
     </div> <!-- /panel -->
-
 
 
     <form action='update' id='palette_form'>
@@ -134,13 +132,11 @@
 <%
             @all_colors.each do |c|
               color = 'white'
-              if( @my_colors.include?( c ) ) then
-                color = 'yellow'
-              end %>
+              id = 'all_color' + c.id.to_s
+              color = 'yellow' if( @my_colors.include?( c ) ) %>
               <div id='border_div<%= c.id.to_s %>' style='display:inline-block; border-style:solid; border-width:2px; border-color:<%= color %>;'>
                 <a onclick='toggle_color( "<%= c.id %>" );'>
-                  <div class='color-item' title='<%= c.hex_code %>' id='all_color<%= c.id %>' style='background:<%= c.hex_code %>;'>
-                  </div>
+                  <%= swatch( c, { id: id } ).html_safe %>
                 </a>
               </div>
 <%          end # each color %>
