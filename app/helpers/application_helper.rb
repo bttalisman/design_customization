@@ -27,18 +27,18 @@ module ApplicationHelper
     data_file = source_folder + '/' + base_name + '_data.jsn'
     data_file
   end
-end
 
-def bool_display_text( b )
-  t = if b.to_s == 'true'
-        'yes'
-      else
-        'no'
-      end
-  t
-end
+  def bool_display_text( b )
+    t = if b.to_s == 'true'
+          'yes'
+        else
+          'no'
+        end
+    t
+  end
 
-def time_display_text(datetime)
-  time = datetime.in_time_zone('Pacific Time (US & Canada)')
-  time.strftime('%-d/%-m/%y: %H:%M %Z')
+  def time_display_text(datetime)
+    time = datetime.in_time_zone('Pacific Time (US & Canada)')
+    time.strftime('%-m/%-d/%y: %H:%M %Z')
+  end
 end
