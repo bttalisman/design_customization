@@ -109,46 +109,66 @@ module VersionsHelper
     # and bind it to the image_name
     image_count.times do |i|
 
-      # params contains pairs keyed by:
-      # => replacement_image<index> and image_name<index>
-      # for each replacement image.
+      # params contain values keyed by:
+      # => replacement_image<index>,
+      # => image_name<index>,
+      # => type<index>,
+      # => query<index>
+      # for each image.
+
+      p_name = 'type' + i.to_s
+      type = params[ p_name ]
+
       p_name = 'replacement_image' + i.to_s
       replacement_image = params[ p_name ]
 
       p_name = 'image_name' + i.to_s
       image_name = params[ p_name ]
 
+      p_name = 'collage_query' + i.to_s
+      query = params[ p_name ]
+
+      logger.info 'VERSIONS_HELPER - set_image_values() - type: '\
+        + type.to_s
       logger.info 'VERSIONS_HELPER - set_image_values() - image_name: '\
         + image_name.to_s
       logger.info 'VERSIONS_HELPER - set_image_values() - replacement_image: '\
         + replacement_image.to_s
+      logger.info 'VERSIONS_HELPER - set_image_values() - query: '\
+        + query.to_s
 
-      if replacement_image
-        my_file = replacement_image[ 'uploaded_file' ]
-        logger.info 'VERSIONS_HELPER - set_image_values() - myFile: ' + my_file.to_s
+      if type == 'upload'
+        if replacement_image
+          my_file = replacement_image[ 'uploaded_file' ]
+          logger.info 'VERSIONS_HELPER - set_image_values() - myFile: ' + my_file.to_s
 
-        if my_file
+          if my_file
 
-          # get any replacement_image already associated with this image_name,
-          # and destroy it.
-          # No need to modify the version.values, we're just about to replace
-          # that entry
+            # get any replacement_image already associated with this image_name,
+            # and destroy it.
+            # No need to modify the version.values, we're just about to replace
+            # that entry
+            ri = get_replacement_image( image_name, version )
+            logger.info 'VERSIONS_HELPER - set_image_values() - ri: ' + ri.to_s
+            ri.destroy if ri
 
-          ri = get_replacement_image( image_name, version )
-          logger.info 'VERSIONS_HELPER - set_image_values() - ri: ' + ri.to_s
-          ri.destroy if ri
+            o = { uploaded_file: my_file }
+            @replacement_image = @version.replacement_images.create( o )
+            @replacement_image.save
 
-          o = { uploaded_file: my_file }
-          @replacement_image = @version.replacement_images.create( o )
-          @replacement_image.save
+            # this will set version.values to reflect any user-set properties for
+            # this version, these values will eventually be read by the AI script
+            add_replacement_image_to_version( @replacement_image,\
+                                              image_name, version )
+          end # my_file
+        end # replacement_image
+      else
+        # type = instagram
+        logger.info 'VERSIONS_HELPER - set_image_values() - Instagram collage!'
 
-          # this will set version.values to reflect any user-set properties for
-          # this version, these values will eventually be read by the AI script
-          add_replacement_image_to_version( @replacement_image,\
-                                            image_name, version )
-        end
+
       end
-    end
+    end # image_count times
   end
 
   # a version's values object matches image tags to replacement_images.

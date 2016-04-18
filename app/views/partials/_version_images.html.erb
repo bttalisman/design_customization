@@ -36,16 +36,39 @@ i = 0
   end
 
 %>
-  <div class="panel panel-success">
-    <div class="panel-heading"><h3 class='panel-title'><%= image_name %> - Upload an Image</h3></div>
-    <div class="panel-body">
+  <div class='panel panel-success'>
+    <div class='panel-heading'><h3 class='panel-title'><%= image_name %> - Upload an Image</h3></div>
+    <div class='panel-body'>
 
-      <input type='text' disabled style='float:left; width:80%;' class='form-control' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
+      <div class='btn-group' data-upload-gp-id='upload-gp<%= i.to_s %>' data-inst-gp-id='inst-gp<%= i.to_s %>'>
+        <label class="btn">
+          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' value='upload'></input>
+            <span>Upload</span>
+        </label>
+        <label class="btn">
+          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' checked='checked' value='instagram'></input>
+          <span>Instagram</span>
+        </label>
+      </div>
 
-      <span style='float:left;' class="btn btn-default fileinput-button" id='file_input_container'>
-        <span>Upload</span>
-        <input type="file" data-input-id='replacement_path<%= i.to_s %>' name="replacement_image<%= i.to_s %>[uploaded_file]" id="replacement_image_uploaded_file<%= i.to_s %>" onchange='fileInputChange( this );' >
-      </span>
+      <div class='spacer'></div>
+
+      <div class='input-group' style='display:none;' id='upload-gp<%= i.to_s %>'>
+        <span class='input-group-btn' id='basic-addon2'>
+          <span  class='btn btn-default fileinput-button' id='file_input_container'>
+            <span>Upload</span>
+            <input type='file' data-input-id='replacement_path<%= i.to_s %>' name='replacement_image<%= i.to_s %>[uploaded_file]' id='replacement_image_uploaded_file<%= i.to_s %>' onchange='fileInputChange( this );' >
+          </span>
+        </span>
+        <input type='text' disabled class='form-control' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
+      </div>
+
+      <div class='input-group' id='inst-gp<%= i.to_s %>'>
+        <span class='input-group-addon' id='basic-addon1'>Instagram User</span>
+        <input type='text' class='form-control' id='collage_query<%= i.to_s %>' value='' name='collage_query<%= i.to_s %>'></input>
+      </div>
+
+      <div class='spacer'></div>
 
       <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id<%= i.to_s %>' value='<%= @version_id %>'></input>
       <input style='display:none;' id='image_name<%= i.to_s %>' name='image_name<%= i.to_s %>' value='<%= image_name %>'></input>
@@ -61,6 +84,42 @@ i = 0
 <input type='hidden' name='image_count' id='image_count' value='<%= i.to_s %>'></input>
 
 <script>
+
+  function changeType( event )
+  {
+    var s, o;
+    var target = $(event.target);
+    var name_attr = target.attr( 'name' );
+    var parent = target.parent().parent();
+    var upload_gp_id = parent.attr( 'data-upload-gp-id' );
+    var inst_gp_id = parent.attr( 'data-inst-gp-id' );
+
+    s = 'input:radio[name=' + name_attr + ']:checked';
+    o = $(s);
+
+    if( o.val() == 'upload' )
+    {
+      // hide the instagram ui and show the upload ui
+      s = '#' + upload_gp_id;
+      o = $(s);
+      o.show();
+      s = '#' + inst_gp_id;
+      o = $(s);
+      o.hide();
+    }
+    else
+    {
+      // hide the upload ui and show the instagram ui
+      s = '#' + upload_gp_id;
+      o = $(s);
+      o.hide();
+      s = '#' + inst_gp_id;
+      o = $(s);
+      o.show();
+    }
+
+
+  }
 
   function fileInputChange( element )
   {
@@ -91,13 +150,14 @@ i = 0
 
     for( var i = 0; i < count; i++ )
     {
-      s = '#replacement_path' + i;
-      o = $(s);
-      if( o.val() == '' )
-      {
-        alert( 'Please upload a file.' );
-        return false;
-      }
+//    todo, validate stuff smartly
+//      s = '#replacement_path' + i;
+//      o = $(s);
+//      if( o.val() == '' )
+//      {
+//        alert( 'Please upload a file.' );
+//        return false;
+//      }
     }
 
     return true;
