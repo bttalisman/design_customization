@@ -108,6 +108,10 @@ module VersionsHelper
     # get all of the uploaded files, for each create a ReplacementImage,
     # and bind it to the image_name
     image_count.times do |i|
+
+      # params contains pairs keyed by:
+      # => replacement_image<index> and image_name<index>
+      # for each replacement image.
       p_name = 'replacement_image' + i.to_s
       replacement_image = params[ p_name ]
 

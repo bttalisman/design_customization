@@ -5,9 +5,9 @@ Rails.application.routes.draw do
 
   get '/tools' => 'home#tools'
 
-  get 'processcode' => 'home#processcode'
-  get 'cleartoken' => 'home#cleartoken'
-
+  get 'processcode' => 'replacement_images#processcode'
+  get 'cleartoken' => 'replacement_images#cleartoken'
+  get 'fetch' => 'replacement_images#fetch'
 
   get '/colors/:id/update' => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'

@@ -18,10 +18,8 @@ class VersionsController < ApplicationController
 
   def delete_all
     logger.info 'VERSIONS_CONTROLLER - delete_all'
-
     versions = Version.all
     versions.each( &:delete )
-
     render nothing: true
   end
 
@@ -69,10 +67,10 @@ class VersionsController < ApplicationController
     @version.update( version_params )
 
     # extract the tag-related settings from the parameters object, and set
-    # this version's values property.  This is done independently of
-    # image-related settings.
+    # this version's values property.
     set_tag_values( @version, params )
-
+    # extract the image-related settings from the parameters object, and set
+    # this version's values property.
     set_image_values( @version, params )
 
     @design_template = @version.design_template
