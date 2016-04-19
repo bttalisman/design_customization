@@ -28,11 +28,24 @@ i = 0
   replacement_path = ''
   raplacement_name = ''
   replacement_image_id = ''
+  collage_query = ''
+  collage_checked = ''
+  ri_checked = ''
+  ri_display = 'display:none;'
+  collage_display = 'display:none;'
+  is_collage = false
 
   if @version
     replacement_path = get_local_image_path( image_name, @version )
     replacement_name = get_uploaded_file_name( image_name, @version )
     replacement_image_id = get_replacement_image_id( image_name, @version )
+    collage = get_collage( image_name, @version )
+    collage_query = collage.query if !collage.nil?
+    is_collage = associated_with_collage?( image_name, @version )
+    collage_checked = 'checked' if is_collage
+    collage_display = '' if is_collage
+    ri_checked = 'checked' if !is_collage
+    ri_display = '' if !is_collage
   end
 
 %>
@@ -42,18 +55,18 @@ i = 0
 
       <div class='btn-group' data-upload-gp-id='upload-gp<%= i.to_s %>' data-inst-gp-id='inst-gp<%= i.to_s %>'>
         <label class="btn">
-          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' value='upload'></input>
+          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= ri_checked %> value='upload'></input>
             <span>Upload</span>
         </label>
         <label class="btn">
-          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' checked='checked' value='instagram'></input>
+          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= collage_checked %> value='instagram'></input>
           <span>Instagram</span>
         </label>
       </div>
 
       <div class='spacer'></div>
 
-      <div class='input-group' style='display:none;' id='upload-gp<%= i.to_s %>'>
+      <div class='input-group' style='<%= ri_display %>' id='upload-gp<%= i.to_s %>'>
         <span class='input-group-btn' id='basic-addon2'>
           <span  class='btn btn-default fileinput-button' id='file_input_container'>
             <span>Upload</span>
@@ -63,9 +76,9 @@ i = 0
         <input type='text' disabled class='form-control' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
       </div>
 
-      <div class='input-group' id='inst-gp<%= i.to_s %>'>
+      <div class='input-group' style='<%= collage_display %>' id='inst-gp<%= i.to_s %>'>
         <span class='input-group-addon' id='basic-addon1'>Instagram User</span>
-        <input type='text' class='form-control' id='collage_query<%= i.to_s %>' value='' name='collage_query<%= i.to_s %>'></input>
+        <input type='text' class='form-control' id='collage_query<%= i.to_s %>' value='<%= collage_query %>' name='collage_query<%= i.to_s %>'></input>
       </div>
 
       <div class='spacer'></div>
@@ -85,9 +98,35 @@ i = 0
 
 <script>
 
-  function changeType( event )
+  function set_visibility( type, upload_id, inst_id )
   {
     var s, o;
+
+    if( type == 'upload' )
+    {
+      // hide the instagram ui and show the upload ui
+      s = '#' + upload_id;
+      o = $(s);
+      o.show();
+      s = '#' + inst_id;
+      o = $(s);
+      o.hide();
+    }
+    else
+    {
+      // hide the upload ui and show the instagram ui
+      s = '#' + upload_id;
+      o = $(s);
+      o.hide();
+      s = '#' + inst_id;
+      o = $(s);
+      o.show();
+    }
+  }
+
+  function changeType( event )
+  {
+    var s, o, type;
     var target = $(event.target);
     var name_attr = target.attr( 'name' );
     var parent = target.parent().parent();
@@ -97,28 +136,8 @@ i = 0
     s = 'input:radio[name=' + name_attr + ']:checked';
     o = $(s);
 
-    if( o.val() == 'upload' )
-    {
-      // hide the instagram ui and show the upload ui
-      s = '#' + upload_gp_id;
-      o = $(s);
-      o.show();
-      s = '#' + inst_gp_id;
-      o = $(s);
-      o.hide();
-    }
-    else
-    {
-      // hide the upload ui and show the instagram ui
-      s = '#' + upload_gp_id;
-      o = $(s);
-      o.hide();
-      s = '#' + inst_gp_id;
-      o = $(s);
-      o.show();
-    }
-
-
+    type = o.val();
+    set_visibility( type, upload_gp_id, inst_gp_id );
   }
 
   function fileInputChange( element )

@@ -10,6 +10,14 @@ module ApplicationHelper
     false
   end
 
+  def is_number? string
+    true if Float(string) rescue false
+  end
+
+  def is_integer? string
+    true if Integer(string) rescue false
+  end
+
   def guarantee_final_slash( folder_path )
     # logger.info 'APPLICATION_HELPER - guarantee_final_slash()'\
     # + ' - folder_path: ' + folder_path
