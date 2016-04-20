@@ -19,3 +19,5 @@
 /log
 /working
 /public/system/
+
+/config/database.yml
