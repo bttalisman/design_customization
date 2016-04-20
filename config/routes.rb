@@ -1,18 +1,21 @@
 Rails.application.routes.draw do
   get 'home/index'
 
-
   root 'design_templates#index'
 
   get '/tools' => 'home#tools'
 
-  get "/colors/:id/update" => 'colors#update'
+  get 'processcode' => 'replacement_images#processcode'
+  get 'cleartoken' => 'replacement_images#cleartoken'
+  get 'fetch' => 'replacement_images#fetch'
+
+  get '/colors/:id/update' => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'
 
-  get "/palettes/:id/update" => 'palettes#update'
-  get "/palettes/:id/add" => 'palettes#add'
-  get "/palettes/:id/remove" => 'palettes#remove'
-  get "/palettes/:id/remove_all" => 'palettes#remove_all'
+  get '/palettes/:id/update' => 'palettes#update'
+  get '/palettes/:id/add' => 'palettes#add'
+  get '/palettes/:id/remove' => 'palettes#remove'
+  get '/palettes/:id/remove_all' => 'palettes#remove_all'
   get '/palettes/delete_all' => 'palettes#delete_all'
 
   get '/partials/version_settings/:id' => 'partials#version_settings'
@@ -35,13 +38,10 @@ Rails.application.routes.draw do
   post '/design_templates/:id/settings' => 'design_templates#all_settings'
   get '/design_templates/delete_all' => 'design_templates#delete_all'
 
-
   get 'force_process' => 'design_templates#force_process'
-
 
   post '/replacement_images/create' => 'replacement_images#create'
   post '/replacement_images/' => 'replacement_images#create'
-
 
   resources :design_templates
   resources :versions
@@ -52,9 +52,9 @@ Rails.application.routes.draw do
 
 
   # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
+  # See how all your routes lay out with 'rake routes'.
 
-  # You can have the root of your site routed with "root"
+  # You can have the root of your site routed with 'root'
   # root 'welcome#index'
 
   # Example of regular route:

@@ -18,10 +18,8 @@ class VersionsController < ApplicationController
 
   def delete_all
     logger.info 'VERSIONS_CONTROLLER - delete_all'
-
     versions = Version.all
     versions.each( &:delete )
-
     render nothing: true
   end
 
@@ -65,75 +63,21 @@ class VersionsController < ApplicationController
       + version_params.to_s
 
     @version = Version.find( params[ :id ] )
+    # this takes care of name, output folder, etc.
     @version.update( version_params )
 
     # extract the tag-related settings from the parameters object, and set
-    # this version's values property.  This is done independently of
-    # image-related settings.
+    # this version's values property.
     set_tag_values( @version, params )
+    # extract the image-related settings from the parameters object, and set
+    # this version's values property.
+    set_image_values( @version, params )
 
     @design_template = @version.design_template
     # this is an array of tag names, extracted from the AI file
     @tags = get_tags_array( @design_template )
     # this is an array of image names, extracted from the AI file
     @images = get_images_array( @design_template )
-
-    image_count = params[ 'image_count' ]
-
-    image_count = if image_count != ''
-                    image_count.to_i
-                  else
-                    0
-                  end
-
-    # get all of the uploaded files, for each create a ReplacementImage,
-    # and bind it to the image_name
-    image_count.times do |i|
-      p_name = 'replacement_image' + i.to_s
-      replacement_image = params[ p_name ]
-
-      p_name = 'image_name' + i.to_s
-      image_name = params[ p_name ]
-
-      logger.info 'VERSIONS_CONTROLLER - UPDATE - image_name: '\
-        + image_name.to_s
-      logger.info 'VERSIONS_CONTROLLER - UPDATE - replacement_image: '\
-        + replacement_image.to_s
-
-      if replacement_image
-        my_file = replacement_image[ 'uploaded_file' ]
-        logger.info 'VERSIONS_CONTROLLER - UPDATE - myFile: ' + my_file.to_s
-
-        if my_file
-
-          # get any replacement_image already associated with this image_name,
-          # and destroy it.
-          # No need to modify the version.values, we're just about to replace that entry
-
-          ri = get_replacement_image( image_name, @version )
-          logger.info 'VERSIONS_CONTROLLER - UPDATE - ri: ' + ri.to_s
-          ri.destroy if ri
-
-          o = { uploaded_file: my_file }
-          @replacement_image = @version.replacement_images.create( o )
-          @replacement_image.save
-
-          # this will set version.values to reflect any user-set properties for
-          # this version, these values will eventually be read by the AI script
-          add_replacement_image_to_version( @replacement_image,\
-                                            image_name, @version )
-        end
-      end
-    end
-
-    # logger.info 'VERSIONS_CONTROLLER - UPDATE - image_count: '\
-    # + image_count.to_s
-    # logger.info 'VERSIONS_CONTROLLER - UPDATE - version_params: '\
-    # + version_params.to_s
-    # logger.info 'VERSIONS_CONTROLLER - UPDATE - params[ 'version_data' ]: '\
-    # + params[ 'version_data' ].to_s
-    # logger.info 'VERSIONS_CONTROLLER - UPDATE - @images: ' + @images.to_s
-    # logger.info 'VERSIONS_CONTROLLER - UPDATE - @tags: ' + @tags.to_s
 
     process_version if @version.save
     redirect_to versions_path

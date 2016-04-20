@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160330172456) do
+ActiveRecord::Schema.define(version: 20160419160147) do
+
+  create_table "collages", force: :cascade do |t|
+    t.string   "path"
+    t.string   "query"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "version_id"
+  end
 
   create_table "colors", force: :cascade do |t|
     t.string   "hex_code"
