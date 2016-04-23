@@ -1,0 +1,2 @@
+class RemoteController < ApplicationController
+end

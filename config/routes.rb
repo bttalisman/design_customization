@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root 'design_templates#index'
 
   get '/tools' => 'home#tools'
+  post '/remote_run' => 'home#remote_run'
 
   get 'processcode' => 'replacement_images#processcode'
   get 'cleartoken' => 'replacement_images#cleartoken'

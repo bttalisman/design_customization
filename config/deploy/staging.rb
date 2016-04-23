@@ -1,7 +1,7 @@
 set :stage, :staging
 set :rails_env, 'production'
 set :migration_role, 'db'
-set :branch, ENV["BRANCH_NAME"] || ENV["BRANCH"] || 'develop'
+set :branch, ENV["BRANCH_NAME"] || ENV["BRANCH"] || 'master'
 
 role :app, %w{deploy@eglantine.bombsheller.com}
 role :web, %w{deploy@eglantine.bombsheller.com}
