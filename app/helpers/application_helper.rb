@@ -8,8 +8,6 @@ module ApplicationHelper
   class BailOutOfProcessing < StandardError
   end
 
-  @@run_remotely = true
-
   @@path_to_runner_script = Rails.root.to_s\
     + '/bin/illustrator_processing/run_AI_script.rb'
   @@path_to_extract_tags_script = Rails.root.to_s\
@@ -166,7 +164,15 @@ module ApplicationHelper
 
   def prep_and_run( config )
     prepare_files( config )
-    if !@@run_remotely
+
+    # custom configuration found in config/customization.yml
+    o = Rails.application.config_for(:customization)
+    run_remotely = o['run_remotely']
+
+    logger.info 'APPLICATION_HELPER - prep_and_run() - run_remotely: '\
+      + run_remotely.to_s
+
+    if !run_remotely
       # run locally
       system_call
     else

@@ -1,0 +1,9 @@
+
+development:
+  run_remotely: false
+
+test:
+  run_remotely: true
+
+production:
+  run_remotely: true
