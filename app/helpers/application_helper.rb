@@ -5,8 +5,10 @@ require 'uri'
 module ApplicationHelper
   @versions_folder = Rails.root.to_s + '/public/system/versions/'
 
+  class BailOutOfProcessing < StandardError
+  end
+
   @@run_remotely = true
-  @@run_locally = false
 
   @@path_to_runner_script = Rails.root.to_s\
     + '/bin/illustrator_processing/run_AI_script.rb'
@@ -42,6 +44,8 @@ module ApplicationHelper
     f
   end
 
+  # All necessary data are written to the folder containing the original AI
+  # file
   def path_to_data_file( path_to_ai_file )
     source_folder = File.dirname( path_to_ai_file )
     base_name = File.basename( path_to_ai_file, '.ai' )
@@ -77,6 +81,10 @@ module ApplicationHelper
     end
   end
 
+  # This method returns the path to the configuration file for a version,
+  # to be used as an argument to the run_AI_script script.  If the options
+  # parameter contains version_id, that version will be used, otherwise
+  # the version session variable will be used.
   def config_file_name( options = {} )
     version_id = options[ 'version_id' ]
     logger.info 'APPLICATION_HELPER - config_file_name() - options: '\
@@ -129,6 +137,8 @@ module ApplicationHelper
         + response.code.to_s
     end
 
+    # Wait until t gets back.  This hangs if one machine is serving both
+    # requests.
 #    t.join
   end
 
@@ -140,20 +150,44 @@ module ApplicationHelper
     if @version.design_template.nil?
       logger.info 'APPLICATION_HELPER - maybe_bail_out() - '\
         + 'NOT PROCESSING, no template.'
-      return
+      raise BailOutOfProcessing, 'No DesignTemplate.'
     end
     if runai != 'true'
       logger.info 'APPLICATION_HELPER - maybe_bail_out() - '\
         + 'NOT PROCESSING, runai not on.'
-      return
+      raise BailOutOfProcessing, 'Run AI checkbox unchecked.'
     end
     if @images.empty? && @tags.empty?
       logger.info 'APPLICATION_HELPER - maybe_bail_out() - '\
         + 'NOT PROCESSING, no images and no tags.'
-      return
+      raise BailOutOfProcessing, 'No extracted images or tags.'
     end
   end
 
+  def prep_and_run( config )
+    prepare_files( config )
+    if !@@run_remotely
+      # run locally
+      system_call
+    else
+      # send remote HTTP request
+      send_remote_run_request
+    end
+  end
+
+  # This method does everything necessary to generate modified AI files and
+  # AI output specified by a particular version.
+  # The original AI file is copied from the associated DesignTemplate into
+  # the version folder. This folder is unique to
+  # the version, and where all originals are located and output is placed
+  # before being moved to the output folder.
+  # version.values json is written to the version folder.  This contains all
+  # user-specified data.
+  # A config file containing necessary paths, used by
+  # bin/illustrator_processing/run_AI_script, is created.
+  # If processing is local, system_call() runs ruby.
+  # If processing is remote, send_remote_run_request() sends an HTTP request
+  # containing the version id
   def process_version
     maybe_bail_out
 
@@ -190,12 +224,7 @@ module ApplicationHelper
       config[ 'script file' ] = @@path_to_search_replace_script
       config[ 'output folder' ] = output_folder
 
-      prepare_files( config )
-
-      # run locally
-      system_call if @@run_locally
-      # send remote HTTP request
-      send_remote_run_request if @@run_remotely
+      prep_and_run( config )
 
       # unless something went wrong, this should exist
       int_file_exist = File.exist?( intermediate_output )
@@ -216,13 +245,10 @@ module ApplicationHelper
       config[ 'script file' ] = @@path_to_image_search_replace_script
       config[ 'output folder' ] = output_folder
 
-      prepare_files( config )
-
-      # run locally
-      system_call if @@run_locally
-      # send remote HTTP request
-      send_remote_run_request if @@run_remotely
-
+      prep_and_run( config )
     end # there are images to replace
+
+  rescue => e
+    logger.info 'APPLICATION_HELPER - Bailing Out! - ' + e.inspect
   end
 end
