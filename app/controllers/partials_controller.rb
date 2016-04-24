@@ -6,8 +6,6 @@ class PartialsController < ApplicationController
 
   layout 'partials'
 
-  @@path_to_quick_version_root = Rails.root.to_s + '/versions'
-
   # This action presents the tags extracted from the AI file, with any
   # tag-specific options, for use when creating or editing a DesignTemplate
   def design_template_settings
@@ -40,6 +38,7 @@ class PartialsController < ApplicationController
   end
 
   def quick_new
+    app_config = Rails.application.config_for(:customization)
     template_id = params[ :template_id ]
     @design_template = DesignTemplate.find( template_id )
 
@@ -48,7 +47,7 @@ class PartialsController < ApplicationController
     @version = Version.new( config_hash )
     @version.save
 
-    version_folder_path = @@path_to_quick_version_root + '/template_'\
+    version_folder_path = app_config[ 'path_to_quick_version_root' ] + '/template_'\
       + @design_template.id.to_s + '/version_' + @version.id.to_s + '/'
     version_name = @design_template.name + '_' + @version.id.to_s
 

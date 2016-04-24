@@ -3,22 +3,8 @@ require 'net/http'
 require 'uri'
 
 module ApplicationHelper
-  @versions_folder = Rails.root.to_s + '/public/system/versions/'
-
   class BailOutOfProcessing < StandardError
   end
-
-  @@path_to_runner_script = Rails.root.to_s\
-    + '/bin/illustrator_processing/run_AI_script.rb'
-  @@path_to_extract_tags_script = Rails.root.to_s\
-    + '/bin/illustrator_processing/extractTags.jsx'
-  @@path_to_extract_images_script = Rails.root.to_s\
-    + '/bin/illustrator_processing/extractImages.jsx'
-  @@path_to_search_replace_script = Rails.root.to_s\
-    + '/bin/illustrator_processing/searchAndReplace.jsx'
-  @@path_to_image_search_replace_script = Rails.root.to_s\
-    + '/bin/illustrator_processing/searchAndReplaceImages.jsx'
-  @@path_to_quick_version_root = Rails.root.to_s + '/versions'
 
   def json?( s )
     # double bang forces a boolean context for whatever parse returns, without
@@ -117,7 +103,12 @@ module ApplicationHelper
   def system_call( options = {} )
     logger.info 'APPLICATION_HELPER - system_call() - options: '\
      + options.to_s
-    sys_com = 'ruby ' + @@path_to_runner_script + ' "'\
+    app_config = Rails.application.config_for(:customization)
+    path = app_config['path_to_runner_script']
+    logger.info 'APPLICATION_HELPER - system_call() - path: '\
+     + path.to_s
+
+    sys_com = 'ruby ' + path + ' "'\
       + config_file_name( options ) + '"'
     logger.info 'APPLICATION_HELPER - system_call() - about to run sys_com: '\
       + sys_com.to_s
@@ -166,11 +157,13 @@ module ApplicationHelper
     prepare_files( config )
 
     # custom configuration found in config/customization.yml
-    o = Rails.application.config_for(:customization)
-    run_remotely = o['run_remotely']
+    app_config = Rails.application.config_for(:customization)
+    run_remotely = app_config['run_remotely']
 
     logger.info 'APPLICATION_HELPER - prep_and_run() - run_remotely: '\
       + run_remotely.to_s
+    logger.info 'APPLICATION_HELPER - prep_and_run() - config: '\
+      + config.to_s
 
     if !run_remotely
       # run locally
@@ -221,13 +214,17 @@ module ApplicationHelper
       + '_mod.ai'
 
     int_file_exist = false
+    app_config = Rails.application.config_for(:customization)
+
 
     if !@tags.empty?
       # There are tags to replace, we should replace tags
 
+      path = app_config['path_to_search_replace_script']
+
       config = {}
       config[ 'source file' ] = version_file_path
-      config[ 'script file' ] = @@path_to_search_replace_script
+      config[ 'script file' ] = path
       config[ 'output folder' ] = output_folder
 
       prep_and_run( config )
@@ -248,7 +245,8 @@ module ApplicationHelper
         # replace images
         config[ 'source file' ] = version_file_path
       end
-      config[ 'script file' ] = @@path_to_image_search_replace_script
+
+      config[ 'script file' ] = app_config['path_to_image_search_replace_script']
       config[ 'output folder' ] = output_folder
 
       prep_and_run( config )

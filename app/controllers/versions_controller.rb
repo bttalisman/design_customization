@@ -79,6 +79,7 @@ class VersionsController < ApplicationController
   end
 
   def quick_new
+    app_config = Rails.application.config_for(:customization)
     logger.info 'VERSIONS_CONTROLLER - QUICK_NEW'
     template_id = params[ :template_id ]
     @design_template = DesignTemplate.find( template_id )
@@ -88,7 +89,7 @@ class VersionsController < ApplicationController
     @version = Version.new( config_hash )
     @version.save
 
-    version_folder_path = @@path_to_quick_version_root + '/template_'\
+    version_folder_path = app_config[ 'path_to_quick_version_root' ] + '/template_'\
       + @design_template.id.to_s + '/version_' + @version.id.to_s + '/'
     version_name = @design_template.name + '_' + @version.id.to_s
 

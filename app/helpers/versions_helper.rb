@@ -1,11 +1,11 @@
 # Versions Helper
 module VersionsHelper
-  @@versions_folder = Rails.root.to_s + '/public/system/versions/'
-
   def get_version_folder( version )
+    app_config = Rails.application.config_for(:customization)
+    versions_folder = app_config[ 'path_to_versions_folder' ]
     logger.info 'VERSIONS_HELPER - get_version_folder() - @versions_folder: '\
-      + @@versions_folder.to_s
-    version_output_folder = @@versions_folder + version.id.to_s
+      + versions_folder.to_s
+    version_output_folder = versions_folder + version.id.to_s
     FileUtils.mkdir_p( version_output_folder )\
       unless File.directory?( version_output_folder )
     version_output_folder

@@ -1,8 +1,6 @@
 # Colors Helper
 module ColorsHelper
-
   def swatch( c, settings )
-
     logger.info 'ColorsHelper - swatch() - settings: ' + settings.to_s
 
     display = settings[:display]
