@@ -3,7 +3,8 @@ module VersionsHelper
   @@versions_folder = Rails.root.to_s + '/public/system/versions/'
 
   def get_version_folder( version )
-    logger.info 'VERSIONS_HELPER - get_version_folder() - @versions_folder: ' + @@versions_folder.to_s
+    logger.info 'VERSIONS_HELPER - get_version_folder() - @versions_folder: '\
+      + @@versions_folder.to_s
     version_output_folder = @@versions_folder + version.id.to_s
     FileUtils.mkdir_p( version_output_folder )\
       unless File.directory?( version_output_folder )

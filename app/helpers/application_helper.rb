@@ -1,6 +1,12 @@
 # Application Helper
+require 'net/http'
+require 'uri'
+
 module ApplicationHelper
   @versions_folder = Rails.root.to_s + '/public/system/versions/'
+
+  @@run_remotely = true
+  @@run_locally = false
 
   @@path_to_runner_script = Rails.root.to_s\
     + '/bin/illustrator_processing/run_AI_script.rb'
@@ -31,13 +37,8 @@ module ApplicationHelper
   end
 
   def guarantee_final_slash( folder_path )
-    # logger.info 'APPLICATION_HELPER - guarantee_final_slash()'\
-    # + ' - folder_path: ' + folder_path
     f = folder_path
-    if folder_path[-1, 1] != '/'
-      logger.info 'GUARANTEE_FINAL_SLASH - appending!!'
-      f = folder_path + '/'
-    end
+    f = folder_path + '/' if folder_path[-1, 1] != '/'
     f
   end
 
@@ -65,7 +66,7 @@ module ApplicationHelper
   # This method writes the current version's values string to a file sitting
   # right next to an AI file, named with _data.jsn.
   def write_temp_data_file( path_to_ai_file )
-    logger.info 'APPLICATION_HELPER - write_temp_data_file - path_to_ai_file: '\
+    logger.info 'APPLICATION_HELPER - write_temp_data_file() - path_to_ai_file: '\
       + path_to_ai_file.to_s
     temp_values_file = path_to_data_file( path_to_ai_file )
 
@@ -76,51 +77,85 @@ module ApplicationHelper
     end
   end
 
-  def do_run_ai( config )
-    logger.info 'APPLICATION_HELPER - run_ai - config: ' + config.to_s
+  def config_file_name( options = {} )
+    version_id = options[ 'version_id' ]
+    logger.info 'APPLICATION_HELPER - config_file_name() - options: '\
+      + options.to_s
 
+    version = if version_id.nil?
+                @version
+              else
+                Version.find( version_id )
+              end
+
+    logger.info 'APPLICATION_HELPER - config_file_name() - version: '\
+      + version.to_s
+
+    version_output_folder = get_version_folder( version )
+    config_file = version_output_folder + '/config_ai.jsn'
+    config_file
+  end
+
+  def prepare_files( config )
     # this will put an appropriately named data file right next to the
-    # source file
+    # source file.  The data file will contain the @version.values data.
     write_temp_data_file( config['source file'] )
 
-    # create a config file that tells run_AI_script what it needs.  This file
-    # can be anywhere, but we'll put it in the version folder
-    version_output_folder = get_version_folder( @version )
-    config_file = version_output_folder + '/config_ai.jsn'
-    File.open( config_file, 'w' ) do |f|
+    # this will put a configuration json file in the version folder.  this file
+    # tells bin/run_AI_script necessary file locations
+    File.open( config_file_name, 'w' ) do |f|
       f.write( config.to_json )
     end
+  end
 
-    # And run it!
-
-    sys_com = 'ruby ' + @@path_to_runner_script + ' "' + config_file + '"'
-    logger.info 'APPLICATION_HELPER - run_ai - about to run sys_com: '\
+  def system_call( options = {} )
+    logger.info 'APPLICATION_HELPER - system_call() - options: '\
+     + options.to_s
+    sys_com = 'ruby ' + @@path_to_runner_script + ' "'\
+      + config_file_name( options ) + '"'
+    logger.info 'APPLICATION_HELPER - system_call() - about to run sys_com: '\
       + sys_com.to_s
-    # run the ruby script. AI should generate output files to the output folder
     system( sys_com )
   end
 
-  #
-  def process_version
+  def send_remote_run_request
+    logger.info 'APPLICATION_HELPER - send_remote_run_request()'
+    uri_string = local_host + '/do_run_ai?version_id=' + @version.id.to_s
+    uri = URI.parse( uri_string )
+
+    t = Thread.new do
+      response = Net::HTTP.get_response(uri)
+      logger.info 'APPLICATION_HELPER - send_remote_run_request() - response.code: '\
+        + response.code.to_s
+    end
+
+#    t.join
+  end
+
+  def maybe_bail_out
     runai = params['runai']
-    logger.info 'APPLICATION_HELPER - process_version - runai: ' + runai.to_s
+    logger.info 'APPLICATION_HELPER - maybe_bail_out() - runai: ' + runai.to_s
 
     # bail out for any of these reasons
     if @version.design_template.nil?
-      logger.info 'APPLICATION_HELPER - process_version - '\
+      logger.info 'APPLICATION_HELPER - maybe_bail_out() - '\
         + 'NOT PROCESSING, no template.'
       return
     end
     if runai != 'true'
-      logger.info 'APPLICATION_HELPER - process_version - '\
+      logger.info 'APPLICATION_HELPER - maybe_bail_out() - '\
         + 'NOT PROCESSING, runai not on.'
       return
     end
     if @images.empty? && @tags.empty?
-      logger.info 'APPLICATION_HELPER - process_version - '\
+      logger.info 'APPLICATION_HELPER - maybe_bail_out() - '\
         + 'NOT PROCESSING, no images and no tags.'
       return
     end
+  end
+
+  def process_version
+    maybe_bail_out
 
     original_file = @version.design_template.original_file
     original_file_path = original_file.path
@@ -131,31 +166,19 @@ module ApplicationHelper
     version_file_path = version_folder + '/' + original_file_name
 
     # copy the original file to the version folder, same name
-    logger.info 'APPLICATION_HELPER - process_version - '\
-      + 'about to copy original file.'
     FileUtils.cp( original_file_path, version_file_path )
 
     if @version.output_folder_path != ''
       # the user has specified an output folder
-      logger.info 'APPLICATION_HELPER - process_version - '\
-        + 'user specified output folder.'
       output_folder = guarantee_final_slash( @version.output_folder_path )
     else
       # the user has not specified an output folder,
       # we'll just use the version folder
-      logger.info 'APPLICATION_HELPER - process_version - '\
-        + 'NO user specified output folder.'
       output_folder = guarantee_final_slash( version_folder )
     end
 
-    logger.info 'APPLICATION_HELPER - process_version - output_folder: '\
-      + output_folder.to_s
-    logger.info 'APPLICATION_HELPER - process_version - '\
-      + 'original_file_base_name: ' + original_file_base_name.to_s
     intermediate_output = output_folder.to_s + original_file_base_name.to_s\
       + '_mod.ai'
-    logger.info 'APPLICATION_HELPER - process_version - intermediate_output: '\
-      + intermediate_output.to_s
 
     int_file_exist = false
 
@@ -167,12 +190,15 @@ module ApplicationHelper
       config[ 'script file' ] = @@path_to_search_replace_script
       config[ 'output folder' ] = output_folder
 
-      do_run_ai( config )
+      prepare_files( config )
+
+      # run locally
+      system_call if @@run_locally
+      # send remote HTTP request
+      send_remote_run_request if @@run_remotely
 
       # unless something went wrong, this should exist
       int_file_exist = File.exist?( intermediate_output )
-      logger.info 'APPLICATION_HELPER - process_version - int_file_exist: '\
-        + int_file_exist.to_s
 
     end # there are tags to replace
 
@@ -190,7 +216,12 @@ module ApplicationHelper
       config[ 'script file' ] = @@path_to_image_search_replace_script
       config[ 'output folder' ] = output_folder
 
-      do_run_ai( config )
+      prepare_files( config )
+
+      # run locally
+      system_call if @@run_locally
+      # send remote HTTP request
+      send_remote_run_request if @@run_remotely
 
     end # there are images to replace
   end
