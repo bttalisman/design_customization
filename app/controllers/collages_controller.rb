@@ -7,10 +7,8 @@ class CollagesController < ApplicationController
   class FailedInstagramConnection < StandardError
   end
 
-  @@ngrok_host = 'https://6ff06513.ngrok.io'
-
   def processcode
-    logger.info 'replacement_images_controller - processcode()'
+    logger.info 'collages_controller - processcode()'
     vars = request.query_parameters
     code = vars['code']
 
@@ -18,7 +16,7 @@ class CollagesController < ApplicationController
       # code was passed, get the token from instagram
 
       uri = URI('https://api.instagram.com/oauth/access_token')
-      redirect_uri = @@ngrok_host + '/processcode'
+      redirect_uri = local_host + '/processcode'
 
       res = Net::HTTP.post_form( uri, 'client_id' => '2b45daba4e154a6cb20060193db7ebfc', 'client_secret' => 'a9260a99b47f4caab4eecf0f86cf8241',
   'grant_type' => 'authorization_code', 'redirect_uri' => redirect_uri, 'code' => code)
@@ -37,7 +35,7 @@ class CollagesController < ApplicationController
   # This method is called whenver a FailedInstagramConnection exception is thrown,
   # assuming that the problem is an expired token.
   def cleartoken
-    logger.info 'replacement_images_controller - cleartoken()'
+    logger.info 'collages_controller - cleartoken()'
     session[:insta_token] = nil
     redirect_to @@ngrok_host + '/processcode'
 #    redirect_to 'https://api.instagram.com/oauth/authorize/'\
@@ -53,7 +51,7 @@ class CollagesController < ApplicationController
   private
 
   def fetch_pics( user_id )
-    logger.info 'replacement_images_controller - fetch_pics()'
+    logger.info 'collages_controller - fetch_pics()'
     pages_got = 0
     items_got = 0
 

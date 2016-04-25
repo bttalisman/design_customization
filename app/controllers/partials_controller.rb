@@ -20,7 +20,7 @@ class PartialsController < ApplicationController
     if json?( @design_template.prompts )
       @values = JSON.parse( @design_template.prompts )
     else
-      logger.info 'PARTIALS_CONTROLLER - design_template_settings - BAD json!!!'
+      logger.info 'PARTIALS_CONTROLLER - design_template_settings - prompts BAD json!!!'
     end
 
     logger.info 'PARTIALS_CONTROLLER - design_template_settings - template_id: '\
@@ -95,10 +95,10 @@ class PartialsController < ApplicationController
   # whenever the user changes the DesignTemplate associated with this version.
   def version_settings
     id = params[ :id ]
-    logger.info 'PARTIALS_CONTROLLER - version_settings - id: ' + id.to_s
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - id: ' + id.to_s
 
     @version_id = params[ :version_id ]
-    logger.info 'PARTIALS_CONTROLLER - version_settings - @version_id: '\
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - @version_id: '\
       + @version_id.to_s
 
     @design_template = DesignTemplate.find( id )
@@ -107,12 +107,12 @@ class PartialsController < ApplicationController
     @colors = Color.all
     @palettes = get_palettes( @design_template )
 
-    logger.info 'PARTIALS_CONTROLLER - version_settings - @tags: ' + @tags.to_s
-    logger.info 'PARTIALS_CONTROLLER - version_settings - @images: '\
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - @tags: ' + @tags.to_s
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - @images: '\
       + @images.to_s
-    logger.info 'PARTIALS_CONTROLLER - version_settings - @images.length: '\
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - @images.length: '\
       + @images.length.to_s
-    logger.info 'PARTIALS_CONTROLLER - version_settings - @tags.length: '\
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - @tags.length: '\
       + @tags.length.to_s
 
     if !@version_id.nil?
@@ -122,7 +122,7 @@ class PartialsController < ApplicationController
       @version_id = ''
     end
 
-    logger.info 'PARTIALS_CONTROLLER - version_settings - @version: '\
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - @version: '\
       + @version.to_s
 
     if !@version.nil?
@@ -134,9 +134,9 @@ class PartialsController < ApplicationController
       @version.update( o )
 
       if @version.save
-        logger.info 'PARTIALS_CONTROLLER - version_settings - VERSION SAVED!'
+        logger.info 'PARTIALS_CONTROLLER - version_settings() - VERSION SAVED!'
       else
-        logger.info 'PARTIALS_CONTROLLER - version_settings - VERSION NOT SAVED!'
+        logger.info 'PARTIALS_CONTROLLER - version_settings() - VERSION NOT SAVED!'
       end
 
       values = get_values_object( @version )

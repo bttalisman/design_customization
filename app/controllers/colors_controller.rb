@@ -9,7 +9,7 @@ class ColorsController < ApplicationController
   end
 
   def edit
-    logger.info 'COLORS CONTROLLER - edit! - params: ' + params.to_s
+    logger.info 'COLORS_CONTROLLER - edit! - params: ' + params.to_s
     @color = Color.find(params[:id])
   end
 
@@ -32,19 +32,19 @@ class ColorsController < ApplicationController
   end
 
   def create
-    logger.info 'COLOR_CONTROLLER - create!'
+    logger.info 'COLORS_CONTROLLER - create!'
     @color = Color.new(color_params)
     if @color.save
-      logger.info 'COLOR_CONTROLLER - create - SUCCESS!'
+      logger.info 'COLORS_CONTROLLER - create - SUCCESS!'
       redirect_to colors_path
     else
-      logger.info 'COLOR_CONTROLLER - create - FAILURE!'
+      logger.info 'COLORS_CONTROLLER - create - FAILURE!'
       render 'new'
     end
   end
 
   def destroy
-    logger.info 'COLORSS_CONTROLLER - destroy'
+    logger.info 'COLORS_CONTROLLER - destroy'
     @color = Color.find(params[:id])
     @color.destroy
     redirect_to :colors

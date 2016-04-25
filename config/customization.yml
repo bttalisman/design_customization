@@ -11,6 +11,7 @@ development:
   path_to_collage_root: <%= Rails.root.to_s + '/collages' %>
 
   run_remotely: false
+  remote_server_uri: 'http://localhost:3000'
 
 test:
   run_remotely: true
