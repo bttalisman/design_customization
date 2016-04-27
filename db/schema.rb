@@ -14,52 +14,69 @@
 ActiveRecord::Schema.define(version: 20160419160147) do
 
   create_table "collages", force: :cascade do |t|
-    t.string   "path"
-    t.string   "query"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer  "version_id"
+    t.string   "path",       limit: 255
+    t.string   "query",      limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "version_id", limit: 4
   end
 
   create_table "colors", force: :cascade do |t|
-    t.string   "hex_code"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "palette_id"
-    t.string   "description"
+    t.string   "hex_code",    limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "palette_id",  limit: 4
+    t.string   "description", limit: 255
   end
 
-  add_index "colors", ["palette_id"], name: "index_colors_on_palette_id"
+  add_index "colors", ["palette_id"], name: "index_colors_on_palette_id", using: :btree
 
   create_table "colors_palettes", id: false, force: :cascade do |t|
-    t.integer "color_id",   null: false
-    t.integer "palette_id", null: false
+    t.integer "color_id",   limit: 4, null: false
+    t.integer "palette_id", limit: 4, null: false
   end
 
-# Could not dump table "design_templates" because of following NoMethodError
-#   undefined method `[]' for nil:NilClass
+  create_table "design_templates", force: :cascade do |t|
+    t.string   "orig_file_path",             limit: 255
+    t.string   "name",                       limit: 255
+    t.text     "prompts",                    limit: 65535
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.string   "original_file_file_name",    limit: 255
+    t.string   "original_file_content_type", limit: 255
+    t.integer  "original_file_file_size",    limit: 4
+    t.datetime "original_file_updated_at"
+  end
 
   create_table "palettes", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "color_id"
-    t.string   "description"
+    t.string   "name",        limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "color_id",    limit: 4
+    t.string   "description", limit: 255
   end
 
-  add_index "palettes", ["color_id"], name: "index_palettes_on_color_id"
+  add_index "palettes", ["color_id"], name: "index_palettes_on_color_id", using: :btree
 
   create_table "replacement_images", force: :cascade do |t|
-    t.integer  "version_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "uploaded_file_file_name"
-    t.string   "uploaded_file_content_type"
-    t.integer  "uploaded_file_file_size"
+    t.integer  "version_id",                 limit: 4
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.string   "uploaded_file_file_name",    limit: 255
+    t.string   "uploaded_file_content_type", limit: 255
+    t.integer  "uploaded_file_file_size",    limit: 4
     t.datetime "uploaded_file_updated_at"
   end
 
-# Could not dump table "versions" because of following NoMethodError
-#   undefined method `[]' for nil:NilClass
+  create_table "versions", force: :cascade do |t|
+    t.string   "output_folder_path", limit: 255
+    t.text     "values",             limit: 65535
+    t.integer  "design_template_id", limit: 4
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "name",               limit: 255
+  end
 
+  add_foreign_key "colors", "palettes"
+  add_foreign_key "palettes", "colors"
 end

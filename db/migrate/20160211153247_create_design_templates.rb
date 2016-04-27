@@ -3,7 +3,7 @@ class CreateDesignTemplates < ActiveRecord::Migration
     create_table :design_templates do |t|
       t.string :orig_file_path
       t.string :name
-      t.column :prompts, :json   # Edited
+      t.text :prompts
       t.timestamps null: false
     end
   end
