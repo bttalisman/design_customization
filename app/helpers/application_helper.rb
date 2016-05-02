@@ -68,5 +68,4 @@ module ApplicationHelper
     time = datetime.in_time_zone('Pacific Time (US & Canada)')
     time.strftime('%-m/%-d/%y: %H:%M %Z')
   end
-
 end

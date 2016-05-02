@@ -84,17 +84,33 @@ module DesignTemplatesHelper
     images
   end
 
-  # a design_template's prompts column describes any extensible settings
+  # A design_template's prompts describes any extensible settings
   # presented by versions of this template, such as replace this image?, allow
   # users to set the color of this text?
+  #
+  # tag_settings:
+  #   tag_name:
+  #     prompt: 'stuff'
+  #     max_length: '33'
+  #     min_length: '2'
+  #     pick_color: 'checked'
+  #     use_palette: 'checked'
+  #     palette_id: '4'
+  #
+  # image_settings:
+  #   image_name:
+  #     replace_image: 'checked'
+  #
   def get_prompts_object( design_template )
     prompts_string = design_template.prompts
     prompts = JSON.parse( prompts_string ) if json?( prompts_string )
-     logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - prompts_string: '\
-     + prompts_string.to_s
+    logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
+      + 'prompts_string: ' + prompts_string.to_s
     prompts
   end
 
+  # This method makes a folder to temporarily hold output.  The folder is
+  # called 'output' and it's located in the design template folder.
   def make_output_folder
     # the illustrator scripts place all output
     # in a subfolder of the folder containing the original file, and later
@@ -105,6 +121,8 @@ module DesignTemplatesHelper
         unless File.directory?( ai_output_folder )
   end
 
+  # This method returns the path to the specified DesignTemplate's working
+  # folder.
   def get_design_template_folder( dt )
     file = dt.original_file
     source_path = file.path

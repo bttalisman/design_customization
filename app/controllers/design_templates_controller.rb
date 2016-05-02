@@ -12,8 +12,7 @@ class DesignTemplatesController < ApplicationController
             tags: bool_display_text( tags?(t) ),
             images: bool_display_text( images?(t) ),
             id: t.id.to_s,
-            created: time_display_text( t.created_at )
-      }
+            created: time_display_text( t.created_at ) }
       @design_templates << o
     end
   end
