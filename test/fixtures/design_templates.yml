@@ -1,16 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  orig_file_path: ?
-  name: OneAndOne
+  orig_file_path: '?'
+  name: 'OneAndOne'
   prompts:
 
 two:
-  orig_file_path: ?
-  name: OneTag
+  orig_file_path: '?'
+  name: 'OneTag'
   prompts:
 
 three:
-  orig_file_path: ?
-  name: Tiled
+  orig_file_path: '?'
+  name: 'Tiled'
   prompts:

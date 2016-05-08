@@ -2,10 +2,8 @@
 
 one:
   output_folder_path: MyString
-  values: 
-  template_id: 1
+  values:
 
 two:
   output_folder_path: MyString
-  values: 
-  template_id: 1
+  values:
