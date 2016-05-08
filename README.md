@@ -14,17 +14,17 @@ Each Design Template object is associated with an Adobe Illustrator file.  A Des
 
 Each Version object encapsulates a customer’s specifications of how one particular version is to be created.  A Version is associated with an OS folder, referred to as its 'working folder'.  A Version’s specifications are passed along to AI when generating output.
 
-Colors and Palettes are used to manage color usage.  Color objects can be created for appealing colors, and grouped into Palettes, and in this way a customer's choices can be limited.
+Colors and Palettes are used to manage color usage.  Color objects can be created for appealing colors, and grouped into Palettes. In this way a customer's choices can be limited.
 
 A Replacement Image is essentially an uploaded file that will replace a 'placed item' found in an AI file.
 
-A Collage is an alternative to a Replacement Image, essentially being a collection of images, currently implemented as a connection to Instagram.
+A Collage is an alternative to a Replacement Image, essentially being a collection of images, currently implemented as a connection to Instagram.  When created, a collage downloads a collection of images from Instagram into an OS folder.  
 
 ## Languages and Environments
 
 This is a Rails application, but several other scripting languages are used as needed.
 
-The Adobe Illustrator application is used to run a script currently written in JavaScript, but any AI-supported scripting language could be used.  This script has access to the entire Illustrator API.  AppleScript is used as little as possible: to launch Adobe Illustrator, load the AI script, and close Illustrator.  A Ruby OS script creates this AppleScript in memory, runs it, and generates a collection of output files including .ai, .jpeg, and any other type needed.  These files are initially placed in the ‘output’ subfolder of the Version’s working folder. The OS script then continues to copy output files to their final location, as well as initiate any further processing that needs to occur.
+The Adobe Illustrator application is used to run a script written in JavaScript, but any AI-supported scripting language could be used.  This script has access to the entire Illustrator API.  AppleScript is used as little as possible: to launch Adobe Illustrator, load the AI script, and close Illustrator.  A Ruby OS script creates this AppleScript in memory, runs it, and generates a collection of output files including .ai, .jpeg, and any other type needed.  These files are initially placed in the ‘output’ subfolder of the Version’s working folder. The OS script copies these output files to their final location, as well as initiates any further processing that needs to occur.
 
 ## Distributed Installation
 
