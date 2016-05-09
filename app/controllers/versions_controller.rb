@@ -67,7 +67,7 @@ class VersionsController < ApplicationController
     # this is an array of image names, extracted from the AI file
     @images = get_images_array( @design_template )
 
-    process_version if @version.save
+    process_version( @version, @tags, @images ) if @version.save
     redirect_to versions_path
   end
 

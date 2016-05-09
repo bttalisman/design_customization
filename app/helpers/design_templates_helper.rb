@@ -66,12 +66,12 @@ module DesignTemplatesHelper
   # placed items within an AI file that will be replaced by versions of this
   # template.
   def get_images_array( design_template )
-    # logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array()'
+    # Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array()'
     images_file = path_to_images_file( design_template )
-    # logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array() - images_file: '\
+    # Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array() - images_file: '\
     # + images_file.to_s
     exists = File.exist?( images_file )
-    # logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array - exists: '\
+    # Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array - exists: '\
     # + exists.to_s
     images_string = ''
     images = []
@@ -104,18 +104,18 @@ module DesignTemplatesHelper
   def get_prompts_object( design_template )
     prompts_string = design_template.prompts
     prompts = JSON.parse( prompts_string ) if json?( prompts_string )
-    logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
+    Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
       + 'prompts_string: ' + prompts_string.to_s
     prompts
   end
 
   # This method makes a folder to temporarily hold output.  The folder is
   # called 'output' and it's located in the design template folder.
-  def make_output_folder
+  def make_output_folder( design_template )
     # the illustrator scripts place all output
     # in a subfolder of the folder containing the original file, and later
     # moved to wherever
-    source_folder = get_design_template_folder( @design_template )
+    source_folder = get_design_template_folder( design_template )
     ai_output_folder = source_folder + '/output'
     FileUtils.mkdir_p( ai_output_folder )\
         unless File.directory?( ai_output_folder )
@@ -123,29 +123,30 @@ module DesignTemplatesHelper
 
   # This method returns the path to the specified DesignTemplate's working
   # folder.
-  def get_design_template_folder( dt )
-    file = dt.original_file
+  def get_design_template_folder( design_template )
+    file = design_template.original_file
     source_path = file.path
     source_folder = File.dirname( source_path )
     source_folder
   end
 
   # This method returns the path to the configuration file for extracting tags,
-  # to be used as an argument to the run_AI_script script.  If the options
-  # parameter contains design_template_id, that template will be used, otherwise
-  # the session variable will be used.
+  # to be used as an argument to the run_AI_script script.  The options
+  # parameter must contain either 'design_template_id' or 'design_template'
   def tags_config_file_name( options = {} )
     dt_id = options[ 'design_template_id' ]
-    logger.info 'design_templates_helper - tags_config_file_name() - options: '\
+    design_template = options[ 'design_template' ]
+
+    Rails.logger.info 'design_templates_helper - tags_config_file_name() - options: '\
       + options.to_s
 
     dt = if dt_id.nil?
-           @design_template
+           design_template
          else
            DesignTemplate.find( dt_id )
          end
 
-    logger.info 'design_templates_helper - tags_config_file_name() - dt: '\
+    Rails.logger.info 'design_templates_helper - tags_config_file_name() - dt: '\
       + dt.to_s
 
     dt_folder = get_design_template_folder( dt )
@@ -154,21 +155,22 @@ module DesignTemplatesHelper
   end
 
   # This method returns the path to the configuration file for extracting images,
-  # to be used as an argument to the run_AI_script script.  If the options
-  # parameter contains design_template_id, that template will be used, otherwise
-  # the session variable will be used.
+  # to be used as an argument to the run_AI_script script.  The options
+  # parameter must contain either 'design_template_id' or 'design_template'
   def images_config_file_name( options = {} )
     dt_id = options[ 'design_template_id' ]
-    logger.info 'design_templates_helper - images_config_file_name() - options: '\
+    design_template = options[ 'design_template' ]
+
+    Rails.logger.info 'design_templates_helper - images_config_file_name() - options: '\
       + options.to_s
 
     dt = if dt_id.nil?
-           @design_template
+           design_template
          else
            DesignTemplate.find( dt_id )
          end
 
-    logger.info 'design_templates_helper - images_config_file_name() - dt: '\
+    Rails.logger.info 'design_templates_helper - images_config_file_name() - dt: '\
       + dt.to_s
 
     dt_folder = get_design_template_folder( dt )
@@ -180,20 +182,20 @@ module DesignTemplatesHelper
   # info from an AI file.  If config/customization.yml[ 'run_remotely' ] then
   # HTTP requests will be sent to the remote server, otherwise local
   # system calls will be executed.
-  def process_original
-    extract_tags
-    extract_images
+  def process_original( design_template )
+    extract_tags( design_template )
+    extract_images( design_template )
   end
 
-  def extract_tags
+  def extract_tags( design_template )
     app_config = Rails.application.config_for(:customization)
     run_remotely = app_config['run_remotely']
 
-    config_file = tags_config_file_name
-    source_folder = get_design_template_folder( @design_template )
+    config_file = tags_config_file_name( 'design_template' => design_template )
+    source_folder = get_design_template_folder( design_template )
 
     config = {}
-    config[ 'source file' ] = @design_template.original_file.path
+    config[ 'source file' ] = design_template.original_file.path
     config[ 'script file' ] = app_config[ 'path_to_extract_tags_script' ]
     config[ 'output folder' ] = source_folder
 
@@ -201,27 +203,27 @@ module DesignTemplatesHelper
       f.write( config.to_json )
     end
 
-    make_output_folder
+    make_output_folder( design_template )
 
     if run_remotely
-      extract_tags_send_remote
+      extract_tags_send_remote( design_template )
     else
-      extract_tags_system_call
+      extract_tags_system_call( design_template )
     end
   end
 
-  def extract_images
+  def extract_images( design_template )
     app_config = Rails.application.config_for(:customization)
     run_remotely = app_config['run_remotely']
 
-    config_file = images_config_file_name
-    source_folder = get_design_template_folder( @design_template )
+    config_file = images_config_file_name( 'design_template' => design_template )
+    source_folder = get_design_template_folder( design_template )
 
-    logger.info 'DESIGN_TEMPLATES_HELPER - extract_images() - config_file: '\
+    Rails.logger.info 'DESIGN_TEMPLATES_HELPER - extract_images() - config_file: '\
       + config_file.to_s
 
     config = {}
-    config[ 'source file' ] = @design_template.original_file.path
+    config[ 'source file' ] = design_template.original_file.path
     config[ 'script file' ] = app_config[ 'path_to_extract_images_script' ]
     config[ 'output folder' ] = source_folder
 
@@ -229,27 +231,27 @@ module DesignTemplatesHelper
       f.write( config.to_json )
     end
 
-    make_output_folder
+    make_output_folder( design_template )
 
     if run_remotely
-      extract_images_send_remote
+      extract_images_send_remote( design_template )
     else
-      extract_images_system_call
+      extract_images_system_call( design_template )
     end
   end
 
-  def extract_tags_send_remote
-    logger.info 'design_templates_helper - extract_tags_send_remote() - '\
-      + '@design_template: ' + @design_template.to_s
-    logger.info 'design_templates_helper - extract_tags_send_remote() - '\
+  def extract_tags_send_remote( design_template )
+    Rails.logger.info 'design_templates_helper - extract_tags_send_remote() - '\
+      + 'design_template: ' + design_template.to_s
+    Rails.logger.info 'design_templates_helper - extract_tags_send_remote() - '\
       + 'remote_host: ' + remote_host.to_s
     uri_string = remote_host + '/do_extract_tags?design_template_id='\
-      + @design_template.id.to_s
+      + design_template.id.to_s
     uri = URI.parse( uri_string )
 
     t = Thread.new do
       response = Net::HTTP.get_response(uri)
-      logger.info 'design_templates_helper - extract_tags_send_remote() - '\
+      Rails.logger.info 'design_templates_helper - extract_tags_send_remote() - '\
         + 'response.code: ' + response.code.to_s
     end
 
@@ -258,15 +260,15 @@ module DesignTemplatesHelper
 #    t.join
   end
 
-  def extract_images_send_remote
-    logger.info 'design_templates_helper - extract_images_send_remote()'
+  def extract_images_send_remote( design_template )
+    Rails.logger.info 'design_templates_helper - extract_images_send_remote()'
     uri_string = remote_host + '/do_extract_images?design_template_id='\
-      + @design_template.id.to_s
+      + design_template.id.to_s
     uri = URI.parse( uri_string )
 
     t = Thread.new do
       response = Net::HTTP.get_response(uri)
-      logger.info 'design_templates_helper - extract_images_send_remote() - '\
+      Rails.logger.info 'design_templates_helper - extract_images_send_remote() - '\
         + 'response.code: ' + response.code.to_s
     end
 
@@ -275,28 +277,28 @@ module DesignTemplatesHelper
 #    t.join
   end
 
-  def extract_tags_system_call( options = {} )
-    logger.info 'design_templates_helper - extract_tags_system_call() - '\
-      + 'options: ' + options.to_s
+  def extract_tags_system_call( design_template )
+    Rails.logger.info 'design_templates_helper - extract_tags_system_call() - '\
+      + 'design_template: ' + design_template.to_s
     app_config = Rails.application.config_for(:customization)
     path = app_config['path_to_runner_script']
 
     sys_com = 'ruby ' + path + ' "'\
-      + tags_config_file_name( options ) + '"'
-    logger.info 'design_templates_helper - extract_tags_system_call() - '\
+      + tags_config_file_name( 'design_template' => design_template ) + '"'
+    Rails.logger.info 'design_templates_helper - extract_tags_system_call() - '\
       + 'about to run sys_com: ' + sys_com.to_s
     system( sys_com )
   end
 
-  def extract_images_system_call( options = {} )
-    logger.info 'design_templates_helper - extract_images_system_call() - '\
-      + 'options: ' + options.to_s
+  def extract_images_system_call( design_template )
+    Rails.logger.info 'design_templates_helper - extract_images_system_call() - '\
+      + 'design_template: ' + design_template.to_s
     app_config = Rails.application.config_for(:customization)
     path = app_config['path_to_runner_script']
 
     sys_com = 'ruby ' + path + ' "'\
-      + images_config_file_name( options ) + '"'
-    logger.info 'design_templates_helper - extract_tags_system_call() - '\
+      + images_config_file_name( 'design_template' => design_template ) + '"'
+    Rails.logger.info 'design_templates_helper - extract_tags_system_call() - '\
       + 'about to run sys_com: ' + sys_com.to_s
     system( sys_com )
   end

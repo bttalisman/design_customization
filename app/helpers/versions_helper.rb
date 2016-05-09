@@ -8,7 +8,7 @@ module VersionsHelper
   def get_version_folder( version )
     app_config = Rails.application.config_for(:customization)
     versions_folder = app_config[ 'path_to_versions_folder' ]
-    logger.info 'VERSIONS_HELPER - get_version_folder() - @versions_folder: '\
+    logger.info 'VERSIONS_HELPER - get_version_folder() - versions_folder: '\
       + versions_folder.to_s
     version_output_folder = versions_folder + version.id.to_s
     FileUtils.mkdir_p( version_output_folder )\
@@ -112,7 +112,8 @@ module VersionsHelper
     type = get_type( image_name, version )
     b = false
     b = true if type == 'ReplacementImage'
-    logger.info 'VERSIONS_HELPER - associated_with_replacement_image?() - image_name: '\
+    logger.info 'VERSIONS_HELPER - associated_with_replacement_image?()'\
+      + ' - image_name: '\
       + image_name.to_s
     logger.info 'VERSIONS_HELPER - associated_with_replacement_image?() - b: '\
       + b.to_s
@@ -194,7 +195,7 @@ module VersionsHelper
     co.destroy if co
   end
 
-  # This method updates a version's values blob and associated ReplacementImages
+  # This method updates a version's values json and associated ReplacementImages
   # and Collages.
   # params must contain an 'image_count' property.
   # params contain values keyed by:
@@ -242,19 +243,19 @@ module VersionsHelper
       if type == 'upload'
         if replacement_image
           my_file = replacement_image[ 'uploaded_file' ]
-          logger.info 'VERSIONS_HELPER - set_image_values() - myFile: '\
+          logger.info 'VERSIONS_HELPER - set_image_values() - my_file: '\
             + my_file.to_s
 
           if my_file
             clear_image_associations( image_name, version )
             o = { uploaded_file: my_file }
-            @replacement_image = @version.replacement_images.create( o )
-            @replacement_image.save
+            replacement_image = version.replacement_images.create( o )
+            replacement_image.save
 
             # this will set version.values to reflect any user-set properties
             # for this version, these values will eventually be read by
             # the AI script
-            add_replacement_image_to_version( @replacement_image,\
+            add_replacement_image_to_version( replacement_image,\
                                               image_name, version )
           end # my_file
         end # replacement_image
@@ -264,9 +265,9 @@ module VersionsHelper
 
         o = { query: query }
         clear_image_associations( image_name, version )
-        @collage = @version.collages.create( o )
-        @collage.save
-        add_collage_to_version( @collage, image_name, version )
+        collage = version.collages.create( o )
+        collage.save
+        add_collage_to_version( collage, image_name, version )
       end
     end # image_count times
   end
@@ -328,10 +329,9 @@ module VersionsHelper
       + ' - version saved!' if version.save
   end
 
-
   # This method writes the current version's values string to a file sitting
   # right next to an AI file, named with _data.jsn.
-  def write_temp_data_file( path_to_ai_file )
+  def write_temp_data_file( version, path_to_ai_file )
     logger.info 'versions_helper - write_temp_data_file() - path_to_ai_file: '\
       + path_to_ai_file.to_s
     temp_values_file = path_to_data_file( path_to_ai_file )
@@ -339,7 +339,7 @@ module VersionsHelper
     # we'll create a temporary file containing necessary info, sitting right
     # next to the original ai file.
     File.open( temp_values_file, 'w' ) do |f|
-      f.write( @version.values.to_s )
+      f.write( version.values.to_s )
     end
   end
 
@@ -349,53 +349,55 @@ module VersionsHelper
   # the version session variable will be used.
   def config_file_name( options = {} )
     version_id = options[ 'version_id' ]
+    version = options[ 'version' ]
+
     logger.info 'versions_helper - config_file_name() - options: '\
       + options.to_s
 
-    version = if version_id.nil?
-                @version
-              else
-                Version.find( version_id )
-              end
+    v = if version_id.nil?
+          version
+        else
+          Version.find( version_id )
+        end
 
-    logger.info 'versions_helper - config_file_name() - version: '\
-      + version.to_s
+    logger.info 'versions_helper - config_file_name() - v: '\
+      + v.to_s
 
-    version_output_folder = get_version_folder( version )
+    version_output_folder = get_version_folder( v )
     config_file = version_output_folder + '/config_ai.jsn'
     config_file
   end
 
-  def prepare_files( config )
+  def prepare_files( version, config )
     # this will put an appropriately named data file right next to the
-    # source file.  The data file will contain the @version.values data.
-    write_temp_data_file( config['source file'] )
+    # source file.  The data file will contain the version.values data.
+    write_temp_data_file( version, config['source file'] )
 
     # this will put a configuration json file in the version folder.  this file
     # tells bin/run_AI_script necessary file locations
-    File.open( config_file_name, 'w' ) do |f|
+    File.open( config_file_name( 'version' => version ), 'w' ) do |f|
       f.write( config.to_json )
     end
   end
 
-  def process_version_system_call( options = {} )
-    logger.info 'versions_helper - system_call() - options: '\
-     + options.to_s
+  def process_version_system_call( version )
+    logger.info 'versions_helper - system_call() - version: '\
+     + version.to_s
     app_config = Rails.application.config_for(:customization)
     path = app_config['path_to_runner_script']
     logger.info 'versions_helper - system_call() - path: '\
      + path.to_s
 
     sys_com = 'ruby ' + path + ' "'\
-      + config_file_name( options ) + '"'
+      + config_file_name( 'version' => version ) + '"'
     logger.info 'versions_helper - system_call() - about to run sys_com: '\
       + sys_com.to_s
     system( sys_com )
   end
 
-  def process_version_send_remote
+  def process_version_send_remote( version )
     logger.info 'versions_helper - process_version_send_remote()'
-    uri_string = remote_host + '/do_process_version?version_id=' + @version.id.to_s
+    uri_string = remote_host + '/do_process_version?version_id=' + version.id.to_s
     uri = URI.parse( uri_string )
 
     t = Thread.new do
@@ -409,12 +411,12 @@ module VersionsHelper
 #    t.join
   end
 
-  def maybe_bail_out
+  def maybe_bail_out( version, tags, images )
     runai = params['runai']
     logger.info 'versions_helper - maybe_bail_out() - runai: ' + runai.to_s
 
     # bail out for any of these reasons
-    if @version.design_template.nil?
+    if version.design_template.nil?
       logger.info 'versions_helper - maybe_bail_out() - '\
         + 'NOT PROCESSING, no template.'
       raise BailOutOfProcessing, 'No DesignTemplate.'
@@ -424,15 +426,15 @@ module VersionsHelper
         + 'NOT PROCESSING, runai not on.'
       raise BailOutOfProcessing, 'Run AI checkbox unchecked.'
     end
-    if @images.empty? && @tags.empty?
+    if images.empty? && tags.empty?
       logger.info 'versions_helper - maybe_bail_out() - '\
         + 'NOT PROCESSING, no images and no tags.'
       raise BailOutOfProcessing, 'No extracted images or tags.'
     end
   end
 
-  def prep_and_run( config )
-    prepare_files( config )
+  def prep_and_run( version, config )
+    prepare_files( version, config )
 
     # custom configuration found in config/customization.yml
     app_config = Rails.application.config_for(:customization)
@@ -445,10 +447,10 @@ module VersionsHelper
 
     if !run_remotely
       # run locally
-      process_version_system_call
+      process_version_system_call( version )
     else
       # send remote HTTP request
-      process_version_send_remote
+      process_version_send_remote( version )
     end
   end
 
@@ -465,23 +467,23 @@ module VersionsHelper
   # If processing is local, system_call() runs ruby.
   # If processing is remote, send_remote_run_request() sends an HTTP request
   # containing the version id
-  def process_version
-    maybe_bail_out
+  def process_version( version, tags, images )
+    maybe_bail_out( version, tags, images )
 
-    original_file = @version.design_template.original_file
+    original_file = version.design_template.original_file
     original_file_path = original_file.path
     original_file_name = File.basename( original_file_path )
     original_file_base_name = File.basename( original_file_path, '.ai' )
 
-    version_folder = get_version_folder( @version )
+    version_folder = get_version_folder( version )
     version_file_path = version_folder + '/' + original_file_name
 
     # copy the original file to the version folder, same name
     FileUtils.cp( original_file_path, version_file_path )
 
-    if @version.output_folder_path != ''
+    if version.output_folder_path != ''
       # the user has specified an output folder
-      output_folder = guarantee_final_slash( @version.output_folder_path )
+      output_folder = guarantee_final_slash( version.output_folder_path )
     else
       # the user has not specified an output folder,
       # we'll just use the version folder
@@ -494,8 +496,7 @@ module VersionsHelper
     int_file_exist = false
     app_config = Rails.application.config_for(:customization)
 
-
-    if !@tags.empty?
+    if !tags.empty?
       # There are tags to replace, we should replace tags
 
       path = app_config['path_to_search_replace_script']
@@ -505,14 +506,14 @@ module VersionsHelper
       config[ 'script file' ] = path
       config[ 'output folder' ] = output_folder
 
-      prep_and_run( config )
+      prep_and_run( version, config )
 
       # unless something went wrong, this should exist
       int_file_exist = File.exist?( intermediate_output )
 
     end # there are tags to replace
 
-    if !@images.empty?
+    if !images.empty?
       # There are images to replace, we should replace images
 
       config = {}
@@ -527,7 +528,7 @@ module VersionsHelper
       config[ 'script file' ] = app_config['path_to_image_search_replace_script']
       config[ 'output folder' ] = output_folder
 
-      prep_and_run( config )
+      prep_and_run( version, config )
     end # there are images to replace
 
   rescue => e

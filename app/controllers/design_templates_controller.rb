@@ -112,7 +112,7 @@ class DesignTemplatesController < ApplicationController
 
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - create() - SUCCESS! About to"\
       + " procdess the AI file.'
-      process_original
+      process_original( @design_template )
 
       if stay_after_save == 'true'
         # This action was called because the user wants to edit the extracted
@@ -133,7 +133,7 @@ class DesignTemplatesController < ApplicationController
   def force_process
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - force_process()'
     @design_template = DesignTemplate.find( params[ :id ] )
-    process_original
+    process_original( @design_template )
     redirect_to @design_template
   end
 
