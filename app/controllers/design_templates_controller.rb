@@ -110,8 +110,8 @@ class DesignTemplatesController < ApplicationController
 
     if @design_template.save
 
-      logger.info 'DESIGN_TEMPLATES_CONTROLLER - create() - SUCCESS! About to"\
-      + " procdess the AI file.'
+      logger.info 'DESIGN_TEMPLATES_CONTROLLER - create() - SUCCESS! About to'\
+      + ' process the AI file.'
       process_original( @design_template )
 
       if stay_after_save == 'true'

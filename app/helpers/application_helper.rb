@@ -6,15 +6,8 @@ module ApplicationHelper
   class BailOutOfProcessing < StandardError
   end
 
-  @local_host = nil
-
   def local_host
-    if @local_host.nil?
-      @local_host = request.protocol + request.host + ':' + request.port.to_s
-      # logger.info 'ApplicationController - LOCAL_HOST - Setting localhost'\
-      # ' to: ' + @@local_host
-    end
-    @local_host
+    request.protocol + request.host + ':' + request.port.to_s
   end
 
   def remote_host
