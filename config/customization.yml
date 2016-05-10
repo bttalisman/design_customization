@@ -20,9 +20,9 @@ test:
   path_to_extract_images_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractImages.jsx' %>
   path_to_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplace.jsx' %>
   path_to_image_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplaceImages.jsx' %>
-  path_to_quick_version_root: <%= Rails.root.to_s + '/versions' %>
-  path_to_versions_folder: <%= Rails.root.to_s + '/public/system/versions/' %>
-  path_to_collage_root: <%= Rails.root.to_s + '/collages' %>
+  path_to_quick_version_root: <%= Rails.root.to_s + '/test_versions' %>
+  path_to_versions_folder: <%= Rails.root.to_s + '/public/system/test_versions/' %>
+  path_to_collage_root: <%= Rails.root.to_s + '/test_collages' %>
 
   run_remotely: false
   remote_server_uri: 'http://localhost:3000'

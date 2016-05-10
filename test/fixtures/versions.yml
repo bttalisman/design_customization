@@ -1,9 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  output_folder_path: MyString
-  values:
-
-two:
-  output_folder_path: MyString
-  values:
+one_tag:
+  name: 'One Tag'
+  design_template: one_tag

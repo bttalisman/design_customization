@@ -302,20 +302,4 @@ module DesignTemplatesHelper
       + 'about to run sys_com: ' + sys_com.to_s
     system( sys_com )
   end
-
-  # DesignTemplates created in test environment need to create their own
-  # folder structure, I guess because paperclip doesn't do it.
-  def build_test_template( design_template, file )
-    Rails.logger.info 'design_templates_helper - build_test_template()'\
-      + ' design_template: ' + design_template.to_s
-
-
-    orig_path = design_template.original_file.path.to_s
-    Rails.logger.info 'design_templates_helper - build_test_template()'\
-      + ' orig_path: ' + orig_path
-
-    make_output_folder( design_template )
-    FileUtils.cp( file.path.to_s, orig_path )
-
-  end
 end

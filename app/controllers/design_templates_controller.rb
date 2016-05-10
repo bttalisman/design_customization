@@ -137,6 +137,12 @@ class DesignTemplatesController < ApplicationController
     redirect_to @design_template
   end
 
+  def bobaction
+    logger.info 'BOBACTION'
+    my_hash_string = request.body.read.to_s
+    logger.info 'BOBACTION - ' + my_hash_string
+  end
+
   def delete_all
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all'
 
