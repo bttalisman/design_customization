@@ -8,9 +8,11 @@ module VersionsHelper
   def get_version_folder( version )
     app_config = Rails.application.config_for(:customization)
     versions_folder = app_config[ 'path_to_versions_folder' ]
-    logger.info 'VERSIONS_HELPER - get_version_folder() - versions_folder: '\
-      + versions_folder.to_s
     version_output_folder = versions_folder + version.id.to_s
+
+    Rails.logger.info 'VERSIONS_HELPER - get_version_folder() - version_output_folder: '\
+      + version_output_folder.to_s
+
     FileUtils.mkdir_p( version_output_folder )\
       unless File.directory?( version_output_folder )
     version_output_folder
@@ -35,19 +37,19 @@ module VersionsHelper
   def get_values_object( version )
     values_string = version.values
     values = {}
-    logger.info 'versions_helper - get_values_object - values_string: '\
+    Rails.logger.info 'versions_helper - get_values_object - values_string: '\
     + values_string.to_s
     if json?( values_string )
       values = JSON.parse values_string
     else
-      logger.info 'VERSIONS_HELPER - get_values_object - INVALID JSON!!'
+      Rails.logger.info 'VERSIONS_HELPER - get_values_object - INVALID JSON!!'
     end
 
     values
   end
 
   def get_replacement_image_id( image_name, version )
-    logger.info 'VERSIONS_HELPER - get_replacement_image_id()!!'
+    Rails.logger.info 'VERSIONS_HELPER - get_replacement_image_id()!!'
 
     values = get_values_object( version )
     image_values = values[ 'image_settings' ] unless values.nil?
@@ -62,13 +64,13 @@ module VersionsHelper
   end
 
   def get_collage_id( image_name, version )
-    logger.info 'VERSIONS_HELPER - get_collage_id()!! - image_name: '\
+    Rails.logger.info 'VERSIONS_HELPER - get_collage_id()!! - image_name: '\
       + image_name
     values = get_values_object( version )
     image_values = values[ 'image_settings' ] unless values.nil?
     col_id = ''
 
-    logger.info 'VERSIONS_HELPER - get_collage_id() - image_values: '\
+    Rails.logger.info 'VERSIONS_HELPER - get_collage_id() - image_values: '\
       + image_values.to_s
 
     if image_values
@@ -76,7 +78,7 @@ module VersionsHelper
       col_id = vals[ 'collage_id' ] if vals
     end
 
-    logger.info 'VERSIONS_HELPER - get_collage_id() - col_id: '\
+    Rails.logger.info 'VERSIONS_HELPER - get_collage_id() - col_id: '\
       + col_id.to_s
 
     col_id
@@ -99,9 +101,9 @@ module VersionsHelper
     type = get_type( image_name, version )
     b = false
     b = true if type == 'Collage'
-    logger.info 'VERSIONS_HELPER - associated_with_collage?() - image_name: '\
+    Rails.logger.info 'VERSIONS_HELPER - associated_with_collage?() - image_name: '\
       + image_name.to_s
-    logger.info 'VERSIONS_HELPER - associated_with_collage?() - b: '\
+    Rails.logger.info 'VERSIONS_HELPER - associated_with_collage?() - b: '\
       + b.to_s
     b
   end
@@ -112,25 +114,25 @@ module VersionsHelper
     type = get_type( image_name, version )
     b = false
     b = true if type == 'ReplacementImage'
-    logger.info 'VERSIONS_HELPER - associated_with_replacement_image?()'\
+    Rails.logger.info 'VERSIONS_HELPER - associated_with_replacement_image?()'\
       + ' - image_name: '\
       + image_name.to_s
-    logger.info 'VERSIONS_HELPER - associated_with_replacement_image?() - b: '\
+    Rails.logger.info 'VERSIONS_HELPER - associated_with_replacement_image?() - b: '\
       + b.to_s
     b
   end
 
   def get_collage( image_name, version )
-    logger.info 'VERSIONS_HELPER - get_collage()'
+    Rails.logger.info 'VERSIONS_HELPER - get_collage()'
     id = get_collage_id( image_name, version )
-    logger.info 'VERSIONS_HELPER - get_collage() - id: ' + id.to_s
+    Rails.logger.info 'VERSIONS_HELPER - get_collage() - id: ' + id.to_s
     co = Collage.find( id ) if is_integer?( id )
-    logger.info 'VERSIONS_HELPER - get_collage() - co: ' + co.to_s
+    Rails.logger.info 'VERSIONS_HELPER - get_collage() - co: ' + co.to_s
     co
   end
 
   def get_replacement_image( image_name, version )
-    logger.info 'VERSIONS_HELPER - get_replacement_image()!!'
+    Rails.logger.info 'VERSIONS_HELPER - get_replacement_image()!!'
     id = get_replacement_image_id( image_name, version )
     ri = ReplacementImage.find( id ) if is_integer?( id )
     ri
@@ -138,7 +140,7 @@ module VersionsHelper
 
   # A version associates image_names with actual uploaded files
   def get_uploaded_file( image_name, version )
-    logger.info 'VERSIONS_HELPER - get_uploaded_file !!'
+    Rails.logger.info 'VERSIONS_HELPER - get_uploaded_file !!'
 
     values = get_values_object( version )
     image_values = values[ 'image_settings' ] unless values.nil?
@@ -166,7 +168,7 @@ module VersionsHelper
   end
 
   def set_tag_values( version, params )
-    logger.info 'VERSIONS_HELPER - set_tag_values() - params: ' + params.to_s
+    Rails.logger.info 'VERSIONS_HELPER - set_tag_values() - params: ' + params.to_s
 
     if json?( params[ 'version_data' ] )
       version_data = JSON.parse( params[ 'version_data' ] )
@@ -178,7 +180,7 @@ module VersionsHelper
       version.values = values.to_json
     end
 
-    logger.info 'VERSIONS_HELPER - set_tag_values() - version saved!'\
+    Rails.logger.info 'VERSIONS_HELPER - set_tag_values() - version saved!'\
       if version.save
   end
 
@@ -231,19 +233,19 @@ module VersionsHelper
       p_name = 'collage_query' + i.to_s
       query = params[ p_name ]
 
-      logger.info 'VERSIONS_HELPER - set_image_values() - type: '\
+      Rails.logger.info 'VERSIONS_HELPER - set_image_values() - type: '\
         + type.to_s
-      logger.info 'VERSIONS_HELPER - set_image_values() - image_name: '\
+      Rails.logger.info 'VERSIONS_HELPER - set_image_values() - image_name: '\
         + image_name.to_s
-      logger.info 'VERSIONS_HELPER - set_image_values() - replacement_image: '\
+      Rails.logger.info 'VERSIONS_HELPER - set_image_values() - replacement_image: '\
         + replacement_image.to_s
-      logger.info 'VERSIONS_HELPER - set_image_values() - query: '\
+      Rails.logger.info 'VERSIONS_HELPER - set_image_values() - query: '\
         + query.to_s
 
       if type == 'upload'
         if replacement_image
           my_file = replacement_image[ 'uploaded_file' ]
-          logger.info 'VERSIONS_HELPER - set_image_values() - my_file: '\
+          Rails.logger.info 'VERSIONS_HELPER - set_image_values() - my_file: '\
             + my_file.to_s
 
           if my_file
@@ -261,7 +263,7 @@ module VersionsHelper
         end # replacement_image
       else
         # type = instagram collage
-        logger.info 'VERSIONS_HELPER - set_image_values() - Instagram collage!'
+        Rails.logger.info 'VERSIONS_HELPER - set_image_values() - Instagram collage!'
 
         o = { query: query }
         clear_image_associations( image_name, version )
@@ -277,8 +279,8 @@ module VersionsHelper
   # the replacement_image, as well as the path to the local file,
   # as this is needed by the AI script.
   def add_replacement_image_to_version( ri, image_name, version )
-    logger.info 'VERSIONS_HELPER - add_replacement_image_to_version()'
-    logger.info 'VERSIONS_HELPER - add_replacement_image_to_version() - ri: '\
+    Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version()'
+    Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version() - ri: '\
       + ri.to_s
 
     values = get_values_object( version )
@@ -290,12 +292,12 @@ module VersionsHelper
     settings[ 'type' ] = 'ReplacementImage'
     image_settings[ image_name ] = settings
 
-    logger.info 'VERSIONS_HELPER - add_replacement_image_to_version()'\
+    Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version()'\
       + ' - values.to_json: ' + values.to_json
 
     version.values = values.to_json
 
-    logger.info 'VERSIONS_HELPER - add_replacement_image_to_version()'\
+    Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version()'\
       + ' - version saved!' if version.save
   end
 
@@ -304,8 +306,8 @@ module VersionsHelper
   # the collage, as well as the path to the local folder where a collage's
   # images are stored, as this is needed by the AI script.
   def add_collage_to_version( co, image_name, version )
-    logger.info 'VERSIONS_HELPER - add_collage_to_version()'
-    logger.info 'VERSIONS_HELPER - add_collage_to_version() - co: '\
+    Rails.logger.info 'VERSIONS_HELPER - add_collage_to_version()'
+    Rails.logger.info 'VERSIONS_HELPER - add_collage_to_version() - co: '\
       + co.to_s
 
     # todo, can this be part of a constructor?
@@ -320,19 +322,19 @@ module VersionsHelper
 
     image_settings[ image_name ] = settings
 
-    logger.info 'VERSIONS_HELPER - add_collage_to_version()'\
+    Rails.logger.info 'VERSIONS_HELPER - add_collage_to_version()'\
       + ' - values.to_json: ' + values.to_json
 
     version.values = values.to_json
 
-    logger.info 'VERSIONS_HELPER - add_collage_to_version()'\
+    Rails.logger.info 'VERSIONS_HELPER - add_collage_to_version()'\
       + ' - version saved!' if version.save
   end
 
   # This method writes the current version's values string to a file sitting
   # right next to an AI file, named with _data.jsn.
   def write_temp_data_file( version, path_to_ai_file )
-    logger.info 'versions_helper - write_temp_data_file() - path_to_ai_file: '\
+    Rails.logger.info 'versions_helper - write_temp_data_file() - path_to_ai_file: '\
       + path_to_ai_file.to_s
     temp_values_file = path_to_data_file( path_to_ai_file )
 
@@ -351,7 +353,7 @@ module VersionsHelper
     version_id = options[ 'version_id' ]
     version = options[ 'version' ]
 
-    logger.info 'versions_helper - config_file_name() - options: '\
+    Rails.logger.info 'versions_helper - config_file_name() - options: '\
       + options.to_s
 
     v = if version_id.nil?
@@ -360,7 +362,7 @@ module VersionsHelper
           Version.find( version_id )
         end
 
-    logger.info 'versions_helper - config_file_name() - v: '\
+    Rails.logger.info 'versions_helper - config_file_name() - v: '\
       + v.to_s
 
     version_output_folder = get_version_folder( v )
@@ -368,7 +370,61 @@ module VersionsHelper
     config_file
   end
 
+  def process_version_system_call( version )
+    Rails.logger.info 'versions_helper - system_call() - version: '\
+     + version.to_s
+    app_config = Rails.application.config_for(:customization)
+    path = app_config['path_to_runner_script']
+    Rails.logger.info 'versions_helper - system_call() - path: '\
+     + path.to_s
+
+    sys_com = 'ruby ' + path + ' "'\
+      + config_file_name( 'version' => version ) + '"'
+    Rails.logger.info 'versions_helper - system_call() - about to run sys_com: '\
+      + sys_com.to_s
+    system( sys_com )
+  end
+
+  def process_version_send_remote( version )
+    Rails.logger.info 'versions_helper - process_version_send_remote()'
+    uri_string = remote_host + '/do_process_version?version_id=' + version.id.to_s
+    uri = URI.parse( uri_string )
+
+    t = Thread.new do
+      response = Net::HTTP.get_response(uri)
+      Rails.logger.info 'versions_helper - process_version_send_remote() - response.code: '\
+        + response.code.to_s
+    end
+
+    # Wait until t gets back.  This hangs if one machine is serving both
+    # requests.
+#    t.join
+  end
+
+  def maybe_bail_out( version, tags, images, params )
+    runai = params['runai']
+    Rails.logger.info 'versions_helper - maybe_bail_out() - runai: ' + runai.to_s
+
+    # bail out for any of these reasons
+    if version.design_template.nil?
+      Rails.logger.info 'versions_helper - maybe_bail_out() - '\
+        + 'NOT PROCESSING, no template.'
+      raise BailOutOfProcessing, 'No DesignTemplate.'
+    end
+    if runai != 'true'
+      Rails.logger.info 'versions_helper - maybe_bail_out() - '\
+        + 'NOT PROCESSING, runai not on.'
+      raise BailOutOfProcessing, 'Run AI checkbox unchecked.'
+    end
+    if images.empty? && tags.empty?
+      Rails.logger.info 'versions_helper - maybe_bail_out() - '\
+        + 'NOT PROCESSING, no images and no tags.'
+      raise BailOutOfProcessing, 'No extracted images or tags.'
+    end
+  end
+
   def prepare_files( version, config )
+    Rails.logger.info( 'versions_helper - prepare_files()')
     # this will put an appropriately named data file right next to the
     # source file.  The data file will contain the version.values data.
     write_temp_data_file( version, config['source file'] )
@@ -380,69 +436,17 @@ module VersionsHelper
     end
   end
 
-  def process_version_system_call( version )
-    logger.info 'versions_helper - system_call() - version: '\
-     + version.to_s
-    app_config = Rails.application.config_for(:customization)
-    path = app_config['path_to_runner_script']
-    logger.info 'versions_helper - system_call() - path: '\
-     + path.to_s
-
-    sys_com = 'ruby ' + path + ' "'\
-      + config_file_name( 'version' => version ) + '"'
-    logger.info 'versions_helper - system_call() - about to run sys_com: '\
-      + sys_com.to_s
-    system( sys_com )
-  end
-
-  def process_version_send_remote( version )
-    logger.info 'versions_helper - process_version_send_remote()'
-    uri_string = remote_host + '/do_process_version?version_id=' + version.id.to_s
-    uri = URI.parse( uri_string )
-
-    t = Thread.new do
-      response = Net::HTTP.get_response(uri)
-      logger.info 'versions_helper - process_version_send_remote() - response.code: '\
-        + response.code.to_s
-    end
-
-    # Wait until t gets back.  This hangs if one machine is serving both
-    # requests.
-#    t.join
-  end
-
-  def maybe_bail_out( version, tags, images )
-    runai = params['runai']
-    logger.info 'versions_helper - maybe_bail_out() - runai: ' + runai.to_s
-
-    # bail out for any of these reasons
-    if version.design_template.nil?
-      logger.info 'versions_helper - maybe_bail_out() - '\
-        + 'NOT PROCESSING, no template.'
-      raise BailOutOfProcessing, 'No DesignTemplate.'
-    end
-    if runai != 'true'
-      logger.info 'versions_helper - maybe_bail_out() - '\
-        + 'NOT PROCESSING, runai not on.'
-      raise BailOutOfProcessing, 'Run AI checkbox unchecked.'
-    end
-    if images.empty? && tags.empty?
-      logger.info 'versions_helper - maybe_bail_out() - '\
-        + 'NOT PROCESSING, no images and no tags.'
-      raise BailOutOfProcessing, 'No extracted images or tags.'
-    end
-  end
-
   def prep_and_run( version, config )
+    Rails.logger.info( 'versions_helper - prep_and_run()')
     prepare_files( version, config )
 
     # custom configuration found in config/customization.yml
     app_config = Rails.application.config_for(:customization)
     run_remotely = app_config['run_remotely']
 
-    logger.info 'versions_helper - prep_and_run() - run_remotely: '\
+    Rails.logger.info 'versions_helper - prep_and_run() - run_remotely: '\
       + run_remotely.to_s
-    logger.info 'versions_helper - prep_and_run() - config: '\
+    Rails.logger.info 'versions_helper - prep_and_run() - config: '\
       + config.to_s
 
     if !run_remotely
@@ -467,8 +471,8 @@ module VersionsHelper
   # If processing is local, system_call() runs ruby.
   # If processing is remote, send_remote_run_request() sends an HTTP request
   # containing the version id
-  def process_version( version, tags, images )
-    maybe_bail_out( version, tags, images )
+  def process_version( version, tags, images, params )
+    maybe_bail_out( version, tags, images, params )
 
     original_file = version.design_template.original_file
     original_file_path = original_file.path
@@ -478,10 +482,17 @@ module VersionsHelper
     version_folder = get_version_folder( version )
     version_file_path = version_folder + '/' + original_file_name
 
+    Rails.logger.info 'versions_helper - process_version() - original_file_path - '\
+      + original_file_path
+    Rails.logger.info 'versions_helper - process_version() - version_file_path - '\
+      + version_file_path
+    Rails.logger.info 'versions_helper - process_version() - version.output_folder_path - '\
+      + version.output_folder_path.to_s
+
     # copy the original file to the version folder, same name
     FileUtils.cp( original_file_path, version_file_path )
 
-    if version.output_folder_path != ''
+    if version.output_folder_path != '' && !version.output_folder_path.nil?
       # the user has specified an output folder
       output_folder = guarantee_final_slash( version.output_folder_path )
     else
@@ -493,12 +504,15 @@ module VersionsHelper
     intermediate_output = output_folder.to_s + original_file_base_name.to_s\
       + '_mod.ai'
 
+    Rails.logger.info( 'versions_helper - process_version() - '\
+      + 'intermediate_output: ' + intermediate_output )
+
     int_file_exist = false
     app_config = Rails.application.config_for(:customization)
 
     if !tags.empty?
       # There are tags to replace, we should replace tags
-
+      Rails.logger.info( 'versions_helper - process_version() - about to rep tags' )
       path = app_config['path_to_search_replace_script']
 
       config = {}
@@ -515,7 +529,7 @@ module VersionsHelper
 
     if !images.empty?
       # There are images to replace, we should replace images
-
+      Rails.logger.info( 'versions_helper - process_version() - about to rep images' )
       config = {}
       if int_file_exist
         config[ 'source file' ] = intermediate_output
@@ -532,6 +546,7 @@ module VersionsHelper
     end # there are images to replace
 
   rescue => e
-    logger.info 'versions_helper - Bailing Out! - ' + e.inspect
+    Rails.logger.info 'versions_helper - Bailing Out! - ' + e.inspect
+    Rails.logger.info JSON.pretty_generate( JSON.parse( e.backtrace.to_s ) )
   end
 end

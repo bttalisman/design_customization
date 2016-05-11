@@ -34,6 +34,8 @@ module ApplicationHelper
   end
 
   def guarantee_final_slash( folder_path )
+    Rails.logger.info( 'application_helper - guarantee_final_slash() - '\
+      + 'folder_path' + folder_path.to_s )
     f = folder_path
     f = folder_path + '/' if folder_path[-1, 1] != '/'
     f

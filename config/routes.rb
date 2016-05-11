@@ -34,7 +34,6 @@ Rails.application.routes.draw do
   get '/versions/quick_new' => 'versions#quick_new'
 
   post '/design_templates/create' => 'design_templates#create'
-  post '/design_templates/:id/bob' => 'design_templates#bobaction'
   get '/design_templates/:id/edit' => 'design_templates#edit'
   get '/design_templates/:id/update' => 'design_templates#update'
   get '/design_templates/edit' => 'design_templates#edit'

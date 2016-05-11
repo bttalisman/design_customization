@@ -1,47 +1,48 @@
 # Test Helper
 module TestHelper
-  def sample_file(filename = 'one_tag_one_image.ai')
+  def sample_file( filename )
     s = 'test/fixtures/original_files/' + filename
     File.new(s)
   end
 
-  def raw_post(action, params, body)
+  # Post body data to specified controller/action
+  def raw_post( options )
+    Rails.logger.info 'test_helper - raw_post() - options: ' + options.to_s
+
+    action = options[ :action ]
+    body = options[ :body ]
+    params = options[ :params ]
+    controller = options[ :controller ]
+
+    if !controller.nil?
+      old_controller = @controller
+      @controller = controller
+    end
+
     @request.env['RAW_POST_DATA'] = body
     response = post(action, params)
     @request.env.delete('RAW_POST_DATA')
+
+    @controller = old_controller if !controller.nil?
+
     response
   end
 
-  def process_template( design_template, file_name )
-    file = sample_file( file_name )
-    design_template.orig_file_path = file.path.to_s
-    design_template.original_file = file
-    design_template.original_file.\
-      instance_write(:content_type, 'application/postscript')
-    build_test_template( design_template, file )
-
-    if design_template.save!
-      Rails.logger.info 'test_helper - process_template() - successful save'
-      process_original( design_template )
-    else
-      Rails.logger.info 'test_helper - process_template() - failed save'
-    end
+  def get_test_replacement_image()
+    ri = ReplacementImage.new
+    file = sample_file( 'bact.jpg' )
+    ri.uploaded_file = file
+    ri.save
+    ri
   end
 
-  # DesignTemplates created in test environment need to create their own
-  # folder structure, I guess because paperclip doesn't do it.
-  def build_test_template( design_template, file )
-    Rails.logger.info 'test_helper - build_test_template()'\
-      + ' design_template: ' + design_template.to_s
-
-
-    orig_path = design_template.original_file.path.to_s
-    Rails.logger.info 'test_helper - build_test_template()'\
-      + ' orig_path: ' + orig_path
-
-    make_output_folder( design_template )
-    FileUtils.cp( file.path.to_s, orig_path )
-
+  # Fake-o ReplacementImages won't be in the folder struct built by paperclip,
+  # so we'll just return the path to the fixture folder
+  def get_test_replacement_image_path( ri )
+    name = ri.file_name
+    path = Rails.root.to_s + '/test/fixtures/original_files/' + name
+    Rails.logger.info 'test_helper - get_test_replacement_image_path() - '\
+      + path.to_s
+    path
   end
-
 end

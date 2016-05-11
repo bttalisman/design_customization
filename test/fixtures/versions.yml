@@ -3,3 +3,8 @@
 one_tag:
   name: 'One Tag'
   design_template: one_tag
+
+
+one_tag_one_image:
+  name: 'One Tag One Image'
+  design_template: one_tag_one_image

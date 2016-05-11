@@ -66,12 +66,14 @@ class DesignTemplatesController < ApplicationController
     # expecting something like { 'extracted_settings' => arbitrary settings
     # depending on tags, 'general_settings' => settings every DesignTemplate has
     my_hash_string = request.body.read.to_s
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - myHashString: ' \
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - body: ' \
      + my_hash_string
 
     if json?( my_hash_string )
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - good JSON!'
       my_hash = JSON.parse my_hash_string
+      logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - my_hash: ' \
+       + JSON.pretty_generate( my_hash )
     else
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - BAD JSON!'
     end
@@ -135,12 +137,6 @@ class DesignTemplatesController < ApplicationController
     @design_template = DesignTemplate.find( params[ :id ] )
     process_original( @design_template )
     redirect_to @design_template
-  end
-
-  def bobaction
-    logger.info 'BOBACTION'
-    my_hash_string = request.body.read.to_s
-    logger.info 'BOBACTION - ' + my_hash_string
   end
 
   def delete_all

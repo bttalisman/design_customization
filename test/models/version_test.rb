@@ -1,7 +1,12 @@
 require_relative '../helpers/test_helper'
+require_relative '../helpers/version_test_helper'
+require_relative '../helpers/design_template_test_helper'
+
 
 class VersionTest < ActiveSupport::TestCase
   include TestHelper
+  include VersionTestHelper
+  include DesignTemplateTestHelper
   include DesignTemplatesHelper
 
   test 'one tag' do
