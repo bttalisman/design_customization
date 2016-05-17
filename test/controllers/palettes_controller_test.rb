@@ -15,6 +15,7 @@ class PalettesControllerTest < ActionController::TestCase
 
     path = palette_path( p.id )
     assert_redirected_to path
+    assert( p.save, 'Save failed.' )
   end
 
   test 'delete all' do
@@ -78,6 +79,5 @@ class PalettesControllerTest < ActionController::TestCase
     assert_equal( 0, p.colors.count, 'Unexpected color count.' )
 
     assert( p.save, 'Save failed.' )
-    
   end
 end

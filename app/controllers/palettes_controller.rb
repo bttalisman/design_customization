@@ -81,10 +81,8 @@ class PalettesController < ApplicationController
       logger.info 'PALETTES_CONTROLLER - create - SUCCESS!'
       redirect_to palettes_path
     else
-
       logger.info 'PALETTES_CONTROLLER - create - FAILURE!'
       render 'new'
-
     end
   end
 

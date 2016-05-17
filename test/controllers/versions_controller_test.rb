@@ -38,7 +38,6 @@ class VersionsControllerTest < ActionController::TestCase
     values = get_some_values( version )
     version.values = values.to_json
 
-
     process_version( version, tags, images, 'runai' => 'true' ) if version.save
     check_version( version, tags, images )
   end
