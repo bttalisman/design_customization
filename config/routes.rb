@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   get '/palettes/:id/remove_all' => 'palettes#remove_all'
   get '/palettes/delete_all' => 'palettes#delete_all'
 
-  get '/partials/version_settings/:id' => 'partials#version_settings'
+  get '/partials/version_settings' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
   get '/partials/quick_new' => 'partials#quick_new'
 

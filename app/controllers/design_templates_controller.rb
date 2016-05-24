@@ -81,13 +81,19 @@ class DesignTemplatesController < ApplicationController
     extracted_object = my_hash[ 'extracted_settings' ]
     extracted_string = extracted_object.to_json
 
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - setting prompts to: '\
+      + extracted_string.to_s
     @design_template = DesignTemplate.find( params[ :id ] )
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - @design_template.name: '\
+      + @design_template.name.to_s
     @design_template.prompts = extracted_string
 
     @design_template.name = my_hash[ 'general_settings' ][ 'template_name' ]
 
     if @design_template.save
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - save SUCCESS!'
+      logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - @design_template.name: '\
+        + @design_template.name.to_s
     else
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - save FAILURE!'
     end

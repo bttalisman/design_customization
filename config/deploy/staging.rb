@@ -3,9 +3,9 @@ set :rails_env, 'production'
 set :migration_role, 'db'
 set :branch, ENV["BRANCH_NAME"] || ENV["BRANCH"] || 'master'
 
-role :app, %w{deploy@eglantine.bombsheller.com}
-role :web, %w{deploy@eglantine.bombsheller.com}
-role :db,  %w{deploy@eglantine.bombsheller.com}
+role :app, %w{deploy@10.1.10.8}
+role :web, %w{deploy@10.1.10.8}
+role :db,  %w{deploy@10.1.10.8}
 
 
 # server-based syntax

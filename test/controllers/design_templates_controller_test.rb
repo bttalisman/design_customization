@@ -2,8 +2,11 @@ require_relative '../helpers/test_helper'
 require_relative '../helpers/design_template_test_helper'
 
 class DesignTemplatesControllerTest < ActionController::TestCase
+  # It seems that these test helpers need to be required, as above.  No idea
+  # why. todo - figure this out.
   include TestHelper
   include DesignTemplateTestHelper
+
   include ApplicationHelper
   include DesignTemplatesHelper
 

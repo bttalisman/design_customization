@@ -1,7 +1,21 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
+  name: 'first palette'
+  description: 'Blahblah blah blah.'
 
 two:
-  name: MyString
+  name: 'second palette'
+  description: 'Blahblah blah blah.'
+
+three:
+  name: 'Third palette'
+  description: 'Blahblah blah blah.'
+
+four:
+  name: 'Fourth palette'
+  description: 'Blahblah blah blah.'
+
+five:
+  name: 'Fifth palette'
+  description: 'Blahblah blah blah.'

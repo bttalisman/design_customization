@@ -153,9 +153,8 @@ class VersionsController < ApplicationController
   private
 
   def version_params
-    # params.require(:version).permit( :output_folder_path, :values, :name,
-    # :design_template_id )
-    params.require(:version).permit!
+    params.require(:version).permit( :output_folder_path, :values, :name, :design_template_id )
+    # sparams.require(:version).permit!
   end
 
 end

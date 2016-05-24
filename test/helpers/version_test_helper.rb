@@ -1,5 +1,43 @@
 # Version Test Helper
 module VersionTestHelper
+  include VersionsHelper
+
+  def exercise_version( file_name )
+    dt_package = get_template_package( file_name )
+    v_package = get_version_package( 'dt_package' => dt_package,
+                                     'do_process' => true )
+
+    check_version( dt_package, v_package )
+  end
+
+  def get_version_package( options )
+    Rails.logger.info 'VersionTestHelper - get_version_package() - options: '\
+      + options.to_s
+
+    dt_package = options[ 'dt_package' ]
+    do_process = options[ 'do_process' ]
+
+    design_template = dt_package[ 'design_template' ]
+    tags = dt_package[ 'tags' ]
+    images = dt_package[ 'images' ]
+
+    version = Version.new
+    version.design_template = design_template
+    version.save
+
+    version.update( 'output_folder_path' => get_test_output_folder( version ) )
+
+    if do_process then
+      values = get_some_values( version )
+      version.values = values.to_json
+      process_version( version, tags, images, 'runai' => 'true' ) if version.save
+    end
+
+    version_package = { 'version' => version }
+    version_package
+  end
+
+
   #####################################################################
   # Helper functions for setting up Version.values
   #
@@ -62,16 +100,24 @@ module VersionTestHelper
     path
   end
 
-  def check_version( version, tags, images )
+  # Validate as much as possible that this version is good
+  def check_version( dt_package, v_package )
+
+    version = v_package[ 'version' ]
+    dt = dt_package[ 'design_template' ]
+
+    has_images = images?( dt )
+    has_tags = tags( dt )
+
     version_folder = get_version_folder( version )
     output_folder = version.output_folder_path
 
+    # todo check for presence of all files
     Rails.logger.info( 'version_test_helper - check_version()'\
       + ' - version_folder: ' + version_folder.to_s )
 
     Rails.logger.info( 'version_test_helper - check_version()'\
       + ' - output_folder: ' + output_folder.to_s )
-
 
   end
 end

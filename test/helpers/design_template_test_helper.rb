@@ -1,6 +1,38 @@
 # DesignTemplate Test Helper
 module DesignTemplateTestHelper
 
+  # This method takes a file name and does all the stuff that needs to be
+  # done to set up a design_template, ready to be used to create a version.
+  def get_template_package( file_name )
+    design_template = DesignTemplate.new
+    design_template.save
+    dt_id = design_template.id
+
+    process_template( design_template, file_name )
+
+    tags = get_tags_array( design_template )
+    images = get_images_array( design_template )
+    extracted_settings = get_some_extracted_settings( design_template )
+    general_settings = {}
+
+    o = { 'extracted_settings' => extracted_settings,
+          'general_settings' => general_settings }
+
+    raw_post( action: :all_settings,
+              controller: DesignTemplatesController.new,
+              params: { 'id' => dt_id },
+              body: o.to_json )
+
+    # Apparently, the object is copied or something, I have no idea, you need
+    # to find it again or it doesn't reflect all of the changes made above.
+    design_template = DesignTemplate.find( dt_id )
+    package = { 'design_template' => design_template,
+                'tags' => tags,
+                'images' => images }
+    package
+  end
+
+
   # Add the ai file to the DesignTemplate, build the necessary folder
   # structure, and launch the extracting process.
   def process_template( design_template, file_name )
@@ -16,6 +48,7 @@ module DesignTemplateTestHelper
       process_original( design_template )
     else
       Rails.logger.info 'design_template_test_helper - process_template() - FAILED to save.'
+      assert( false, 'DesignTemplate save failed.' )
     end
   end
 
@@ -66,8 +99,8 @@ module DesignTemplateTestHelper
             'max_length' => '33',
             'min_length' => '22',
             'pick_color' => 'checked',
-            'use_pallette' => 'checked',
-            'palette_id' => '4' }
+            'use_palette' => 'checked',
+            'palette_id' => random_palette.id }
       tag_settings[ t ] = o
     }
     tag_settings

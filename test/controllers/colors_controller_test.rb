@@ -2,6 +2,8 @@ require_relative '../helpers/test_helper'
 
 # Colors Controlle Test
 class ColorsControllerTest < ActionController::TestCase
+  # It seems that these test helpers need to be required, as above.  No idea
+  # why. todo - figure this out.
   include TestHelper
 
   test 'update action' do

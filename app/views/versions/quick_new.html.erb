@@ -31,7 +31,7 @@
   {
     var o;
     var uri;
-    uri = '<%= local_host %>/partials/version_settings/' + templateId;
+    uri = '<%= local_host %>/partials/version_settings?template_id=' + templateId;
     $.get( uri, function(data, status)
       {
         $('#values_container').html( data );

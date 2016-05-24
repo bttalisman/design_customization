@@ -28,6 +28,25 @@ module TestHelper
     response
   end
 
+  def raw_get( options )
+    Rails.logger.info 'test_helper - raw_get() - options: ' + options.to_s
+
+    action = options[ :action ]
+    params = options[ :params ]
+    controller = options[ :controller ]
+
+    if !controller.nil?
+      old_controller = @controller
+      @controller = controller
+    end
+
+    response = get(action, params)
+
+    @controller = old_controller if !controller.nil?
+
+    response
+  end
+
   def get_test_replacement_image()
     ri = ReplacementImage.new
     file = sample_file( 'bact.jpg' )
@@ -44,5 +63,11 @@ module TestHelper
     Rails.logger.info 'test_helper - get_test_replacement_image_path() - '\
       + path.to_s
     path
+  end
+
+  def random_palette()
+    offset = rand( Palette.count )
+    rand_record = Palette.offset( offset ).first
+    rand_record
   end
 end

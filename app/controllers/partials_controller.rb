@@ -3,11 +3,13 @@ class PartialsController < ApplicationController
   include ApplicationHelper
   include DesignTemplatesHelper
   include VersionsHelper
+  include PartialsHelper
 
   layout 'partials'
 
   # This action presents the tags extracted from the AI file, with any
-  # tag-specific options, for use when creating or editing a DesignTemplate
+  # tag-specific options, for use when creating or editing a DesignTemplate.
+  # See partials_controller_test.rb.
   def design_template_settings
     template_id = params[ :id ]
     @design_template = DesignTemplate.find( template_id )
@@ -43,7 +45,6 @@ class PartialsController < ApplicationController
     @design_template = DesignTemplate.find( template_id )
 
     config_hash = { design_template_id: template_id }
-
     @version = Version.new( config_hash )
     @version.save
 
@@ -56,52 +57,18 @@ class PartialsController < ApplicationController
     @version.save
   end
 
-  def get_palettes( template )
-    palettes = {}
-    prompts = get_prompts_object( template )
-    tag_settings = prompts[ 'tag_settings' ]
-
-    tag_settings.each do |t|
-      use_palette = t[ 1 ][ 'use_palette' ]
-      palette_id = t[ 1 ][ 'palette_id' ]
-
-      logger.info 'PARTIALS_CONTROLLER - get_palettes - t: ' + t.to_s
-      logger.info 'PARTIALS_CONTROLLER - get_palettes - use_palette: '\
-        + use_palette.to_s
-
-      if use_palette == 'checked'
-
-        begin
-          palette = Palette.find( palette_id )
-          palettes[ t[0] ] = palette.colors
-
-        rescue ActiveRecord::RecordNotFound
-          palettes[ t[0] ] = Color.all
-        end
-
-      else
-        palettes[ t[0] ] = Color.all
-      end
-    end
-
-    logger.info 'PARTIALS_CONTROLLER - get_palettes - palettes: '\
-      + palettes.to_s
-
-    palettes
-  end
-
-  # This action presents each tag with ui for setting version-specific options
-  # for use in creating a Version tied to a DesignTemplate.  It is called
-  # whenever the user changes the DesignTemplate associated with this version.
+  # This action presents each tag and image with ui for setting
+  # version-specific options,
+  # for use in creating a Version tied to a DesignTemplate.
   def version_settings
-    id = params[ :id ]
-    logger.info 'PARTIALS_CONTROLLER - version_settings() - id: ' + id.to_s
+    t_id = params[ :template_id ]
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - id: ' + t_id.to_s
 
     @version_id = params[ :version_id ]
     logger.info 'PARTIALS_CONTROLLER - version_settings() - @version_id: '\
       + @version_id.to_s
 
-    @design_template = DesignTemplate.find( id )
+    @design_template = DesignTemplate.find( t_id )
     @tags = get_tags_array( @design_template )
     @images = get_images_array( @design_template )
     @colors = Color.all
@@ -142,6 +109,8 @@ class PartialsController < ApplicationController
       values = get_values_object( @version )
 
       if !values.nil?
+        logger.info 'PARTIALS_CONTROLLER - version_settings() - values: '\
+          + values.to_s
         @image_values = values[ 'image_settings' ]
         @tag_values = values[ 'tag_settings' ]
       end

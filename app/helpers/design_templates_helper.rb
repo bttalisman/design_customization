@@ -103,9 +103,9 @@ module DesignTemplatesHelper
   #
   def get_prompts_object( design_template )
     prompts_string = design_template.prompts
-    prompts = JSON.parse( prompts_string ) if json?( prompts_string )
     Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
       + 'prompts_string: ' + prompts_string.to_s
+    prompts = JSON.parse( prompts_string ) if json?( prompts_string )
     prompts
   end
 

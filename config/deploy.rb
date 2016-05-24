@@ -1,14 +1,17 @@
 # config valid only for current version of Capistrano
 lock '3.4.0'
 
-set :application, 'customization'
+set :application, 'design_customization'
 set :repo_url, 'git@github.com:bttalisman/design_customization.git'
+
+server 'armory.bombsheller.com', user: 'deploy', roles: %w{app web db}
+
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
- set :deploy_to, '/var/www/customizer'
+ set :deploy_to, '/var/www/design_customization'
 
 # Default value for :scm is :git
 # set :scm, :git
