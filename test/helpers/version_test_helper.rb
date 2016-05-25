@@ -1,6 +1,7 @@
 # Version Test Helper
 module VersionTestHelper
   include VersionsHelper
+  include DesignTemplatesHelper
 
   def exercise_version( file_name )
     dt_package = get_template_package( file_name )
@@ -37,10 +38,6 @@ module VersionTestHelper
     version_package
   end
 
-
-  #####################################################################
-  # Helper functions for setting up Version.values
-  #
   # A version's values is a json obj describing all extensible settings,
   # set by the user.
   # tag_settings:
@@ -107,17 +104,21 @@ module VersionTestHelper
     dt = dt_package[ 'design_template' ]
 
     has_images = images?( dt )
-    has_tags = tags( dt )
+    has_tags = tags?( dt )
 
-    version_folder = get_version_folder( version )
     output_folder = version.output_folder_path
 
-    # todo check for presence of all files
-    Rails.logger.info( 'version_test_helper - check_version()'\
-      + ' - version_folder: ' + version_folder.to_s )
+    original_file = version.design_template.original_file
+    original_file_path = original_file.path
+    original_file_name = File.basename( original_file_path )
+    original_file_base_name = File.basename( original_file_path, '.ai' )
+
+    output_contents = Dir.entries( output_folder.to_s )
 
     Rails.logger.info( 'version_test_helper - check_version()'\
       + ' - output_folder: ' + output_folder.to_s )
+    Rails.logger.info( 'version_test_helper - check_version()'\
+      + ' - output_contents: ' + output_contents.to_s )
 
   end
 end

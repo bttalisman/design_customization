@@ -1,5 +1,5 @@
 # Pass the name of a configuration file as the first argument.  This json
-# object contains "source file", "script file", "output folder" keys and values.
+# object contains 'source file', 'script file', 'output folder' keys and values.
 
 # An AppleScript script is built using this information.  Adobe Illustrator is
 # run, opening the source file.  Adobe Illustrator is told to load and run the
@@ -10,21 +10,21 @@
 
 require 'json'
 require 'FileUtils'
-
+require 'File'
 
 # ASCode contains the template Applescript string
 ASCode = <<-EOD
     on run
-    		tell application "Adobe Illustrator"
+    		tell application 'Adobe Illustrator'
 
     			activate
 
-          open "<<source>>"
+          open '<<source>>'
     			try
     				close windows
     			end try
 
-    			open "<<script>>"
+    			open '<<script>>'
     			try
     				close windows
     			end try
@@ -35,79 +35,82 @@ ASCode = <<-EOD
     end run
 EOD
 
-
 def osascript(script)
   system 'osascript', *script.split(/\n/).map { |line| ['-e', line] }.flatten
 end
 
+def rename_mod_file( source_file, new_name )
+  new_path = File.dirname( source_file ) + '/' + new_name
+  puts 'RUN_AI_SCRIPT - rename_mod_file() - source_file: ' + source_file.to_s
+  puts 'RUN_AI_SCRIPT - rename_mod_file() - new_name: ' + new_name.to_s
+  puts 'RUN_AI_SCRIPT - rename_mod_file() - new_path: ' + new_path.to_s
 
-def move_all( dir, dest )
-
-    puts "RUN_AI_SCRIPT - move_all - dir: " + dir
-    puts "RUN_AI_SCRIPT - move_all - dest: " + dest
-
-    unless File.directory?(dest)
-      puts "RUN_AI_SCRIPT - move_all - calling mkdir"
-      FileUtils.mkdir_p(dest)
-    end
-
-	  Dir.entries(dir).each do |name|
-
-        puts "RUN_AI_SCRIPT - name: " + name
-
-        # skip folders
-        next if File.directory? name
-
-	      from_path = File.join(dir, name)
-        to_path = dest
-
-        puts "RUN_AI_SCRIPT - move_all - about to MV: " + from_path.to_s + " to " + to_path.to_s
-	      FileUtils.mv from_path, to_path
-
-	  end
+  FileUtils.mv source_file, new_path
 end
 
+def move_all( dir, dest )
+  puts 'RUN_AI_SCRIPT - move_all() - dir: ' + dir
+  puts 'RUN_AI_SCRIPT - move_all() - dest: ' + dest
 
+  unless File.directory?(dest)
+    puts 'RUN_AI_SCRIPT - move_all - calling mkdir'
+    FileUtils.mkdir_p(dest)
+  end
+
+  Dir.entries(dir).each do |name|
+    puts 'RUN_AI_SCRIPT - name: ' + name
+
+    # skip folders
+    next if File.directory? name
+
+    from_path = File.join(dir, name)
+    to_path = dest
+
+    puts 'RUN_AI_SCRIPT - move_all - about to MV: ' + from_path.to_s + ' to '\
+      + to_path.to_s
+    FileUtils.mv from_path, to_path
+  end
+end
 
 # Load configuration json, get settings
 
 config_file = ARGV[0]
 
-f = File.open(config_file.to_s, "r")
+f = File.open(config_file.to_s, 'r')
 s = f.read
 config_hash = JSON.parse( s )
 
-source_file = config_hash[ "source file" ]
-script_file = config_hash[ "script file" ]
-output_folder = config_hash[ "output folder" ]
+source_file = config_hash[ 'source file' ]
+script_file = config_hash[ 'script file' ]
+output_folder = config_hash[ 'output folder' ]
+output_file_name = config_hash[ 'output file name' ]
 
 source_folder = File.dirname( source_file )
 temp_output_folder = source_folder + '/output/'
 
 unless File.directory?(temp_output_folder)
-  puts "RUN_AI_SCRIPT - creating temp output folder."
+  puts 'RUN_AI_SCRIPT - creating temp output folder.'
   FileUtils.mkdir_p(temp_output_folder)
 end
 
-puts "RUN_AI_SCRIPT - source_file: " + source_file.to_s
-puts "RUN_AI_SCRIPT - script_file: " + script_file.to_s
-puts "RUN_AI_SCRIPT - output_folder: " + output_folder.to_s
-puts "RUN_AI_SCRIPT - source_folder: " + source_folder.to_s
-puts "RUN_AI_SCRIPT - temp_output_folder: " + temp_output_folder.to_s
-
+puts 'RUN_AI_SCRIPT - source_file: ' + source_file.to_s
+puts 'RUN_AI_SCRIPT - script_file: ' + script_file.to_s
+puts 'RUN_AI_SCRIPT - output_folder: ' + output_folder.to_s
+puts 'RUN_AI_SCRIPT - source_folder: ' + source_folder.to_s
+puts 'RUN_AI_SCRIPT - temp_output_folder: ' + temp_output_folder.to_s
+puts 'RUN_AI_SCRIPT - output_file_name: ' + output_file_name.to_s
 
 # Search and replace values in ASCode
 ASCode.gsub! '<<source>>', source_file
 ASCode.gsub! '<<script>>', script_file
 
-
 # Run the applescript
-osascript ASCode;
+osascript ASCode
 
 # the source folder is the folder containing the source file
 source_folder = File.dirname( source_file )
 
 # AI places all new files in /output/
-AI_output_files = source_folder + "/output/."
+AI_output_files = source_folder + '/output/.'
 
 move_all( AI_output_files, output_folder )

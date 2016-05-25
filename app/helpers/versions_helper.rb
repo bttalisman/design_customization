@@ -501,8 +501,8 @@ module VersionsHelper
       output_folder = guarantee_final_slash( version_folder )
     end
 
-    intermediate_output = output_folder.to_s + original_file_base_name.to_s\
-      + '_mod.ai'
+    output_file_name = orignial_file_base_name.to_s + '_tags.ai'
+    intermediate_output = output_folder.to_s + output_file_name
 
     Rails.logger.info( 'versions_helper - process_version() - '\
       + 'intermediate_output: ' + intermediate_output )
@@ -519,6 +519,7 @@ module VersionsHelper
       config[ 'source file' ] = version_file_path
       config[ 'script file' ] = path
       config[ 'output folder' ] = output_folder
+      config[ 'output file name'] = output_file_name
 
       prep_and_run( version, config )
 
@@ -539,8 +540,11 @@ module VersionsHelper
         config[ 'source file' ] = version_file_path
       end
 
+      output_file_name = orignial_file_base_name + '_images.ai'
+
       config[ 'script file' ] = app_config['path_to_image_search_replace_script']
       config[ 'output folder' ] = output_folder
+      config[ 'output file name' ] = output_file_name
 
       prep_and_run( version, config )
     end # there are images to replace
