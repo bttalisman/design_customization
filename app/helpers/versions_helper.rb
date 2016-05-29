@@ -345,6 +345,11 @@ module VersionsHelper
     end
   end
 
+  def remove_data_file( path_to_ai_file )
+    temp_values_file = path_to_data_file( path_to_ai_file )
+    File.delete( temp_values_file )
+  end
+
   # This method returns the path to the configuration file for a version,
   # to be used as an argument to the run_AI_script script.  If the options
   # parameter contains version_id, that version will be used, otherwise
@@ -427,7 +432,7 @@ module VersionsHelper
     Rails.logger.info( 'versions_helper - prepare_files()')
     # this will put an appropriately named data file right next to the
     # source file.  The data file will contain the version.values data.
-    write_temp_data_file( version, config['source file'] )
+    write_temp_data_file( version, config[ 'source file' ] )
 
     # this will put a configuration json file in the version folder.  this file
     # tells bin/run_AI_script necessary file locations
@@ -456,6 +461,8 @@ module VersionsHelper
       # send remote HTTP request
       process_version_send_remote( version )
     end
+
+    remove_data_file( config[ 'source file' ] )
   end
 
   # This method does everything necessary to generate modified AI files and
@@ -504,7 +511,9 @@ module VersionsHelper
       output_folder = guarantee_final_slash( version_folder )
     end
 
-    output_file_base_name = original_file_base_name.to_s + '_tags'
+    # The output file for each round of transformations has the _final
+    # appendage.
+    output_file_base_name = original_file_base_name.to_s + '_final'
     intermediate_output = output_folder.to_s + output_file_base_name + '.ai'
 
     Rails.logger.info( 'versions_helper - process_version() - '\
@@ -515,7 +524,7 @@ module VersionsHelper
 
     if !tags.empty?
       # There are tags to replace, we should replace tags
-      Rails.logger.info( 'versions_helper - process_version() - about to rep tags' )
+      Rails.logger.info( 'versions_helper - process_version() - about to replace tags' )
       path = app_config[ 'path_to_search_replace_script' ]
 
       config = {}
@@ -543,8 +552,6 @@ module VersionsHelper
         config[ 'source file' ] = version_file_path
       end
 
-      # Gets the '_final' appendage because this is the end of the chain
-      # of transformations
       output_file_base_name = original_file_base_name + '_final'
 
       config[ 'script file' ] = app_config[ 'path_to_image_search_replace_script' ]

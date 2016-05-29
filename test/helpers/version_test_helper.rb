@@ -101,16 +101,10 @@ module VersionTestHelper
   def check_version( dt_package, v_package )
 
     version = v_package[ 'version' ]
-    dt = dt_package[ 'design_template' ]
-
-    has_images = images?( dt )
-    has_tags = tags?( dt )
 
     output_folder = version.output_folder_path
-
     original_file = version.design_template.original_file
     original_file_path = original_file.path
-    original_file_name = File.basename( original_file_path )
     original_file_base_name = File.basename( original_file_path, '.ai' )
 
     output_contents = Dir.entries( output_folder.to_s )
@@ -120,5 +114,10 @@ module VersionTestHelper
     Rails.logger.info( 'version_test_helper - check_version()'\
       + ' - output_contents: ' + output_contents.to_s )
 
+    final_output_file_base_name = original_file_base_name + '_final'
+    assert( output_contents.include?( final_output_file_base_name + '.ai' ),\
+            'Final .ai output file not found.' )
+    assert( output_contents.include?( final_output_file_base_name + '.jpg' ),\
+            'Final .jpg output file not found.' )
   end
 end
