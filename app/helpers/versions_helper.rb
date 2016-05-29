@@ -472,6 +472,9 @@ module VersionsHelper
   # If processing is remote, send_remote_run_request() sends an HTTP request
   # containing the version id
   def process_version( version, tags, images, params )
+    Rails.logger.info ''
+    Rails.logger.info ''
+    Rails.logger.info 'VERSION_HELPER - process_version()'
     maybe_bail_out( version, tags, images, params )
 
     original_file = version.design_template.original_file
@@ -501,8 +504,8 @@ module VersionsHelper
       output_folder = guarantee_final_slash( version_folder )
     end
 
-    output_file_name = orignial_file_base_name.to_s + '_tags.ai'
-    intermediate_output = output_folder.to_s + output_file_name
+    output_file_base_name = original_file_base_name.to_s + '_tags'
+    intermediate_output = output_folder.to_s + output_file_base_name + '.ai'
 
     Rails.logger.info( 'versions_helper - process_version() - '\
       + 'intermediate_output: ' + intermediate_output )
@@ -513,13 +516,13 @@ module VersionsHelper
     if !tags.empty?
       # There are tags to replace, we should replace tags
       Rails.logger.info( 'versions_helper - process_version() - about to rep tags' )
-      path = app_config['path_to_search_replace_script']
+      path = app_config[ 'path_to_search_replace_script' ]
 
       config = {}
       config[ 'source file' ] = version_file_path
       config[ 'script file' ] = path
       config[ 'output folder' ] = output_folder
-      config[ 'output file name'] = output_file_name
+      config[ 'output file base name'] = output_file_base_name
 
       prep_and_run( version, config )
 
@@ -530,7 +533,7 @@ module VersionsHelper
 
     if !images.empty?
       # There are images to replace, we should replace images
-      Rails.logger.info( 'versions_helper - process_version() - about to rep images' )
+      Rails.logger.info( 'versions_helper - process_version() - about to replace images' )
       config = {}
       if int_file_exist
         config[ 'source file' ] = intermediate_output
@@ -540,11 +543,13 @@ module VersionsHelper
         config[ 'source file' ] = version_file_path
       end
 
-      output_file_name = orignial_file_base_name + '_images.ai'
+      # Gets the '_final' appendage because this is the end of the chain
+      # of transformations
+      output_file_base_name = original_file_base_name + '_final'
 
-      config[ 'script file' ] = app_config['path_to_image_search_replace_script']
+      config[ 'script file' ] = app_config[ 'path_to_image_search_replace_script' ]
       config[ 'output folder' ] = output_folder
-      config[ 'output file name' ] = output_file_name
+      config[ 'output file base name' ] = output_file_base_name
 
       prep_and_run( version, config )
     end # there are images to replace
