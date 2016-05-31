@@ -3,12 +3,11 @@ module VersionTestHelper
   include VersionsHelper
   include DesignTemplatesHelper
 
-  def exercise_version( file_name )
+  def exercise_version( file_name, options )
     dt_package = get_template_package( file_name )
     v_package = get_version_package( 'dt_package' => dt_package,
                                      'do_process' => true )
-
-    check_version( dt_package, v_package )
+    check_version( dt_package, v_package, options )
   end
 
   def get_version_package( options )
@@ -21,20 +20,30 @@ module VersionTestHelper
     design_template = dt_package[ 'design_template' ]
     tags = dt_package[ 'tags' ]
     images = dt_package[ 'images' ]
+    stats = dt_package[ 'stats' ]
 
-    version = Version.new
-    version.design_template = design_template
-    version.save
+    if stats[ 'valid' ]
+      # if we have a valid template, do all of the version processing
+      version = Version.new
+      version.design_template = design_template
+      version.save
 
-    version.update( 'output_folder_path' => get_test_output_folder( version ) )
+      version.update( 'output_folder_path' => get_test_output_folder( version ) )
 
-    if do_process then
-      values = get_some_values( version )
-      version.values = values.to_json
-      process_version( version, tags, images, 'runai' => 'true' ) if version.save
+      if do_process
+        values = get_some_values( version )
+        version.values = values.to_json
+        process_version( version, tags, images, 'runai' => 'true' )\
+          if version.save
+      end
+
+      version_package = { 'version' => version,
+                          'dt stats' => stats }
+    else
+      # it's not a valid template, just pass back the stats
+      version_package = { 'dt stats' => stats }
     end
 
-    version_package = { 'version' => version }
     version_package
   end
 
@@ -97,27 +106,40 @@ module VersionTestHelper
     path
   end
 
-  # Validate as much as possible that this version is good
-  def check_version( dt_package, v_package )
-
+  # Validate as much as possible that this version is as it should be.
+  def check_version( dt_package, v_package, options )
     version = v_package[ 'version' ]
 
-    output_folder = version.output_folder_path
-    original_file = version.design_template.original_file
-    original_file_path = original_file.path
-    original_file_base_name = File.basename( original_file_path, '.ai' )
+    dt_stats = v_package[ 'dt stats' ]
+    status = dt_stats[ 'status' ]
 
-    output_contents = Dir.entries( output_folder.to_s )
+    expected_status = options[ 'expected template status' ]
 
-    Rails.logger.info( 'version_test_helper - check_version()'\
-      + ' - output_folder: ' + output_folder.to_s )
-    Rails.logger.info( 'version_test_helper - check_version()'\
-      + ' - output_contents: ' + output_contents.to_s )
+    assert_equal( status, expected_status, 'Unexpected status' )
 
-    final_output_file_base_name = original_file_base_name + '_final'
-    assert( output_contents.include?( final_output_file_base_name + '.ai' ),\
-            'Final .ai output file not found.' )
-    assert( output_contents.include?( final_output_file_base_name + '.jpg' ),\
-            'Final .jpg output file not found.' )
+
+    if !version.nil?
+      output_folder = version.output_folder_path
+      original_file = version.design_template.original_file
+      original_file_path = original_file.path
+      original_file_base_name = File.basename( original_file_path, '.ai' )
+
+      output_contents = Dir.entries( output_folder.to_s )
+
+      Rails.logger.info( 'version_test_helper - check_version()'\
+        + ' - output_folder: ' + output_folder.to_s )
+      Rails.logger.info( 'version_test_helper - check_version()'\
+        + ' - output_contents: ' + output_contents.to_s )
+
+      final_output_file_base_name = original_file_base_name + '_final'
+      assert( output_contents.include?( final_output_file_base_name + '.ai' ),\
+              'Final .ai output file not found.' )
+      assert( output_contents.include?( final_output_file_base_name + '.jpg' ),\
+              'Final .jpg output file not found.' )
+    else
+      # no version was created.
+      Rails.logger.info( 'version_test_helper - check_version()'\
+        + ' - no version made, dt stats: ' + JSON.pretty_generate( dt_stats ) )
+    end
   end
 end

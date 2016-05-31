@@ -26,6 +26,33 @@ module DesignTemplatesHelper
     exists
   end
 
+  def get_stats( dt )
+    Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats()'
+
+    valid = true
+    status = TEMPLATE_STATUS_SUCCESS
+
+    if !tags?( dt ) && !images?( dt )
+      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats() - No tags or images.'
+      valid = false
+      message = 'This file contains no tags or images for replacement.'
+      status = TEMPLATE_STATUS_NOT_A_TEMPLATE
+    end
+
+    tags = get_tags_array( dt )
+    if tags.uniq.length != tags.length
+      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats() - duplicate tags.'
+      valid = false
+      message = 'This file contains duplicate tags, please make all tags unique.'
+      status = TEMPLATE_STATUS_DUP_TAGS
+    end
+
+    o = { 'valid' => valid,
+          'message' => message,
+          'status' => status }
+    o
+  end
+
   # This method returns an array of extracted tags.  These are the strings
   # of text within an AI file that will be replaced by versions of this
   # template.
@@ -189,7 +216,7 @@ module DesignTemplatesHelper
 
   def extract_tags( design_template )
     app_config = Rails.application.config_for(:customization)
-    run_remotely = app_config['run_remotely']
+    run_remotely = app_config[ 'run_remotely' ]
 
     config_file = tags_config_file_name( 'design_template' => design_template )
     source_folder = get_design_template_folder( design_template )
@@ -281,7 +308,7 @@ module DesignTemplatesHelper
     Rails.logger.info 'design_templates_helper - extract_tags_system_call() - '\
       + 'design_template: ' + design_template.to_s
     app_config = Rails.application.config_for(:customization)
-    path = app_config['path_to_runner_script']
+    path = app_config[ 'path_to_runner_script' ]
 
     sys_com = 'ruby ' + path + ' "'\
       + tags_config_file_name( 'design_template' => design_template ) + '"'

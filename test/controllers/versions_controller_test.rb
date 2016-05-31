@@ -19,6 +19,20 @@ class VersionsControllerTest < ActionController::TestCase
   # is built, items are extracted, a Version is built, its values are
   # generated, and final AI output is generated
   test 'soup to nuts' do
-    exercise_version( 'one_tag_one_image.ai' )
+
+    # Exercises expected to be successful
+    options = { 'expected template status' => TEMPLATE_STATUS_SUCCESS }
+    exercise_version( 'one_tag_one_image.ai', options )
+    exercise_version( '300x300Items.ai', options )
+    exercise_version( 'SingleTag-V1S12.ai', options )
+    exercise_version( 'tags_and_images.ai', options )
+
+    # Exercises expected to fail
+
+    options = { 'expected template status' => TEMPLATE_STATUS_DUP_TAGS }
+    exercise_version( 'duplicate_keys.ai', options )
+
+    options = { 'expected template status' => TEMPLATE_STATUS_NOT_A_TEMPLATE }
+    exercise_version( 'no_tags_no_images.ai', options )
   end
 end

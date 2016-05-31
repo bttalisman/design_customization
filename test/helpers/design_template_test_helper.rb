@@ -12,6 +12,7 @@ module DesignTemplateTestHelper
 
     tags = get_tags_array( design_template )
     images = get_images_array( design_template )
+    stats = get_stats( design_template )
     extracted_settings = get_some_extracted_settings( design_template )
     general_settings = {}
 
@@ -28,10 +29,10 @@ module DesignTemplateTestHelper
     design_template = DesignTemplate.find( dt_id )
     package = { 'design_template' => design_template,
                 'tags' => tags,
-                'images' => images }
+                'images' => images,
+                'stats' => stats }
     package
   end
-
 
   # Add the ai file to the DesignTemplate, build the necessary folder
   # structure, and launch the extracting process.

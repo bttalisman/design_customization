@@ -104,10 +104,8 @@
     var o;
     var uri;
 
-    // If both of these arrays have no elements, then either the file contained
-    // nothing to extract, or there is no file.
-<%  if @images.empty? && @tags.empty? %>
-      $('#panel_container').html( '<b>This Illustrator file is not a template.</b>' );
+<%  if !@stats[ 'valid' ] %>
+      $('#panel_container').html( '<b><%= @stats[ 'message' ] %></b>' );
       return;
 <%  end %>
 
