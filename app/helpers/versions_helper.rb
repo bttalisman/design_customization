@@ -52,7 +52,7 @@ module VersionsHelper
   def get_replacement_image_id( image_name, version )
     Rails.logger.info 'VERSIONS_HELPER - get_replacement_image_id()!!'
     values = get_values_object( version )
-    image_values = values[ 'image_settings' ] unless values.nil?
+    image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ] unless values.nil?
     rep_id = ''
     if image_values
       vals = image_values[ image_name ]
@@ -65,7 +65,7 @@ module VersionsHelper
     Rails.logger.info 'VERSIONS_HELPER - get_collage_id()!! - image_name: '\
       + image_name
     values = get_values_object( version )
-    image_values = values[ 'image_settings' ] unless values.nil?
+    image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ] unless values.nil?
     col_id = ''
     Rails.logger.info 'VERSIONS_HELPER - get_collage_id() - image_values: '\
       + image_values.to_s
@@ -80,7 +80,7 @@ module VersionsHelper
 
   def get_type( image_name, version )
     values = get_values_object( version )
-    image_values = values[ 'image_settings' ] unless values.nil?
+    image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ] unless values.nil?
     type = ''
     if image_values
       vals = image_values[ image_name ]
@@ -137,7 +137,7 @@ module VersionsHelper
     Rails.logger.info 'VERSIONS_HELPER - get_uploaded_file !!'
 
     values = get_values_object( version )
-    image_values = values[ 'image_settings' ] unless values.nil?
+    image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ] unless values.nil?
 
     if image_values
       vals = image_values[ image_name ]
@@ -278,7 +278,7 @@ module VersionsHelper
       + ri.to_s
 
     values = get_values_object( version )
-    image_settings = values[ 'image_settings' ]
+    image_settings = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
 
     settings = {}
     settings[ 'replacement_image_id' ] = ri.id
@@ -307,7 +307,7 @@ module VersionsHelper
     # todo, can this be part of a constructor?
 
     values = get_values_object( version )
-    image_settings = values[ 'image_settings' ]
+    image_settings = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
 
     settings = {}
     settings[ 'collage_id' ] = co.id

@@ -7,6 +7,7 @@ class Version < ActiveRecord::Base
   before_save :default_values
 
   def default_values
-    self.values ||= '{ "tag_settings" : {}, "image_settings" : {} }'
+    self.values ||= '{ "' + VERSION_VALUES_KEY_TAG_SETTINGS + '" : {}, "'\
+      + VERSION_VALUES_KEY_IMAGE_SETTINGS + '" : {} }'
   end
 end

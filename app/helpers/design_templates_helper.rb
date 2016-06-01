@@ -243,7 +243,7 @@ module DesignTemplatesHelper
 
   def extract_images( design_template )
     app_config = Rails.application.config_for(:customization)
-    run_remotely = app_config['run_remotely']
+    run_remotely = app_config[ 'run_remotely' ]
 
     config_file = images_config_file_name( 'design_template' => design_template )
     source_folder = get_design_template_folder( design_template )

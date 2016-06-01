@@ -13,3 +13,8 @@ RUNNER_IMAGES_CONFIG_FILE_NAME = 'xx_config_extract_images.jsn'.freeze
 DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'.freeze
 DESIGN_TEMPLATE_STATS_KEY_MESSAGE = 'message'.freeze
 DESIGN_TEMPLATE_STATS_KEY_STATUS = 'status'.freeze
+
+# Code in bin/illustrator_processing/*.jsx uses these key values also, so
+# any changes must be reflected there.
+VERSION_VALUES_KEY_IMAGE_SETTINGS = 'image_settings'.freeze
+VERSION_VALUES_KEY_TAG_SETTINGS = 'tag_settings'.freeze
