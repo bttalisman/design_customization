@@ -100,10 +100,10 @@ f = File.open(config_file.to_s, 'r')
 s = f.read
 config_hash = JSON.parse( s )
 
-source_file = config_hash[ 'source file' ]
-script_file = config_hash[ 'script file' ]
-output_folder = config_hash[ 'output folder' ]
-output_file_base_name = config_hash[ 'output file base name' ]
+source_file = config_hash[ RUNNER_CONFIG_KEY_SOURCE_FILE ]
+script_file = config_hash[ RUNNER_CONFIG_KEY_SCRIPT_FILE ]
+output_folder = config_hash[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ]
+output_file_base_name = config_hash[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ]
 
 source_folder = File.dirname( source_file )
 temp_output_folder = source_folder + '/output/'

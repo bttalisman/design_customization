@@ -3,6 +3,12 @@ module VersionTestHelper
   include VersionsHelper
   include DesignTemplatesHelper
 
+  # This method gets a template package based on the passed file name. This
+  # template package is then used to get a version package.  Processing is
+  # turned on, so we will attempt to generate final version output.  Both
+  # packages are then checked for validity.
+  #
+  # options - { 'expected template status' => TEMPLATE_STATUS_... }
   def exercise_version( file_name, options )
     dt_package = get_template_package( file_name )
     v_package = get_version_package( 'dt_package' => dt_package,
@@ -10,6 +16,12 @@ module VersionTestHelper
     check_version( dt_package, v_package, options )
   end
 
+  # Returns an object containing all things you'd want with a version.
+  #
+  # options - { 'dt_package' => design template package,
+  #             'do_process' => true/false - run AI and generate output? }
+  #
+  # returns - { 'version' => The Version }
   def get_version_package( options )
     Rails.logger.info 'VersionTestHelper - get_version_package() - options: '\
       + options.to_s
@@ -21,6 +33,7 @@ module VersionTestHelper
     tags = dt_package[ 'tags' ]
     images = dt_package[ 'images' ]
     stats = dt_package[ 'stats' ]
+    version_package = {}
 
     if stats[ 'valid' ]
       # if we have a valid template, do all of the version processing
@@ -37,11 +50,7 @@ module VersionTestHelper
           if version.save
       end
 
-      version_package = { 'version' => version,
-                          'dt stats' => stats }
-    else
-      # it's not a valid template, just pass back the stats
-      version_package = { 'dt stats' => stats }
+      version_package = { 'version' => version }
     end
 
     version_package
@@ -74,29 +83,32 @@ module VersionTestHelper
     ri_id = ri.id
     ri_path = get_test_replacement_image_path( ri )
 
-    Rails.logger.info( 'version_test_helper - get_some_values() - tags: ' + tags.to_s )
-    Rails.logger.info( 'version_test_helper - get_some_values() - images: ' + images.to_s )
+    Rails.logger.info( 'version_test_helper - get_some_values() - tags: '\
+      + tags.to_s )
+    Rails.logger.info( 'version_test_helper - get_some_values() - images: '\
+      + images.to_s )
 
     tag_settings = {}
     image_settings = {}
 
-    tags.each { |t|
+    tags.each do |t|
       o = { 'replacement_text' => 'some text',
             'text_color' => '#333333' }
       tag_settings[ t ] = o
-    }
+    end
 
-    images.each { |i|
+    images.each do |i|
       o = { 'replacement_image_id' => ri_id,
             'path' => ri_path.to_s,
             'type' => 'ReplacementImage' }
       image_settings[ i ] = o
-    }
+    end
 
     o = { 'tag_settings' => tag_settings,
           'image_settings' => image_settings }
 
-    Rails.logger.info( 'version_test_helper - get_some_values() - o: ' + o.to_s )
+    Rails.logger.info( 'version_test_helper - get_some_values() - o: '\
+      + o.to_s )
 
     o
   end
@@ -109,14 +121,11 @@ module VersionTestHelper
   # Validate as much as possible that this version is as it should be.
   def check_version( dt_package, v_package, options )
     version = v_package[ 'version' ]
-
-    dt_stats = v_package[ 'dt stats' ]
+    dt_stats = dt_package[ 'stats' ]
     status = dt_stats[ 'status' ]
-
     expected_status = options[ 'expected template status' ]
 
     assert_equal( status, expected_status, 'Unexpected status' )
-
 
     if !version.nil?
       output_folder = version.output_folder_path

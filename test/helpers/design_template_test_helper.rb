@@ -1,8 +1,12 @@
 # DesignTemplate Test Helper
 module DesignTemplateTestHelper
-
   # This method takes a file name and does all the stuff that needs to be
   # done to set up a design_template, ready to be used to create a version.
+  #
+  # returns - { 'design_template' => DesignTemplate,
+  #             'images' => array of image names,
+  #             'tags' => array of tag names,
+  #             'stats' => object describing template statistics/status }
   def get_template_package( file_name )
     design_template = DesignTemplate.new
     design_template.save
@@ -67,9 +71,6 @@ module DesignTemplateTestHelper
     FileUtils.cp( file.path.to_s, orig_path )
   end
 
-  #####################################################################
-  # Helper functions for setting up DesignTemplate.prompts
-  #
   # This method returns an object providing arbitrary values for all of the
   # DesignTemplate's extracted images and tags.
   def get_some_extracted_settings( design_template )
@@ -86,16 +87,16 @@ module DesignTemplateTestHelper
 
   def get_some_image_settings( images )
     image_settings = {}
-    images.each { |i|
+    images.each do |i|
       o = { 'replace_image' => 'checked' }
       image_settings[ i ] = o
-    }
+    end
     image_settings
   end
 
   def get_some_tag_settings( tags )
     tag_settings = {}
-    tags.each { |t|
+    tags.each do |t|
       o = { 'prompt' => 'Enter Stuff',
             'max_length' => '33',
             'min_length' => '22',
@@ -103,7 +104,7 @@ module DesignTemplateTestHelper
             'use_palette' => 'checked',
             'palette_id' => random_palette.id }
       tag_settings[ t ] = o
-    }
+    end
     tag_settings
   end
 end

@@ -26,12 +26,17 @@ module DesignTemplatesHelper
     exists
   end
 
+  # Given a template, this method returns an object providing metadata on that
+  # template.
+  #
+  # returns - { 'valid' => true/false,
+  #             'message' => helpful text for users,
+  #             'status' => see config/initializers/constants.rb }
   def get_stats( dt )
-    Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats()'
-
     valid = true
     status = TEMPLATE_STATUS_SUCCESS
 
+    # No tags and no images
     if !tags?( dt ) && !images?( dt )
       Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats() - No tags or images.'
       valid = false
@@ -39,6 +44,7 @@ module DesignTemplatesHelper
       status = TEMPLATE_STATUS_NOT_A_TEMPLATE
     end
 
+    # Duplicate tags
     tags = get_tags_array( dt )
     if tags.uniq.length != tags.length
       Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats() - duplicate tags.'
@@ -93,13 +99,9 @@ module DesignTemplatesHelper
   # placed items within an AI file that will be replaced by versions of this
   # template.
   def get_images_array( design_template )
-    # Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array()'
     images_file = path_to_images_file( design_template )
-    # Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array() - images_file: '\
-    # + images_file.to_s
     exists = File.exist?( images_file )
-    # Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_images_array - exists: '\
-    # + exists.to_s
+
     images_string = ''
     images = []
     if exists
@@ -222,9 +224,9 @@ module DesignTemplatesHelper
     source_folder = get_design_template_folder( design_template )
 
     config = {}
-    config[ 'source file' ] = design_template.original_file.path
-    config[ 'script file' ] = app_config[ 'path_to_extract_tags_script' ]
-    config[ 'output folder' ] = source_folder
+    config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = design_template.original_file.path
+    config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = app_config[ 'path_to_extract_tags_script' ]
+    config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = source_folder
 
     File.open( config_file, 'w' ) do |f|
       f.write( config.to_json )
@@ -250,9 +252,9 @@ module DesignTemplatesHelper
       + config_file.to_s
 
     config = {}
-    config[ 'source file' ] = design_template.original_file.path
-    config[ 'script file' ] = app_config[ 'path_to_extract_images_script' ]
-    config[ 'output folder' ] = source_folder
+    config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = design_template.original_file.path
+    config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = app_config[ 'path_to_extract_images_script' ]
+    config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = source_folder
 
     File.open( config_file, 'w' ) do |f|
       f.write( config.to_json )
@@ -321,7 +323,7 @@ module DesignTemplatesHelper
     Rails.logger.info 'design_templates_helper - extract_images_system_call() - '\
       + 'design_template: ' + design_template.to_s
     app_config = Rails.application.config_for(:customization)
-    path = app_config['path_to_runner_script']
+    path = app_config[ 'path_to_runner_script' ]
 
     sys_com = 'ruby ' + path + ' "'\
       + images_config_file_name( 'design_template' => design_template ) + '"'
