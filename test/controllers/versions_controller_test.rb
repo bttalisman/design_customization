@@ -19,7 +19,7 @@ class VersionsControllerTest < ActionController::TestCase
   # exercises is expected to successfully generate all version output.
   test 'soup to nuts' do
     options = { 'expected template status' => TEMPLATE_STATUS_SUCCESS }
-    #exercise_version( 'one_tag_one_image.ai', options )
+    exercise_version( 'one_tag_one_image.ai', options )
     #exercise_version( '300x300Items.ai', options )
     #exercise_version( 'SingleTag-V1S12.ai', options )
     #exercise_version( 'tags_and_images.ai', options )

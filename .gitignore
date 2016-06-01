@@ -19,5 +19,7 @@
 /log
 /working
 /public/system/
+/test/output
+/output
 
 /config/database.yml

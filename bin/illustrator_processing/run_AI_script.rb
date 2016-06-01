@@ -12,6 +12,7 @@
 
 require 'json'
 require 'FileUtils'
+require_relative '../../config/initializers/constants.rb'
 
 # ASCode contains the template Applescript string
 ASCode = <<-EOD

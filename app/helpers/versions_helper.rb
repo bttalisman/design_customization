@@ -10,7 +10,8 @@ module VersionsHelper
     versions_folder = app_config[ 'path_to_versions_folder' ]
     version_output_folder = versions_folder + version.id.to_s
 
-    Rails.logger.info 'VERSIONS_HELPER - get_version_folder() - version_output_folder: '\
+    Rails.logger.info 'VERSIONS_HELPER - get_version_folder() -'\
+      + ' version_output_folder: '\
       + version_output_folder.to_s
 
     FileUtils.mkdir_p( version_output_folder )\
@@ -50,16 +51,13 @@ module VersionsHelper
 
   def get_replacement_image_id( image_name, version )
     Rails.logger.info 'VERSIONS_HELPER - get_replacement_image_id()!!'
-
     values = get_values_object( version )
     image_values = values[ 'image_settings' ] unless values.nil?
     rep_id = ''
-
     if image_values
       vals = image_values[ image_name ]
       rep_id = vals[ 'replacement_image_id' ] if vals
     end
-
     rep_id
   end
 
@@ -69,18 +67,14 @@ module VersionsHelper
     values = get_values_object( version )
     image_values = values[ 'image_settings' ] unless values.nil?
     col_id = ''
-
     Rails.logger.info 'VERSIONS_HELPER - get_collage_id() - image_values: '\
       + image_values.to_s
-
     if image_values
       vals = image_values[ image_name ]
       col_id = vals[ 'collage_id' ] if vals
     end
-
     Rails.logger.info 'VERSIONS_HELPER - get_collage_id() - col_id: '\
       + col_id.to_s
-
     col_id
   end
 
@@ -432,7 +426,7 @@ module VersionsHelper
     Rails.logger.info( 'versions_helper - prepare_files()')
     # this will put an appropriately named data file right next to the
     # source file.  The data file will contain the version.values data.
-    write_temp_data_file( version, config[ 'source file' ] )
+    write_temp_data_file( version, config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] )
 
     # this will put a configuration json file in the version folder.  this file
     # tells bin/run_AI_script necessary file locations
@@ -442,17 +436,14 @@ module VersionsHelper
   end
 
   def prep_and_run( version, config )
-    Rails.logger.info( 'versions_helper - prep_and_run()')
+    Rails.logger.info( 'versions_helper - prep_and_run() - config: '\
+      + JSON.pretty_generate( config ) )
+
     prepare_files( version, config )
 
     # custom configuration found in config/customization.yml
     app_config = Rails.application.config_for(:customization)
-    run_remotely = app_config['run_remotely']
-
-    Rails.logger.info 'versions_helper - prep_and_run() - run_remotely: '\
-      + run_remotely.to_s
-    Rails.logger.info 'versions_helper - prep_and_run() - config: '\
-      + config.to_s
+    run_remotely = app_config[ 'run_remotely' ]
 
     if !run_remotely
       # run locally
@@ -462,7 +453,7 @@ module VersionsHelper
       process_version_send_remote( version )
     end
 
-    remove_data_file( config[ 'source file' ] )
+    remove_data_file( config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] )
   end
 
   # This method does everything necessary to generate modified AI files and
@@ -528,10 +519,10 @@ module VersionsHelper
       path = app_config[ 'path_to_search_replace_script' ]
 
       config = {}
-      config[ 'source file' ] = version_file_path
-      config[ 'script file' ] = path
-      config[ 'output folder' ] = output_folder
-      config[ 'output file base name'] = output_file_base_name
+      config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = version_file_path
+      config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = path
+      config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = output_folder
+      config[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ] = output_file_base_name
 
       prep_and_run( version, config )
 
@@ -545,18 +536,18 @@ module VersionsHelper
       Rails.logger.info( 'versions_helper - process_version() - about to replace images' )
       config = {}
       if int_file_exist
-        config[ 'source file' ] = intermediate_output
+        config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = intermediate_output
       else
         # the intermediate file does not exist, but we should still
         # replace images
-        config[ 'source file' ] = version_file_path
+        config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = version_file_path
       end
 
       output_file_base_name = original_file_base_name + '_final'
 
-      config[ 'script file' ] = app_config[ 'path_to_image_search_replace_script' ]
-      config[ 'output folder' ] = output_folder
-      config[ 'output file base name' ] = output_file_base_name
+      config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = app_config[ 'path_to_image_search_replace_script' ]
+      config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = output_folder
+      config[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ] = output_file_base_name
 
       prep_and_run( version, config )
     end # there are images to replace
