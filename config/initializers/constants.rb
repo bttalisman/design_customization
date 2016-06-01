@@ -7,6 +7,9 @@ RUNNER_CONFIG_KEY_OUTPUT_FOLDER = 'xx_output folder'.freeze
 RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME = 'xx_output file base name'.freeze
 RUNNER_CONFIG_KEY_SOURCE_FILE = 'xx_source file'.freeze
 
-DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'
-DESIGN_TEMPLATE_STATS_KEY_MESSAGE = 'message'
-DESIGN_TEMPLATE_STATS_KEY_STATUS = 'status'
+RUNNER_TAGS_CONFIG_FILE_NAME = 'xx_config_extract_tags.jsn'.freeze
+RUNNER_IMAGES_CONFIG_FILE_NAME = 'xx_config_extract_images.jsn'.freeze
+
+DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'.freeze
+DESIGN_TEMPLATE_STATS_KEY_MESSAGE = 'message'.freeze
+DESIGN_TEMPLATE_STATS_KEY_STATUS = 'status'.freeze

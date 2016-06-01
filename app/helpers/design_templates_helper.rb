@@ -179,7 +179,7 @@ module DesignTemplatesHelper
       + dt.to_s
 
     dt_folder = get_design_template_folder( dt )
-    config_file = dt_folder + '/config_extract_tags.jsn'
+    config_file = dt_folder + '/' + RUNNER_TAGS_CONFIG_FILE_NAME
     config_file
   end
 
@@ -203,7 +203,7 @@ module DesignTemplatesHelper
       + dt.to_s
 
     dt_folder = get_design_template_folder( dt )
-    config_file = dt_folder + '/config_extract_images.jsn'
+    config_file = dt_folder + '/' + RUNNER_IMAGES_CONFIG_FILE_NAME
     config_file
   end
 
