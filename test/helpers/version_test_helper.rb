@@ -122,7 +122,7 @@ module VersionTestHelper
   def check_version( dt_package, v_package, options )
     version = v_package[ 'version' ]
     dt_stats = dt_package[ 'stats' ]
-    status = dt_stats[ 'status' ]
+    status = dt_stats[ DESIGN_TEMPLATE_STATS_KEY_STATUS ]
     expected_status = options[ 'expected template status' ]
 
     assert_equal( status, expected_status, 'Unexpected status' )

@@ -104,8 +104,8 @@
     var o;
     var uri;
 
-<%  if !@stats[ 'valid' ] %>
-      $('#panel_container').html( '<b><%= @stats[ 'message' ] %></b>' );
+<%  if !@stats[ DESIGN_TEMPLATE_STATS_KEY_VALID ] %>
+      $('#panel_container').html( '<b><%= @stats[ DESIGN_TEMPLATE_STATS_KEY_MESSAGE ] %></b>' );
       return;
 <%  end %>
 

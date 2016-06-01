@@ -53,9 +53,9 @@ module DesignTemplatesHelper
       status = TEMPLATE_STATUS_DUP_TAGS
     end
 
-    o = { 'valid' => valid,
-          'message' => message,
-          'status' => status }
+    o = { DESIGN_TEMPLATE_STATS_KEY_VALID => valid,
+          DESIGN_TEMPLATE_STATS_KEY_MESSAGE => message,
+          DESIGN_TEMPLATE_STATS_KEY_STATUS => status }
     o
   end
 

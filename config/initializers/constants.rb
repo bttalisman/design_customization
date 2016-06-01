@@ -6,3 +6,7 @@ RUNNER_CONFIG_KEY_SCRIPT_FILE = 'xx_script file'.freeze
 RUNNER_CONFIG_KEY_OUTPUT_FOLDER = 'xx_output folder'.freeze
 RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME = 'xx_output file base name'.freeze
 RUNNER_CONFIG_KEY_SOURCE_FILE = 'xx_source file'.freeze
+
+DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'
+DESIGN_TEMPLATE_STATS_KEY_MESSAGE = 'message'
+DESIGN_TEMPLATE_STATS_KEY_STATUS = 'status'
