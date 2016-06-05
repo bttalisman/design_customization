@@ -18,9 +18,9 @@ class PartialsController < ApplicationController
     @palettes = Palette.all
 
     # If the user has set options regarding tags extracted from an AI file they
-    # go in @values
+    # go in @prompts
     if json?( @design_template.prompts )
-      @values = JSON.parse( @design_template.prompts )
+      @prompts = JSON.parse( @design_template.prompts )
     else
       logger.info 'PARTIALS_CONTROLLER - design_template_settings - prompts BAD json!!!'
     end
@@ -31,8 +31,8 @@ class PartialsController < ApplicationController
       + @tags.to_s
     logger.info 'PARTIALS_CONTROLLER - design_template_settings - @images: '\
       + @images.to_s
-    logger.info 'PARTIALS_CONTROLLER - design_template_settings - @values: '\
-      + @values.to_s
+    logger.info 'PARTIALS_CONTROLLER - design_template_settings - @prompts: '\
+      + @prompts.to_s
     logger.info 'PARTIALS_CONTROLLER - design_template_settings - @images.length: '\
       + @images.length.to_s
     logger.info 'PARTIALS_CONTROLLER - design_template_settings - @tags.length: '\
@@ -74,7 +74,8 @@ class PartialsController < ApplicationController
     @colors = Color.all
     @palettes = get_palettes( @design_template )
 
-    logger.info 'PARTIALS_CONTROLLER - version_settings() - @tags: ' + @tags.to_s
+    logger.info 'PARTIALS_CONTROLLER - version_settings() - @tags: '\
+      + @tags.to_s
     logger.info 'PARTIALS_CONTROLLER - version_settings() - @images: '\
       + @images.to_s
     logger.info 'PARTIALS_CONTROLLER - version_settings() - @images.length: '\

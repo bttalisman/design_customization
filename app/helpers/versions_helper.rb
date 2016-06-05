@@ -45,7 +45,6 @@ module VersionsHelper
     else
       Rails.logger.info 'VERSIONS_HELPER - get_values_object - INVALID JSON!!'
     end
-
     values
   end
 

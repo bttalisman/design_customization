@@ -8,8 +8,8 @@ customer to specify the ultimate appearance of a design.  -->
   rendering_images_form = false
 
   if !@prompts.nil?
-    @tag_settings = @prompts[ 'tag_settings' ]
-    @image_settings = @prompts[ 'image_settings' ]
+    @tag_settings = @prompts[ PROMPTS_KEY_TAG_SETTINGS ]
+    @image_settings = @prompts[ PROMPTS_KEY_IMAGE_SETTINGS ]
   end
 
   if !@tag_settings.nil?
@@ -25,7 +25,6 @@ customer to specify the ultimate appearance of a design.  -->
 <%=   render :partial => 'version_images' %>
 <%  end
   end %>
-
 
 <script>
 

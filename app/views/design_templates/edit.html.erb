@@ -76,7 +76,7 @@
       oToSend.extracted_settings = extractedSettings;
       // these are always the same
       oToSend.general_settings = oGeneralSettings;
-
+      // post to design_templates#all_settings action
       var uri = '<%= local_host %>' + '/design_templates/' + templateId + '/settings/';
 
       $.ajax({

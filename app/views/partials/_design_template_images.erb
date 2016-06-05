@@ -5,7 +5,7 @@ should this extracted image be replaced? -->
 <%
 if !@images.nil?
 
-  logger.info '_design_template_images.html.erb - @values: ' + @values.to_s
+  logger.info '_design_template_images.html.erb - @prompts: ' + @prompts.to_s
   logger.info '_design_template_images.html.erb - @images: ' + @images.to_s
 
   i = 0
@@ -13,11 +13,11 @@ if !@images.nil?
 
     logger.info '_design_template_images.html.erb - image: ' + image.to_s
 
-    if !@values.nil? && (image != '')
+    if !@prompts.nil? && (image != '')
 
       # we'll try to look up any previously set values for this image.
 
-      imageProps = @values[ 'image_settings' ][ image.to_s ]
+      imageProps = @prompts[ PROMPTS_KEY_IMAGE_SETTINGS ][ image.to_s ]
 
       logger.info '_design_template_images.html.erb - imageProps: ' + imageProps.to_s
 

@@ -5,7 +5,7 @@ can the color be set for this tag? -->
 <%
 if !@tags.nil?
 
-  logger.info '_design_template_tags.html.erb - @values: ' + @values.to_s
+  logger.info '_design_template_tags.html.erb - @values: ' + @prompts.to_s
   logger.info '_design_template_tags.html.erb - @tags: ' + @tags.to_s
 
   i = 0
@@ -23,11 +23,11 @@ if !@tags.nil?
     palette_id = ''
     select_pal = ''
 
-    if !@values.nil?
+    if !@prompts.nil?
 
       # we'll try to look up any previously set values for this tag.
 
-      all_tag_settings = @values[ 'tag_settings' ]
+      all_tag_settings = @prompts[ PROMPTS_KEY_TAG_SETTINGS ]
 
       if !all_tag_settings.nil?
 

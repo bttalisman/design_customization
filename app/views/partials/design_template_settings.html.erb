@@ -71,9 +71,10 @@ extracting information. -->
       oImages = build_images();
 <%  end %>
 
+    // This object will become DesignTemplate.prompts
     oReturn = {};
-    oReturn[ 'tag_settings' ] = oTags;
-    oReturn[ 'image_settings' ] = oImages;
+    oReturn[ '<%= PROMPTS_KEY_TAG_SETTINGS %>' ] = oTags;
+    oReturn[ '<%= PROMPTS_KEY_IMAGE_SETTINGS %>' ] = oImages;
 
     return oReturn;
   }

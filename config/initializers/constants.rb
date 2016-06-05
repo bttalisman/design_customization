@@ -14,6 +14,10 @@ DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'.freeze
 DESIGN_TEMPLATE_STATS_KEY_MESSAGE = 'message'.freeze
 DESIGN_TEMPLATE_STATS_KEY_STATUS = 'status'.freeze
 
+PROMPTS_KEY_TAG_SETTINGS = 'xx_tag_settings'.freeze
+PROMPTS_KEY_IMAGE_SETTINGS = 'xx_image_settings'.freeze
+
+
 # Code in bin/illustrator_processing/*.jsx uses these key values also, so
 # any changes must be reflected there.
 VERSION_VALUES_KEY_IMAGE_SETTINGS = 'image_settings'.freeze

@@ -7,7 +7,7 @@ module PartialsHelper
   def get_palettes( template )
     palettes = {}
     prompts = get_prompts_object( template )
-    tag_settings = prompts[ 'tag_settings' ]
+    tag_settings = prompts[ PROMPTS_KEY_TAG_SETTINGS ]
 
     tag_settings.each do |t|
       use_palette = t[ 1 ][ 'use_palette' ]
