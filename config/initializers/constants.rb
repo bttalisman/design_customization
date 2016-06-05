@@ -17,8 +17,12 @@ DESIGN_TEMPLATE_STATS_KEY_STATUS = 'status'.freeze
 PROMPTS_KEY_TAG_SETTINGS = 'xx_tag_settings'.freeze
 PROMPTS_KEY_IMAGE_SETTINGS = 'xx_image_settings'.freeze
 
-
 # Code in bin/illustrator_processing/*.jsx uses these key values also, so
 # any changes must be reflected there.
 VERSION_VALUES_KEY_IMAGE_SETTINGS = 'image_settings'.freeze
 VERSION_VALUES_KEY_TAG_SETTINGS = 'tag_settings'.freeze
+
+# Code in bin/illustrator_processing/*.jsx uses thesekey values also, so
+# any changes must be reflected there.
+IMAGE_TYPE_COLLAGE = 'Dollage'.freeze
+IMAGE_TYPE_REPLACEMENT_IMAGE = 'ReplacementImage'.freeze

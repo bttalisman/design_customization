@@ -21,5 +21,6 @@
 /public/system/
 /test/output
 /output
-
+/versions
+/collages
 /config/database.yml

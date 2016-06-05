@@ -93,7 +93,7 @@ module VersionsHelper
   def associated_with_collage?( image_name, version )
     type = get_type( image_name, version )
     b = false
-    b = true if type == 'Collage'
+    b = true if type == IMAGE_TYPE_COLLAGE
     Rails.logger.info 'VERSIONS_HELPER - associated_with_collage?() - image_name: '\
       + image_name.to_s
     Rails.logger.info 'VERSIONS_HELPER - associated_with_collage?() - b: '\
@@ -106,7 +106,7 @@ module VersionsHelper
   def associated_with_replacement_image?( image_name, version )
     type = get_type( image_name, version )
     b = false
-    b = true if type == 'ReplacementImage'
+    b = true if type == IMAGE_TYPE_REPLACEMENT_IMAGE
     Rails.logger.info 'VERSIONS_HELPER - associated_with_replacement_image?()'\
       + ' - image_name: '\
       + image_name.to_s
@@ -282,7 +282,7 @@ module VersionsHelper
     settings = {}
     settings[ 'replacement_image_id' ] = ri.id
     settings[ 'path' ] = ri.uploaded_file.path
-    settings[ 'type' ] = 'ReplacementImage'
+    settings[ 'type' ] = IMAGE_TYPE_REPLACEMENT_IMAGE
     image_settings[ image_name ] = settings
 
     Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version()'\
@@ -311,7 +311,7 @@ module VersionsHelper
     settings = {}
     settings[ 'collage_id' ] = co.id
     settings[ 'path' ] = co.path
-    settings[ 'type' ] = 'Collage'
+    settings[ 'type' ] = IMAGE_TYPE_COLLAGE
 
     image_settings[ image_name ] = settings
 
