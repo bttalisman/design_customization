@@ -197,7 +197,7 @@ module VersionsHelper
   # => replacement_image<index>,
   # => image_name<index>,
   # => type<index>,
-  # => query<index>
+  # => collage_query<index>
   # for each image.
   def set_image_values( version, params )
     design_template = version.design_template
@@ -286,9 +286,7 @@ module VersionsHelper
     image_settings[ image_name ] = settings
 
     version.values = values.to_json
-
-    Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version()'\
-      + ' - version saved!' if version.save
+    version.save
   end
 
   # a version's values object matches image tags to collages.
@@ -312,9 +310,7 @@ module VersionsHelper
 
     image_settings[ image_name ] = settings
     version.values = values.to_json
-
-    Rails.logger.info 'VERSIONS_HELPER - add_collage_to_version()'\
-      + ' - version saved!' if version.save
+    version.save
   end
 
   # This method writes the current version's values string to a file sitting
@@ -359,17 +355,12 @@ module VersionsHelper
   end
 
   def process_version_system_call( version )
-    Rails.logger.info 'versions_helper - system_call() - version: '\
-     + version.to_s
     app_config = Rails.application.config_for(:customization)
     path = app_config['path_to_runner_script']
-    Rails.logger.info 'versions_helper - system_call() - path: '\
-     + path.to_s
-
     sys_com = 'ruby ' + path + ' "'\
       + config_file_name( 'version' => version ) + '"'
-    Rails.logger.info 'versions_helper - system_call() - about to run sys_com: '\
-      + sys_com.to_s
+    Rails.logger.info 'versions_helper - system_call() - about to run '\
+      + 'sys_com: ' + sys_com.to_s
     system( sys_com )
   end
 
@@ -392,30 +383,18 @@ module VersionsHelper
   end
 
   def maybe_bail_out( version, tags, images, params )
-    runai = params['runai']
-    Rails.logger.info 'versions_helper - maybe_bail_out() - runai: '\
-      + runai.to_s
+    runai = params[ 'runai' ]
 
     # bail out for any of these reasons
-    if version.design_template.nil?
-      Rails.logger.info 'versions_helper - maybe_bail_out() - '\
-        + 'NOT PROCESSING, no template.'
-      raise BailOutOfProcessing, 'No DesignTemplate.'
-    end
-    if runai != 'true'
-      Rails.logger.info 'versions_helper - maybe_bail_out() - '\
-        + 'NOT PROCESSING, runai not on.'
-      raise BailOutOfProcessing, 'Run AI checkbox unchecked.'
-    end
-    if images.empty? && tags.empty?
-      Rails.logger.info 'versions_helper - maybe_bail_out() - '\
-        + 'NOT PROCESSING, no images and no tags.'
-      raise BailOutOfProcessing, 'No extracted images or tags.'
-    end
+    raise BailOutOfProcessing, 'No DesignTemplate.'\
+      if version.design_template.nil?
+    raise BailOutOfProcessing, 'Run AI checkbox unchecked.'\
+      if runai != 'true'
+    raise BailOutOfProcessing, 'No extracted images or tags.'\
+      if images.empty? && tags.empty?
   end
 
   def prepare_files( version, config )
-    Rails.logger.info( 'versions_helper - prepare_files()')
     # this will put an appropriately named data file right next to the
     # source file.  The data file will contain the version.values data.
     write_temp_data_file( version, config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] )
@@ -462,9 +441,7 @@ module VersionsHelper
   # If processing is remote, send_remote_run_request() sends an HTTP request
   # containing the version id
   def process_version( version, tags, images, params )
-    Rails.logger.info ''
-    Rails.logger.info ''
-    Rails.logger.info 'VERSION_HELPER - process_version()'
+    Rails.logger.info '\n\n\nVERSION_HELPER - process_version()'
     maybe_bail_out( version, tags, images, params )
 
     original_file = version.design_template.original_file

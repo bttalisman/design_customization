@@ -98,9 +98,9 @@ module VersionTestHelper
     end
 
     images.each do |i|
-      o = { IMAGE_SETTINGS_KEY_RI_ID => ri_id,
-            IMAGE_SETTINGS_KEY_PATH => ri_path.to_s,
-            IMAGE_SETTINGS_KEY_TYPE => 'ReplacementImage' }
+      o = { VERSION_VALUES_KEY_RI_ID => ri_id,
+            VERSION_VALUES_KEY_PATH => ri_path.to_s,
+            VERSION_VALUES_KEY_TYPE => 'ReplacementImage' }
       image_settings[ i ] = o
     end
 
