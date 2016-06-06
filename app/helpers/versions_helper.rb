@@ -55,7 +55,7 @@ module VersionsHelper
     rep_id = ''
     if image_values
       vals = image_values[ image_name ]
-      rep_id = vals[ IMAGE_SETTINGS_KEY_RI_ID ] if vals
+      rep_id = vals[ VERSION_VALUES_KEY_RI_ID ] if vals
     end
     rep_id
   end
@@ -71,7 +71,7 @@ module VersionsHelper
       + image_values.to_s
     if image_values
       vals = image_values[ image_name ]
-      col_id = vals[ IMAGE_SETTINGS_KEY_COLLAGE_ID ] if vals
+      col_id = vals[ VERSION_VALUES_KEY_COLLAGE_ID ] if vals
     end
     Rails.logger.info 'VERSIONS_HELPER - get_collage_id() - col_id: '\
       + col_id.to_s
@@ -85,7 +85,7 @@ module VersionsHelper
     type = ''
     if image_values
       vals = image_values[ image_name ]
-      type = vals[ IMAGE_SETTINGS_KEY_TYPE ] if vals
+      type = vals[ VERSION_VALUES_KEY_TYPE ] if vals
     end
     type
   end
@@ -140,7 +140,7 @@ module VersionsHelper
     if image_values
       vals = image_values[ image_name ]
       if vals
-        rep_id = vals[ IMAGE_SETTINGS_KEY_RI_ID ]
+        rep_id = vals[ VERSION_VALUES_KEY_RI_ID ]
         ri = ReplacementImage.find( rep_id ) if rep_id
       end
     end
@@ -280,9 +280,9 @@ module VersionsHelper
     image_settings = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
 
     settings = {}
-    settings[ IMAGE_SETTINGS_KEY_RI_ID ] = ri.id
-    settings[ IMAGE_SETTINGS_KEY_PATH ] = ri.uploaded_file.path
-    settings[ IMAGE_SETTINGS_KEY_TYPE ] = IMAGE_TYPE_REPLACEMENT_IMAGE
+    settings[ VERSION_VALUES_KEY_RI_ID ] = ri.id
+    settings[ VERSION_VALUES_KEY_PATH ] = ri.uploaded_file.path
+    settings[ VERSION_VALUES_KEY_TYPE ] = IMAGE_TYPE_REPLACEMENT_IMAGE
     image_settings[ image_name ] = settings
 
     version.values = values.to_json
@@ -306,9 +306,9 @@ module VersionsHelper
     image_settings = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
 
     settings = {}
-    settings[ IMAGE_SETTINGS_KEY_COLLAGE_ID ] = co.id
-    settings[ IMAGE_SETTINGS_KEY_PATH ] = co.path
-    settings[ IMAGE_SETTINGS_KEY_TYPE ] = IMAGE_TYPE_COLLAGE
+    settings[ VERSION_VALUES_KEY_COLLAGE_ID ] = co.id
+    settings[ VERSION_VALUES_KEY_PATH ] = co.path
+    settings[ VERSION_VALUES_KEY_TYPE ] = IMAGE_TYPE_COLLAGE
 
     image_settings[ image_name ] = settings
     version.values = values.to_json

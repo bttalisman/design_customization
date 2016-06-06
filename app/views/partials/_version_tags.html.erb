@@ -11,10 +11,10 @@ i = 0
   # for specifics from the user creating a version.
   tag_name = tag[ 0 ]
 
-  prompt = tag[ 1 ]['prompt']
-  max_length = tag[ 1 ]['max_length']
-  min_length = tag[ 1 ]['min_length']
-  pick_color = tag[ 1 ]['pick_color']
+  prompt = tag[ 1 ][ PROMPTS_KEY_PROMPT ]
+  max_length = tag[ 1 ][ PROMPTS_KEY_MAX_L ]
+  min_length = tag[ 1 ][ PROMPTS_KEY_MIN_L ]
+  pick_color = tag[ 1 ][ PROMPTS_KEY_PICK_COLOR ]
   text_color = ''
 
   if( !max_length )
@@ -24,15 +24,14 @@ i = 0
     min_length = ''
   end
 
-
   if @tag_values
     val = @tag_values[ tag_name ]
 
     if !val.nil?
       # these properties are the users' previously set answers to the questions asked
       # when creating a version
-      replacement_text = val['replacement_text']
-      text_color = val['text_color']
+      replacement_text = val[ VERSION_VALUES_KEY_REPLACEMENT_TEXT ]
+      text_color = val[ VERSION_VALUES_KEY_TEXT_COLOR ]
     end
   end
 
@@ -216,8 +215,8 @@ i = 0
       text_color = o.val();
 
       oTagProps = {};
-      oTagProps.replacement_text = rep_text;
-      oTagProps.text_color = text_color;
+      oTagProps[ '<%= VERSION_VALUES_KEY_REPLACEMENT_TEXT %>' ] = rep_text;
+      oTagProps[ '<%= VERSION_VALUES_KEY_TEXT_COLOR %>' ] = text_color;
 
       oReturn[ tag_name ] = oTagProps;
     }

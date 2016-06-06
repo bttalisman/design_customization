@@ -5,21 +5,16 @@ images partial says, ok, this image is getting replaced, what should I replace i
 
 <%
 logger.info '_VERSION_IMAGES.html.erb - @image_values: ' + @image_values.to_s
-logger.info '_VERSION_IMAGES.html.erb - @image_settings: ' + @image_settings.to_s
-logger.info '_VERSION_IMAGES.html.erb - @version: ' + @version.to_s
+logger.info '_VERSION_IMAGES.html.erb - @image_settings: '\
+  + @image_settings.to_s
 
 i = 0
 
 @image_settings.each { |image|
 
-  logger.info '_VERSION_IMAGES.html.erb - image: ' + image.to_s
-
   image_settings = image[ 1 ]
 
-  if( image_settings['replace_image'] == '' ) then
-    # this image shouldn't be replaced
-    next
-  end
+  next if( image_settings[ PROMPTS_KEY_REPLACE_IMG ] == '' )
 
   image_name = image[ 0 ]
 
@@ -142,7 +137,6 @@ i = 0
 
   function fileInputChange( element )
   {
-
     var s, e, inputId;
     var filePath = event.target.value;
     filePath = filePath.replace(/.*[\/\\]/, '');
@@ -212,7 +206,7 @@ i = 0
       replacement_image_id = o.val();
 
       oImageProps = {};
-      oImageProps.replacement_image_id = replacement_image_id;
+      oImageProps[ '<%= VERSION_VALUES_KEY_RI_ID %>' ] = replacement_image_id;
 
       oReturn[ image_name ] = oImageProps;
     }
