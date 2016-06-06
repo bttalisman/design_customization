@@ -110,10 +110,8 @@ class PartialsController < ApplicationController
       values = get_values_object( @version )
 
       if !values.nil?
-        logger.info 'PARTIALS_CONTROLLER - version_settings() - values: '\
-          + values.to_s
-        @image_values = values[ 'image_settings' ]
-        @tag_values = values[ 'tag_settings' ]
+        @image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
+        @tag_values = values[ VERSION_VALUES_KEY_TAG_SETTINGS ]
       end
 
     end

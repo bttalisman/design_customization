@@ -80,8 +80,8 @@ module DesignTemplateTestHelper
     tag_settings = get_some_tag_settings( tags )
     image_settings = get_some_image_settings( images )
 
-    extracted_settings = { 'tag_settings' => tag_settings,
-                           'image_settings' => image_settings }
+    extracted_settings = { PROMPTS_KEY_TAG_SETTINGS => tag_settings,
+                           PROMPTS_KEY_IMAGE_SETTINGS => image_settings }
     extracted_settings
   end
 

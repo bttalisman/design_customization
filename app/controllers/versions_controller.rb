@@ -16,14 +16,14 @@ class VersionsController < ApplicationController
     @versions = []
 
     versions.each do |v|
+      next if !v.design_template
       o = { name: v.name.to_s,
             template: v.design_template.name.to_s,
             tags: bool_display_text( tags?( v.design_template ) ),
             images: bool_display_text( images?( v.design_template ) ),
             id: v.id.to_s,
             template_id: v.design_template.id.to_s,
-            created: time_display_text( v.created_at )
-      }
+            created: time_display_text( v.created_at ) }
       @versions << o
     end
   end
@@ -115,7 +115,6 @@ class VersionsController < ApplicationController
     @design_template = @version.design_template
     @root_folder = Rails.root.to_s
     @replacement_images = @version.replacement_images
-
     @version_folder = get_version_folder( @version )
 
     if !@design_template.nil?

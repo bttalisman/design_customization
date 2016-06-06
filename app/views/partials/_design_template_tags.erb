@@ -35,12 +35,12 @@ if !@tags.nil?
         logger.info '_design_template_tags.html.erb - tagProps: ' + tagProps.to_s
 
         if !tagProps.nil?
-          prompt = tagProps[ 'prompt' ]
-          max_length = tagProps[ 'max_length' ]
-          min_length = tagProps[ 'min_length']
-          pick_color = tagProps[ 'pick_color' ]
-          use_palette = tagProps[ 'use_palette' ]
-          palette_id = tagProps[ 'palette_id' ]
+          prompt = tagProps[ PROMPTS_KEY_PROMPT ]
+          max_length = tagProps[ PROMPTS_KEY_MAX_L ]
+          min_length = tagProps[ PROMPTS_KEY_MIN_L ]
+          pick_color = tagProps[ PROMPTS_KEY_PICK_COLOR ]
+          use_palette = tagProps[ PROMPTS_KEY_USE_PALETTE ]
+          palette_id = tagProps[ PROMPTS_KEY_PALETT_ID ]
         end
 
         if pick_color != 'checked'
@@ -253,17 +253,17 @@ end # @tags is not nil
       s = '#prompt' + i;
       o = $(s);
       prompt = o.val();
-      tagSettings.prompt = prompt;
+      tagSettings[ '<%= PROMPTS_KEY_PROMPT %>' ] = prompt;
 
       s = '#maxl' + i;
       o = $(s);
       maxl = o.val();
-      tagSettings.max_length = maxl;
+      tagSettings[ '<%= PROMPTS_KEY_MAX_L %>' ] = maxl;
 
       s = '#minl' + i;
       o = $(s);
       minl = o.val();
-      tagSettings.min_length = minl;
+      tagSettings[ '<%= PROMPTS_KEY_MIN_L %>' ] = minl;
 
       s = '#colorp' + i;
       o = $(s);
@@ -271,9 +271,9 @@ end # @tags is not nil
 
       if( colorp )
       {
-        tagSettings.pick_color = 'checked';
+        tagSettings[ '<%= PROMPTS_KEY_PICK_COLOR %>' ] = 'checked';
       } else {
-        tagSettings.pick_color = '';
+        tagSettings[ '<%= PROMPTS_KEY_PICK_COLOR %>' ] = '';
       }
 
       s = '#use_pal' + i;
@@ -282,15 +282,15 @@ end # @tags is not nil
 
       if( use_pal )
       {
-        tagSettings.use_palette = 'checked';
+        tagSettings[ '<%= PROMPTS_KEY_USE_PALETTE %>' ] = 'checked';
       } else {
-        tagSettings.use_palette = '';
+        tagSettings[ '<%= PROMPTS_KEY_USE_PALETTE %>' ] = '';
       }
 
       s = '#select_pal' + i;
       o = $(s);
       palette_id = o.val();
-      tagSettings.palette_id = palette_id;
+      tagSettings[ '<%= PROMPTS_KEY_PALETTE_ID %>' ] = palette_id;
 
     }
 

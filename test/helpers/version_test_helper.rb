@@ -98,14 +98,14 @@ module VersionTestHelper
     end
 
     images.each do |i|
-      o = { 'replacement_image_id' => ri_id,
-            'path' => ri_path.to_s,
-            'type' => 'ReplacementImage' }
+      o = { IMAGE_SETTINGS_KEY_RI_ID => ri_id,
+            IMAGE_SETTINGS_KEY_PATH => ri_path.to_s,
+            IMAGE_SETTINGS_KEY_TYPE => 'ReplacementImage' }
       image_settings[ i ] = o
     end
 
-    o = { 'tag_settings' => tag_settings,
-          'image_settings' => image_settings }
+    o = { VERSION_VALUES_KEY_TAG_SETTINGS => tag_settings,
+          VERSION_VALUES_KEY_IMAGE_SETTINGS => image_settings }
 
     Rails.logger.info( 'version_test_helper - get_some_values() - o: '\
       + o.to_s )
