@@ -64,16 +64,7 @@ module DesignTemplatesHelper
   # template.
   def get_tags_array( design_template )
     tags_file = path_to_tags_file( design_template )
-    exists = File.exist?( tags_file )
-
-    tags_string = ''
-    tags = [] # default value
-    if exists
-      File.open( tags_file, 'r' ) do |f|
-        tags_string = f.read
-      end
-      tags = JSON.parse( tags_string ) if json?( tags_string )
-    end
+    tags = load_array_file( tags_file )
     tags
   end
 
@@ -100,16 +91,7 @@ module DesignTemplatesHelper
   # template.
   def get_images_array( design_template )
     images_file = path_to_images_file( design_template )
-    exists = File.exist?( images_file )
-
-    images_string = ''
-    images = []
-    if exists
-      File.open( images_file, 'r' ) do |f|
-        images_string = f.read
-      end
-      images = JSON.parse( images_string ) if json?( images_string )
-    end
+    images = load_array_file( images_file )
     images
   end
 

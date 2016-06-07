@@ -63,4 +63,17 @@ module ApplicationHelper
     time = datetime.in_time_zone('Pacific Time (US & Canada)')
     time.strftime('%-m/%-d/%y: %H:%M %Z')
   end
+
+  def load_array_file( path )
+    exists = File.exist?( path )
+    a_string = ''
+    a = [] # default value
+    if exists
+      File.open( path, 'r' ) do |f|
+        a_string = f.read
+      end
+      a = JSON.parse( a_string ) if json?( a_string )
+    end
+    a
+  end
 end

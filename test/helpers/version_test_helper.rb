@@ -56,6 +56,13 @@ module VersionTestHelper
     version_package
   end
 
+  def get_some_text( min, max )
+    size = rand( min..max )
+    o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
+    string = (0...size).map { o[rand(o.length)] }.join
+    string
+  end
+
   # A version's values is a json obj describing all extensible settings,
   # set by the user.
   # tag_settings:
@@ -77,22 +84,22 @@ module VersionTestHelper
   # the version's tags and images are created.
   def get_some_values( version )
     design_template = version.design_template
+    prompts = get_prompts_object( design_template )
     tags = get_tags_array( design_template )
     images = get_images_array( design_template )
     ri = get_test_replacement_image
     ri_id = ri.id
     ri_path = get_test_replacement_image_path( ri )
 
-    Rails.logger.info( 'version_test_helper - get_some_values() - tags: '\
-      + tags.to_s )
-    Rails.logger.info( 'version_test_helper - get_some_values() - images: '\
-      + images.to_s )
-
     tag_settings = {}
     image_settings = {}
 
     tags.each do |t|
-      o = { 'replacement_text' => 'some text',
+      min = prompts[ PROMPTS_KEY_TAG_SETTINGS ][ t ][ PROMPTS_KEY_MIN_L ]
+      max = prompts[ PROMPTS_KEY_TAG_SETTINGS ][ t ][ PROMPTS_KEY_MAX_L ]
+
+      text = get_some_text( min.to_i, max.to_i )
+      o = { 'replacement_text' => text,
             'text_color' => '#333333' }
       tag_settings[ t ] = o
     end
@@ -108,7 +115,7 @@ module VersionTestHelper
           VERSION_VALUES_KEY_IMAGE_SETTINGS => image_settings }
 
     Rails.logger.info( 'version_test_helper - get_some_values() - o: '\
-      + o.to_s )
+      + JSON.pretty_generate( o ) )
 
     o
   end
@@ -116,6 +123,72 @@ module VersionTestHelper
   def get_test_output_folder( version )
     path = Rails.root.to_s + '/test/output/version_' + version.id.to_s
     path
+  end
+
+
+  def get_original_file_base_name( version )
+    original_file = version.design_template.original_file
+    original_file_path = original_file.path
+    original_file_base_name = File.basename( original_file_path, '.ai' )
+    original_file_base_name
+  end
+
+  def get_final_output_file_name( version )
+    original_file_base_name = get_original_file_base_name( version )
+    final_output_file_base_name = original_file_base_name + '_final'
+    final_output_file_name = final_output_file_base_name + '.ai'
+    final_output_file_name
+  end
+
+  def extract_strings( version )
+    final_output_file_name = get_final_output_file_name( version)
+    output_folder = version.output_folder_path
+
+    final_output_file_path = output_folder + '/' + final_output_file_name
+
+    Rails.logger.info( 'version_test_helper - extract_strings() - '\
+      + ' final_output_file_path: ' + final_output_file_path )
+
+    app_config = Rails.application.config_for(:customization)
+
+    path = app_config[ 'path_to_extract_all_text_script' ]
+
+    config = {}
+    config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = final_output_file_path
+    config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = path
+    config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = output_folder
+    config[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ] = 'strings'
+
+    prep_and_run( version, config )
+  end
+
+  def get_strings_file_path( version )
+    original_file_base_name = get_original_file_base_name( version )
+    output_folder = version.output_folder_path
+    strings_file_name = original_file_base_name + '_final_all_strings.jsn'
+    strings_file_path = output_folder + '/' + strings_file_name
+    strings_file_path
+  end
+
+  # Verify that all of the replacement strings found in Version.values are
+  # present in the final ai output file.
+  # generates an _all_string.jsn file containing all strings found in the
+  # specified ai file.
+  def check_strings( version )
+    extract_strings( version )
+
+    values = get_values_object( version )
+    tag_settings = values[ VERSION_VALUES_KEY_TAG_SETTINGS ]
+
+    strings_file_path = get_strings_file_path( version )
+    strings = load_array_file( strings_file_path )
+
+    tag_settings.each do |t|
+      rep_text = t[ 1 ][ VERSION_VALUES_KEY_REPLACEMENT_TEXT ]
+
+      assert( strings.include?( rep_text ), 'Replacement text not found: '\
+        + rep_text )
+    end
   end
 
   # Validate as much as possible that this version is as it should be.
@@ -128,6 +201,9 @@ module VersionTestHelper
     assert_equal( status, expected_status, 'Unexpected status' )
 
     if !version.nil?
+
+      check_strings( version )
+
       output_folder = version.output_folder_path
       original_file = version.design_template.original_file
       original_file_path = original_file.path
