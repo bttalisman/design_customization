@@ -63,6 +63,12 @@ module VersionTestHelper
     string
   end
 
+  def get_a_color
+    color = '%06x' % (rand * 0xffffff)
+    color = '#' + color
+    color
+  end
+
   # A version's values is a json obj describing all extensible settings,
   # set by the user.
   # tag_settings:
@@ -99,15 +105,16 @@ module VersionTestHelper
       max = prompts[ PROMPTS_KEY_TAG_SETTINGS ][ t ][ PROMPTS_KEY_MAX_L ]
 
       text = get_some_text( min.to_i, max.to_i )
-      o = { 'replacement_text' => text,
-            'text_color' => '#333333' }
+      color = get_a_color
+      o = { VERSION_VALUES_KEY_REPLACEMENT_TEXT => text,
+            VERSION_VALUES_KEY_TEXT_COLOR => color }
       tag_settings[ t ] = o
     end
 
     images.each do |i|
       o = { VERSION_VALUES_KEY_RI_ID => ri_id,
             VERSION_VALUES_KEY_PATH => ri_path.to_s,
-            VERSION_VALUES_KEY_TYPE => 'ReplacementImage' }
+            VERSION_VALUES_KEY_TYPE => IMAGE_TYPE_REPLACEMENT_IMAGE }
       image_settings[ i ] = o
     end
 
