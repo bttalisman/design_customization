@@ -177,6 +177,30 @@ module VersionTestHelper
     strings_file_path
   end
 
+  def get_hex_code( red, green, blue )
+    r = '%02x' % red
+    g = '%02x' % green
+    b = '%02x' % blue
+
+    s = '#' + r + g + b
+    s
+  end
+
+  def colors_close_enough( c1, c2 )
+    r1 = c1[ 1..2 ]
+    r2 = c2[ 1..2 ]
+    g1 = c1[ 3..4 ]
+    g2 = c2[ 3..4 ]
+    b1 = c1[ 5..6 ]
+    b2 = c2[ 5..6 ]
+
+    diff = ( r1.to_i - r2.to_i ).abs + ( g1.to_i - g2.to_i ).abs\
+      + ( b1.to_i - b2.to_i ).abs
+
+    return true if diff < 10
+    false
+  end
+
   # Verify that all of the replacement strings found in Version.values are
   # present in the final ai output file.
   # generates an _all_string.jsn file containing all strings found in the
@@ -188,13 +212,28 @@ module VersionTestHelper
     tag_settings = values[ VERSION_VALUES_KEY_TAG_SETTINGS ]
 
     strings_file_path = get_strings_file_path( version )
-    strings = load_array_file( strings_file_path )
+    strings_object = load_array_file( strings_file_path )
 
     tag_settings.each do |t|
       rep_text = t[ 1 ][ VERSION_VALUES_KEY_REPLACEMENT_TEXT ]
+      rep_color = t[ 1 ][ VERSION_VALUES_KEY_TEXT_COLOR ]
 
-      assert( strings.include?( rep_text ), 'Replacement text not found: '\
-        + rep_text )
+      actual_index = strings_object.find_index\
+        { |item| item['string'] == rep_text }
+
+      # Make sure the replacement string exists in the final ai file.
+      assert( actual_index, 'Replacement text not found: ' + rep_text )
+
+      actual_string_data = strings_object[ actual_index ] if actual_index
+      actual_hex = get_hex_code( actual_string_data[ 'r'],\
+                                 actual_string_data[ 'g' ],\
+                                 actual_string_data[ 'b' ] )
+
+      # Make sure the color of the replacements string is close enough to
+      # the replacement string color.
+      assert( colors_close_enough( rep_color, actual_hex ),\
+              'Colors not close enough! rep_color: ' + rep_color.to_s\
+              + ', actual_hex: ' + actual_hex.to_s )
     end
   end
 
@@ -205,7 +244,7 @@ module VersionTestHelper
     status = dt_stats[ DESIGN_TEMPLATE_STATS_KEY_STATUS ]
     expected_status = options[ 'expected template status' ]
 
-    assert_equal( status, expected_status, 'Unexpected status' )
+    assert_equal( status, expected_status, 'Unexpected status!' )
 
     if !version.nil?
 

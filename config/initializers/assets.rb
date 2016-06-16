@@ -10,7 +10,6 @@ Rails.application.config.assets.version = '1.0'
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
 
-
 Rails.application.config.assets.precompile += %w( jquery.minicolors.css )
 Rails.application.config.assets.precompile += %w( jquery.minicolors.js )
 Rails.application.config.assets.precompile += %w( bootstrap.js )
@@ -19,7 +18,4 @@ Rails.application.config.assets.precompile += %w( bootstrap-responsive.css )
 Rails.application.config.assets.precompile += %w( select2.js )
 Rails.application.config.assets.precompile += %w( select2.css )
 Rails.application.config.assets.precompile += %w( util.css )
-
-
 Rails.application.config.assets.precompile += %w( star.png )
-Rails.application.config.assets.precompile += %w( jquery.minicolors.png )

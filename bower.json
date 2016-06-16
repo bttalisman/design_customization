@@ -1,0 +1,21 @@
+{
+  "name": "design_customization",
+  "homepage": "https://github.com/bttalisman/design_customization",
+  "authors": [
+    "Benjamin Talisman <bttalisman@gmail.com>"
+  ],
+  "description": "Generate custom design templates and versions.",
+  "main": "README.md",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/assets/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "colorpicker": "^1.2.1"
+  }
+}
