@@ -17,6 +17,10 @@
     <br></br>
 
     <a class='btn btn-default' onclick='fetch();'>Fetch Shit</a>
+    <br></br>
+
+    <a class='btn btn-default' onclick='git_fetch();'>Git Fetch</a>
+
 
   </div>
   <div class='col col-md-1'></div>
@@ -33,6 +37,15 @@
     });
   }
 
+
+  function git_fetch()
+  {
+    $.ajax({
+      url: '/git_fetch/',
+    }).done(function() {
+    });
+
+  }
 
   function delete_all_versions()
   {

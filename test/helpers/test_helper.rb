@@ -58,7 +58,7 @@ module TestHelper
   end
 
   # Fake-o ReplacementImages won't be in the folder struct built by paperclip,
-  # so we'll just return the path to the fixture folder
+  # so we'll just return the path to the fixtures folder
   def get_test_replacement_image_path( ri )
     name = ri.file_name
     path = Rails.root.to_s + '/test/fixtures/original_files/replacement_images/' + name
