@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   get 'cleartoken' => 'replacement_images#cleartoken'
   get 'fetch' => 'replacement_images#fetch'
 
+  get 'git_fetch' => 'application#git_fetch'
+
   get '/colors/:id/update' => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'
 
