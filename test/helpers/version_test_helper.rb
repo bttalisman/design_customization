@@ -56,7 +56,9 @@ module VersionTestHelper
     version_package
   end
 
+  # Get random text between min and max chars in length
   def get_some_text( min, max )
+    return '' if min >= max
     size = rand( min..max )
     o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
     string = (0...size).map { o[rand(o.length)] }.join
@@ -145,7 +147,6 @@ module VersionTestHelper
     path = Rails.root.to_s + '/test/output/version_' + version.id.to_s
     path
   end
-
 
   def get_original_file_base_name( version )
     original_file = version.design_template.original_file

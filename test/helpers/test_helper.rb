@@ -48,8 +48,10 @@ module TestHelper
   end
 
   def get_test_replacement_image()
+    path = Rails.root.to_s + '/test/fixtures/original_files/replacement_images'
+    folder_contents = Dir.entries( path )
     ri = ReplacementImage.new
-    file = sample_file( 'bact.jpg' )
+    file = File.new( path + '/' + folder_contents.sample )
     ri.uploaded_file = file
     ri.save
     ri
@@ -59,7 +61,7 @@ module TestHelper
   # so we'll just return the path to the fixture folder
   def get_test_replacement_image_path( ri )
     name = ri.file_name
-    path = Rails.root.to_s + '/test/fixtures/original_files/' + name
+    path = Rails.root.to_s + '/test/fixtures/original_files/replacement_images/' + name
     Rails.logger.info 'test_helper - get_test_replacement_image_path() - '\
       + path.to_s
     path

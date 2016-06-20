@@ -20,10 +20,10 @@ class VersionsControllerTest < ActionController::TestCase
   test 'soup to nuts' do
     options = { 'expected template status' => TEMPLATE_STATUS_SUCCESS }
     #exercise_version( 'one_tag_one_image.ai', options )
-    #exercise_version( '300x300Items.ai', options )
+    exercise_version( '300x300Items.ai', options )
     #exercise_version( 'SingleTag-V1S12.ai', options )
     #exercise_version( 'tags_and_images.ai', options )
-    exercise_version( 'many_tags.ai', options )
+    #exercise_version( 'many_tags.ai', options )
   end
 
   # These tests attempt to make templates from ai files that
