@@ -42,7 +42,7 @@ class ReplacementImagesController < ApplicationController
     logger.info 'ReplacementImagesController - clear_token()'
 
     session[:insta_token] = nil
-    redirect_to 'https://api.instagram.com/oauth/authorize/?client_id=2b45daba4e154a6cb20060193db7ebfc&redirect_uri=' + local_host + '/processcode&response_type=code'
+    redirect_to 'https://api.instagram.com/oauth/authorize/?client_id=2b45daba4e154a6cb20060193db7ebfc&redirect_uri=http://armory.bombsheller.net:3000/processcode&response_type=code'
   end
 
 
