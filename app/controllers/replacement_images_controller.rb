@@ -5,7 +5,7 @@ class ReplacementImagesController < ApplicationController
   class FailedInstagramConnection < StandardError
   end
 
-  rescue_from FailedInstagramConnection, with: :cleartoken
+  rescue_from FailedInstagramConnection, with: :clear_token
 
   def new
   end
@@ -17,6 +17,8 @@ class ReplacementImagesController < ApplicationController
     Rails.logger.info 'ReplacementImagesController - fetch()'
 
     token = session[ :insta_token ]
+    Rails.logger.info 'ReplacementImagesController - fetch() - token: ' + token.to_s
+
     query = 'wood'
     uristring = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?access_token=' + token.to_s
 
@@ -28,7 +30,7 @@ class ReplacementImagesController < ApplicationController
       raise FailedInstagramConnection
     end
 
-    body = JSON.parse res.body if JSON.is_json?( res.body )
+    body = JSON.parse res.body if json?( res.body )
 
     Rails.logger.info 'body: ' + JSON.pretty_generate( body )
 
@@ -38,11 +40,11 @@ class ReplacementImagesController < ApplicationController
 
 
   def clear_token
-
-    logger.info 'ReplacementImagesController - clear_token()'
-
     session[:insta_token] = nil
-    redirect_to 'https://api.instagram.com/oauth/authorize/?client_id=2b45daba4e154a6cb20060193db7ebfc&redirect_uri=' + local_host + '/processcode&response_type=code'
+    url = 'http://api.instagram.com/oauth/authorize/?client_id=2b45daba4e154a6cb20060193db7ebfc&redirect_uri=' + local_host + '/process_code&response_type=code'
+    Rails.logger.info 'ReplacementImagesController - clear_token() url: ' + url.to_s
+
+    redirect_to url
   end
 
 
@@ -60,9 +62,9 @@ class ReplacementImagesController < ApplicationController
 
       # code was passed, get the token from instagram
 
-      uri = URI('https://api.instagram.com/oauth/access_token')
+      uri = URI('http://api.instagram.com/oauth/access_token')
 
-      redirect_uri = local_host + '/processcode'
+      redirect_uri = local_host + '/process_code'
 
       res = Net::HTTP.post_form(uri, 'client_id' => '2b45daba4e154a6cb20060193db7ebfc',
                                 'client_secret' => 'a9260a99b47f4caab4eecf0f86cf8241',
@@ -70,7 +72,7 @@ class ReplacementImagesController < ApplicationController
                                 'code' => code)
 
 
-      if JSON.is_json?( res.body ) then
+      if json?( res.body ) then
         hash = JSON.parse res.body
         token = hash['access_token']
       end
