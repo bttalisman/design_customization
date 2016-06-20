@@ -94,12 +94,14 @@ module DesignTemplateTestHelper
     image_settings
   end
 
+
+
   def get_some_tag_settings( tags )
     tag_settings = {}
     tags.each do |t|
       o = { 'prompt' => 'Enter Stuff',
-            'max_length' => '33',
-            'min_length' => '22',
+            'max_length' => Random.rand(30).to_s,
+            'min_length' => Random.rand(10).to_s,
             'pick_color' => 'checked',
             'use_palette' => 'checked',
             'palette_id' => random_palette.id }
