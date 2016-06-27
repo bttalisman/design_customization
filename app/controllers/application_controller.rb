@@ -47,4 +47,5 @@ class ApplicationController < ActionController::Base
 
     render nothing: true
   end
+
 end

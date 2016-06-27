@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   get '/git_fetch' => 'application#git_fetch'
 
+
   get '/colors/:id/update' => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'
 
