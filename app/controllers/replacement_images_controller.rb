@@ -42,9 +42,9 @@ class ReplacementImagesController < ApplicationController
   def clear_token
     session[:insta_token] = nil
     url = 'http://api.instagram.com/oauth/authorize/?client_id=2b45daba4e154a6cb20060193db7ebfc&redirect_uri=' + local_host + '/process_code&response_type=code'
-    Rails.logger.info 'ReplacementImagesController - clear_token() url: ' + url.to_s
+    Rails.logger.info 'ReplacementImagesController - clear_token() - url: ' + url.to_s
 
-    redirect_to url
+    redirect_to "http://www.google.com"
   end
 
 
@@ -56,6 +56,7 @@ class ReplacementImagesController < ApplicationController
     # code is passed as a query parameter, it must be passed on to the instagram API in return for a token
     vars = request.query_parameters
     code = vars['code']
+    Rails.logger.info 'GOT code!! - code: ' + code.to_s
 
 
     if code != nil then
@@ -72,6 +73,8 @@ class ReplacementImagesController < ApplicationController
                                 'code' => code)
 
 
+      Rails.logger.info 'GOT token!! - res.body: ' + res.body.to_s
+
       if json?( res.body ) then
         hash = JSON.parse res.body
         token = hash['access_token']
@@ -84,7 +87,7 @@ class ReplacementImagesController < ApplicationController
 
     end
 
-    redirect_to action: :index
+    render nothing: true
 
   end   # end def processcode
 
