@@ -1,10 +1,19 @@
 # Application Controller
 class ApplicationController < ActionController::Base
+
+  include ApplicationHelper
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
 
+  def clear_token
+    Rails.logger.info 'ApplicationController - clear_token()'
+    clear_insta_token
+  end
+
+  # This action is hit by the Instagram authentication endpoint
   def process_code
     Rails.logger.info 'ApplicationController - process_code()'
 
@@ -17,7 +26,7 @@ class ApplicationController < ActionController::Base
     if !code.nil?
       # code was passed, get the token from instagram
 
-      uri = URI( 'http://api.instagram.com/oauth/access_token' )
+      uri = URI( 'https://api.instagram.com/oauth/access_token' )
 
       redirect_uri = local_host + '/process_code'
 
@@ -28,6 +37,8 @@ class ApplicationController < ActionController::Base
                                  'redirect_uri' => redirect_uri,
                                  'code' => code )
 
+      Rails.logger.info 'ApplicationController - process_code() - res: '\
+        + res.inspect
       Rails.logger.info 'ApplicationController - process_code() - res.body: '\
         + res.body.to_s
 
@@ -37,6 +48,9 @@ class ApplicationController < ActionController::Base
         session[ :insta_token ] = token
       end
     end
+
+    render 'home/tools'
+
   end # end processcode
 
   # This action is invoked to remotely cause the rails server to get the latest

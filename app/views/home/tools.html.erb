@@ -16,7 +16,10 @@
     <a class='btn btn-default' onclick='delete_all_palettes();'>Delete ALL Palettes</a>
     <br></br>
 
-    <a class='btn btn-default' onclick='fetch();'>Fetch Shit</a>
+    <a class='btn btn-default' onclick='fetch();'>Fetch Instagram Shit</a>
+    <br></br>
+
+    <a class='btn btn-default' onclick='clear_token();'>Clear Instagram Token</a>
     <br></br>
 
     <a class='btn btn-default' onclick='git_fetch();'>Git Fetch/Merge</a>
@@ -31,10 +34,17 @@
 
   function fetch()
   {
-    alert( 'hey' );
-
     $.ajax({
       url: '/fetch/',
+    }).done(function() {
+    });
+  }
+
+
+  function clear_token()
+  {
+    $.ajax({
+      url: '/clear_token/',
     }).done(function() {
     });
   }
