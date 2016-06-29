@@ -22,11 +22,10 @@ class ReplacementImagesController < ApplicationController
     res = Net::HTTP.get_response(uri)
 
     if !res.is_a? Net::HTTPSuccess
-      Rails.logger.info 'RAISING FailedInstagramConnection'
+      Rails.logger.info 'Instagram fetch failure.'
     end
 
     body = JSON.parse res.body if json?( res.body )
-
     Rails.logger.info 'body: ' + JSON.pretty_generate( body )
 
     render nothing: true

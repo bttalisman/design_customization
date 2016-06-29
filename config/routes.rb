@@ -8,11 +8,12 @@ Rails.application.routes.draw do
   get '/do_extract_tags' => 'remote#do_extract_tags'
   get '/do_extract_images' => 'remote#do_extract_images'
 
-  get 'process_code' => 'application#process_code'
-  get 'cleartoken' => 'application#cleartoken'
 
-  get 'fetch' => 'replacement_images#fetch'
+  get 'fetch' => 'collages#fetch'
+
+
   get 'clear_token' => 'application#clear_token'
+  get 'process_code' => 'application#process_code'
 
   get 'git_fetch' => 'application#git_fetch'
 

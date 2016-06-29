@@ -1,5 +1,7 @@
 # Versions Helper
 module VersionsHelper
+  include CollagesHelper
+
   # Every version has its own folder, used for building modified AI files.
   # This folder will contain a copy of the AI file from the template,
   # configuration files, data files, everything needed to run whatever
@@ -41,9 +43,9 @@ module VersionsHelper
     if json?( values_string )
       values = JSON.parse values_string
     else
-      Rails.logger.info 'VERSIONS_HELPER - get_values_object - INVALID JSON!!'
+      Rails.logger.info 'VERSIONS_HELPER - get_values_object() - INVALID JSON!!'
     end
-    Rails.logger.info 'versions_helper - get_values_object - values: '\
+    Rails.logger.info 'versions_helper - get_values_object() - values: '\
       + JSON.pretty_generate( values )
     values
   end
@@ -148,14 +150,20 @@ module VersionsHelper
   end
 
   def get_uploaded_file_name( image_name, version )
-    uploaded_file = get_uploaded_file( image_name, version )
-    file_name = uploaded_file.original_filename if uploaded_file
+    file_name = ''
+    if associated_with_replacement_image?( image_name, version )
+      uploaded_file = get_uploaded_file( image_name, version )
+      file_name = uploaded_file.original_filename if uploaded_file
+    end
     file_name
   end
 
   def get_local_image_path( image_name, version )
-    uploaded_file = get_uploaded_file( image_name, version )
-    replacement_path = uploaded_file.path if uploaded_file
+    replacement_path = ''
+    if associated_with_replacement_image?( image_name, version )
+      uploaded_file = get_uploaded_file( image_name, version )
+      replacement_path = uploaded_file.path if uploaded_file
+    end
     replacement_path
   end
 
@@ -164,6 +172,8 @@ module VersionsHelper
       + params.to_s
 
     if json?( params[ 'version_data' ] )
+      # these strings are just part of the params structure, not necesarilly
+      # VERSION_VALUES_KEY...
       version_data = JSON.parse( params[ 'version_data' ] )
       tag_settings = version_data[ 'tag_settings' ]
 
@@ -183,11 +193,15 @@ module VersionsHelper
   def clear_image_associations( image_name, version )
     # get any replacement_image or collage already associated with this
     # image_name, and destroy it.
-    ri = get_replacement_image( image_name, version )
-    ri.destroy if ri
+    if associated_with_replacement_image?( image_name, version )
+      ri = get_replacement_image( image_name, version )
+      ri.destroy if ri
+    end
 
-    co = get_collage( image_name, version )
-    co.destroy if co
+    if associated_with_collage?( image_name, version )
+      co = get_collage( image_name, version )
+      co.destroy if co
+    end
   end
 
   # This method updates a version's values json and associated ReplacementImages
@@ -262,6 +276,7 @@ module VersionsHelper
         clear_image_associations( image_name, version )
         collage = version.collages.create( o )
         collage.save
+        build_collage_folder( collage )
         add_collage_to_version( collage, image_name, version )
       end
     end # image_count times
