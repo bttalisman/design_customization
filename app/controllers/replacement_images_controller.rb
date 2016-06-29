@@ -2,6 +2,8 @@
 class ReplacementImagesController < ApplicationController
   include ApplicationHelper
 
+  before_action :check_insta_token
+
   class FailedInstagramConnection < StandardError
   end
 
@@ -11,10 +13,6 @@ class ReplacementImagesController < ApplicationController
   end
 
   def create
-  end
-
-  def check_insta_token
-    get_insta_token if session[:insta_token].nil?
   end
 
   def fetch
@@ -42,6 +40,10 @@ class ReplacementImagesController < ApplicationController
   end
 
   private
+
+  def check_insta_token
+    get_insta_token if session[:insta_token].nil?
+  end
 
   def replacement_image_params
     params.require( :replacement_image ).permit( :uploaded_file )
