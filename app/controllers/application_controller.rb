@@ -5,28 +5,39 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
 
+  def process_code
+    Rails.logger.info 'ApplicationController - process_code()'
 
-  before_filter :cors_preflight_check
-  after_filter :cors_set_access_control_headers
+    # code is passed as a query parameter, it must be passed on to the
+    # instagram API in return for a token
+    code = request.query_parameters[ 'code' ]
+    Rails.logger.info 'ApplicationController - process_code() - code: '\
+      + code.to_s
 
-  def cors_set_access_control_headers
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
-    headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token'
-    headers['Access-Control-Max-Age'] = "1728000"
-  end
+    if !code.nil?
+      # code was passed, get the token from instagram
 
-  def cors_preflight_check
-    if request.method == 'OPTIONS'
-      headers['Access-Control-Allow-Origin'] = '*'
-      headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
-      headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version, Token'
-      headers['Access-Control-Max-Age'] = '1728000'
+      uri = URI( 'http://api.instagram.com/oauth/access_token' )
 
-      render :text => '', :content_type => 'text/plain'
+      redirect_uri = local_host + '/process_code'
+
+      res = Net::HTTP.post_form( uri,
+                                 'client_id' => '2b45daba4e154a6cb20060193db7ebfc',
+                                 'client_secret' => 'a9260a99b47f4caab4eecf0f86cf8241',
+                                 'grant_type' => 'authorization_code',
+                                 'redirect_uri' => redirect_uri,
+                                 'code' => code )
+
+      Rails.logger.info 'ApplicationController - process_code() - res.body: '\
+        + res.body.to_s
+
+      if json?( res.body )
+        hash = JSON.parse res.body
+        token = hash[ 'access_token' ]
+        session[ :insta_token ] = token
+      end
     end
-  end
-
+  end # end processcode
 
   # This action is invoked to remotely cause the rails server to get the latest
   # code from the git repo.
