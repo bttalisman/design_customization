@@ -150,7 +150,7 @@ class DesignTemplatesController < ApplicationController
   end
 
   def delete_all
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all'
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all()'
 
     dts = DesignTemplate.all
     dts.each( &:delete )
@@ -158,10 +158,41 @@ class DesignTemplatesController < ApplicationController
   end
 
   def destroy
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - destroy'
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - destroy()'
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.destroy
     redirect_to :design_templates
+  end
+
+  # This action makes a design_template with no Illustrator file associated.
+  # tags and images json files are created, and the template should function
+  # normally.
+  def make_zombie
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - make_zombie()'
+
+    @design_template = DesignTemplate.new( 'orig_file_path' => 'nil',
+                                           'name' => 'zombie' )
+
+    @design_template.save
+    make_output_folder( @design_template )
+
+    a = [ 'tag' ]
+    tags_file = path_to_tags_file( @design_template )
+    File.open( tags_file, 'w' ) do |f|
+      f.write( a.to_s )
+    end
+
+    a = [ 'cat' ]
+    images_file = path_to_images_file( @design_template )
+    File.open( images_file, 'w' ) do |f|
+      f.write( a.to_s )
+    end
+
+    prompts = get_zombie_prompts( @design_template )
+    @design_template.prompts = prompts.to_json
+    @design_template.save
+
+    render 'home/tools'
   end
 
   private

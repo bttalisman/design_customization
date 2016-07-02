@@ -385,7 +385,12 @@ module VersionsHelper
   def maybe_bail_out( version, tags, images, params )
     runai = params[ 'runai' ]
 
+    Rails.logger.info 'versions_helper - maybe_bail_out() - orig_file_path: '\
+      + version.design_template.orig_file_path.to_s
+
     # bail out for any of these reasons
+    raise BailOutOfProcessing, 'Zombie DesignTemplate.'\
+      if version.design_template.orig_file_path == 'nil'
     raise BailOutOfProcessing, 'No DesignTemplate.'\
       if version.design_template.nil?
     raise BailOutOfProcessing, 'Run AI checkbox unchecked.'\

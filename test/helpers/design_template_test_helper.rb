@@ -94,8 +94,6 @@ module DesignTemplateTestHelper
     image_settings
   end
 
-
-
   def get_some_tag_settings( tags )
     tag_settings = {}
     tags.each do |t|

@@ -22,6 +22,10 @@
     <a class='btn btn-default' onclick='git_fetch();'>Git Fetch/Merge</a>
     <br></br>
 
+    <a class='btn btn-default' onclick='make_zombie_template();'>Make Zombie Template</a>
+    <br></br>
+
+
   </div>
   <div class='col col-md-1'></div>
 </div>
@@ -29,10 +33,17 @@
 
 <script>
 
+
+  function make_zombie_template()
+  {
+    $.ajax({
+      url: '/design_templates/make_zombie',
+    }).done(function() {
+    });
+  }
+
   function fetch()
   {
-    alert( 'hey' );
-
     $.ajax({
       url: '/fetch/',
     }).done(function() {

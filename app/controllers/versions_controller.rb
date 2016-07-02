@@ -118,7 +118,7 @@ class VersionsController < ApplicationController
     @version_folder = get_version_folder( @version )
 
     if !@design_template.nil?
-      @data_file = path_to_data_file( @version.design_template.original_file.path )
+      @data_file = path_to_data_file( @version.design_template.original_file.path.to_s )
     end
 
     logger.info 'version_controller - show - @version: ' + @version.to_s

@@ -3,20 +3,39 @@ module DesignTemplatesHelper
   # the path to the tags file is based on the path to the original ai file.
   def path_to_tags_file( design_template )
     file = design_template.original_file
-    source_path = file.path.to_s
-    source_folder = File.dirname( source_path )
-    data_file = source_folder + '/' + File.basename( source_path, '.ai' )\
-      + '_tags.jsn'
+
+    # todo - do this better
+    if !file.path.nil?
+      source_path = file.path.to_s
+      source_folder = File.dirname( source_path )
+      data_file = source_folder + '/' + File.basename( source_path, '.ai' )\
+        + '_tags.jsn'
+    else
+      # zombie!
+      Rails.logger.info 'DesignTemplatesHelper - path_to_tags_file() - zombie!'
+      dt_folder = get_design_template_folder( design_template )
+      data_file = dt_folder + 'zombie_tags.jsn'
+    end
     data_file
   end
 
   # the path to the images file is based on the path to the original ai file.
   def path_to_images_file( design_template )
     file = design_template.original_file
-    source_path = file.path.to_s
-    source_folder = File.dirname( source_path )
-    data_file = source_folder + '/' + File.basename( source_path, '.ai' )\
-      + '_images.jsn'
+
+    # todo - do this better
+    if !file.path.nil?
+      source_path = file.path.to_s
+      source_folder = File.dirname( source_path )
+      data_file = source_folder + '/' + File.basename( source_path, '.ai' )\
+        + '_images.jsn'
+    else
+      # zombie!
+      Rails.logger.info 'DesignTemplatesHelper - path_to_images_file() - zombie!'
+      dt_folder = get_design_template_folder( design_template )
+      data_file = dt_folder + 'zombie_images.jsn'
+    end
+
     data_file
   end
 
@@ -135,9 +154,21 @@ module DesignTemplatesHelper
   # This method returns the path to the specified DesignTemplate's working
   # folder.
   def get_design_template_folder( design_template )
+    Rails.logger.info 'design_templates_helper - get_design_template_folder()'
+    app_config = Rails.application.config_for(:customization)
+
     file = design_template.original_file
-    source_path = file.path
-    source_folder = File.dirname( source_path )
+    if !file.path.nil?
+      source_path = file.path
+      source_folder = File.dirname( source_path )
+    else
+      # zombie template!!
+      Rails.logger.info 'design_templates_helper - get_design_template_folder()'\
+        + ' - zombie!'
+      id = design_template.id
+      source_folder = app_config[ 'path_to_zombie_templates_root' ]\
+        + id.to_s + '/'
+    end
     source_folder
   end
 
@@ -313,4 +344,42 @@ module DesignTemplatesHelper
       + 'about to run sys_com: ' + sys_com.to_s
     system( sys_com )
   end
+
+
+  def get_zombie_image_settings( images )
+    image_settings = {}
+    images.each do |i|
+      o = { 'replace_image' => 'checked' }
+      image_settings[ i ] = o
+    end
+    image_settings
+  end
+
+  def get_zombie_tag_settings( tags )
+    tag_settings = {}
+    tags.each do |t|
+      o = { 'prompt' => 'Enter Stuff',
+            'max_length' => '5',
+            'min_length' => '1',
+            'pick_color' => 'checked',
+            'use_palette' => '',
+            'palette_id' => '-1' }
+      tag_settings[ t ] = o
+    end
+    tag_settings
+  end
+
+  def get_zombie_prompts( design_template )
+
+    tags = get_tags_array( design_template )
+    tag_settings = get_zombie_tag_settings( tags )
+
+    images = get_images_array( design_template )
+    image_settings = get_zombie_image_settings( images )
+
+    o = { PROMPTS_KEY_TAG_SETTINGS => tag_settings,
+          PROMPTS_KEY_IMAGE_SETTINGS => image_settings }
+    o
+  end
+
 end

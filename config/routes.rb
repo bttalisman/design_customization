@@ -43,6 +43,8 @@ Rails.application.routes.draw do
   post '/design_templates/:id/update' => 'design_templates#update'
   post '/design_templates/:id/settings' => 'design_templates#all_settings'
   get '/design_templates/delete_all' => 'design_templates#delete_all'
+  get '/design_templates/make_zombie' => 'design_templates#make_zombie'
+
 
   get 'force_process' => 'design_templates#force_process'
 

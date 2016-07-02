@@ -23,6 +23,8 @@ class PartialsController < ApplicationController
       @prompts = JSON.parse( @design_template.prompts )
     else
       logger.info 'PARTIALS_CONTROLLER - design_template_settings - prompts BAD json!!!'
+      logger.info 'PARTIALS_CONTROLLER - design_template_settings - prompts: '\
+        + @design_template.prompts.to_s
     end
 
     logger.info 'PARTIALS_CONTROLLER - design_template_settings - template_id: '\
