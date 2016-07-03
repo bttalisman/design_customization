@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20160419160147) do
     t.string   "description", limit: 255
   end
 
-  add_index "colors", ["palette_id"], name: "index_colors_on_palette_id", using: :btree
+  add_index "colors", ["palette_id"], name: "index_colors_on_palette_id"
 
   create_table "colors_palettes", id: false, force: :cascade do |t|
     t.integer "color_id",   limit: 4, null: false
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20160419160147) do
     t.string   "description", limit: 255
   end
 
-  add_index "palettes", ["color_id"], name: "index_palettes_on_color_id", using: :btree
+  add_index "palettes", ["color_id"], name: "index_palettes_on_color_id"
 
   create_table "replacement_images", force: :cascade do |t|
     t.integer  "version_id",                 limit: 4
@@ -77,6 +77,4 @@ ActiveRecord::Schema.define(version: 20160419160147) do
     t.string   "name",               limit: 255
   end
 
-  add_foreign_key "colors", "palettes"
-  add_foreign_key "palettes", "colors"
 end

@@ -16,9 +16,6 @@
     <a class='btn btn-default' onclick='delete_all_palettes();'>Delete ALL Palettes</a>
     <br></br>
 
-    <a class='btn btn-default' onclick='fetch();'>Fetch Instagram Shit</a>
-    <br></br>
-
     <a class='btn btn-default' onclick='clear_token();'>Clear Instagram Token</a>
     <br></br>
 
@@ -41,14 +38,6 @@
   {
     $.ajax({
       url: '/design_templates/make_zombie',
-    }).done(function() {
-    });
-  }
-
-  function fetch()
-  {
-    $.ajax({
-      url: '/fetch/',
     }).done(function() {
     });
   }

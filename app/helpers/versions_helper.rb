@@ -272,12 +272,20 @@ module VersionsHelper
         # type = instagram collage
         Rails.logger.info 'VERSIONS_HELPER - set_image_values() - Instagram collage!'
 
-        o = { query: query }
-        clear_image_associations( image_name, version )
-        collage = version.collages.create( o )
-        collage.save
-        build_collage_folder( collage )
-        add_collage_to_version( collage, image_name, version )
+        c = get_collage( image_name, version )
+        
+        if( c.nil? || c.query != query )
+          # Either there was no associated collage, or the query has changed.
+          Rails.logger.info 'VERSIONS_HELPER - set_image_values() - Building a new Collage.'
+          o = { query: query }
+          clear_image_associations( image_name, version )
+          collage = version.collages.create( o )
+          collage.save
+          build_collage_folder( collage )
+          add_collage_to_version( collage, image_name, version )
+        else
+          Rails.logger.info 'VERSIONS_HELPER - set_image_values() - Keeping the old Collage'
+        end
       end
     end # image_count times
   end
@@ -543,6 +551,6 @@ module VersionsHelper
 
   rescue => e
     Rails.logger.info 'versions_helper - Bailing Out! - ' + e.inspect
-    Rails.logger.info JSON.pretty_generate( JSON.parse( e.backtrace.to_s ) )
+    #Rails.logger.info JSON.pretty_generate( JSON.parse( e.backtrace.to_s ) )
   end
 end

@@ -9,9 +9,6 @@ Rails.application.routes.draw do
   get '/do_extract_images' => 'remote#do_extract_images'
 
 
-  get 'fetch' => 'collages#fetch'
-
-
   get 'clear_token' => 'application#clear_token'
   get 'process_code' => 'application#process_code'
 
