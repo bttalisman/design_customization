@@ -17,6 +17,8 @@ module ApplicationHelper
     get_insta_token if session[:insta_token].nil?
   end
 
+  # Redirect to Instagram authorization endpoint.  Should come back at the
+  # application#process_code action.
   def get_insta_token
     Rails.logger.info 'ApplicationHelper - get_insta_token()'
     url = 'https://api.instagram.com/oauth/authorize/?'\
@@ -79,9 +81,9 @@ module ApplicationHelper
     t
   end
 
-  def time_display_text(datetime)
-    time = datetime.in_time_zone('Pacific Time (US & Canada)')
-    time.strftime('%-m/%-d/%y: %H:%M %Z')
+  def time_display_text( datetime )
+    time = datetime.in_time_zone( 'Pacific Time (US & Canada)' )
+    time.strftime( '%-m/%-d/%y: %H:%M %Z' )
   end
 
   def load_array_file( path )

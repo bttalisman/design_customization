@@ -13,7 +13,8 @@ class ApplicationController < ActionController::Base
     clear_insta_token
   end
 
-  # This action is hit by the Instagram authentication endpoint
+  # This action is hit by the Instagram authentication endpoint.  Make a post 
+  # to the Instagram oath endpoint, 
   def process_code
     Rails.logger.info 'ApplicationController - process_code()'
 
