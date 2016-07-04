@@ -41,7 +41,7 @@ module CollagesHelper
 
         url = item[ 'images' ][ 'standard_resolution' ][ 'url' ]
         Rails.logger.info 'CollagesHelper - fetch_content() - url: ' + url.to_s
-        
+
         full_path = path + '/image_' + index.to_s + '.jpg'
         index += 1
         open( full_path, 'wb' ) do |file|
@@ -51,7 +51,6 @@ module CollagesHelper
       }
     end
 
-    render nothing: true
   end
 
 end
