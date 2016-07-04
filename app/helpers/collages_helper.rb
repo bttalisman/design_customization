@@ -44,6 +44,7 @@ module CollagesHelper
 
         full_path = path + '/image_' + index.to_s + '.jpg'
         index += 1
+        
         open( full_path, 'wb' ) do |file|
           file << open( url ).read
         end

@@ -24,6 +24,7 @@ module ApplicationHelper
     url = 'https://api.instagram.com/oauth/authorize/?'\
       + 'client_id=2b45daba4e154a6cb20060193db7ebfc&redirect_uri='\
       + local_host + '/process_code&response_type=code'
+    Rails.logger.info 'ApplicationHelper - get_insta_token() - url: ' + url.to_s
     redirect_to url
   end
 
