@@ -3,8 +3,6 @@ module CollagesHelper
   require 'open-uri'
   include ApplicationHelper
 
-
-
   # This method is called after the collage is saved.  It creates a folder,
   # contacts Instagram and downloads images based on the query into that
   # folder.
@@ -15,7 +13,10 @@ module CollagesHelper
     fetch_content( collage )
   end
 
-
+  # This method downloads images from Instagram and places them in the collage
+  # folder.  If Instagram is an asshole, the query could be the URL of zip file
+  # containing images.  I use miniMagick to reformat the image because jpgs
+  # retrieved from Instagram cause errors in AI.
   def fetch_content( collage )
     token = session[ :insta_token ]
     path = collage.path
@@ -32,20 +33,17 @@ module CollagesHelper
     if !res.is_a? Net::HTTPSuccess
       Rails.logger.info 'Instagram fetch failure.'
     else
-
       body = JSON.parse res.body if json?( res.body )
       #Rails.logger.info 'CollagesHelper - fetch_content() - body: ' + JSON.pretty_generate( body )
 
       index = 0
       body[ 'data' ].each { |item|
-
         url = item[ 'images' ][ 'standard_resolution' ][ 'url' ]
         Rails.logger.info 'CollagesHelper - fetch_content() - url: ' + url.to_s
 
         image = MiniMagick::Image.open( url )
         width = image.width
         height = image.height
-
 
         if( (height >= 500) && (width >= 500) )
           # if the image is big enough, we'll crop it and save it.
@@ -57,14 +55,13 @@ module CollagesHelper
           image.crop( crop_string )
           image.format 'png'
 
+          # Any name will do, the AI script will just place all of the images
+          # found in the collage folder.
           index += 1
           full_path = path + '/image_' + index.to_s + '.png'
           image.write( full_path )
         end
-
       }
     end
-
   end
-
 end

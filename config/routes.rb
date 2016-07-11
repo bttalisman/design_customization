@@ -4,10 +4,10 @@ Rails.application.routes.draw do
   root 'design_templates#index'
 
   get '/tools' => 'home#tools'
+  
   get '/do_process_version' => 'remote#do_process_version'
   get '/do_extract_tags' => 'remote#do_extract_tags'
   get '/do_extract_images' => 'remote#do_extract_images'
-
 
   get 'clear_token' => 'application#clear_token'
   get 'process_code' => 'application#process_code'
