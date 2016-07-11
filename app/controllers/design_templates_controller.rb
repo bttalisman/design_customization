@@ -114,7 +114,7 @@ class DesignTemplatesController < ApplicationController
 
     @design_template = DesignTemplate.new( design_template_params )
 
-    stay_after_save = params['stayAfterSave']
+    stay_after_save = params[ 'stayAfterSave' ]
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - create() - design_template_params: '\
     + design_template_params.to_s
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - create() - stay_after_save: '\
@@ -169,29 +169,7 @@ class DesignTemplatesController < ApplicationController
   # normally.
   def make_zombie
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - make_zombie()'
-
-    @design_template = DesignTemplate.new( 'orig_file_path' => 'nil',
-                                           'name' => 'zombie' )
-
-    @design_template.save
-    make_output_folder( @design_template )
-
-    a = [ 'tag' ]
-    tags_file = path_to_tags_file( @design_template )
-    File.open( tags_file, 'w' ) do |f|
-      f.write( a.to_s )
-    end
-
-    a = [ 'cat' ]
-    images_file = path_to_images_file( @design_template )
-    File.open( images_file, 'w' ) do |f|
-      f.write( a.to_s )
-    end
-
-    prompts = get_zombie_prompts( @design_template )
-    @design_template.prompts = prompts.to_json
-    @design_template.save
-
+    build_zombie_template
     render 'home/tools'
   end
 

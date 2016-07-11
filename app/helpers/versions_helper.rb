@@ -8,7 +8,7 @@ module VersionsHelper
   # AI scripts.  Calling this method will create this folder if it doesn't
   # exist.
   def get_version_folder( version )
-    app_config = Rails.application.config_for(:customization)
+    app_config = Rails.application.config_for( :customization )
     versions_folder = app_config[ 'path_to_versions_folder' ]
     version_output_folder = versions_folder + version.id.to_s
 
@@ -50,6 +50,9 @@ module VersionsHelper
     values
   end
 
+  # Get the id of the ReplacementImage associated with the specified image name.
+  # Should return nil if the image name doesn't exist, or it's associated with
+  # something else such as a Collage.
   def get_replacement_image_id( image_name, version )
     Rails.logger.info 'VERSIONS_HELPER - get_replacement_image_id()!!'
     values = get_values_object( version )
@@ -62,6 +65,9 @@ module VersionsHelper
     rep_id
   end
 
+  # Get the id of the Collage associated with the specified image name.
+  # Should return nil if the image name doesn't exist, or it's associated with
+  # something else such as a ReplacementImage.
   def get_collage_id( image_name, version )
     Rails.logger.info 'VERSIONS_HELPER - get_collage_id()!! - image_name: '\
       + image_name
@@ -80,6 +86,7 @@ module VersionsHelper
     col_id
   end
 
+  # Returns IMAGE_TYPE_...
   def get_type( image_name, version )
     values = get_values_object( version )
     image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]\
@@ -468,11 +475,18 @@ module VersionsHelper
   # If processing is local, system_call() runs ruby.
   # If processing is remote, send_remote_run_request() sends an HTTP request
   # containing the version id
-  def process_version( version, tags, images, params )
+  def process_version( version, params )
     Rails.logger.info '\n\n\nVERSION_HELPER - process_version()'
+    
+    design_template = version.design_template
+    # this is an array of tag names, extracted from the AI file
+    tags = get_tags_array( design_template )
+    # this is an array of image names, extracted from the AI file
+    images = get_images_array( design_template )    
+    
     maybe_bail_out( version, tags, images, params )
 
-    original_file = version.design_template.original_file
+    original_file = design_template.original_file
     original_file_path = original_file.path
     original_file_name = File.basename( original_file_path )
     original_file_base_name = File.basename( original_file_path, '.ai' )

@@ -61,13 +61,7 @@ class VersionsController < ApplicationController
     # this version's values property.
     set_image_values( @version, params )
 
-    @design_template = @version.design_template
-    # this is an array of tag names, extracted from the AI file
-    @tags = get_tags_array( @design_template )
-    # this is an array of image names, extracted from the AI file
-    @images = get_images_array( @design_template )
-
-    process_version( @version, @tags, @images, params ) if @version.save
+    process_version( @version, params ) if @version.save
     redirect_to versions_path
   end
 

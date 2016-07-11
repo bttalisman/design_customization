@@ -1,5 +1,6 @@
 # DesignTemplates Helper
 module DesignTemplatesHelper
+
   # the path to the tags file is based on the path to the original ai file.
   def path_to_tags_file( design_template )
     file = design_template.original_file
@@ -381,5 +382,31 @@ module DesignTemplatesHelper
           PROMPTS_KEY_IMAGE_SETTINGS => image_settings }
     o
   end
+  
+  # This method creates a fully functional template that is not associated
+  # with any Illustrator file, and returns the id of that template.
+  def build_zombie_template
+    design_template = DesignTemplate.new( 'orig_file_path' => 'nil',
+                                           'name' => 'zombie' )
 
+    design_template.save
+    make_output_folder( design_template )
+
+    a = [ 'tag' ]
+    tags_file = path_to_tags_file( design_template )
+    File.open( tags_file, 'w' ) do |f|
+      f.write( a.to_s )
+    end
+
+    a = [ 'cat' ]
+    images_file = path_to_images_file( design_template )
+    File.open( images_file, 'w' ) do |f|
+      f.write( a.to_s )
+    end
+
+    prompts = get_zombie_prompts( design_template )
+    design_template.prompts = prompts.to_json
+    design_template.save
+    design_template.id
+  end
 end

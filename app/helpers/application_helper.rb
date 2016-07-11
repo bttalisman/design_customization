@@ -8,13 +8,13 @@ module ApplicationHelper
 
   def clear_insta_token
     Rails.logger.info 'ApplicationHelper - clear_insta_token()'
-    session[:insta_token] = nil
+    session[ :insta_token ] = nil
     render 'home/tools'
   end
 
   def check_insta_token
     Rails.logger.info 'ApplicationHelper - check_insta_token()'
-    get_insta_token if session[:insta_token].nil?
+    get_insta_token if session[ :insta_token ].nil?
   end
 
   # Redirect to Instagram authorization endpoint.  Should come back at the
@@ -33,7 +33,7 @@ module ApplicationHelper
   end
 
   def remote_host
-    app_config = Rails.application.config_for(:customization)
+    app_config = Rails.application.config_for( :customization )
     host = app_config[ 'remote_server_uri' ]
     logger.info 'application_helper - remote_host() - host: ' + host.to_s
     host
