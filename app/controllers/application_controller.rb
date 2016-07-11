@@ -13,8 +13,8 @@ class ApplicationController < ActionController::Base
     clear_insta_token
   end
 
-  # This action is hit by the Instagram authentication endpoint.  Make a post 
-  # to the Instagram oath endpoint, 
+  # This action is hit by the Instagram authentication endpoint.  Make a post
+  # to the Instagram oath endpoint,
   def process_code
     Rails.logger.info 'ApplicationController - process_code()'
 
@@ -28,9 +28,7 @@ class ApplicationController < ActionController::Base
       # code was passed, get the token from instagram
 
       uri = URI( 'https://api.instagram.com/oauth/access_token' )
-
       redirect_uri = local_host + '/process_code'
-
       res = Net::HTTP.post_form( uri,
                                  'client_id' => '2b45daba4e154a6cb20060193db7ebfc',
                                  'client_secret' => 'a9260a99b47f4caab4eecf0f86cf8241',
@@ -51,7 +49,6 @@ class ApplicationController < ActionController::Base
     end
 
     render 'home/tools'
-
   end # end processcode
 
   # This action is invoked to remotely cause the rails server to get the latest
