@@ -42,11 +42,24 @@ module CollagesHelper
         url = item[ 'images' ][ 'standard_resolution' ][ 'url' ]
         Rails.logger.info 'CollagesHelper - fetch_content() - url: ' + url.to_s
 
-        full_path = path + '/image_' + index.to_s + '.jpg'
-        index += 1
-        
-        open( full_path, 'wb' ) do |file|
-          file << open( url ).read
+        image = MiniMagick::Image.open( url )
+        width = image.width
+        height = image.height
+
+
+        if( (height >= 500) && (width >= 500) )
+          # if the image is big enough, we'll crop it and save it.
+
+          x_offset = (width - 500) / 2
+          y_offset = (height - 500) / 2
+
+          crop_string = '500x500+' + x_offset.to_s + '+' + y_offset.to_s
+          image.crop( crop_string )
+          image.format 'png'
+
+          index += 1
+          full_path = path + '/image_' + index.to_s + '.png'
+          image.write( full_path )
         end
 
       }
