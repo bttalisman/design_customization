@@ -47,11 +47,19 @@ module TestHelper
     response
   end
 
+  # Get a ReplacementImage containing a random image from
+  # /test/fixtures/original_files/replacement_images
   def get_test_replacement_image()
     path = Rails.root.to_s + '/test/fixtures/original_files/replacement_images'
+    Rails.logger.info 'test_helper - get_test_replacement_image() - path: '\
+      + path.to_s
     folder_contents = Dir.entries( path )
-    ri = ReplacementImage.new
     file = File.new( path + '/' + folder_contents.sample )
+    file = File.new( path + '/' + folder_contents.sample )\
+      while File.directory?( file.path )
+    Rails.logger.info 'test_helper - get_test_replacement_image() - file.path: '\
+      + file.path.to_s
+    ri = ReplacementImage.new
     ri.uploaded_file = file
     ri.save
     ri
@@ -60,7 +68,7 @@ module TestHelper
   # Fake-o ReplacementImages won't be in the folder struct built by paperclip,
   # so we'll just return the path to the fixtures folder
   def get_test_replacement_image_path( ri )
-    name = ri.file_name
+    name = ri.uploaded_file.original_filename
     path = Rails.root.to_s + '/test/fixtures/original_files/replacement_images/' + name
     Rails.logger.info 'test_helper - get_test_replacement_image_path() - '\
       + path.to_s

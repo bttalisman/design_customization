@@ -46,7 +46,7 @@ module VersionTestHelper
       if do_process
         values = get_some_values( version )
         version.values = values.to_json
-        process_version( version, tags, images, 'runai' => 'true' )\
+        process_version( version, 'runai' => 'true' )\
           if version.save
       end
 
@@ -58,6 +58,8 @@ module VersionTestHelper
 
   # Get random text between min and max chars in length
   def get_some_text( min, max )
+    Rails.logger.info 'version_test_helper - get_some_text() - min: ' + min.to_s
+    Rails.logger.info 'version_test_helper - get_some_text() - max: ' + max.to_s
     return '' if min >= max
     size = rand( min..max )
     o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten

@@ -9,13 +9,7 @@ class CollagesControllerTest < ActionController::TestCase
   include DesignTemplateTestHelper
 
   include ApplicationHelper
-  include DesignTemplatesHelper  
+  include DesignTemplatesHelper
   include VersionsHelper
 
-  
-  test 'collage basics' do
-
-    id = build_zombie_template
-    
-  end
 end

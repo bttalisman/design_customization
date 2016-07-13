@@ -195,8 +195,7 @@ module VersionsHelper
   end
 
   # This method removes any associates with a given image name, for a given
-  # version, it does not modify the values blob so the internal state of the
-  # version will be no longer consistant.
+  # version.
   def clear_image_associations( image_name, version )
     # get any replacement_image or collage already associated with this
     # image_name, and destroy it.
@@ -208,6 +207,13 @@ module VersionsHelper
     if associated_with_collage?( image_name, version )
       co = get_collage( image_name, version )
       co.destroy if co
+    end
+
+    values = get_values_object( version )
+    if values
+      image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
+      image_values.delete( image_name ) if image_values
+      version.values = values.to_json
     end
   end
 
@@ -280,7 +286,7 @@ module VersionsHelper
         Rails.logger.info 'VERSIONS_HELPER - set_image_values() - Instagram collage!'
 
         c = get_collage( image_name, version )
-        
+
         if( c.nil? || c.query != query )
           # Either there was no associated collage, or the query has changed.
           Rails.logger.info 'VERSIONS_HELPER - set_image_values() - Building a new Collage.'
@@ -327,8 +333,6 @@ module VersionsHelper
     Rails.logger.info 'VERSIONS_HELPER - add_collage_to_version()'
     Rails.logger.info 'VERSIONS_HELPER - add_collage_to_version() - co: '\
       + co.to_s
-
-    # todo, can this be part of a constructor?
 
     values = get_values_object( version )
     image_settings = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
@@ -477,13 +481,13 @@ module VersionsHelper
   # containing the version id
   def process_version( version, params )
     Rails.logger.info '\n\n\nVERSION_HELPER - process_version()'
-    
+
     design_template = version.design_template
     # this is an array of tag names, extracted from the AI file
     tags = get_tags_array( design_template )
     # this is an array of image names, extracted from the AI file
-    images = get_images_array( design_template )    
-    
+    images = get_images_array( design_template )
+
     maybe_bail_out( version, tags, images, params )
 
     original_file = design_template.original_file

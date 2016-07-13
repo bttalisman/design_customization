@@ -7,9 +7,9 @@ development:
   path_to_extract_all_text_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractAllText.jsx' %>
   path_to_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplace.jsx' %>
   path_to_image_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplaceImages.jsx' %>
-  path_to_quick_version_root: <%= Rails.root.to_s + '/versions' %>
+  path_to_quick_version_root: <%= Rails.root.to_s + '/versions/' %>
   path_to_versions_folder: <%= Rails.root.to_s + '/public/system/versions/' %>
-  path_to_collage_root: <%= Rails.root.to_s + '/collages' %>
+  path_to_collage_root: <%= Rails.root.to_s + '/collages/' %>
   path_to_zombie_templates_root: <%= Rails.root.to_s + '/zombies/design_templates/' %>
 
   run_remotely: false
@@ -23,7 +23,7 @@ test:
   path_to_extract_all_text_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractAllText.jsx' %>
   path_to_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplace.jsx' %>
   path_to_image_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplaceImages.jsx' %>
-  path_to_quick_version_root: <%= Rails.root.to_s + '/test_versions' %>
+  path_to_quick_version_root: <%= Rails.root.to_s + '/test_versions/' %>
   path_to_versions_folder: <%= Rails.root.to_s + '/public/system/test_versions/' %>
   path_to_collage_root: <%= Rails.root.to_s + '/test_collages/' %>
   path_to_zombie_templates_root: <%= Rails.root.to_s + '/zombies/design_templates/' %>
