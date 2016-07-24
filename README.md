@@ -10,7 +10,7 @@ The intended user for all version-related UI is a customer, and therefore not ne
 
 ## Managed Objects
 
-Each Design Template object is associated with an Adobe Illustrator file.  A Design Template object encapsulates a description of how customers will be prompted to create their individual versions.  A template is associated with an OS folder, referred to as its 'working folder'
+Each DesignTemplate object is associated with an Adobe Illustrator file.  A DesignTemplate object encapsulates a description of how customers will be prompted to create their individual versions.  A template is associated with an OS folder, referred to as its 'working folder'
 
 Each Version object encapsulates a customer’s specifications of how one particular version is to be created.  A Version is associated with an OS folder, referred to as its 'working folder'.  A Version’s specifications are passed along to AI when generating output.
 
@@ -19,8 +19,6 @@ Colors and Palettes are used to manage color usage.  Color objects can be create
 A Replacement Image is essentially an uploaded file that will replace a 'placed item' found in an AI file.
 
 A Collage is an alternative to a Replacement Image, essentially being a collection of images, currently implemented as a connection to Instagram.  When created, a collage downloads a collection of images from Instagram into an OS folder.  
-
-
 
 
 ![alt text]( https://github.com/bttalisman/design_customization/blob/master/diagram.jpg "Diagram")
