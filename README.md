@@ -20,6 +20,8 @@ A Replacement Image is essentially an uploaded file that will replace a 'placed 
 
 A Collage is an alternative to a Replacement Image, essentially being a collection of images, currently implemented as a connection to Instagram.  When created, a collage downloads a collection of images from Instagram into an OS folder.  
 
+![alt text](https://github.com/bttalisman/design_customization/blob/master/diagram.pdf "Diagram")
+
 ## Languages and Environments
 
 This is a Rails application, but several other scripting languages are used as needed.
