@@ -23,7 +23,7 @@ A Collage is an alternative to a Replacement Image, essentially being a collecti
 
 
 
-![alt text]( https://github.com/bttalisman/design_customization/diagram.svg "Diagram")
+![alt text]( https://raw.github.com/bttalisman/design_customization/design.png "Diagram")
 
 ## Languages and Environments
 
