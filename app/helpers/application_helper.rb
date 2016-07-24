@@ -6,27 +6,6 @@ module ApplicationHelper
   class BailOutOfProcessing < StandardError
   end
 
-  def clear_insta_token
-    Rails.logger.info 'ApplicationHelper - clear_insta_token()'
-    session[ :insta_token ] = nil
-    render 'home/tools'
-  end
-
-  def check_insta_token
-    Rails.logger.info 'ApplicationHelper - check_insta_token()'
-    get_insta_token if session[ :insta_token ].nil?
-  end
-
-  # Redirect to Instagram authorization endpoint.  Should come back at the
-  # application#process_code action.
-  def get_insta_token
-    Rails.logger.info 'ApplicationHelper - get_insta_token()'
-    url = 'https://api.instagram.com/oauth/authorize/?'\
-      + 'client_id=2b45daba4e154a6cb20060193db7ebfc&redirect_uri='\
-      + local_host + '/process_code&response_type=code'
-    Rails.logger.info 'ApplicationHelper - get_insta_token() - url: ' + url.to_s
-    redirect_to url
-  end
 
   def local_host
     request.protocol + request.host + ':' + request.port.to_s

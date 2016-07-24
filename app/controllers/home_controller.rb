@@ -7,6 +7,5 @@ class HomeController < ApplicationController
   end
 
   def tools
-    check_insta_token
   end
 end

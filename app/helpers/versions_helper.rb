@@ -449,7 +449,7 @@ module VersionsHelper
     prepare_files( version, config )
 
     # custom configuration found in config/customization.yml
-    app_config = Rails.application.config_for(:customization)
+    app_config = Rails.application.config_for( :customization )
     run_remotely = app_config[ 'run_remotely' ]
 
     if !run_remotely

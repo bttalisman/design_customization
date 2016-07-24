@@ -109,9 +109,9 @@ output_file_base_name = config_hash[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ]
 source_folder = File.dirname( source_file )
 temp_output_folder = source_folder + '/output/'
 
-unless File.directory?(temp_output_folder)
+unless File.directory?( temp_output_folder )
   puts 'RUN_AI_SCRIPT - creating temp output folder.'
-  FileUtils.mkdir_p(temp_output_folder)
+  FileUtils.mkdir_p( temp_output_folder )
 end
 
 puts 'RUN_AI_SCRIPT - source_file: ' + source_file.to_s

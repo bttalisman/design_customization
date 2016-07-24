@@ -25,43 +25,49 @@ module CollagesHelper
     Rails.logger.info 'CollagesHelper - fetch_content() - path: ' + path.to_s
     Rails.logger.info 'CollagesHelper - fetch_content() - query: ' + query.to_s
 
-    uristring = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + token.to_s
 
-    uri = URI( uristring )
-    res = Net::HTTP.get_response(uri)
+    index = 0
 
-    if !res.is_a? Net::HTTPSuccess
-      Rails.logger.info 'Instagram fetch failure.'
-    else
-      body = JSON.parse res.body if json?( res.body )
-      #Rails.logger.info 'CollagesHelper - fetch_content() - body: ' + JSON.pretty_generate( body )
+    # the following code goes to instagram and scrapes image data from
+    # the page
+    # create a headless browser
+    b = Watir::Browser.new :phantomjs
+    uri = 'https://www.instagram.com/explore/tags/' + query + '?hl=en'
+    b.goto uri
 
-      index = 0
-      body[ 'data' ].each { |item|
-        url = item[ 'images' ][ 'standard_resolution' ][ 'url' ]
-        Rails.logger.info 'CollagesHelper - fetch_content() - url: ' + url.to_s
+    # all data are stored on this page-level object.
+    o = b.execute_script( 'return window._sharedData;')
 
-        image = MiniMagick::Image.open( url )
-        width = image.width
-        height = image.height
+    data = o[ 'entry_data' ][ 'TagPage' ][ 0 ][ 'tag' ][ 'media' ][ 'nodes' ]
+    page_info = o[ 'entry_data' ][ 'TagPage' ][ 0 ][ 'tag' ][ 'media' ][ 'page_info' ]
+    max_id = page_info[ 'end_cursor' ]
+    has_next_page = page_info[ 'has_next_page' ]
 
-        if( (height >= 500) && (width >= 500) )
-          # if the image is big enough, we'll crop it and save it.
+    data.each { |item|
+      url = item[ 'thumbnail_src' ]
+      Rails.logger.info 'CollagesHelper - fetch_content() - url: ' + url.to_s
 
-          x_offset = (width - 500) / 2
-          y_offset = (height - 500) / 2
+      image = MiniMagick::Image.open( url )
+      width = image.width
+      height = image.height
 
-          crop_string = '500x500+' + x_offset.to_s + '+' + y_offset.to_s
-          image.crop( crop_string )
-          image.format 'png'
+      if( (height >= 500) && (width >= 500) )
+        # if the image is big enough, we'll crop it and save it.
 
-          # Any name will do, the AI script will just place all of the images
-          # found in the collage folder.
-          index += 1
-          full_path = path + '/image_' + index.to_s + '.png'
-          image.write( full_path )
-        end
-      }
-    end
+        x_offset = (width - 500) / 2
+        y_offset = (height - 500) / 2
+
+        crop_string = '500x500+' + x_offset.to_s + '+' + y_offset.to_s
+        image.crop( crop_string )
+        image.format 'png'
+
+        # Any name will do, the AI script will just place all of the images
+        # found in the collage folder.
+        index += 1
+        full_path = path + '/image_' + index.to_s + '.png'
+        image.write( full_path )
+      end
+    }
+
   end
 end

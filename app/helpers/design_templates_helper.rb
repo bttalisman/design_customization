@@ -230,7 +230,7 @@ module DesignTemplatesHelper
   end
 
   def extract_tags( design_template )
-    app_config = Rails.application.config_for(:customization)
+    app_config = Rails.application.config_for( :customization )
     run_remotely = app_config[ 'run_remotely' ]
 
     config_file = tags_config_file_name( 'design_template' => design_template )
@@ -335,7 +335,7 @@ module DesignTemplatesHelper
   def extract_images_system_call( design_template )
     Rails.logger.info 'design_templates_helper - extract_images_system_call() - '\
       + 'design_template: ' + design_template.to_s
-    app_config = Rails.application.config_for(:customization)
+    app_config = Rails.application.config_for( :customization )
     path = app_config[ 'path_to_runner_script' ]
 
     sys_com = 'ruby ' + path + ' "'\

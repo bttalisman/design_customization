@@ -4,13 +4,10 @@ Rails.application.routes.draw do
   root 'design_templates#index'
 
   get '/tools' => 'home#tools'
-  
+
   get '/do_process_version' => 'remote#do_process_version'
   get '/do_extract_tags' => 'remote#do_extract_tags'
   get '/do_extract_images' => 'remote#do_extract_images'
-
-  get 'clear_token' => 'application#clear_token'
-  get 'process_code' => 'application#process_code'
 
   get 'git_fetch' => 'application#git_fetch'
 
@@ -43,7 +40,6 @@ Rails.application.routes.draw do
   post '/design_templates/:id/settings' => 'design_templates#all_settings'
   get '/design_templates/delete_all' => 'design_templates#delete_all'
   get '/design_templates/make_zombie' => 'design_templates#make_zombie'
-
 
   get 'force_process' => 'design_templates#force_process'
 
