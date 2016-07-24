@@ -20,7 +20,7 @@ A Replacement Image is essentially an uploaded file that will replace a 'placed 
 
 A Collage is an alternative to a Replacement Image, essentially being a collection of images, currently implemented as a connection to Instagram.  When created, a collage downloads a collection of images from Instagram into an OS folder.  
 
-![alt text](./diagram.pdf "Diagram")
+![alt text](./diagram.svg "Diagram")
 
 ## Languages and Environments
 
