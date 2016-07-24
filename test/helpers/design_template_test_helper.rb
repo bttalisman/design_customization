@@ -42,7 +42,6 @@ module DesignTemplateTestHelper
   # structure, and launch the extracting process.
   def process_template( design_template, file_name )
     file = sample_file( file_name )
-    design_template.orig_file_path = file.path.to_s
     design_template.original_file = file
     design_template.original_file.\
       instance_write(:content_type, 'application/postscript')

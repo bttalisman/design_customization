@@ -24,7 +24,6 @@ module DesignTemplatesHelper
   def path_to_images_file( design_template )
     file = design_template.original_file
 
-    # todo - do this better
     if !file.path.nil?
       source_path = file.path.to_s
       source_folder = File.dirname( source_path )
@@ -346,7 +345,6 @@ module DesignTemplatesHelper
     system( sys_com )
   end
 
-
   def get_zombie_image_settings( images )
     image_settings = {}
     images.each do |i|
@@ -371,7 +369,6 @@ module DesignTemplatesHelper
   end
 
   def get_zombie_prompts( design_template )
-
     tags = get_tags_array( design_template )
     tag_settings = get_zombie_tag_settings( tags )
 
@@ -382,13 +379,11 @@ module DesignTemplatesHelper
           PROMPTS_KEY_IMAGE_SETTINGS => image_settings }
     o
   end
-  
+
   # This method creates a fully functional template that is not associated
   # with any Illustrator file, and returns the id of that template.
   def build_zombie_template
-    design_template = DesignTemplate.new( 'orig_file_path' => 'nil',
-                                           'name' => 'zombie' )
-
+    design_template = DesignTemplate.new( 'name' => 'zombie' )
     design_template.save
     make_output_folder( design_template )
 

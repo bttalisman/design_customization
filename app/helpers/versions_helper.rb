@@ -389,8 +389,8 @@ module VersionsHelper
   end
 
   def process_version_system_call( version )
-    app_config = Rails.application.config_for(:customization)
-    path = app_config['path_to_runner_script']
+    app_config = Rails.application.config_for( :customization )
+    path = app_config[ 'path_to_runner_script' ]
     sys_com = 'ruby ' + path + ' "'\
       + config_file_name( 'version' => version ) + '"'
     Rails.logger.info 'versions_helper - system_call() - about to run '\
@@ -419,12 +419,9 @@ module VersionsHelper
   def maybe_bail_out( version, tags, images, params )
     runai = params[ 'runai' ]
 
-    Rails.logger.info 'versions_helper - maybe_bail_out() - orig_file_path: '\
-      + version.design_template.orig_file_path.to_s
-
     # bail out for any of these reasons
     raise BailOutOfProcessing, 'Zombie DesignTemplate.'\
-      if version.design_template.orig_file_path == 'nil'
+      if version.design_template.original_file == 'nil'
     raise BailOutOfProcessing, 'No DesignTemplate.'\
       if version.design_template.nil?
     raise BailOutOfProcessing, 'Run AI checkbox unchecked.'\
@@ -569,6 +566,6 @@ module VersionsHelper
 
   rescue => e
     Rails.logger.info 'versions_helper - Bailing Out! - ' + e.inspect
-    #Rails.logger.info JSON.pretty_generate( JSON.parse( e.backtrace.to_s ) )
+    Rails.logger.info JSON.pretty_generate( JSON.parse( e.backtrace.to_s ) )
   end
 end

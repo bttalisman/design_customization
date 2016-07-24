@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160419160147) do
+ActiveRecord::Schema.define(version: 20160713191722) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20160419160147) do
     t.string   "description", limit: 255
   end
 
-  add_index "colors", ["palette_id"], name: "index_colors_on_palette_id"
+  add_index "colors", ["palette_id"], name: "index_colors_on_palette_id", using: :btree
 
   create_table "colors_palettes", id: false, force: :cascade do |t|
     t.integer "color_id",   limit: 4, null: false
@@ -37,7 +37,6 @@ ActiveRecord::Schema.define(version: 20160419160147) do
   end
 
   create_table "design_templates", force: :cascade do |t|
-    t.string   "orig_file_path",             limit: 255
     t.string   "name",                       limit: 255
     t.text     "prompts",                    limit: 65535
     t.datetime "created_at",                               null: false
@@ -56,7 +55,7 @@ ActiveRecord::Schema.define(version: 20160419160147) do
     t.string   "description", limit: 255
   end
 
-  add_index "palettes", ["color_id"], name: "index_palettes_on_color_id"
+  add_index "palettes", ["color_id"], name: "index_palettes_on_color_id", using: :btree
 
   create_table "replacement_images", force: :cascade do |t|
     t.integer  "version_id",                 limit: 4
@@ -77,4 +76,6 @@ ActiveRecord::Schema.define(version: 20160419160147) do
     t.string   "name",               limit: 255
   end
 
+  add_foreign_key "colors", "palettes"
+  add_foreign_key "palettes", "colors"
 end
