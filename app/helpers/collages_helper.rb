@@ -1,6 +1,5 @@
 # Collages Helper
 module CollagesHelper
-  require 'open-uri'
   include ApplicationHelper
 
   # This method is called after the collage is saved.  It creates a folder,

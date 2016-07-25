@@ -9,4 +9,11 @@ class DesignTemplate < ActiveRecord::Base
 
   validates_attachment_content_type :original_file,
                                     content_type: 'application/postscript'
+
+  before_save :default_prompts
+
+  def default_prompts
+    self.prompts ||= '{ "' + PROMPTS_KEY_TAG_SETTINGS + '" : {}, "'\
+      + PROMPTS_KEY_IMAGE_SETTINGS + '" : {} }'
+  end
 end
