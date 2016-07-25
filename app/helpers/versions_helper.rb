@@ -523,7 +523,7 @@ module VersionsHelper
       + 'intermediate_output: ' + intermediate_output )
 
     int_file_exist = false
-    app_config = Rails.application.config_for(:customization)
+    app_config = Rails.application.config_for( :customization )
 
     if !tags.empty?
       # There are tags to replace, we should replace tags

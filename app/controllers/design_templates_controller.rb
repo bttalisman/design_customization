@@ -12,7 +12,8 @@ class DesignTemplatesController < ApplicationController
             tags: bool_display_text( tags?(t) ),
             images: bool_display_text( images?(t) ),
             id: t.id.to_s,
-            created: time_display_text( t.created_at ) }
+            created: time_display_text( t.created_at ),
+            updated: time_display_text( t.updated_at ) }
       @design_templates << o
     end
   end
@@ -111,7 +112,6 @@ class DesignTemplatesController < ApplicationController
 
   def create
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - create()!'
-
     @design_template = DesignTemplate.new( design_template_params )
 
     stay_after_save = params[ 'stayAfterSave' ]
@@ -121,7 +121,6 @@ class DesignTemplatesController < ApplicationController
     + stay_after_save
 
     if @design_template.save
-
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - create() - SUCCESS! About to'\
       + ' process the AI file.'
       process_original( @design_template )
@@ -133,12 +132,9 @@ class DesignTemplatesController < ApplicationController
       else
         redirect_to design_templates_path
       end
-
     else
-
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - create() - FAILURE!'
       render 'new'
-
     end
   end
 
@@ -151,7 +147,6 @@ class DesignTemplatesController < ApplicationController
 
   def delete_all
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all()'
-
     dts = DesignTemplate.all
     dts.each( &:delete )
     render nothing: true

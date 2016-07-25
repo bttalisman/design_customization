@@ -15,6 +15,11 @@ development:
   run_remotely: false
   remote_server_uri: 'http://localhost:3000'
 
+  collages_max_items_to_retrieve: 25
+  collages_min_width_pixels: 500
+  collages_min_height_pixels: 500
+
+
 test:
 
   path_to_runner_script: <%= Rails.root.to_s + '/bin/illustrator_processing/run_AI_script.rb' %>
@@ -31,6 +36,10 @@ test:
   run_remotely: false
   remote_server_uri: 'http://localhost:3000'
 
+  collages_max_items_to_retrieve: 25
+  collages_min_width_pixels: 500
+  collages_min_height_pixels: 500
+
 production:
 
   path_to_runner_script: <%= Rails.root.to_s + '/bin/illustrator_processing/run_AI_script.rb' %>
@@ -46,3 +55,7 @@ production:
 
   run_remotely: false
   remote_server_uri: 'http://localhost:3000'
+
+  collages_max_items_to_retrieve: 25
+  collages_min_width_pixels: 500
+  collages_min_height_pixels: 500

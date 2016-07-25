@@ -9,6 +9,7 @@
         <tr>
           <th><a onclick='toggle_name();'>Template Name</a></th>
           <th><a onclick='toggle_created();'>Created</a></th>
+          <th><a onclick='toggle_updated();'>Updated</a></th>
           <th><a onclick='toggle_tags();'>Tags?</a></th>
           <th><a onclick='toggle_images();'>Images?</a></th>
         </tr>
@@ -23,6 +24,9 @@
             </td>
             <td id='created<%= i.to_s %>'>
               <%= t[:created] %>
+            </td>
+            <td id='updated<%= i.to_s %>'>
+              <%= t[:updated] %>
             </td>
             <td id='tags<%= i.to_s %>'>
               <%= t[:tags] %>
@@ -54,12 +58,13 @@
   var TAGS_FLIP = true;
   var IMAGES_FLIP = true;
   var CREATED_FLIP = true;
+  var UPDATED_FLIP = true;
+
 
   function show_template( id )
   {
     window.location = '/design_templates/' + id;
   }
-
 
   function get_templates()
   {
@@ -69,13 +74,11 @@
     return templates_array;
   }
 
-
   function put_templates( array )
   {
     var templates_element = $('#templates');
     templates_element.text( JSON.stringify( array ) );
   }
-
 
   function toggle_name()
   {
@@ -106,6 +109,20 @@
     fill_container();
   }
 
+  function toggle_updated()
+  {
+    var templates = get_templates();
+    UPDATED_FLIP = !UPDATED_FLIP;
+
+    templates.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'updated', UPDATED_FLIP );
+    });
+
+    put_templates( templates );
+    fill_container();
+  }
+
   function toggle_tags()
   {
     var templates = get_templates();
@@ -119,7 +136,6 @@
     put_templates( templates );
     fill_container();
   }
-
 
   function toggle_images()
   {
@@ -161,6 +177,10 @@
       el = $(s);
       el.text( o.created );
 
+      s = '#updated' + container_index.toString();
+      el = $(s);
+      el.text( o.updated );
+
       s = '#images' + container_index.toString();
       el = $(s);
       el.text( o.images );
@@ -171,10 +191,7 @@
 
 
   $(document).ready( function() {
-
-    // clicks data are probably what the user is here for
     toggle_name();
-
   });
 
 </script>

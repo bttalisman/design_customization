@@ -10,6 +10,7 @@
           <th><a onclick='toggle_name();'>Version Name</a></th>
           <th><a onclick='toggle_template();'>Template</a></th>
           <th><a onclick='toggle_created();'>Created</a></th>
+          <th><a onclick='toggle_updated();'>Updated</a></th>
           <th><a onclick='toggle_tags();'>Tags?</a></th>
           <th><a onclick='toggle_images();'>Images?</a></th>
         </tr>
@@ -27,6 +28,9 @@
             </td>
             <td id='created<%= i.to_s %>'>
               <%= v[:created] %>
+            </td>
+            <td id='updated<%= i.to_s %>'>
+              <%= v[:updated] %>
             </td>
             <td id='tags<%= i.to_s %>'>
               <%= bool_display_text( v[:tags] ) %>
@@ -59,6 +63,7 @@
   var TAGS_FLIP = true;
   var IMAGES_FLIP = true;
   var CREATED_FLIP = true;
+  var UPDATED_FLIP = true;
 
 
   function show_version( id )
@@ -134,6 +139,21 @@
   }
 
 
+  function toggle_updated()
+  {
+    var versions = get_versions();
+    UPDATED_FLIP = !UPDATED_FLIP;
+
+    versions.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'updated', UPDATED_FLIP );
+    });
+
+    put_versions( versions );
+    drawPage();
+  }
+
+
   function toggle_tags()
   {
     var versions = get_versions();
@@ -193,6 +213,10 @@
       el = $(s);
       el.text( o.created );
 
+      s = '#updated' + container_index.toString();
+      el = $(s);
+      el.text( o.updated );
+
       s = '#images' + container_index.toString();
       el = $(s);
       el.text( o.images );
@@ -209,10 +233,7 @@
 
 
   $(document).ready( function() {
-
-    // clicks data are probably what the user is here for
     toggle_name();
-
   });
 
 </script>

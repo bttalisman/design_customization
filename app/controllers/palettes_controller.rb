@@ -28,7 +28,7 @@ class PalettesController < ApplicationController
     @my_colors = @palette.colors
 
     logger.info 'PALETTES_CONTROLLER - @my_colors: '\
-      + JSON.pretty_generate(JSON.parse(@my_colors.to_json))
+      + JSON.pretty_generate( JSON.parse( @my_colors.to_json ) )
   end
 
   def update

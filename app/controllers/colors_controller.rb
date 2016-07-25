@@ -15,8 +15,8 @@ class ColorsController < ApplicationController
 
   def update
     logger.info 'COLORS_CONTROLLER - update! - params: ' + params.to_s
-    @color = Color.find(params[:id])
-    @color.update(color_params)
+    @color = Color.find( params[:id] )
+    @color.update( color_params )
     logger.info 'COLORS_CONTROLLER - update - about to save.'
     if @color.save
       logger.info 'COLORS_CONTROLLER - update - SUCCESS!'
