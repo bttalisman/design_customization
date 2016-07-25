@@ -227,6 +227,10 @@ module VersionsHelper
   # => collage_query<index>
   # for each image.
   def set_image_values( version, params )
+
+    Rails.logger.info 'versions_helper - set_image_values() - params: '\
+      + params.to_s
+
     design_template = version.design_template
     images = get_images_array( design_template )
 
@@ -250,8 +254,14 @@ module VersionsHelper
       p_name = 'image_name' + i.to_s
       image_name = params[ p_name ]
 
-      p_name = 'collage_query' + i.to_s
-      query = params[ p_name ]
+      p_name = 'collage_query_string' + i.to_s
+      query_string = params[ p_name ]
+
+      p_name = 'collage_query_type' + i.to_s
+      query_type = params[ p_name ]
+
+      query = { instagram: { type: query_type, query_string: query_string } }
+      query = query.to_json
 
       Rails.logger.info 'VERSIONS_HELPER - set_image_values() - type: '\
         + type.to_s
@@ -261,6 +271,7 @@ module VersionsHelper
         + replacement_image.to_s
       Rails.logger.info 'VERSIONS_HELPER - set_image_values() - query: '\
         + query.to_s
+
 
       if type == 'upload'
         if replacement_image
@@ -280,11 +291,10 @@ module VersionsHelper
             add_replacement_image_to_version( replacement_image,\
                                               image_name, version )
           end # my_file
-        end # replacement_image
+        end # we have a replacement_image
       else
         # type = instagram collage
         Rails.logger.info 'VERSIONS_HELPER - set_image_values() - Instagram collage!'
-
         c = get_collage( image_name, version )
 
         if( c.nil? || c.query != query )

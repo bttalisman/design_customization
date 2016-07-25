@@ -189,39 +189,4 @@ i = 0
   }
 
 
-  // called from versions/edit.html.erb, and version/new.html.erb
-  function build_tag_values()
-  {
-    var count = $('#tag_count').val();
-    var s, v, o;
-    var rep_text;
-    var text_color;
-
-    var oReturn;
-    var oTagProps;
-    oReturn = {};
-
-    var tag_name;
-
-    for( var i = 0; i < count; i++ )
-    {
-      s = '#replacement_text' + i;
-      o = $(s);
-      rep_text = o.val();
-      tag_name = o.attr( 'data-tag-name' );
-
-      s = '#color_val' + i;
-      o = $(s);
-      text_color = o.val();
-
-      oTagProps = {};
-      oTagProps[ '<%= VERSION_VALUES_KEY_REPLACEMENT_TEXT %>' ] = rep_text;
-      oTagProps[ '<%= VERSION_VALUES_KEY_TEXT_COLOR %>' ] = text_color;
-
-      oReturn[ tag_name ] = oTagProps;
-    }
-
-    return oReturn;
-  }
-
 </script>

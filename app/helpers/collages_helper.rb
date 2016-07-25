@@ -34,34 +34,53 @@ module CollagesHelper
     return false
   end
 
+
+  def extract_insta_data( o, type )
+    if type == 'user'
+      data = o[ 'entry_data' ][ 'ProfilePage' ][ 0 ][ 'user' ][ 'media' ][ 'nodes' ]
+      page_info = o[ 'entry_data' ][ 'ProfilePage' ][ 0 ][ 'user' ][ 'media' ][ 'page_info' ]
+      max_id = page_info[ 'end_cursor' ]
+      has_next_page = page_info[ 'has_next_page' ]
+    else
+      data = o[ 'entry_data' ][ 'TagPage' ][ 0 ][ 'tag' ][ 'media' ][ 'nodes' ]
+      page_info = o[ 'entry_data' ][ 'TagPage' ][ 0 ][ 'tag' ][ 'media' ][ 'page_info' ]
+      max_id = page_info[ 'end_cursor' ]
+      has_next_page = page_info[ 'has_next_page' ]
+    end
+    return_data = { 'data' => data, 'max_id' => max_id, 'has_next_page' => has_next_page }
+    return_data
+  end
+
+
+
   # This method downloads images from Instagram and places them in the collage
   # folder.
   def fetch_content( collage )
     app_config = Rails.application.config_for( :customization )
     path = collage.path
     query = collage.query
+    if json?( query )
+      query = JSON.parse( query )
+      query_type = query[ 'instagram' ][ 'type' ]
+      query_string = query[ 'instagram' ][ 'query_string' ]
+    end
     max_items = app_config[ 'collages_max_items_to_retrieve' ]
-    Rails.logger.info 'CollagesHelper - fetch_content() - path: ' + path.to_s
-    Rails.logger.info 'CollagesHelper - fetch_content() - query: ' + query.to_s
-    Rails.logger.info 'CollagesHelper - fetch_content() - max_items: '\
-      + max_items.to_s
-
     index = 0
+
     # the following code goes to instagram and scrapes image data from
     # the page.
-
     # create a headless browser
     b = Watir::Browser.new :phantomjs
-    uri = 'https://www.instagram.com/explore/tags/' + query + '?hl=en'
+    uri = 'https://www.instagram.com/explore/tags/' + query_string.to_s
+    uri = 'https://www.instagram.com/' + query_string.to_s if query_type == 'user'
     b.goto uri
 
     # all data are stored on this page-level object.
     o = b.execute_script( 'return window._sharedData;')
-
-    data = o[ 'entry_data' ][ 'TagPage' ][ 0 ][ 'tag' ][ 'media' ][ 'nodes' ]
-    page_info = o[ 'entry_data' ][ 'TagPage' ][ 0 ][ 'tag' ][ 'media' ][ 'page_info' ]
-    max_id = page_info[ 'end_cursor' ]
-    has_next_page = page_info[ 'has_next_page' ]
+    o = extract_insta_data( o, query_type )
+    data = o[ 'data' ]
+    has_next_page = o[ 'has_next_page' ]
+    max_id = o[ 'max_id' ]
 
     data.each { |item|
       break if index >= max_items
@@ -71,15 +90,16 @@ module CollagesHelper
     }
 
     while( has_next_page && (index < max_items) )
-      uri = 'https://www.instagram.com/explore/tags/bombsheller?hl=en&max_id='\
-        + max_id.to_s
+      uri = 'https://www.instagram.com/explore/tags/' + query_string.to_s\
+        + '?&max_id=' + max_id.to_s
+      uri = 'https://www.instagram.com/' + query_string.to_s + '?&max_id='\
+        + max_id.to_s if query_type === 'user'
       b.goto uri
       o = b.execute_script( 'return window._sharedData;')
-
-      data = o[ 'entry_data' ][ 'TagPage' ][ 0 ][ 'tag' ][ 'media' ][ 'nodes' ]
-      page_info = o[ 'entry_data' ][ 'TagPage' ][ 0 ][ 'tag' ][ 'media' ][ 'page_info' ]
-      max_id = page_info[ 'end_cursor' ]
-      has_next_page = page_info[ 'has_next_page' ]
+      o = extract_insta_data( o, query_type )
+      data = o[ 'data' ]
+      has_next_page = o[ 'has_next_page' ]
+      max_id = o[ 'max_id' ]
 
       data.each { |item|
         break if index >= max_items
@@ -89,5 +109,7 @@ module CollagesHelper
       }
     end
     b.close # IMPORTANT!
+  rescue
+    b.close
   end
 end

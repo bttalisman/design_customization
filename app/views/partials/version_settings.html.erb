@@ -55,27 +55,4 @@ customer to specify the ultimate appearance of a design.  -->
 
 
 
-  function build()
-  {
-
-    var oTags = {};
-    var oImages = {};
-
-<%  if rendering_tags_form %>
-      oTags = build_tag_values();
-<%  end %>
-
-<%  if rendering_images_form %>
-      oImages = build_image_values();
-<%  end %>
-
-    oReturn = {};
-    oReturn.tag_settings = oTags;
-    oReturn.image_settings = oImages;
-
-//    alert( 'oReturn: ' + JSON.stringify( oReturn ) );
-
-    return oReturn;
-  }
-
 </script>

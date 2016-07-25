@@ -19,43 +19,65 @@ i = 0
   image_name = image[ 0 ]
 
   logger.info '_VERSION_IMAGES.html.erb - image_name: ' + image_name.to_s
+  logger.info '_VERSION_IMAGES.html.erb - @version: ' + @version.to_s
 
   replacement_path = ''
   raplacement_name = ''
   replacement_image_id = ''
   collage_query = ''
   collage_checked = ''
-  ri_checked = ''
-  ri_display = 'display:none;'
+  ri_checked = true
+  ri_display = ''
   collage_display = 'display:none;'
   is_collage = false
 
   if @version
-    replacement_path = get_local_image_path( image_name, @version )
-    replacement_name = get_uploaded_file_name( image_name, @version )
-    replacement_image_id = get_replacement_image_id( image_name, @version )
-    collage = get_collage( image_name, @version )
-    collage_query = collage.query if !collage.nil?
+
     is_collage = associated_with_collage?( image_name, @version )
-    collage_checked = 'checked' if is_collage
-    collage_display = '' if is_collage
-    ri_checked = 'checked' if !is_collage
-    ri_display = '' if !is_collage
+    logger.info '_VERSION_IMAGES.html.erb - is_collage: ' + is_collage.to_s
+
+    if is_collage
+      collage = get_collage( image_name, @version )
+      collage_query = collage.query
+      collage_checked = 'checked'
+      collage_display = ''
+      ri_checked = false
+      ri_display = 'display:none;'
+
+      begin
+        query_obj = JSON.parse( collage_query )
+        collage_query_type = query_obj[ 'instagram' ][ 'type' ]
+        collage_query_string = query_obj[ 'instagram' ][ 'query_string' ]
+      rescue
+        collage_query_string = ''
+      end
+
+    else
+      replacement_path = get_local_image_path( image_name, @version )
+      replacement_name = get_uploaded_file_name( image_name, @version )
+      replacement_image_id = get_replacement_image_id( image_name, @version )
+      ri_display = ''
+    end
+
+    logger.info '_VERSION_IMAGES.html.erb - ri_display: ' + ri_display.to_s
+    logger.info '_VERSION_IMAGES.html.erb - collage_display: ' + collage_display.to_s
+
+
   end
 
 %>
   <div class='panel panel-success'>
-    <div class='panel-heading'><h3 class='panel-title'><%= image_name %> - Upload an Image</h3></div>
+    <div class='panel-heading'><h3 class='panel-title'><%= image_name %> - Image Replace</h3></div>
     <div class='panel-body'>
 
       <div class='btn-group' data-upload-gp-id='upload-gp<%= i.to_s %>' data-inst-gp-id='inst-gp<%= i.to_s %>'>
         <label class="btn">
-          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= ri_checked %> value='upload'></input>
+          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= 'checked' if ri_checked %> value='upload'></input>
             <span>Upload</span>
         </label>
         <label class="btn">
-          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= collage_checked %> value='instagram'></input>
-          <span>Instagram</span>
+          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= 'checked' if !ri_checked %> value='instagram'></input>
+          <span>Collage</span>
         </label>
       </div>
 
@@ -72,8 +94,14 @@ i = 0
       </div>
 
       <div class='input-group' style='<%= collage_display %>' id='inst-gp<%= i.to_s %>'>
-        <span class='input-group-addon' id='basic-addon1'>Instagram User</span>
-        <input type='text' class='form-control' id='collage_query<%= i.to_s %>' value='<%= collage_query %>' name='collage_query<%= i.to_s %>'></input>
+
+        <select id='collage_query_type<%= i.to_s %>' name='collage_query_type<%= i.to_s %>' class='form-control'>
+          <option value='user'>Instagram User</option>
+          <option value='tag'>Hash Tag</option>
+        </select>
+
+        <input type='text' class='form-control' id='collage_query_string<%= i.to_s %>' value='<%= collage_query_string %>' name='collage_query_string<%= i.to_s %>'></input>
+
       </div>
 
       <div class='spacer'></div>
@@ -149,7 +177,7 @@ i = 0
     s = '#' + inputId;
     e = $( s );
 
-    if( filePath != '' )
+    if( filePath !== '' )
     {
       e.val( filePath );
     }
@@ -176,42 +204,5 @@ i = 0
     return true;
   }
 
-
-
-  // When a user updates a Version, this method is called to build a json description
-  // of all version-specific settings.  This json object is stored as the 'values' property
-  function build_image_values()
-  {
-    var count = $('#image_count').val();
-    var s, v, o;
-    var rep_path;
-    var text_color;
-
-    var oReturn;
-    var oImageProps;
-    oReturn = {};
-
-    var image_name, replacement_image_id;
-
-    console.log( 'build_image_values() - count: ' + count );
-
-    for( var i = 0; i < count; i++ )
-    {
-      s = '#image_name' + i;
-      o = $(s);
-      image_name = o.val();
-
-      s = '#replacement_image_id' + i;
-      o = $(s);
-      replacement_image_id = o.val();
-
-      oImageProps = {};
-      oImageProps[ '<%= VERSION_VALUES_KEY_RI_ID %>' ] = replacement_image_id;
-
-      oReturn[ image_name ] = oImageProps;
-    }
-
-    return oReturn;
-  }
 
 </script>
