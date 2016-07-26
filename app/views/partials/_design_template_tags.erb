@@ -10,9 +10,6 @@ if !@tags.nil?
 
   i = 0
   @tags.each { |t|
-
-    logger.info '_design_template_tags.html.erb - t: ' + t
-
     offer_pal_enabled = ''
     label_class = ''
     prompt = ''
@@ -26,11 +23,9 @@ if !@tags.nil?
     if !@prompts.nil?
 
       # we'll try to look up any previously set values for this tag.
-
       all_tag_settings = @prompts[ PROMPTS_KEY_TAG_SETTINGS ]
 
       if !all_tag_settings.nil?
-
         tagProps = all_tag_settings[ t.to_s ]
         logger.info '_design_template_tags.html.erb - tagProps: ' + tagProps.to_s
 
@@ -53,10 +48,9 @@ if !@tags.nil?
         end
 
       end # there are tag settings
-
     end # there are set values
 %>
-    <div id='tag<%= i.to_s %>' data-tag-name='<%= t.to_s %>'></div>
+    <input type='hidden' name='tag_name<%= i.to_s %>' value='<%= t.to_s %>'></input>
 
     <div class='panel panel-info'>
       <div class='panel-heading'><h3 class='panel-title'><%= t %> - Text Replacement</h3></div>
@@ -64,7 +58,7 @@ if !@tags.nil?
 
         <div class='input-group'>
           <span class='input-group-addon' id='basic-addon1'>Prompt</span>
-          <input type='text' class='form-control' id='prompt<%= i.to_s %>' placeholder='Enter a prompt' aria-describedby='basic-addon1' value='<%= prompt %>'></input>
+          <input type='text' class='form-control' name='prompt<%= i.to_s %>' id='prompt<%= i.to_s %>' placeholder='Enter a prompt' aria-describedby='basic-addon1' value='<%= prompt %>'></input>
         </div>
         <div class='spacer'></div>
 
@@ -72,13 +66,13 @@ if !@tags.nil?
           <div style='width:45%; float:left;'>
             <div class='input-group' style='margin-bottom:20px;'>
               <span class='input-group-addon' id='basic-addon2'>Min Length</span>
-              <input type='number' class='form-control' id='minl<%= i.to_s %>' aria-describedby='basic-addon2' value='<%= min_length %>'></input>
+              <input type='number' class='form-control' name='minl<%= i.to_s %>' id='minl<%= i.to_s %>' aria-describedby='basic-addon2' value='<%= min_length %>'></input>
             </div>
           </div>
           <div style='width:45%; float:right;'>
             <div class='input-group' style='margin-bottom:20px;'>
               <span class='input-group-addon' id='basic-addon3'>Max Length</span>
-              <input type='number' class='form-control' id='maxl<%= i.to_s %>' aria-describedby='basic-addon3' value='<%= max_length %>'></input>
+              <input type='number' class='form-control' name='maxl<%= i.to_s %>' id='maxl<%= i.to_s %>' aria-describedby='basic-addon3' value='<%= max_length %>'></input>
             </div>
           </div>
         </div>
@@ -88,13 +82,13 @@ if !@tags.nil?
           <div style='float:left; width:45%;'>
             <label class='checkbox-label' style='margin-left:30px;'>
               Pick a color?
-              <input type='checkbox' data-label-id='label<%= i.to_s %>' data-use-pal-id='use_pal<%= i.to_s %>' data-sel-id='select_pal<%= i.to_s %>' id='colorp<%= i.to_s %>' onchange='toggle_pick_color( event );' class='checkbox-input' value='true' <%= pick_color %> ></input>
+              <input type='checkbox' data-label-id='label<%= i.to_s %>' data-use-pal-id='use_pal<%= i.to_s %>' data-sel-id='select_pal<%= i.to_s %>' name='colorp<%= i.to_s %>' id='colorp<%= i.to_s %>' onchange='toggle_pick_color( event );' class='checkbox-input' value='true' <%= pick_color %> ></input>
             </label>
           </div>
           <div style='float:right; width:45%;'>
             <label class='checkbox-label <%= label_class %>' id='label<%= i.to_s %>' style='margin-left:30px;'>
               Offer a Palette?
-              <input type='checkbox' data-sel-id='select_pal<%= i.to_s %>' onchange='toggle_use_palette( event );' class='checkbox-input' value='true' id='use_pal<%= i.to_s %>' <%= use_palette %> <%= offer_pal_enabled %> ></input>
+              <input type='checkbox' data-sel-id='select_pal<%= i.to_s %>' onchange='toggle_use_palette( event );' class='checkbox-input' value='true' name='use_pal<%= i.to_s %>' id='use_pal<%= i.to_s %>' <%= use_palette %> <%= offer_pal_enabled %> ></input>
             </label>
           </div>
         </div>
@@ -103,7 +97,7 @@ if !@tags.nil?
         <div>
           <div class='input-group'>
             <span class='input-group-addon' id='basic-addon4'>Palette</span>
-            <select <%= select_pal %> id='select_pal<%= i.to_s %>' class='form-control' style='width:200px;' aria-describedby='basic-addon4'>
+            <select <%= select_pal %> name='select_pal<%= i.to_s %>' id='select_pal<%= i.to_s %>' class='form-control' style='width:200px;' aria-describedby='basic-addon4'>
               <option value='' disabled selected>Select a Palette</option>
 <%            @palettes.each { |p|
                 if p.id.to_s == palette_id
@@ -126,8 +120,7 @@ if !@tags.nil?
     i += 1
   } # each tag
 %>
-
-  <input type='hidden' id='tag_count' value='<%= i.to_s %>'></input>
+  <input type='hidden' name='tag_count' value='<%= i.to_s %>'></input>
 <%
 end # @tags is not nil
 %>
@@ -221,81 +214,6 @@ end # @tags is not nil
     }
 
     return bValid;
-  }
-
-
-  // Builds json object with all setting values set on this page
-  function build_tags_data()
-  {
-
-    var o;
-    var s;
-    var count;
-    var prompt, maxl, minl, colorp;
-    var returnSettings, tagName, tagSettings;
-
-    o = $( '#tag_count' );
-    count = parseInt( o.val() );
-
-    returnSettings = {};
-
-    for( var i = 0; i < count; i++ )
-    {
-
-      s = '#tag' + i;
-      o = $(s);
-
-      tagName = o.attr( 'data-tag-name' ).trim();
-
-      tagSettings = {};
-      returnSettings[ tagName ] = tagSettings;
-
-      s = '#prompt' + i;
-      o = $(s);
-      prompt = o.val();
-      tagSettings[ '<%= PROMPTS_KEY_PROMPT %>' ] = prompt;
-
-      s = '#maxl' + i;
-      o = $(s);
-      maxl = o.val();
-      tagSettings[ '<%= PROMPTS_KEY_MAX_L %>' ] = maxl;
-
-      s = '#minl' + i;
-      o = $(s);
-      minl = o.val();
-      tagSettings[ '<%= PROMPTS_KEY_MIN_L %>' ] = minl;
-
-      s = '#colorp' + i;
-      o = $(s);
-      colorp = o.is(':checked');
-
-      if( colorp )
-      {
-        tagSettings[ '<%= PROMPTS_KEY_PICK_COLOR %>' ] = 'checked';
-      } else {
-        tagSettings[ '<%= PROMPTS_KEY_PICK_COLOR %>' ] = '';
-      }
-
-      s = '#use_pal' + i;
-      o = $(s);
-      use_pal = o.is(':checked');
-
-      if( use_pal )
-      {
-        tagSettings[ '<%= PROMPTS_KEY_USE_PALETTE %>' ] = 'checked';
-      } else {
-        tagSettings[ '<%= PROMPTS_KEY_USE_PALETTE %>' ] = '';
-      }
-
-      s = '#select_pal' + i;
-      o = $(s);
-      palette_id = o.val();
-      tagSettings[ '<%= PROMPTS_KEY_PALETTE_ID %>' ] = palette_id;
-
-    }
-
-    return returnSettings;
-
   }
 
 

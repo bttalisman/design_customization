@@ -114,6 +114,99 @@ module DesignTemplatesHelper
     images
   end
 
+  # This method constructs a new json string for the prompts field.  This
+  # method must be coordinated with parameters as set in
+  # views/partials/_design_template_tags.html.erb
+  def set_tag_prompts( template, params )
+    Rails.logger.info 'design_templates_helper - set_tag_prompts() - params: '\
+      + params.to_s
+
+    tag_count = params[ 'tag_count' ]
+    tag_count = if tag_count != ''
+                    tag_count.to_i
+                  else
+                    0
+                  end
+
+    all_tag_settings = {}
+    tag_count.times do |i|
+      tag_settings = {}
+
+      p_name = 'tag_name' + i.to_s
+      tag_name = params[ p_name ]
+
+      p_name = 'prompt' + i.to_s
+      tag_settings[ PROMPTS_KEY_PROMPT ] = params[ p_name ]
+
+      p_name = 'maxl' + i.to_s
+      tag_settings[ PROMPTS_KEY_MAX_L ] = params[ p_name ]
+
+      p_name = 'minl' + i.to_s
+      tag_settings[ PROMPTS_KEY_MIN_L ] = params[ p_name ]
+
+      p_name = 'colorp' + i.to_s
+      if params[ p_name ]
+        tag_settings[ PROMPTS_KEY_PICK_COLOR ] = PROMPTS_VALUE_PICK_COLOR_TRUE
+      else
+        tag_settings[ PROMPTS_KEY_PICK_COLOR ] = PROMPTS_VALUE_PICK_COLOR_FALSE
+      end
+
+      p_name = 'use_pal' + i.to_s
+      if params[ p_name ]
+        tag_settings[ PROMPTS_KEY_USE_PALETTE ] = PROMPTS_VALUE_USE_PALETTE_TRUE
+      else
+        tag_settings[ PROMPTS_KEY_USE_PALETTE ] = PROMPTS_VALUE_USE_PALETTE_FALSE
+      end
+
+      p_name = 'select_pal' + i.to_s
+      tag_settings[ PROMPTS_KEY_PALETTE_ID ] = params[ p_name ]
+
+      all_tag_settings[ tag_name ] = tag_settings
+    end
+
+    prompts_string = template.prompts
+    prompts = JSON.parse( prompts_string )
+    prompts[ PROMPTS_KEY_TAG_SETTINGS ] = all_tag_settings
+    prompts_string = prompts.to_json
+    template.prompts = prompts_string
+  end
+
+  # This method constructs a new json string for the prompts field.  This
+  # method must be coordinated with parameters as set in
+  # views/partials/_design_template_images.html.erb
+  def set_image_prompts( template, params )
+    Rails.logger.info 'design_templates_helper - set_image_prompts() - params: '\
+      + params.to_s
+    image_count = params[ 'image_count' ]
+    image_count = if image_count != ''
+                    image_count.to_i
+                  else
+                    0
+                  end
+
+    all_image_settings = {}
+
+    image_count.times do |i|
+      image_settings = {}
+      p_name = 'image_name' + i.to_s
+      image_name = params[ p_name ]
+      p_name = 'replace_image' + i.to_s
+      replace = params[ p_name ]
+      if replace
+        image_settings[ PROMPTS_KEY_REPLACE_IMG ] = PROMPTS_VALUE_REPLACE_IMG_TRUE
+      else
+        image_settings[ PROMPTS_KEY_REPLACE_IMG ] = PROMPTS_VALUE_REPLACE_IMG_FALSE
+      end
+      all_image_settings[ image_name ] = image_settings
+    end
+
+    prompts_string = template.prompts
+    prompts = JSON.parse( prompts_string )
+    prompts[ PROMPTS_KEY_IMAGE_SETTINGS ] = all_image_settings
+    prompts_string = prompts.to_json
+    template.prompts = prompts_string
+  end
+
   # A design_template's prompts describes any extensible settings
   # presented by versions of this template, such as replace this image?, allow
   # users to set the color of this text?

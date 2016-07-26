@@ -48,11 +48,16 @@ class DesignTemplatesController < ApplicationController
 
   def update
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - update! - params: ' + params.to_s
-
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.update( design_template_params )
 
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - about to save.'
+    # extract the tag-related settings from the parameters object, and set
+    # this template's prompts property.
+    set_tag_prompts( @design_template, params )
+    # extract the image-related settings from the parameters object, and set
+    # this template's prompts property.
+    set_image_prompts( @design_template, params )
+
     if @design_template.save
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - SUCCESS!'
       redirect_to design_template_path
@@ -60,50 +65,6 @@ class DesignTemplatesController < ApplicationController
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - FAILURE!'
       render 'new'
     end
-  end
-
-  # this action executes in response to an ajax call from the Design Template
-  # editor, the body of the post made contains JSON describing all extensible
-  # settings
-  def all_settings
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings()'
-
-    # expecting something like { 'extracted_settings' => arbitrary settings
-    # depending on tags, 'general_settings' => settings every DesignTemplate has
-    my_hash_string = request.body.read.to_s
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - body: ' \
-     + my_hash_string
-
-    if json?( my_hash_string )
-      logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - good JSON!'
-      my_hash = JSON.parse my_hash_string
-      logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - my_hash: ' \
-       + JSON.pretty_generate( my_hash )
-    else
-      logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - BAD JSON!'
-    end
-
-    extracted_object = my_hash[ 'extracted_settings' ]
-    extracted_string = extracted_object.to_json
-
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - setting prompts to: '\
-      + extracted_string.to_s
-    @design_template = DesignTemplate.find( params[ :id ] )
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - @design_template.name: '\
-      + @design_template.name.to_s
-    @design_template.prompts = extracted_string
-
-    @design_template.name = my_hash[ 'general_settings' ][ 'template_name' ]
-
-    if @design_template.save
-      logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - save SUCCESS!'
-      logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - @design_template.name: '\
-        + @design_template.name.to_s
-    else
-      logger.info 'DESIGN_TEMPLATES_CONTROLLER - all_settings() - save FAILURE!'
-    end
-
-    render nothing: true
   end
 
   def new

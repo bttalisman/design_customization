@@ -10,15 +10,10 @@ if !@images.nil?
 
   i = 0
   @images.each { |image|
-
     logger.info '_design_template_images.html.erb - image: ' + image.to_s
-
     if !@prompts.nil? && (image != '')
-
       # we'll try to look up any previously set values for this image.
-
       imageProps = @prompts[ PROMPTS_KEY_IMAGE_SETTINGS ][ image.to_s ]
-
       logger.info '_design_template_images.html.erb - imageProps: ' + imageProps.to_s
 
       if !imageProps.nil?
@@ -26,83 +21,32 @@ if !@images.nil?
       else
         replaceImage = ''
       end
-
-    end # @prompts not nil
-%>
-    <div id='image<%= i.to_s %>' data-image-name='<%= image.to_s %>'></div>
-
+    end # @prompts not nil %>
     <div class='panel panel-success'>
       <div class='panel-heading'><h3 class='panel-title'><%= image %> - Image Replacement</h3></div>
       <div class='panel-body'>
 
         <label class='checkbox-label'>
           Replace this image?
-          <input type='checkbox' class='checkbox-input' value='true' <%= replaceImage %> id='replace_image<%= i.to_s %>' <%= replaceImage %> ></input>
+          <input type='checkbox' class='checkbox-input' value='true' <%= replaceImage %> name='replace_image<%= i.to_s %>' id='replace_image<%= i.to_s %>' <%= replaceImage %> ></input>
+          <input type='hidden' name='image_name<%= i.to_s %>' value='<%= image.to_s %>'></input>
         </label>
 
       </div>
     </div>
-
 <%
     i += 1
   } # each tag
 %>
-
-  <input type='hidden' id='image_count' value='<%= i.to_s %>'></input>
+  <input type='hidden' name='image_count' value='<%= i.to_s %>'></input>
 <%
 end #imags is not nil
 %>
 
 <script>
-
   function validate_image_values()
   {
     // not really anything to do here.
     return true;
   }
-
-
-  // Builds json object with all setting values set on this page
-  function build_images()
-  {
-    var o;
-    var s;
-    var count;
-    var replaceImage;
-    var returnSettings, imageName, imageSettings;
-
-    o = $( '#image_count' );
-    count = parseInt( o.val() );
-
-    returnSettings = {};
-
-    for( var i = 0; i < count; i++ )
-    {
-
-      s = '#image' + i;
-      o = $( s );
-      imageName = o.attr( 'data-image-name' ).trim();
-
-      imageSettings = {};
-
-      s = '#replace_image' + i;
-      o = $( s );
-
-      replaceImage = o.is(':checked');
-
-      if( replaceImage )
-      {
-        imageSettings[ 'replace_image' ] = 'checked';
-      } else {
-        imageSettings[ 'replace_image' ] = '';
-      }
-
-      returnSettings[ imageName ] = imageSettings;
-    }
-
-    return returnSettings;
-
-  }
-
-
 </script>

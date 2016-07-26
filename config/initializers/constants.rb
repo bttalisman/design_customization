@@ -24,6 +24,13 @@ PROMPTS_KEY_USE_PALETTE = 'use_palette'.freeze
 PROMPTS_KEY_PALETTE_ID = 'palette_id'.freeze
 PROMPTS_KEY_REPLACE_IMG = 'replace_image'.freeze
 
+PROMPTS_VALUE_REPLACE_IMG_TRUE = 'checked'.freeze
+PROMPTS_VALUE_REPLACE_IMG_FALSE = ''.freeze
+PROMPTS_VALUE_PICK_COLOR_TRUE = 'checked'.freeze
+PROMPTS_VALUE_PICK_COLOR_FALSE = ''.freeze
+PROMPTS_VALUE_USE_PALETTE_TRUE = 'checked'.freeze
+PROMPTS_VALUE_USE_PALETTE_FALSE = ''.freeze
+
 # Code in bin/illustrator_processing/*.jsx uses these key values also, so
 # any changes must be reflected there.
 VERSION_VALUES_KEY_IMAGE_SETTINGS = 'image_settings'.freeze

@@ -227,7 +227,6 @@ module VersionsHelper
   # => collage_query<index>
   # for each image.
   def set_image_values( version, params )
-
     Rails.logger.info 'versions_helper - set_image_values() - params: '\
       + params.to_s
 
@@ -235,7 +234,6 @@ module VersionsHelper
     images = get_images_array( design_template )
 
     image_count = params[ 'image_count' ]
-
     image_count = if image_count != ''
                     image_count.to_i
                   else

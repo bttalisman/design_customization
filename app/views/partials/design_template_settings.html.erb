@@ -53,26 +53,4 @@ extracting information. -->
 
     return bReturn;
   }
-
-
-  function build_template_settings()
-  {
-    var oTags = {};
-    var oImages = {};
-<%  if rendering_tags_form %>
-      oTags = build_tags_data();
-<%  end %>
-
-<%  if rendering_images_form %>
-      oImages = build_images();
-<%  end %>
-
-    // This object will become DesignTemplate.prompts
-    oReturn = {};
-    oReturn[ '<%= PROMPTS_KEY_TAG_SETTINGS %>' ] = oTags;
-    oReturn[ '<%= PROMPTS_KEY_IMAGE_SETTINGS %>' ] = oImages;
-
-    return oReturn;
-  }
-
 </script>

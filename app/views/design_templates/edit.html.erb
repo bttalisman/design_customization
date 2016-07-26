@@ -1,7 +1,6 @@
-
-
-<form action='update' id='design_template_form'>
-
+<%=
+form_for @design_template, html: { multipart: true, id: 'design_template_form' } do |form|
+%>
   <div class='row'>
     <div class='col col-md-1'></div>
     <div class='col col-md-4'>
@@ -14,7 +13,7 @@
 
           <div class='input-group' style='margin-bottom:20px;'>
             <span class="input-group-addon" id="basic-addon1">Name</span>
-            <input type='text' class='form-control' id='design_template_name' aria-describedby="basic-addon1" value='<%= @design_template.name %>'></input>
+            <input type='text' class='form-control' name='design_template[name]' id='design_template_name' aria-describedby="basic-addon1" value='<%= @design_template.name %>'></input>
           </div>
 
           <a class='btn btn-default' href='<%= local_host %>/force_process?id=<%= @design_template.id %>'>Reprocess</a>
@@ -24,26 +23,16 @@
 
         </div> <!-- /panel body -->
       </div> <!-- /panel -->
-
     </div> <!--  -->
-
     <div class='col-md-1'></div>
-
     <div class='col-md-5'>
       <div id='panel_container'></div>
     </div>
-
   </div> <!-- /row -->
-
-  <input name='panel_data' id='tags_data' style='display:none;'></input>
-
-</form>
-
-
+<%
+end %>
 
 <script>
-
-
   function validate()
   {
     var dtName = $('#design_template_name').val();
@@ -65,34 +54,8 @@
   {
     if( validate() )
     {
-      var extractedSettings = build_template_settings();
-      var oToSend = {};
-
-      // We stuff our own data in there too
-      var oGeneralSettings = {};
-      oGeneralSettings.template_name = $('#design_template_name').val();
-
-      // the number and type of these settings depends on what was extracted from the original file
-      oToSend.extracted_settings = extractedSettings;
-      // these are always the same
-      oToSend.general_settings = oGeneralSettings;
-      // post to design_templates#all_settings action
-      var uri = '<%= local_host %>' + '/design_templates/' + templateId + '/settings/';
-
-      $.ajax({
-          url: uri,
-          type: 'post',
-          dataType: 'application/json',
-          data: JSON.stringify( oToSend ),
-          success: function (data) {
-              alert( 'success getting : ' + data );
-          },
-          error: function(xhr, status, error) {
-              // todo - why never success?
-          }
-      });
-
-      window.location = '<%= local_host %>';
+      var form = $('#design_template_form');
+      form.submit();
     }
   }
 
