@@ -59,8 +59,15 @@ class VersionsController < ApplicationController
     # this version's values property.
     set_tag_values( @version, params )
     # extract the image-related settings from the parameters object, and set
-    # this version's values property.
+    # this version's values property.  This method also creates the
+    # replacement_image objects that make up the version.replacement_images
+    # collection.
     set_image_values( @version, params )
+
+    # do anything that needs to be done to replacement_images.  The version's
+    # replacement_images collection is created by the set_image_values method
+    # above.
+    process_replacement_images( @version )
 
     process_version( @version, params ) if @version.save
     redirect_to versions_path

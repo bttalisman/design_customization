@@ -38,13 +38,13 @@ i = 0
 
     if is_collage
       collage = get_collage( image_name, @version )
-      collage_query = collage.query
-      collage_checked = 'checked'
-      collage_display = ''
-      ri_checked = false
-      ri_display = 'display:none;'
 
       begin
+        collage_query = collage.query
+        collage_checked = 'checked'
+        collage_display = ''
+        ri_checked = false
+        ri_display = 'display:none;'
         query_obj = JSON.parse( collage_query )
         collage_query_type = query_obj[ 'instagram' ][ 'type' ]
         collage_query_string = query_obj[ 'instagram' ][ 'query_string' ]
@@ -71,13 +71,13 @@ i = 0
     <div class='panel-body'>
 
       <div class='btn-group' data-upload-gp-id='upload-gp<%= i.to_s %>' data-inst-gp-id='inst-gp<%= i.to_s %>'>
-        <label class="btn">
+        <label class='btn'>
           <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= 'checked' if ri_checked %> value='upload'></input>
             <span>Upload</span>
         </label>
-        <label class="btn">
+        <label class='btn'>
           <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= 'checked' if !ri_checked %> value='instagram'></input>
-          <span>Collage</span>
+          <span>Instagram</span>
         </label>
       </div>
 
@@ -90,17 +90,17 @@ i = 0
             <input type='file' data-input-id='replacement_path<%= i.to_s %>' name='replacement_image<%= i.to_s %>[uploaded_file]' id='replacement_image_uploaded_file<%= i.to_s %>' onchange='fileInputChange( this );' >
           </span>
         </span>
-        <input type='text' disabled class='form-control' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
+        <input type='text' disabled class='form-control' title='<%= replacement_path %>' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
       </div>
 
-      <div class='input-group' style='<%= collage_display %>' id='inst-gp<%= i.to_s %>'>
+      <div class='input-group' style='width:100%;<%= collage_display %>' id='inst-gp<%= i.to_s %>'>
 
-        <select id='collage_query_type<%= i.to_s %>' name='collage_query_type<%= i.to_s %>' class='form-control'>
+        <select style='width:30%;' id='collage_query_type<%= i.to_s %>' name='collage_query_type<%= i.to_s %>' class='form-control'>
           <option value='user'>Instagram User</option>
           <option value='tag'>Hash Tag</option>
         </select>
 
-        <input type='text' class='form-control' id='collage_query_string<%= i.to_s %>' value='<%= collage_query_string %>' name='collage_query_string<%= i.to_s %>'></input>
+        <input style='width:70%;' type='text' class='form-control' id='collage_query_string<%= i.to_s %>' value='<%= collage_query_string %>' name='collage_query_string<%= i.to_s %>'></input>
 
       </div>
 

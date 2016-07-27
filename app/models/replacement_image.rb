@@ -1,3 +1,6 @@
+require 'zip'
+require 'fileutils'
+
 # ReplacementImage Model
 # A ReplacementImage is just an uploaded image. A user creating a version of a template
 # has the option to replace an image with a ReplacementImage or a Collage.
@@ -12,10 +15,36 @@ class ReplacementImage < ActiveRecord::Base
                     url: '/system/:class/:attachment/:id_partition/:basename.:extension'
 
   validates_attachment_content_type :uploaded_file,
-                                    content_type: ['image/jpeg', 'image/png']
+                                    content_type: ['image/jpeg', 'image/png', 'application/zip']
 
-  #def file_name
-  #  file_name_only = File.basename(uploaded_file_file_name).downcase
-  #  file_name_only
-  #end
+  def get_path
+    return_path = uploaded_file.path
+    ext_name = File.extname( return_path )
+
+    return_path = File.dirname( return_path ) + '/extracted/' if( ext_name == '.zip' )
+
+    Rails.logger.info 'replacement_image - get_path() - return_path: ' + return_path.to_s
+    return_path
+  end
+
+  def unzip
+    Rails.logger.info 'replacement_image - unzip() - uploaded_file: '\
+      + uploaded_file.to_s
+
+    if uploaded_file_content_type == 'application/zip'
+      source_folder = File.dirname( uploaded_file.path )
+      dest_folder = source_folder + '/extracted/'
+      Dir.mkdir( dest_folder ) if !Dir.exist?( dest_folder )
+
+      Zip::File.open( uploaded_file.path ) do |zip_file|
+        zip_file.each do |entry|
+          dest_file = dest_folder + entry.name
+          entry.extract( dest_file ) if !File.exist?( dest_file )
+        end
+      end
+
+      FileUtils.rm_rf( dest_folder + '__MACOSX' )
+    end # it's a zip file
+  end
+
 end

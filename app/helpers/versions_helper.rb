@@ -130,12 +130,16 @@ module VersionsHelper
     id = get_collage_id( image_name, version )
     co = Collage.find( id ) if is_integer?( id )
     co
+  rescue
+    nil
   end
 
   def get_replacement_image( image_name, version )
     id = get_replacement_image_id( image_name, version )
     ri = ReplacementImage.find( id ) if is_integer?( id )
     ri
+  rescue
+    nil
   end
 
   # A version associates image_names with actual uploaded files
@@ -240,8 +244,8 @@ module VersionsHelper
                     0
                   end
 
-    # get all of the uploaded files, for each create a ReplacementImage,
-    # and bind it to the image_name
+    # go through all of the images.  For each, determine if its an uploaded file
+    # or an instagam.
     image_count.times do |i|
       p_name = 'type' + i.to_s
       type = params[ p_name ]
@@ -325,9 +329,12 @@ module VersionsHelper
 
     settings = {}
     settings[ VERSION_VALUES_KEY_RI_ID ] = ri.id
-    settings[ VERSION_VALUES_KEY_PATH ] = ri.uploaded_file.path
+    settings[ VERSION_VALUES_KEY_PATH ] = ri.get_path
     settings[ VERSION_VALUES_KEY_TYPE ] = IMAGE_TYPE_REPLACEMENT_IMAGE
     image_settings[ image_name ] = settings
+
+    Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version() - values: '\
+      + JSON.pretty_generate( values )
 
     version.values = values.to_json
     version.save
@@ -576,4 +583,26 @@ module VersionsHelper
     Rails.logger.info 'versions_helper - Bailing Out! - ' + e.inspect
     Rails.logger.info JSON.pretty_generate( JSON.parse( e.backtrace.to_s ) )
   end
+
+
+  # This method iterates through all of the replacement_images associated
+  # with a version, and performs any processing necessary.
+  def process_replacement_images( version )
+    Rails.logger.info 'versions_helper - process_replacement_images()'
+
+    version.replacement_images.each { |ri|
+      type = ri.uploaded_file_content_type
+      Rails.logger.info 'versions_helper - process_replacement_images() - type: '\
+        + type.to_s
+
+      if type == 'application/zip'
+        ri.unzip
+
+      end
+
+    }
+
+
+  end
+
 end
