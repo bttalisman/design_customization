@@ -70,7 +70,7 @@ i = 0
     <div class='panel-heading'><h3 class='panel-title'><%= image_name %> - Image Replace</h3></div>
     <div class='panel-body'>
 
-      <div class='btn-group' data-upload-gp-id='upload-gp<%= i.to_s %>' data-inst-gp-id='inst-gp<%= i.to_s %>'>
+      <div id='wah' class='btn-group' data-upload-desc-id= 'upload-desc<%= i.to_s %>' data-upload-gp-id='upload-gp<%= i.to_s %>' data-inst-gp-id='inst-gp<%= i.to_s %>'>
         <label class='btn'>
           <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= 'checked' if ri_checked %> value='upload'></input>
             <span>Upload</span>
@@ -83,7 +83,11 @@ i = 0
 
       <div class='spacer'></div>
 
-      <div class='input-group' style='<%= ri_display %>' id='upload-gp<%= i.to_s %>'>
+      <div style='<%= ri_display %>' class='upload-group' id='upload-desc<%= i.to_s %>'>
+        Upload a single image or a zip of many.
+      </div>
+
+      <div class='input-group upload-group' style='<%= ri_display %>' id='upload-gp<%= i.to_s %>'>
         <span class='input-group-btn' id='basic-addon2'>
           <span  class='btn btn-default fileinput-button' id='file_input_container'>
             <span>Upload</span>
@@ -93,7 +97,7 @@ i = 0
         <input type='text' disabled class='form-control' title='<%= replacement_path %>' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
       </div>
 
-      <div class='input-group' style='width:100%;<%= collage_display %>' id='inst-gp<%= i.to_s %>'>
+      <div class='input-group instagram-group' style='width:100%;<%= collage_display %>' id='inst-gp<%= i.to_s %>'>
 
         <select style='width:30%;' id='collage_query_type<%= i.to_s %>' name='collage_query_type<%= i.to_s %>' class='form-control'>
           <option value='user'>Instagram User</option>
@@ -121,46 +125,28 @@ i = 0
 
 <script>
 
-  function set_visibility( type, upload_id, inst_id )
-  {
-    var s, o;
-
-    if( type == 'upload' )
-    {
-      // hide the instagram ui and show the upload ui
-      s = '#' + upload_id;
-      o = $(s);
-      o.show();
-      s = '#' + inst_id;
-      o = $(s);
-      o.hide();
-    }
-    else
-    {
-      // hide the upload ui and show the instagram ui
-      s = '#' + upload_id;
-      o = $(s);
-      o.hide();
-      s = '#' + inst_id;
-      o = $(s);
-      o.show();
-    }
-  }
-
   function changeType( event )
   {
     var s, o, type;
     var target = $(event.target);
     var name_attr = target.attr( 'name' );
-    var parent = target.parent().parent();
-    var upload_gp_id = parent.attr( 'data-upload-gp-id' );
-    var inst_gp_id = parent.attr( 'data-inst-gp-id' );
+    var parent = target.parent().parent().parent();
 
     s = 'input:radio[name=' + name_attr + ']:checked';
     o = $(s);
 
+    // todo there must be a better way
     type = o.val();
-    set_visibility( type, upload_gp_id, inst_gp_id );
+
+    if( type == 'upload' )
+    {
+      parent.find( '.upload-group' ).show();
+      parent.find( '.instagram-group' ).hide();
+    }
+    else {
+      parent.find( '.upload-group' ).hide();
+      parent.find( '.instagram-group' ).show();
+    }
   }
 
   function fileInputChange( element )
