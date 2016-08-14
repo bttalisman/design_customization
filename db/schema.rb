@@ -60,7 +60,6 @@ ActiveRecord::Schema.define(version: 20160713191722) do
 
   create_table "instagrams", force: :cascade do |t|
     t.string   "insta_id",     limit: 255
-    t.string   "primary_tag",  limit: 255
     t.string   "image_url",    limit: 255
     t.string   "open_link",    limit: 255
     t.integer  "created_time", limit: 4

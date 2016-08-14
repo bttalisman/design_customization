@@ -20,13 +20,39 @@
   function add_color( color_id )
   {
     var uri = '<%= local_host %>/palettes/<%= @palette.id %>/add?color_id=' + color_id;
-    var s, o;
-
     $.get( uri, function(data, status) {});
 
+    var s, my_color, all_color, my_color_offset, all_color_offset, left_dif, top_dif;
+
+    s = '#all_color' + color_id;
+    all_color = $(s);
+
     s = '#my_color' + color_id;
-    o = $(s);
-    o.show();
+    my_color = $(s);
+    my_color.css( { opacity:0 } );
+    my_color.show();
+
+    var ac_left = all_color.offset().left;
+    var ac_top = all_color.offset().top;
+    var mc_left = my_color.offset().left;
+    var mc_top = my_color.offset().top;
+
+    var clone = all_color.clone();
+    $('body').prepend( clone );
+    clone.css( {position: 'absolute', left: ac_left, top: ac_top, zIndex: 999} );
+    clone.animate( { opacity: 0,
+                     left: mc_left,
+                     top: mc_top },
+                   { duration: 'fast',
+                     easing: 'swing',
+                     complete: function() {
+                       $(this).remove();
+                     } } );
+
+
+    my_color.animate( { opacity: 1 },
+                      { duration: 500,
+                        easing: 'easeInQuint' } );
 
     s = '#border_div' + color_id;
     $(s).css( 'border-color', 'yellow' );
@@ -38,15 +64,39 @@
   function remove_color( color_id )
   {
     var s;
+
+    // Update the server
     var uri = '<%= local_host %>/palettes/<%= @palette.id %>/remove?color_id=' + color_id;
     $.get( uri, function(data, status) {});
 
     s = '#my_color' + color_id;
-    $(s).hide();
+    var my_color = $(s);
+    var mc_left = my_color.offset().left;
+    var mc_top = my_color.offset().top;
 
+    // clone the color being removed, position it over the original,
+    // make the original transparent, and drop the clone off the page.
+    var clone = my_color.clone();
+    $('body').prepend( clone );
+    clone.css( {position: 'absolute', left: mc_left, top: mc_top, zIndex: 999} );
+    my_color.css( {opacity: 0} );
+
+    clone.animate( { top: 1000 },
+                   { duration: 300,
+                     easing: 'easeInQuad',
+                     complete: function() {
+                       // when the clone is done dropping, remove it, hide
+                       // the original, and then make it opaque.
+                       $(this).remove();
+                       my_color.hide();
+                       my_color.css( {opacity: 1} );
+                     } } );
+
+    // Make the border color on the all_colors swatch white.
     s = '#border_div' + color_id;
     $(s).css( 'border-color', 'white' );
 
+    // Remove the color from MY_PALETTE
     var index = MY_PALETTE.indexOf( color_id );
     if (index > -1) {
         MY_PALETTE.splice(index, 1);
@@ -77,21 +127,18 @@
         <h3 class='panel-title'><%= @palette.name %></h3>
       </div>
       <div class='panel-body'>
-        <%
-        if !@all_colors.empty? %>
+<%      if !@all_colors.empty? %>
           <div id='my_colors_list'>
-    <%
-            @all_colors.each do |c|
+<%          @all_colors.each do |c|
               display = 'none'
               display = 'block' if( @my_colors.include?( c ) )
               id = 'my_color' + c.id.to_s %>
               <a onclick='toggle_color( "<%= c.id %>" );'>
                 <%= swatch( c, { display: display, id: id } ).html_safe %>
               </a>
-
-    <%      end # each color %>
+<%          end # each color %>
           </div>
-    <%  end # there are colors %>
+<%      end # there are colors %>
       </div> <!-- /panel body -->
     </div> <!-- /panel -->
 
@@ -129,8 +176,7 @@
 <%
         if !@all_colors.empty? %>
           <div id='all_colors_list'>
-<%
-            @all_colors.each do |c|
+<%          @all_colors.each do |c|
               color = 'white'
               id = 'all_color' + c.id.to_s
               color = 'yellow' if( @my_colors.include?( c ) ) %>

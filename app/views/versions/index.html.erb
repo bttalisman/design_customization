@@ -1,18 +1,33 @@
-
-
 <div class='row'>
-
   <div class='col col-md-1'></div>
-  <div class='col col-md-7'>
-    <table class="table table-striped">
+  <div class='col col-md-10'>
+    <table class='table table-hover'>
       <thead>
         <tr>
-          <th><a onclick='toggle_name();'>Version Name</a></th>
-          <th><a onclick='toggle_template();'>Template</a></th>
-          <th><a onclick='toggle_created();'>Created</a></th>
-          <th><a onclick='toggle_updated();'>Updated</a></th>
-          <th><a onclick='toggle_tags();'>Tags?</a></th>
-          <th><a onclick='toggle_images();'>Images?</a></th>
+          <th><a onclick='toggle_name();'>Version Name</a>
+            <span id='name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_template();'>Template</a>
+            <span id='template_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_created();'>Created</a>
+            <span id='created_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_updated();'>Updated</a>
+            <span id='updated_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_tags();'>Tags?</a>
+            <span id='tags_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_images();'>Images?</a>
+            <span id='images_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -20,10 +35,10 @@
         i = 0
         @versions.each { |v| %>
           <tr>
-            <td onclick='show_version( "<%= v[:id]%>" );' id='name<%= i.to_s %>'>
+            <td class='clickable' onclick='show_version( "<%= v[:id]%>" );' id='name<%= i.to_s %>'>
               <%= v[:name] %>
             </td>
-            <td onclick='show_template( "<%= v[:template_id]%>" );' id='template<%= i.to_s %>'>
+            <td class='clickable' onclick='show_template( "<%= v[:template_id]%>" );' id='template<%= i.to_s %>'>
               <%= v[:template] %>
             </td>
             <td id='created<%= i.to_s %>'>
@@ -44,9 +59,6 @@
       </tbody>
     </table>
   </div> <!-- / col -->
-
-  <div class='col col-md-3'>
-  </div>
 
   <div class='col col-md-1'>
   </div>
@@ -93,6 +105,15 @@
     versions_element.text( JSON.stringify( array ) );
   }
 
+  function toggle_arrow( e )
+  {
+    $( '.menu-arrow' ).hide();
+    $( '.arrow-spacer' ).show();  // show all of the arrow spacers
+    e.show();
+    e.toggleClass( 'glyphicon-menu-up' );
+    e.toggleClass( 'glyphicon-menu-down' );
+    e.next().hide();  // hide the arrow spacer immediately following the clicked element.
+  }
 
   function toggle_name()
   {
@@ -105,6 +126,7 @@
     });
 
     put_versions( versions );
+    toggle_arrow( $('#name_arrow') );
     drawPage();
   }
 
@@ -120,6 +142,7 @@
     });
 
     put_versions( versions );
+    toggle_arrow( $('#template_arrow') );
     drawPage();
   }
 
@@ -135,6 +158,7 @@
     });
 
     put_versions( versions );
+    toggle_arrow( $('#created_arrow') );
     drawPage();
   }
 
@@ -150,6 +174,7 @@
     });
 
     put_versions( versions );
+    toggle_arrow( $('#updated_arrow') );
     drawPage();
   }
 
@@ -165,6 +190,7 @@
     });
 
     put_versions( versions );
+    toggle_arrow( $('#tags_arrow') );
     drawPage();
   }
 
@@ -180,6 +206,7 @@
     });
 
     put_versions( versions );
+    toggle_arrow( $('#images_arrow') );
     drawPage();
   }
 
