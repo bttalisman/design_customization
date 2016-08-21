@@ -1,6 +1,26 @@
 @import "bootstrap"
 
 
+.add_swatch
+  animation:
+    name: add
+    duration: 400ms
+    timing-function: ease-in-out
+
+.drop_swatch
+  perspective: 1000px
+  animation:
+    name: drop
+    duration: 400ms
+    timing-function: ease-in
+
+@keyframes drop
+  from
+    transform: rotateX(0deg) rotateY(0deg)
+  to
+    transform: rotateX(90deg) rotateY(490deg)
+    top: 1000px
+
 .color-item
   display: inline-block
   height: 40px
