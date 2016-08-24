@@ -3,15 +3,30 @@
 <div class='row'>
 
   <div class='col col-md-1'></div>
-  <div class='col col-md-7'>
-    <table class="table table-striped">
+  <div class='col col-md-10'>
+    <table class='table table-hover'>
       <thead>
         <tr>
-          <th><a onclick='toggle_name();'>Template Name</a></th>
-          <th><a onclick='toggle_created();'>Created</a></th>
-          <th><a onclick='toggle_updated();'>Updated</a></th>
-          <th><a onclick='toggle_tags();'>Tags?</a></th>
-          <th><a onclick='toggle_images();'>Images?</a></th>
+          <th><a onclick='toggle_name();'>Template Name</a>
+            <span id='name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_created();'>Created</a>
+            <span id='created_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_updated();'>Updated</a>
+            <span id='updated_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_tags();'>Tags?</a>
+            <span id='tags_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_images();'>Images?</a>
+            <span id='images_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -19,7 +34,7 @@
         i = 0
         @design_templates.each { |t| %>
           <tr>
-            <td onclick='show_template( "<%= t[:id]%>" );' id='name<%= i.to_s %>'>
+            <td class='clickable' onclick='show_template( "<%= t[:id]%>" );' id='name<%= i.to_s %>'>
               <%= t[:name] %>
             </td>
             <td id='created<%= i.to_s %>'>
@@ -41,9 +56,6 @@
     </table>
   </div> <!-- / col -->
 
-  <div class='col col-md-3'>
-  </div>
-
   <div class='col col-md-1'>
   </div>
 
@@ -59,6 +71,18 @@
   var IMAGES_FLIP = true;
   var CREATED_FLIP = true;
   var UPDATED_FLIP = true;
+
+
+
+  function toggle_arrow( e )
+  {
+    $( '.menu-arrow' ).hide();
+    $( '.arrow-spacer' ).show();  // show all of the arrow spacers
+    e.show();
+    e.toggleClass( 'glyphicon-menu-up' );
+    e.toggleClass( 'glyphicon-menu-down' );
+    e.next().hide();  // hide the arrow spacer immediately following the clicked element.
+  }
 
 
   function show_template( id )
@@ -91,6 +115,7 @@
     });
 
     put_templates( templates );
+    toggle_arrow( $('#name_arrow') );
     fill_container();
   }
 
@@ -106,6 +131,7 @@
     });
 
     put_templates( templates );
+    toggle_arrow( $('#created_arrow') );
     fill_container();
   }
 
@@ -120,6 +146,7 @@
     });
 
     put_templates( templates );
+    toggle_arrow( $('#updated_arrow') );
     fill_container();
   }
 
@@ -134,6 +161,7 @@
     });
 
     put_templates( templates );
+    toggle_arrow( $('#tags_arrow') );
     fill_container();
   }
 
@@ -148,6 +176,7 @@
     });
 
     put_templates( templates );
+    toggle_arrow( $('#images_arrow') );
     fill_container();
   }
 

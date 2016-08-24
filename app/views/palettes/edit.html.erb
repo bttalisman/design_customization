@@ -19,18 +19,57 @@
 
   function add_color( color_id )
   {
+    // update the server
     var uri = '<%= local_host %>/palettes/<%= @palette.id %>/add?color_id=' + color_id;
-    var s, o;
-
     $.get( uri, function(data, status) {});
 
-    s = '#my_color' + color_id;
-    o = $(s);
-    o.show();
+    var s, my_color, all_color, my_color_offset, all_color_offset, left_dif, top_dif;
 
+    // get the color swatch from the All Colors panel
+    s = '#all_color' + color_id;
+    all_color = $(s);
+
+    // clone it, make it transparent, and stick it onto the end of the
+    // My Colors list.
+    my_color = all_color.clone();
+    my_color.attr( 'id', 'my_color' + color_id );
+    my_color.css( { opacity:0 } );
+    var anchor = $( '<a></a>' );
+    anchor.attr( 'onclick', 'toggle_color( "' + color_id + '" );' );
+    anchor.prepend( my_color );
+    $('#my_colors_list').append( anchor );
+
+    var ac_left = all_color.offset().left - 10;  // not sure why we need these
+    var ac_top = all_color.offset().top - 10;    // fudge factors
+    var left = my_color.offset().left - 10;
+    var top = my_color.offset().top - 10;
+
+    // Clone the swatch from All Colors, and place it above the original.
+    var clone = all_color.clone();
+    $('body').prepend( clone );
+    clone.css( {position: 'absolute', top: ac_top, left: ac_left, zIndex: 999} );
+
+    // Dynamically build a keyframe, insert it in the head, and remove it
+    // when the animation finishes.
+    var kf = $('<style>@keyframes add{ ' +
+      '0% {top:' + ac_top + 'px; left:' +
+      ac_left + 'px; transform: rotateX(0deg) rotateY(0deg);} ' +
+      '50% { height:100px; }' +
+      '100% {top:' + top + 'px; left:' + left + 'px; ' +
+      'transform: rotateX(360deg) rotateY(360deg); }}</style>');
+    kf.appendTo('head');
+    clone.bind('oanimationend animationend webkitAnimationEnd', function() {
+      $(this).remove();
+      my_color.css( { opacity:1 } );
+      kf.remove();
+    });
+    clone.addClass( 'add_swatch' );
+
+    // Turn the yellow border on.
     s = '#border_div' + color_id;
     $(s).css( 'border-color', 'yellow' );
 
+    // Add it to our global array
     MY_PALETTE.push( color_id );
   }
 
@@ -38,19 +77,40 @@
   function remove_color( color_id )
   {
     var s;
+
+    // Update the server
     var uri = '<%= local_host %>/palettes/<%= @palette.id %>/remove?color_id=' + color_id;
     $.get( uri, function(data, status) {});
 
+    // Get the swatch from the My Color panel.
     s = '#my_color' + color_id;
-    $(s).hide();
+    var my_color = $(s);
 
+    // Clone it, place it over the original, make the original transparent,
+    // and make the clone visible.
+    var clone = my_color.clone();
+    var mc_left = my_color.offset().left - 10;
+    var mc_top = my_color.offset().top - 10;
+    $('body').prepend( clone );
+    my_color.css( {opacity:0} );
+    clone.css( { position:'absolute', top: mc_top, left: mc_left, zIndex:999 } );
+    clone.bind('oanimationend animationend webkitAnimationEnd', function() {
+      $(this).remove();
+      my_color.animate( { width: 0, height: 0 }, 200, function() {
+        $(this).remove();
+      } );
+    });
+    clone.addClass( 'drop_swatch' );
+
+
+    // Make the border color on the all_colors swatch white.
     s = '#border_div' + color_id;
     $(s).css( 'border-color', 'white' );
 
+    // Remove the color from MY_PALETTE
     var index = MY_PALETTE.indexOf( color_id );
     if (index > -1) {
-        MY_PALETTE.splice(index, 1);
-    }
+        MY_PALETTE.splice(index, 1); }
   }
 
   function load_colors()
@@ -67,7 +127,6 @@
 
 </script>
 
-
 <div class='row'>
 
   <div class='col col-md-1'></div>
@@ -77,21 +136,18 @@
         <h3 class='panel-title'><%= @palette.name %></h3>
       </div>
       <div class='panel-body'>
-        <%
-        if !@all_colors.empty? %>
+<%      if !@all_colors.empty? %>
           <div id='my_colors_list'>
-    <%
-            @all_colors.each do |c|
-              display = 'none'
-              display = 'block' if( @my_colors.include?( c ) )
-              id = 'my_color' + c.id.to_s %>
-              <a onclick='toggle_color( "<%= c.id %>" );'>
-                <%= swatch( c, { display: display, id: id } ).html_safe %>
-              </a>
-
-    <%      end # each color %>
+<%          @all_colors.each do |c|
+              if( @my_colors.include?( c ) )
+                id = 'my_color' + c.id.to_s %>
+                <a onclick='toggle_color( "<%= c.id %>" );'>
+                  <%= swatch( c, { display: display, id: id } ).html_safe %>
+                </a>
+<%            end %>
+<%          end # each color %>
           </div>
-    <%  end # there are colors %>
+<%      end # there are colors %>
       </div> <!-- /panel body -->
     </div> <!-- /panel -->
 
@@ -129,8 +185,7 @@
 <%
         if !@all_colors.empty? %>
           <div id='all_colors_list'>
-<%
-            @all_colors.each do |c|
+<%          @all_colors.each do |c|
               color = 'white'
               id = 'all_color' + c.id.to_s
               color = 'yellow' if( @my_colors.include?( c ) ) %>
