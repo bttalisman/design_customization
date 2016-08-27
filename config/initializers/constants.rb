@@ -9,6 +9,7 @@ RUNNER_CONFIG_KEY_SOURCE_FILE = 'source file'.freeze
 
 RUNNER_TAGS_CONFIG_FILE_NAME = 'config_extract_tags.jsn'.freeze
 RUNNER_IMAGES_CONFIG_FILE_NAME = 'config_extract_images.jsn'.freeze
+RUNNER_POST_PROCESS_CONFIG_FILE_NAME = 'config_post_process.jsn'.freeze
 
 DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'.freeze
 DESIGN_TEMPLATE_STATS_KEY_MESSAGE = 'message'.freeze

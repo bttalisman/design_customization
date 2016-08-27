@@ -51,6 +51,16 @@ module ApplicationHelper
     data_file
   end
 
+  # All prompts data are written to the folder containing the original AI
+  # file.  This is used for post_process method
+  def path_to_prompts_file( path_to_ai_file )
+    source_folder = File.dirname( path_to_ai_file )
+    base_name = File.basename( path_to_ai_file, '.ai' )
+    data_file = source_folder + '/' + base_name + '_prompts.jsn'
+    data_file
+  end
+
+
   def bool_display_text( b )
     t = if b.to_s == 'true'
           'yes'

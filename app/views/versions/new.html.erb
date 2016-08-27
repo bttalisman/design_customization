@@ -61,7 +61,7 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 
           <div class='input-group'>
             <span class='input-group-addon' id='basic-addon1'>Folder</span>
-            <input type='text' class='form-control' id='version_output_folder_path' value='<%= @root_folder.to_s + '/' %>' name='version[output_folder_path]'></input>
+            <input type='text' class='form-control' id='version_output_folder_path' value='<%= @root_folder.to_s + '/output/' %>' name='version[output_folder_path]'></input>
           </div>
 
           <div class='spacer'></div>
@@ -91,11 +91,7 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
         </div> <!-- / panel body -->
       </div> <!-- / panel -->
     </div> <!-- / col -->
-
     <div class='col-md-1'></div>
-
-
   </div> <!-- / row -->
-
 <%
 end # form %>

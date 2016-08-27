@@ -79,7 +79,6 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
             <span class='input-group-addon' id='basic-addon1'>Template</span>
             <select class='form-control' disabled style='width:200px;' name='version[design_template_id]' id='version_design_template_id'>
               <option value='' disabled selected>Select a Template</option>
-
   <%            @design_templates.each { |t|
                   if t.id == @design_template_id.to_i
                     selected = true
@@ -105,16 +104,10 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
         </div> <!-- / panel body -->
       </div> <!-- / panel -->
     </div>  <!-- / col -->
-
     <div class='col col-md-1'></div>
-
     <div class='col col-md-5'>
       <div id='values_container'></div>
     </div>
-
   </div> <!-- / row -->
-
-  <input name='version_data' id='version_data' style='display:none;'></input>
-
 <%
 end %>

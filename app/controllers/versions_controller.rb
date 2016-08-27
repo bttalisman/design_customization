@@ -30,6 +30,9 @@ class VersionsController < ApplicationController
   end
 
   def edit
+    logger.info ''
+    logger.info ''
+    logger.info 'VERSION_COTROLLER - EDIT'
     @version = Version.find( params[ :id ] )
     @design_template = @version.design_template
 
