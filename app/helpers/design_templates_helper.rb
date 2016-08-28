@@ -105,13 +105,49 @@ module DesignTemplatesHelper
     true
   end
 
-  # This method returns an array of extracted image names.  These are the
+  # This method returns an array of extracted image data.  These are the
   # placed items within an AI file that will be replaced by versions of this
   # template.
+  # [
+  #    { name: 'bob', height: '34', width: '355' }
+  # ]
   def get_images_array( design_template )
     images_file = path_to_images_file( design_template )
     images = load_array_file( images_file )
     images
+  end
+
+  # This method returns an array of image names.  These are the names of
+  # placed items within the original AI file.
+  def get_image_names_array( design_template )
+    images = get_images_array( design_template )
+    names = []
+    images.each { |i|
+      names << i[ 'name' ]
+    }
+    names
+  end
+
+  def get_image_object( design_template, image_name )
+    extracted_image_data = get_images_array( design_template )
+    found_obj = {}
+    extracted_image_data.each { |i|
+      if( i[ 'name' ] == image_name ) then
+        found_obj = i
+        break
+      end
+    }
+    found_obj
+  end
+
+  def get_original_width( design_template, image_name )
+    o = get_image_object( design_template, image_name )
+    o[ 'width' ]
+  end
+
+  def get_original_height( design_template, image_name )
+    o = get_image_object( design_template, image_name )
+    o[ 'height' ]
   end
 
   # This method constructs a new json string for the prompts field.  This
@@ -188,15 +224,26 @@ module DesignTemplatesHelper
 
     image_count.times do |i|
       image_settings = {}
+
       p_name = 'image_name' + i.to_s
       image_name = params[ p_name ]
       p_name = 'replace_image' + i.to_s
       replace = params[ p_name ]
+
+      height = get_original_height( template, image_name )
+      width = get_original_width( template, image_name )
+
       if replace
         image_settings[ PROMPTS_KEY_REPLACE_IMG ] = PROMPTS_VALUE_REPLACE_IMG_TRUE
       else
         image_settings[ PROMPTS_KEY_REPLACE_IMG ] = PROMPTS_VALUE_REPLACE_IMG_FALSE
       end
+
+      orig_image = {}
+      orig_image[ PROMPTS_KEY_ORIGINAL_HEIGHT ] = height
+      orig_image[ PROMPTS_KEY_ORIGINAL_WIDTH ] = width
+      image_settings[ PROMPTS_KEY_ORIGINAL_IMAGE ] = orig_image
+
       all_image_settings[ image_name ] = image_settings
     end
 
@@ -223,7 +270,9 @@ module DesignTemplatesHelper
   # image_settings:
   #   image_name:
   #     replace_image: 'checked'
-  #
+  #     original_image:
+  #       original_height: '356'
+  #       original_width: '343'
   def get_prompts_object( design_template )
     prompts_string = design_template.prompts
     Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\

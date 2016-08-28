@@ -1,6 +1,7 @@
 # Versions Helper
 module VersionsHelper
   include CollagesHelper
+  include ImageHelper
 
   # Every version has its own folder, used for building modified AI files.
   # This folder will contain a copy of the AI file from the template,
@@ -336,6 +337,8 @@ module VersionsHelper
     Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version() - ri: '\
       + ri.to_s
 
+    #
+    ri.image_name = image_name
     values = get_values_object( version )
     image_settings = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
 
@@ -601,20 +604,36 @@ module VersionsHelper
   # with a version, and performs any processing necessary.
   def process_replacement_images( version )
     Rails.logger.info 'versions_helper - process_replacement_images()'
+    design_template = version.design_template
+    MiniMagick.logger.level = Logger::WARN
 
     version.replacement_images.each { |ri|
       type = ri.uploaded_file_content_type
+      image_name = ri.image_name
+      path = ri.get_path.to_s
+
+      Rails.logger.info 'versions_helper - process_replacement_images() - uploaded_file_file_name: '\
+        + ri.uploaded_file_file_name.to_s
       Rails.logger.info 'versions_helper - process_replacement_images() - type: '\
         + type.to_s
+      Rails.logger.info 'versions_helper - process_replacement_images() - image_name: '\
+        + image_name.to_s
+      Rails.logger.info 'versions_helper - process_replacement_images() - path: '\
+        + path
 
       if type == 'application/zip'
         ri.unzip
+      elsif type == 'image/jpeg'
 
+        height = get_original_height( design_template, image_name )
+        width = get_original_width( design_template, image_name )
+
+        image = MiniMagick::Image.open( path )
+        image = resize_with_crop( image, width.to_f, height.to_f )
+        image.write( path )
       end
 
     }
-
-
   end
 
 end

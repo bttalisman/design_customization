@@ -24,6 +24,9 @@ PROMPTS_KEY_PICK_COLOR = 'pick_color'.freeze
 PROMPTS_KEY_USE_PALETTE = 'use_palette'.freeze
 PROMPTS_KEY_PALETTE_ID = 'palette_id'.freeze
 PROMPTS_KEY_REPLACE_IMG = 'replace_image'.freeze
+PROMPTS_KEY_ORIGINAL_IMAGE = 'original_image'.freeze
+PROMPTS_KEY_ORIGINAL_HEIGHT = 'original_height'.freeze
+PROMPTS_KEY_ORIGINAL_WIDTH = 'original_width'.freeze
 
 PROMPTS_VALUE_REPLACE_IMG_TRUE = 'checked'.freeze
 PROMPTS_VALUE_REPLACE_IMG_FALSE = ''.freeze

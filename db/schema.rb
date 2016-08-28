@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160713191722) do
+ActiveRecord::Schema.define(version: 20160828181449) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 20160713191722) do
     t.string   "uploaded_file_content_type", limit: 255
     t.integer  "uploaded_file_file_size",    limit: 4
     t.datetime "uploaded_file_updated_at"
+    t.string   "image_name",                 limit: 255
   end
 
   create_table "uploads", force: :cascade do |t|

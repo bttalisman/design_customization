@@ -6,7 +6,7 @@ images partial says, ok, this image is getting replaced, what should I replace i
 <%
 logger.info '_VERSION_IMAGES.html.erb - @image_values: ' + @image_values.to_s
 logger.info '_VERSION_IMAGES.html.erb - @image_settings: '\
-  + @image_settings.to_s
+  + JSON.pretty_generate(  @image_settings )
 
 i = 0
 
