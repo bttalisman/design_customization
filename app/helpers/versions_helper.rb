@@ -612,14 +612,11 @@ module VersionsHelper
       image_name = ri.image_name
       path = ri.get_path.to_s
 
-      Rails.logger.info 'versions_helper - process_replacement_images() - uploaded_file_file_name: '\
-        + ri.uploaded_file_file_name.to_s
       Rails.logger.info 'versions_helper - process_replacement_images() - type: '\
         + type.to_s
       Rails.logger.info 'versions_helper - process_replacement_images() - image_name: '\
         + image_name.to_s
-      Rails.logger.info 'versions_helper - process_replacement_images() - path: '\
-        + path
+
 
       if type == 'application/zip'
         ri.unzip
@@ -631,6 +628,7 @@ module VersionsHelper
         image = MiniMagick::Image.open( path )
         image = resize_with_crop( image, width.to_f, height.to_f )
         image.write( path )
+        image.write( '/users/bent/design_customization/output/images/' + image_name + '.jpg' )
       end
 
     }
