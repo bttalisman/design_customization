@@ -298,6 +298,7 @@ module VersionsHelper
             clear_image_associations( image_name, version )
             o = { uploaded_file: my_file }
             replacement_image = version.replacement_images.create( o )
+            replacement_image.image_name = image_name
             replacement_image.save
 
             # this will set version.values to reflect any user-set properties
@@ -337,8 +338,6 @@ module VersionsHelper
     Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version() - ri: '\
       + ri.to_s
 
-    #
-    ri.image_name = image_name
     values = get_values_object( version )
     image_settings = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
 
@@ -605,7 +604,6 @@ module VersionsHelper
   def process_replacement_images( version )
     Rails.logger.info 'versions_helper - process_replacement_images()'
     design_template = version.design_template
-    MiniMagick.logger.level = Logger::WARN
 
     version.replacement_images.each { |ri|
       type = ri.uploaded_file_content_type
@@ -616,19 +614,22 @@ module VersionsHelper
         + type.to_s
       Rails.logger.info 'versions_helper - process_replacement_images() - image_name: '\
         + image_name.to_s
+      Rails.logger.info 'versions_helper - process_replacement_images() - path: '\
+        + path.to_s
 
+      if image_name
+        if type == 'application/zip'
+          ri.unzip
+        elsif type == 'image/jpeg'
 
-      if type == 'application/zip'
-        ri.unzip
-      elsif type == 'image/jpeg'
+          height = get_original_height( design_template, image_name )
+          width = get_original_width( design_template, image_name )
 
-        height = get_original_height( design_template, image_name )
-        width = get_original_width( design_template, image_name )
-
-        image = MiniMagick::Image.open( path )
-        image = resize_with_crop( image, width.to_f, height.to_f )
-        image.write( path )
-      end
+          image = MiniMagick::Image.open( path )
+          image = resize_with_crop( image, width.to_f, height.to_f )
+          image.write( path )
+        end
+      end # if image_name
 
     }
   end
