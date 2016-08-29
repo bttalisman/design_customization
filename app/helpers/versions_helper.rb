@@ -628,7 +628,6 @@ module VersionsHelper
         image = MiniMagick::Image.open( path )
         image = resize_with_crop( image, width.to_f, height.to_f )
         image.write( path )
-        image.write( '/users/bent/design_customization/output/images/' + image_name + '.jpg' )
       end
 
     }

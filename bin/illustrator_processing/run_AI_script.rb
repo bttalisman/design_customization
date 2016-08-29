@@ -21,13 +21,7 @@ ASCode = <<-EOD
     			activate
           set user interaction level to never interact
           open "<<source>>"
-          tell process "Finder"
-            click button "Ignore" of window "Adobe Illustrator"
-          end tell
     			open "<<script>>"
-    			try
-    				close windows
-    			end try
     			close current document
       	end tell
     end run
