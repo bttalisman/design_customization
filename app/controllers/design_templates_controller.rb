@@ -60,6 +60,11 @@ class DesignTemplatesController < ApplicationController
 
     if @design_template.save
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - SUCCESS!'
+
+      # Do any post-processing necessary.  Original purpose: to fix paths to
+      # missing files.
+      post_process( @design_template )
+
       redirect_to design_template_path
     else
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - FAILURE!'

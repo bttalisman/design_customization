@@ -4,6 +4,7 @@ development:
   path_to_runner_script: <%= Rails.root.to_s + '/bin/illustrator_processing/run_AI_script.rb' %>
   path_to_extract_tags_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractTags.jsx' %>
   path_to_extract_images_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractImages.jsx' %>
+  path_to_post_process_script: <%= Rails.root.to_s + '/bin/illustrator_processing/postProcess.jsx' %>
   path_to_extract_all_text_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractAllText.jsx' %>
   path_to_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplace.jsx' %>
   path_to_image_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplaceImages.jsx' %>
@@ -25,6 +26,7 @@ test:
   path_to_runner_script: <%= Rails.root.to_s + '/bin/illustrator_processing/run_AI_script.rb' %>
   path_to_extract_tags_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractTags.jsx' %>
   path_to_extract_images_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractImages.jsx' %>
+  path_to_post_process_script: <%= Rails.root.to_s + '/bin/illustrator_processing/postProcess.jsx' %>
   path_to_extract_all_text_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractAllText.jsx' %>
   path_to_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplace.jsx' %>
   path_to_image_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplaceImages.jsx' %>
@@ -45,6 +47,7 @@ production:
   path_to_runner_script: <%= Rails.root.to_s + '/bin/illustrator_processing/run_AI_script.rb' %>
   path_to_extract_tags_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractTags.jsx' %>
   path_to_extract_images_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractImages.jsx' %>
+  path_to_post_process_script: <%= Rails.root.to_s + '/bin/illustrator_processing/postProcess.jsx' %>
   path_to_extract_all_text_script: <%= Rails.root.to_s + '/bin/illustrator_processing/extractAllText.jsx' %>
   path_to_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplace.jsx' %>
   path_to_image_search_replace_script: <%= Rails.root.to_s + '/bin/illustrator_processing/searchAndReplaceImages.jsx' %>

@@ -105,13 +105,49 @@ module DesignTemplatesHelper
     true
   end
 
-  # This method returns an array of extracted image names.  These are the
+  # This method returns an array of extracted image data.  These are the
   # placed items within an AI file that will be replaced by versions of this
   # template.
+  # [
+  #    { name: 'bob', height: '34', width: '355' }
+  # ]
   def get_images_array( design_template )
     images_file = path_to_images_file( design_template )
     images = load_array_file( images_file )
     images
+  end
+
+  # This method returns an array of image names.  These are the names of
+  # placed items within the original AI file.
+  def get_image_names_array( design_template )
+    images = get_images_array( design_template )
+    names = []
+    images.each { |i|
+      names << i[ 'name' ]
+    }
+    names
+  end
+
+  def get_image_object( design_template, image_name )
+    extracted_image_data = get_images_array( design_template )
+    found_obj = {}
+    extracted_image_data.each { |i|
+      if( i[ 'name' ] == image_name ) then
+        found_obj = i
+        break
+      end
+    }
+    found_obj
+  end
+
+  def get_original_width( design_template, image_name )
+    o = get_image_object( design_template, image_name )
+    o[ 'width' ]
+  end
+
+  def get_original_height( design_template, image_name )
+    o = get_image_object( design_template, image_name )
+    o[ 'height' ]
   end
 
   # This method constructs a new json string for the prompts field.  This
@@ -188,15 +224,26 @@ module DesignTemplatesHelper
 
     image_count.times do |i|
       image_settings = {}
+
       p_name = 'image_name' + i.to_s
       image_name = params[ p_name ]
       p_name = 'replace_image' + i.to_s
       replace = params[ p_name ]
+
+      height = get_original_height( template, image_name )
+      width = get_original_width( template, image_name )
+
       if replace
         image_settings[ PROMPTS_KEY_REPLACE_IMG ] = PROMPTS_VALUE_REPLACE_IMG_TRUE
       else
         image_settings[ PROMPTS_KEY_REPLACE_IMG ] = PROMPTS_VALUE_REPLACE_IMG_FALSE
       end
+
+      orig_image = {}
+      orig_image[ PROMPTS_KEY_ORIGINAL_HEIGHT ] = height
+      orig_image[ PROMPTS_KEY_ORIGINAL_WIDTH ] = width
+      image_settings[ PROMPTS_KEY_ORIGINAL_IMAGE ] = orig_image
+
       all_image_settings[ image_name ] = image_settings
     end
 
@@ -223,7 +270,9 @@ module DesignTemplatesHelper
   # image_settings:
   #   image_name:
   #     replace_image: 'checked'
-  #
+  #     original_image:
+  #       original_height: '356'
+  #       original_width: '343'
   def get_prompts_object( design_template )
     prompts_string = design_template.prompts
     Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
@@ -269,9 +318,29 @@ module DesignTemplatesHelper
     source_folder
   end
 
-  # This method returns the path to the configuration file for extracting tags,
-  # to be used as an argument to the run_AI_script script.  The options
-  # parameter must contain either 'design_template_id' or 'design_template'
+
+  def post_process_config_file_name( options = {} )
+    dt_id = options[ 'design_template_id' ]
+    design_template = options[ 'design_template' ]
+
+    Rails.logger.info 'design_templates_helper - post_process_config_file_name() - options: '\
+      + options.to_s
+
+    dt = if dt_id.nil?
+           design_template
+         else
+           DesignTemplate.find( dt_id )
+         end
+
+    Rails.logger.info 'design_templates_helper - post_process_config_file_name() - dt: '\
+      + dt.to_s
+
+    dt_folder = get_design_template_folder( dt )
+    config_file = dt_folder + '/' + RUNNER_POST_PROCESS_CONFIG_FILE_NAME
+    config_file
+  end
+
+
   def tags_config_file_name( options = {} )
     dt_id = options[ 'design_template_id' ]
     design_template = options[ 'design_template' ]
@@ -292,6 +361,7 @@ module DesignTemplatesHelper
     config_file = dt_folder + '/' + RUNNER_TAGS_CONFIG_FILE_NAME
     config_file
   end
+
 
   # This method returns the path to the configuration file for extracting images,
   # to be used as an argument to the run_AI_script script.  The options
@@ -324,6 +394,58 @@ module DesignTemplatesHelper
   def process_original( design_template )
     extract_tags( design_template )
     extract_images( design_template )
+  end
+
+
+  # This method writes the design_template's prompts to a json file sitting
+  # next to the original AI file.  These prompts data are used by
+  # the post_processing script.
+  def write_temp_prompts_file( design_template )
+    path_to_ai_file = design_template.original_file.path
+    Rails.logger.info 'design_templates_helper - write_temp_prompts_file()'\
+      + ' - path_to_ai_file: ' + path_to_ai_file.to_s
+    temp_prompts_file = path_to_prompts_file( path_to_ai_file )
+
+    # we'll create a temporary file containing necessary info, sitting right
+    # next to the original ai file.
+    File.open( temp_prompts_file, 'w' ) do |f|
+      f.write( design_template.prompts.to_s )
+    end
+  end
+
+  def remove_prompts_file( design_template )
+    path_to_ai_file = design_template.original_file.path
+    temp_prompts_file = path_to_prompts_file( path_to_ai_file )
+    File.delete( temp_prompts_file )
+  end
+
+
+  def post_process( design_template )
+    app_config = Rails.application.config_for( :customization )
+    run_remotely = app_config[ 'run_remotely' ]
+
+    write_temp_prompts_file( design_template )
+
+    config_file = post_process_config_file_name( 'design_template' => design_template )
+    source_folder = get_design_template_folder( design_template )
+
+    config = {}
+    config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = design_template.original_file.path
+    config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = app_config[ 'path_to_post_process_script' ]
+    config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = source_folder
+
+    File.open( config_file, 'w' ) do |f|
+      f.write( config.to_json )
+    end
+
+    make_output_folder( design_template )
+
+    if run_remotely
+      post_process_send_remote( design_template )
+    else
+      post_process_system_call( design_template )
+    end
+    remove_prompts_file( design_template )
   end
 
   def extract_tags( design_template )
@@ -379,6 +501,27 @@ module DesignTemplatesHelper
     end
   end
 
+
+  def post_process_send_remote( design_template )
+    Rails.logger.info 'design_templates_helper - post_process_send_remote() - '\
+      + 'design_template: ' + design_template.to_s
+    Rails.logger.info 'design_templates_helper - post_process_send_remote() - '\
+      + 'remote_host: ' + remote_host.to_s
+    uri_string = remote_host + '/do_post_process?design_template_id='\
+      + design_template.id.to_s
+    uri = URI.parse( uri_string )
+
+    t = Thread.new do
+      response = Net::HTTP.get_response(uri)
+      Rails.logger.info 'design_templates_helper - post_process_send_remote() - '\
+        + 'response.code: ' + response.code.to_s
+    end
+
+    # Wait until t gets back.  This hangs if one machine is serving both
+    # requests.
+#    t.join
+  end
+
   def extract_tags_send_remote( design_template )
     Rails.logger.info 'design_templates_helper - extract_tags_send_remote() - '\
       + 'design_template: ' + design_template.to_s
@@ -414,6 +557,19 @@ module DesignTemplatesHelper
     # Wait until t gets back.  This hangs if one machine is serving both
     # requests.
 #    t.join
+  end
+
+  def post_process_system_call( design_template )
+    Rails.logger.info 'design_templates_helper - post_process_system_call() - '\
+      + 'design_template: ' + design_template.to_s
+    app_config = Rails.application.config_for(:customization)
+    path = app_config[ 'path_to_runner_script' ]
+
+    sys_com = 'ruby ' + path + ' "'\
+      + post_process_config_file_name( 'design_template' => design_template ) + '"'
+    Rails.logger.info 'design_templates_helper - post_process_system_call() - '\
+      + 'about to run sys_com: ' + sys_com.to_s
+    system( sys_com )
   end
 
   def extract_tags_system_call( design_template )

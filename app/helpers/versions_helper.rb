@@ -1,6 +1,7 @@
 # Versions Helper
 module VersionsHelper
   include CollagesHelper
+  include ImageHelper
 
   # Every version has its own folder, used for building modified AI files.
   # This folder will contain a copy of the AI file from the template,
@@ -182,17 +183,29 @@ module VersionsHelper
     Rails.logger.info 'VERSIONS_HELPER - set_tag_values() - params: '\
       + params.to_s
 
-    if json?( params[ 'version_data' ] )
-      # these strings are just part of the params structure, not necesarilly
-      # VERSION_VALUES_KEY...
-      version_data = JSON.parse( params[ 'version_data' ] )
-      tag_settings = version_data[ 'tag_settings' ]
+    tag_count = params[ 'tag_count' ]
+    tag_count = if tag_count != ''
+                    tag_count.to_i
+                  else
+                    0
+                  end
 
-      values = get_values_object( version )
-      values[ VERSION_VALUES_KEY_TAG_SETTINGS ] = tag_settings
+    all_tag_settings = {}
+    tag_count.times do |i|
+      tag_settings = {}
+      tag_name = params[ 'tag_name' + i.to_s ]
+      rep_text = params[ 'replacement_text' + i.to_s ]
+      text_color = params[ 'color_val' + i.to_s ]
 
-      version.values = values.to_json
+      tag_settings[ VERSION_VALUES_KEY_REPLACEMENT_TEXT ] = rep_text
+      tag_settings[ VERSION_VALUES_KEY_TEXT_COLOR ] = text_color
+
+      all_tag_settings[ tag_name ] = tag_settings
     end
+
+    values = get_values_object( version )
+    values[ VERSION_VALUES_KEY_TAG_SETTINGS ] = all_tag_settings
+    version.values = values.to_json
 
     Rails.logger.info 'VERSIONS_HELPER - set_tag_values() - version saved!'\
       if version.save
@@ -324,6 +337,8 @@ module VersionsHelper
     Rails.logger.info 'VERSIONS_HELPER - add_replacement_image_to_version() - ri: '\
       + ri.to_s
 
+    #
+    ri.image_name = image_name
     values = get_values_object( version )
     image_settings = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
 
@@ -589,20 +604,34 @@ module VersionsHelper
   # with a version, and performs any processing necessary.
   def process_replacement_images( version )
     Rails.logger.info 'versions_helper - process_replacement_images()'
+    design_template = version.design_template
+    MiniMagick.logger.level = Logger::WARN
 
     version.replacement_images.each { |ri|
       type = ri.uploaded_file_content_type
+      image_name = ri.image_name
+      path = ri.get_path.to_s
+
       Rails.logger.info 'versions_helper - process_replacement_images() - type: '\
         + type.to_s
+      Rails.logger.info 'versions_helper - process_replacement_images() - image_name: '\
+        + image_name.to_s
+
 
       if type == 'application/zip'
         ri.unzip
+      elsif type == 'image/jpeg'
 
+        height = get_original_height( design_template, image_name )
+        width = get_original_width( design_template, image_name )
+
+        image = MiniMagick::Image.open( path )
+        image = resize_with_crop( image, width.to_f, height.to_f )
+        image.write( path )
+        image.write( '/users/bent/design_customization/output/images/' + image_name + '.jpg' )
       end
 
     }
-
-
   end
 
 end

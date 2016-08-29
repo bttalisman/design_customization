@@ -14,7 +14,7 @@ class PartialsController < ApplicationController
     template_id = params[ :id ]
     @design_template = DesignTemplate.find( template_id )
     @tags = get_tags_array( @design_template )
-    @images = get_images_array( @design_template )
+    @images = get_image_names_array( @design_template )
     @palettes = Palette.all
 
     # If the user has set options regarding tags extracted from an AI file they

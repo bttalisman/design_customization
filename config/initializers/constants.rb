@@ -9,6 +9,7 @@ RUNNER_CONFIG_KEY_SOURCE_FILE = 'source file'.freeze
 
 RUNNER_TAGS_CONFIG_FILE_NAME = 'config_extract_tags.jsn'.freeze
 RUNNER_IMAGES_CONFIG_FILE_NAME = 'config_extract_images.jsn'.freeze
+RUNNER_POST_PROCESS_CONFIG_FILE_NAME = 'config_post_process.jsn'.freeze
 
 DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'.freeze
 DESIGN_TEMPLATE_STATS_KEY_MESSAGE = 'message'.freeze
@@ -23,6 +24,9 @@ PROMPTS_KEY_PICK_COLOR = 'pick_color'.freeze
 PROMPTS_KEY_USE_PALETTE = 'use_palette'.freeze
 PROMPTS_KEY_PALETTE_ID = 'palette_id'.freeze
 PROMPTS_KEY_REPLACE_IMG = 'replace_image'.freeze
+PROMPTS_KEY_ORIGINAL_IMAGE = 'original_image'.freeze
+PROMPTS_KEY_ORIGINAL_HEIGHT = 'original_height'.freeze
+PROMPTS_KEY_ORIGINAL_WIDTH = 'original_width'.freeze
 
 PROMPTS_VALUE_REPLACE_IMG_TRUE = 'checked'.freeze
 PROMPTS_VALUE_REPLACE_IMG_FALSE = ''.freeze
