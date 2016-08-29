@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160828181449) do
+ActiveRecord::Schema.define(version: 20160829204533) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20160828181449) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.integer  "version_id", limit: 4
+    t.string   "image_name", limit: 255
   end
 
   create_table "colors", force: :cascade do |t|

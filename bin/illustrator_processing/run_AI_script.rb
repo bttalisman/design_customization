@@ -37,6 +37,8 @@ end
 def same_base?( path, base )
   return true if File.basename( path, '.ai' ) == base
   return true if File.basename( path, '.jpg' ) == base
+  return true if File.basename( path, '.png' ) == base
+
   false
 end
 

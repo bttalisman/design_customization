@@ -319,6 +319,7 @@ module VersionsHelper
           o = { query: query }
           clear_image_associations( image_name, version )
           collage = version.collages.create( o )
+          collage.image_name = image_name
           collage.save
           build_collage_folder( collage )
           add_collage_to_version( collage, image_name, version )
@@ -492,6 +493,53 @@ module VersionsHelper
     remove_data_file( config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] )
   end
 
+
+  def get_output_folder( version )
+    if version.output_folder_path != '' && !version.output_folder_path.nil?
+      # the user has specified an output folder
+      output_folder = guarantee_final_slash( version.output_folder_path )
+    else
+      # the user has not specified an output folder,
+      # we'll just use the version folder
+      output_folder = guarantee_final_slash( version_folder )
+    end
+    output_folder
+  end
+
+  def send_to_render( version, params )
+    Rails.logger.info '\n\n\nVERSION_HELPER - send_to_render()'
+
+    do_render = to_boolean( params[ 'render' ] )
+
+    if do_render
+      output_folder = get_output_folder( version )
+      output_folder_files = output_folder + '.'
+
+      original_file = version.design_template.original_file
+      original_file_path = original_file.path
+      original_file_base_name = File.basename( original_file_path, '.ai' )
+
+      png_file = original_file_base_name + '_final.png'
+
+      Rails.logger.info 'versions_helper - send_to_render() - do_render: ' + do_render.to_s
+      Rails.logger.info 'versions_helper - send_to_render() - png_file: ' + png_file.to_s
+      Rails.logger.info 'versions_helper - send_to_render() - output_folder: ' + output_folder.to_s
+
+      Dir.entries(output_folder_files).each do |name|
+        # skip folders
+        next if File.directory? name
+        Rails.logger.info 'versions_helper - send_to_render() - name: ' + name.to_s
+        if( name == png_file )
+          from_path = output_folder + name
+          to_path = '/abyss/NEW_DESIGNS/ToRender/' + name
+          Rails.logger.info 'versions_helper - send_to_render() - from_path: ' + from_path.to_s
+          Rails.logger.info 'versions_helper - send_to_render() - to_path: ' + to_path.to_
+          FileUtils.cp from_path, to_path
+        end
+      end # each entry in dir
+    end # if do_render
+  end
+
   # This method does everything necessary to generate modified AI files and
   # AI output specified by a particular version.
   # The original AI file is copied from the associated DesignTemplate into
@@ -534,14 +582,7 @@ module VersionsHelper
     # copy the original file to the version folder, same name
     FileUtils.cp( original_file_path, version_file_path )
 
-    if version.output_folder_path != '' && !version.output_folder_path.nil?
-      # the user has specified an output folder
-      output_folder = guarantee_final_slash( version.output_folder_path )
-    else
-      # the user has not specified an output folder,
-      # we'll just use the version folder
-      output_folder = guarantee_final_slash( version_folder )
-    end
+    output_folder = get_output_folder( version )
 
     # The output file for each round of transformations has the _final
     # appendage.

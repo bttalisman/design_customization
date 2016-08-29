@@ -17,14 +17,6 @@
   {
     if( validate() )
     {
-      // this function is defined in the version_settings.html.erb controlled
-      // by partials controller
-//      var oReturn = build();
-//      $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
-
-//      var pathInput = $('#version_output_folder_path');
-//      var userSpecFolder = pathInput.val();
-
       var form = $('#version_form');
       form.submit();
     }
@@ -95,6 +87,11 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
             Run Illustrator?
             <input type='checkbox' name='runai' id='runai' class='checkbox-input' value='true'></input>
           </label>
+          <label class='checkbox-label'>
+            Send to Render?
+            <input type='checkbox' name='render' id='render' class='checkbox-input' value='true'></input>
+          </label>
+
           <div class='spacer'></div>
 
           <a class='btn btn-default' id='update' onclick='create_version(); return false;'>Update</a>

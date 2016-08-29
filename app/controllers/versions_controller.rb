@@ -73,6 +73,8 @@ class VersionsController < ApplicationController
     process_replacement_images( @version )
 
     process_version( @version, params ) if @version.save
+    send_to_render( @version, params )
+
     redirect_to versions_path
   end
 

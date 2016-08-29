@@ -26,6 +26,12 @@ module ApplicationHelper
     false
   end
 
+
+  def to_boolean( str )
+    return false if str.nil?
+    str.downcase == 'true'
+  end
+
   def is_number? string
     true if Float(string) rescue false
   end

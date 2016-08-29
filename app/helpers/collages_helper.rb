@@ -1,6 +1,7 @@
 # Collages Helper
 module CollagesHelper
   include ApplicationHelper
+  include ImageHelper
 
   # This method is called after the collage is saved.  It creates a folder,
   # contacts Instagram and downloads images based on the query into that
@@ -14,26 +15,23 @@ module CollagesHelper
 
   # I use miniMagick to reformat the image because jpgs retrieved from
   # Instagram cause errors in AI.
-  def crop_and_save_image( image, index, path )
-    width = image.width
-    height = image.height
+  def crop_and_save_image( image, index, path, collage )
 
-    if( (height >= 500) && (width >= 500) )
-      # if the image is big enough, we'll crop it and save it.
-      x_offset = (width - 500) / 2
-      y_offset = (height - 500) / 2
-      crop_string = '500x500+' + x_offset.to_s + '+' + y_offset.to_s
-      image.crop( crop_string )
-      image.format 'png'
-      # Any name will do, the AI script will just place all of the images
-      # found in the collage folder.
-      full_path = path + '/image_' + index.to_s + '.png'
-      image.write( full_path )
-      return true
-    end
-    return false
+    design_template = collage.version.design_template
+    image_name = collage.image_name
+
+    height = get_original_height( design_template, image_name )
+    width = get_original_width( design_template, image_name )
+
+    image = resize_with_crop( image, width.to_f, height.to_f )
+
+    image.format 'png'
+    # Any name will do, the AI script will just place all of the images
+    # found in the collage folder.
+    full_path = path + '/image_' + index.to_s + '.png'
+    image.write( full_path )
+    return true
   end
-
 
   def extract_insta_data( o, type )
     if type == 'user'
@@ -56,6 +54,7 @@ module CollagesHelper
   # This method downloads images from Instagram and places them in the collage
   # folder.
   def fetch_content( collage )
+
     app_config = Rails.application.config_for( :customization )
     path = collage.path
     query = collage.query
@@ -86,7 +85,7 @@ module CollagesHelper
       break if index >= max_items
       url = item[ 'thumbnail_src' ]
       image = MiniMagick::Image.open( url )
-      index += 1 if crop_and_save_image( image, index, path )
+      index += 1 if crop_and_save_image( image, index, path, collage )
     }
 
     while( has_next_page && (index < max_items) )
@@ -105,11 +104,9 @@ module CollagesHelper
         break if index >= max_items
         url = item[ 'thumbnail_src' ]
         image = MiniMagick::Image.open( url )
-        index += 1 if crop_and_save_image( image, index, path )
+        index += 1 if crop_and_save_image( image, index, path, collage )
       }
     end
     b.close # IMPORTANT!
-  rescue
-    b.close
   end
 end
