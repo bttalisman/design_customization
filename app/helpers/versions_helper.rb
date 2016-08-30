@@ -655,30 +655,44 @@ module VersionsHelper
     version.replacement_images.each { |ri|
       type = ri.uploaded_file_content_type
       image_name = ri.image_name
-      path = ri.get_path.to_s
 
       Rails.logger.info 'versions_helper - process_replacement_images() - type: '\
         + type.to_s
       Rails.logger.info 'versions_helper - process_replacement_images() - image_name: '\
         + image_name.to_s
-      Rails.logger.info 'versions_helper - process_replacement_images() - path: '\
-        + path.to_s
 
       if image_name
         if type == 'application/zip'
           ri.unzip
         elsif type == 'image/jpeg'
-
-          height = get_original_height( design_template, image_name )
-          width = get_original_width( design_template, image_name )
-
-          image = MiniMagick::Image.open( path )
-          image = resize_with_crop( image, width.to_f, height.to_f )
-          image.write( path )
+          resize_image( design_template, ri )
         end
       end # if image_name
 
     }
+  end
+
+
+  def resize_image( design_template, ri )
+    path = ri.get_path.to_s
+    image_name = ri.image_name
+
+    Rails.logger.info 'versions_helper - resize_image() - image_name: '\
+      + image_name.to_s
+    prompts = get_prompts_object( design_template )
+    image_settings = prompts[ PROMPTS_KEY_IMAGE_SETTINGS ][ image_name ]
+    do_fit = image_settings[ PROMPTS_KEY_FIT_IMG ] if !image_settings.nil?
+    Rails.logger.info 'versions_helper - resize_image() - do_fit: '\
+      + do_fit.to_s
+
+    return if do_fit != PROMPTS_VALUE_FIT_IMG_TRUE
+
+    height = get_original_height( design_template, image_name )
+    width = get_original_width( design_template, image_name )
+
+    image = MiniMagick::Image.open( path )
+    image = resize_with_crop( image, width.to_f, height.to_f )
+    image.write( path )
   end
 
 end

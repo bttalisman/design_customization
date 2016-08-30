@@ -32,10 +32,13 @@ if !@images.nil?
 
         <label class='checkbox-label'>
           Replace this image?
-          <input type='checkbox' class='checkbox-input' value='true' <%= replaceImage %> name='replace_image<%= i.to_s %>' id='replace_image<%= i.to_s %>' <%= replaceImage %> ></input>
+          <input type='checkbox' data-label-id='fit_label<%= i.to_s %>'
+            data-input-id='fit_image<%= i.to_s %>' onchange='toggle_replace( event );'
+            class='checkbox-input' value='true' <%= replaceImage %>
+            name='replace_image<%= i.to_s %>' id='replace_image<%= i.to_s %>' ></input>
         </label>
 
-        <label class='checkbox-label'>
+        <label id='fit_label<%= i.to_s %>' class='checkbox-label'>
           Scale and crop replacement images?
           <input type='checkbox' class='checkbox-input' value='true' <%= fitImage %> name='fit_image<%= i.to_s %>' id='fit_image<%= i.to_s %>' <%= fitImage %> ></input>
         </label>
@@ -57,4 +60,33 @@ end #imags is not nil
     // not really anything to do here.
     return true;
   }
+
+
+
+
+    function toggle_replace( event )
+    {
+      var target = $(event.target);
+      var input_id = target.attr( 'data-input-id' );
+      var label_id = target.attr( 'data-label-id' );
+      var fit_input = $( '#' + input_id );
+      var fit_label = $( '#' + label_id );
+
+      if( !target.is(':checked') )
+      {
+        // Do not replace
+        fit_input.prop( 'disabled', true );
+        fit_input.prop( 'checked', false );
+        fit_label.addClass( 'disabled' );
+      }
+      else
+      {
+        // Do replace
+        fit_input.prop( 'disabled', false );
+        fit_label.removeClass( 'disabled' );
+      }
+
+    }
+
+
 </script>
