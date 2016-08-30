@@ -24,6 +24,7 @@ PROMPTS_KEY_PICK_COLOR = 'pick_color'.freeze
 PROMPTS_KEY_USE_PALETTE = 'use_palette'.freeze
 PROMPTS_KEY_PALETTE_ID = 'palette_id'.freeze
 PROMPTS_KEY_REPLACE_IMG = 'replace_image'.freeze
+PROMPTS_KEY_FIT_IMG = 'fit_image'.freeze
 PROMPTS_KEY_ORIGINAL_IMAGE = 'original_image'.freeze
 PROMPTS_KEY_ORIGINAL_HEIGHT = 'original_height'.freeze
 PROMPTS_KEY_ORIGINAL_WIDTH = 'original_width'.freeze
@@ -34,6 +35,8 @@ PROMPTS_VALUE_PICK_COLOR_TRUE = 'checked'.freeze
 PROMPTS_VALUE_PICK_COLOR_FALSE = ''.freeze
 PROMPTS_VALUE_USE_PALETTE_TRUE = 'checked'.freeze
 PROMPTS_VALUE_USE_PALETTE_FALSE = ''.freeze
+PROMPTS_VALUE_FIT_IMG_TRUE = 'checked'.freeze
+PROMPTS_VALUE_FIT_IMG_FALSE = ''.freeze
 
 # Code in bin/illustrator_processing/*.jsx uses these key values also, so
 # any changes must be reflected there.

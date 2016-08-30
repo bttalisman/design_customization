@@ -17,19 +17,27 @@ if !@images.nil?
       logger.info '_design_template_images.html.erb - imageProps: ' + imageProps.to_s
 
       if !imageProps.nil?
-        replaceImage = imageProps[ 'replace_image' ]
+        replaceImage = imageProps[ PROMPTS_KEY_REPLACE_IMG ]
+        fitImage = imageProps[ PROMPTS_KEY_FIT_IMG ]
       else
         replaceImage = ''
+        fitImage = ''
       end
     end # @prompts not nil %>
     <div class='panel panel-success'>
       <div class='panel-heading'><h3 class='panel-title'><%= image %> - Image Replacement</h3></div>
       <div class='panel-body'>
 
+        <input type='hidden' name='image_name<%= i.to_s %>' value='<%= image.to_s %>'></input>
+
         <label class='checkbox-label'>
           Replace this image?
           <input type='checkbox' class='checkbox-input' value='true' <%= replaceImage %> name='replace_image<%= i.to_s %>' id='replace_image<%= i.to_s %>' <%= replaceImage %> ></input>
-          <input type='hidden' name='image_name<%= i.to_s %>' value='<%= image.to_s %>'></input>
+        </label>
+
+        <label class='checkbox-label'>
+          Scale and crop replacement images?
+          <input type='checkbox' class='checkbox-input' value='true' <%= fitImage %> name='fit_image<%= i.to_s %>' id='fit_image<%= i.to_s %>' <%= fitImage %> ></input>
         </label>
 
       </div>

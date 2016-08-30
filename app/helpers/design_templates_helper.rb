@@ -229,6 +229,8 @@ module DesignTemplatesHelper
       image_name = params[ p_name ]
       p_name = 'replace_image' + i.to_s
       replace = params[ p_name ]
+      p_name = 'fit_image' + i.to_s
+      fit = params[ p_name ]
 
       height = get_original_height( template, image_name )
       width = get_original_width( template, image_name )
@@ -237,6 +239,12 @@ module DesignTemplatesHelper
         image_settings[ PROMPTS_KEY_REPLACE_IMG ] = PROMPTS_VALUE_REPLACE_IMG_TRUE
       else
         image_settings[ PROMPTS_KEY_REPLACE_IMG ] = PROMPTS_VALUE_REPLACE_IMG_FALSE
+      end
+
+      if fit
+        image_settings[ PROMPTS_KEY_FIT_IMG ] = PROMPTS_VALUE_FIT_IMG_TRUE
+      else
+        image_settings[ PROMPTS_KEY_FIT_IMG ] = PROMPTS_VALUE_FIT_IMG_FALSE
       end
 
       orig_image = {}
@@ -270,6 +278,7 @@ module DesignTemplatesHelper
   # image_settings:
   #   image_name:
   #     replace_image: 'checked'
+  #     fit_image: 'checked'
   #     original_image:
   #       original_height: '356'
   #       original_width: '343'
