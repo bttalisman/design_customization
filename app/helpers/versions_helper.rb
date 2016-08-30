@@ -145,7 +145,7 @@ module VersionsHelper
 
   # A version associates image_names with actual uploaded files
   def get_uploaded_file( image_name, version )
-    Rails.logger.info 'VERSIONS_HELPER - get_uploaded_file !!'
+    Rails.logger.info 'VERSIONS_HELPER - get_uploaded_file()'
 
     values = get_values_object( version )
     image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]\
@@ -507,23 +507,18 @@ module VersionsHelper
   end
 
   def send_to_render( version, params )
-    Rails.logger.info '\n\n\nVERSION_HELPER - send_to_render()'
-
     do_render = to_boolean( params[ 'render' ] )
+    Rails.logger.info 'VERSION_HELPER - send_to_render() - do_render: '\
+      + do_render.to_s
 
     if do_render
-      output_folder = get_output_folder( version )
+      paths = get_paths( version )
+      output_folder = paths[ :output_folder ]
       output_folder_files = output_folder + '.'
-
-      original_file = version.design_template.original_file
-      original_file_path = original_file.path
-      original_file_base_name = File.basename( original_file_path, '.ai' )
+      original_file_path = paths[ :original_file_path ]
+      original_file_base_name = paths[ :original_file_base_name ]
 
       png_file = original_file_base_name + '_final.png'
-
-      Rails.logger.info 'versions_helper - send_to_render() - do_render: ' + do_render.to_s
-      Rails.logger.info 'versions_helper - send_to_render() - png_file: ' + png_file.to_s
-      Rails.logger.info 'versions_helper - send_to_render() - output_folder: ' + output_folder.to_s
 
       Dir.entries(output_folder_files).each do |name|
         # skip folders
@@ -533,12 +528,40 @@ module VersionsHelper
           from_path = output_folder + name
           to_path = '/abyss/NEW_DESIGNS/ToRender/' + name
           Rails.logger.info 'versions_helper - send_to_render() - from_path: ' + from_path.to_s
-          Rails.logger.info 'versions_helper - send_to_render() - to_path: ' + to_path.to_
+          Rails.logger.info 'versions_helper - send_to_render() - to_path: ' + to_path.to_s
           FileUtils.cp from_path, to_path
         end
       end # each entry in dir
     end # if do_render
   end
+
+  def get_paths( version )
+    original_file = version.design_template.original_file
+    original_file_path = original_file.path
+    original_file_name = File.basename( original_file_path )
+    original_file_base_name = File.basename( original_file_path, '.ai' )
+    version_folder = get_version_folder( version )
+    version_file_path = version_folder + '/' + original_file_name
+    output_folder = get_output_folder( version )
+    output_file_base_name = original_file_base_name.to_s + '_final'
+    intermediate_output = output_folder.to_s + output_file_base_name + '.ai'
+
+    o = {
+      original_file_path: original_file_path,
+      original_file_name: original_file_name,
+      original_file_base_name: original_file_base_name,
+      version_folder: version_folder,
+      version_file_path: version_file_path,
+      output_folder: output_folder,
+      output_file_base_name: output_file_base_name,
+      intermediate_output: intermediate_output
+    }
+
+    Rails.logger.info 'versions_helper - get_paths() - o: '\
+      + JSON.pretty_generate( o )
+    o
+  end
+
 
   # This method does everything necessary to generate modified AI files and
   # AI output specified by a particular version.
@@ -554,7 +577,7 @@ module VersionsHelper
   # If processing is remote, send_remote_run_request() sends an HTTP request
   # containing the version id
   def process_version( version, params )
-    Rails.logger.info '\n\n\nVERSION_HELPER - process_version()'
+    Rails.logger.info 'VERSION_HELPER - process_version()'
 
     design_template = version.design_template
     # this is an array of tag names, extracted from the AI file
@@ -564,45 +587,30 @@ module VersionsHelper
 
     maybe_bail_out( version, tags, images, params )
 
-    original_file = design_template.original_file
-    original_file_path = original_file.path
-    original_file_name = File.basename( original_file_path )
-    original_file_base_name = File.basename( original_file_path, '.ai' )
+    paths = get_paths( version )
 
-    version_folder = get_version_folder( version )
-    version_file_path = version_folder + '/' + original_file_name
-
-    Rails.logger.info 'versions_helper - process_version() - original_file_path - '\
-      + original_file_path
-    Rails.logger.info 'versions_helper - process_version() - version_file_path - '\
-      + version_file_path
-    Rails.logger.info 'versions_helper - process_version() - version.output_folder_path - '\
-      + version.output_folder_path.to_s
+    original_file_path = paths[ :original_file_path ]
+    original_file_name = paths[ :original_file_name ]
+    original_file_base_name = paths[ :original_file_base_name ]
+    version_folder = paths[ :version_folder ]
+    version_file_path = paths[ :version_file_path ]
+    output_folder = paths[ :output_folder ]
+    output_file_base_name = paths[ :output_file_base_name ]
+    intermediate_output = paths[ :intermediate_output ]
 
     # copy the original file to the version folder, same name
     FileUtils.cp( original_file_path, version_file_path )
-
-    output_folder = get_output_folder( version )
-
-    # The output file for each round of transformations has the _final
-    # appendage.
-    output_file_base_name = original_file_base_name.to_s + '_final'
-    intermediate_output = output_folder.to_s + output_file_base_name + '.ai'
-
-    Rails.logger.info( 'versions_helper - process_version() - '\
-      + 'intermediate_output: ' + intermediate_output )
 
     int_file_exist = false
     app_config = Rails.application.config_for( :customization )
 
     if !tags.empty?
       # There are tags to replace, we should replace tags
-      Rails.logger.info( 'versions_helper - process_version() - about to replace tags' )
-      path = app_config[ 'path_to_search_replace_script' ]
+      script_path = app_config[ 'path_to_search_replace_script' ]
 
       config = {}
       config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = version_file_path
-      config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = path
+      config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = script_path
       config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = output_folder
       config[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ] = output_file_base_name
 
@@ -624,8 +632,6 @@ module VersionsHelper
         # replace images
         config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = version_file_path
       end
-
-      output_file_base_name = original_file_base_name + '_final'
 
       config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = app_config[ 'path_to_image_search_replace_script' ]
       config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = output_folder
