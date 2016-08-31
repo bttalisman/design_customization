@@ -1,6 +1,81 @@
 
 module ImageHelper
 
+  def path_to_image?( path )
+    extension = File.extname( path )
+
+    if( (extension == '.jpg') ||
+        (extension == '.jpeg') )
+      return true
+    end
+    false
+  end
+
+  def path_to_zip?( path )
+    extension = File.extname( path )
+    if( extension == '.zip' )
+      return true
+    end
+    false
+  end
+
+
+  # This method resizes all of the images extracted from a ReplacementImage
+  # for which the uploaded_file is a zip archive.  It is expected that the
+  # images have already been extracted into a 'extracted' subfolder.
+  def resize_images_from_zip( design_template, ri )
+    Rails.logger.info 'image_helper - resize_images_from_zip()'
+
+    # Note, we need to verify that uploaded file itself is a zip.
+    # Calling ri.get_path() returns a path to the folder containing extracted
+    # items.
+    path = ri.uploaded_file.path.to_s
+    return if !path_to_zip?( path )
+    extracted_folder = ri.get_path()
+    return if !File.exists?( extracted_folder )
+
+    Dir.entries( extracted_folder ).each do |name|
+      Rails.logger.info 'image_helper - resize_images_from_zip() - name: '\
+        + name.to_s
+      # skip folders
+      next if File.directory? name
+      next if !path_to_image?( name )
+
+      file_path = File.join( extracted_folder, name )
+      resize_image_from_image_file( design_template, ri, file_path )
+    end
+  end
+
+
+  def resize_image_from_image_file( design_template, ri, path )
+    return if !path_to_image?( path )
+
+    image_name = ri.image_name
+    Rails.logger.info 'image_helper - resize_image_from_image_file() - image_name: '\
+      + image_name.to_s
+
+    # Get prompts associated with this replaementImage, see if it's
+    # to be fitted.
+    prompts = get_prompts_object( design_template )
+    image_settings = prompts[ PROMPTS_KEY_IMAGE_SETTINGS ][ image_name ]
+    do_fit = image_settings[ PROMPTS_KEY_FIT_IMG ] if !image_settings.nil?
+    Rails.logger.info 'versions_helper - resize_image_from_image_file() - do_fit: '\
+      + do_fit.to_s
+
+    return if do_fit != PROMPTS_VALUE_FIT_IMG_TRUE
+
+    height = get_original_height( design_template, image_name )
+    width = get_original_width( design_template, image_name )
+
+    image = MiniMagick::Image.open( path )
+    image = resize_with_crop( image, width.to_f, height.to_f )
+    image.write( path )
+  end
+
+
+
+
+
   def resize_with_crop(img, w, h, options = {})
 
     Rails.logger.info 'ImageHelper - resize_with_crop() - img: ' + img.to_s

@@ -17,23 +17,28 @@ class ReplacementImage < ActiveRecord::Base
   validates_attachment_content_type :uploaded_file,
                                     content_type: ['image/jpeg', 'image/png', 'application/zip']
 
+  # This method gets the path of this ReplacementImage.  If the uploaded_file
+  # is an image, the returned path is just the path to that image file.  If
+  # the uploaded_file is a zip archive, the returned path is the path to the
+  # folder into which images are extracted.
   def get_path
     return_path = uploaded_file.path
     ext_name = File.extname( return_path )
 
-    return_path = File.dirname( return_path ) + '/extracted/' if( ext_name == '.zip' )
-
+    return_path = File.dirname( return_path ) + '/'\
+      + ZIP_FILE_EXTRACTED_SUBFOLDER_NAME + '/' if( ext_name == '.zip' )
     Rails.logger.info 'replacement_image - get_path() - return_path: ' + return_path.to_s
     return_path
   end
 
   def unzip
+    uploaded_file = self.uploaded_file
     Rails.logger.info 'replacement_image - unzip() - uploaded_file: '\
       + uploaded_file.to_s
 
     if uploaded_file_content_type == 'application/zip'
       source_folder = File.dirname( uploaded_file.path )
-      dest_folder = source_folder + '/extracted/'
+      dest_folder = source_folder + '/' + ZIP_FILE_EXTRACTED_SUBFOLDER_NAME + '/'
       Dir.mkdir( dest_folder ) if !Dir.exist?( dest_folder )
 
       Zip::File.open( uploaded_file.path ) do |zip_file|

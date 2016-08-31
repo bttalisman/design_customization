@@ -63,3 +63,6 @@ VERSION_VALUES_KEY_TYPE = 'type'.freeze
 # these key values also, so any changes must be reflected there.
 IMAGE_TYPE_COLLAGE = 'Collage'.freeze
 IMAGE_TYPE_REPLACEMENT_IMAGE = 'ReplacementImage'.freeze
+
+# This is the name of the subfolder into which images are extracted.
+ZIP_FILE_EXTRACTED_SUBFOLDER_NAME = 'extracted'.freeze
