@@ -656,7 +656,7 @@ module VersionsHelper
       type = ri.uploaded_file_content_type
       image_name = ri.image_name
 
-      Rails.logger.info 'versions_helper - process_replacement_images() - type: '\
+      Rails.logger.info 'versions_helper - process_replacement_images() - type!!: '\
         + type.to_s
       Rails.logger.info 'versions_helper - process_replacement_images() - image_name: '\
         + image_name.to_s
@@ -666,6 +666,10 @@ module VersionsHelper
           ri.unzip
           resize_images_from_zip( design_template, ri )
         elsif type == 'image/jpeg'
+          path = ri.get_path.to_s
+          resize_image_from_image_file( design_template, ri, path )
+        elsif type == 'image/png'
+          Rails.logger.info 'versions_helper - process_replacement_images() - png '
           path = ri.get_path.to_s
           resize_image_from_image_file( design_template, ri, path )
         end

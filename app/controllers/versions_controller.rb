@@ -96,7 +96,7 @@ class VersionsController < ApplicationController
     @version = Version.new( config_hash )
     @version.save
 
-    version_folder_path = app_config[ 'path_to_quick_version_root' ] + '/template_'\
+    version_folder_path = app_config[ 'path_to_quick_version_root' ] + 'template_'\
       + @design_template.id.to_s + '/version_' + @version.id.to_s + '/'
     version_name = @design_template.name + '_' + @version.id.to_s
 

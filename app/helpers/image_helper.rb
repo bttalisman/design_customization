@@ -5,7 +5,8 @@ module ImageHelper
     extension = File.extname( path )
 
     if( (extension == '.jpg') ||
-        (extension == '.jpeg') )
+        (extension == '.jpeg') ||
+        (extension == '.png') )        
       return true
     end
     false
