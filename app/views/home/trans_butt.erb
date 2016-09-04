@@ -1,0 +1,70 @@
+
+
+
+<form id='butt_form' action='trans_butt_settings'>
+
+  <div class='row'>
+    <div class='col col-md-1'></div>
+    <div class='col col-md-4'>
+
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'>Make Trans-Butt Text Leggings</h3>
+        </div>
+        <div class='panel-body'>
+
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class='input-group-addon' id='basic-addon1'>Text</span>
+            <input type='text' class='form-control' id='text' name='text' aria-describedby='basic-addon1'>
+            </input>
+          </div>
+
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class='input-group-addon' id='basic-addon2'>Height to Width Ratio</span>
+            <input type='text' class='form-control' id='h_to_w' name='h_to_w' aria-describedby='basic-addon2'>
+            </input>
+          </div>
+
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class='input-group-addon' id='basic-addon3'>Color</span>
+            <input type='text' class='form-control' id='color' name='color' aria-describedby='basic-addon3'>
+            </input>
+          </div>
+
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class='input-group-addon' id='basic-addon4'>Width</span>
+            <input type='text' class='form-control' id='width' name='width' aria-describedby='basic-addon4'>
+            </input>
+          </div>
+
+
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class='input-group-addon' id='basic-addon5'>Alignment</span>
+            <select class='form-control' style='width:200px;' name='align' id='align'>
+              <option value='top'>Top</option>
+              <option value='center'>Center</option>
+              <option value='bottom'>Bottom</option>
+            </select>
+          </div>
+
+
+          <a class='btn btn-default' id='' onclick='submit(); return false;'>Make It</a>
+
+        </div> <!-- /panel body -->
+      </div> <!-- /panel -->
+    </div> <!--  -->
+    <div class='col-md-1'></div>
+    <div class='col-md-5'>
+      <div id='panel_container'></div>
+    </div>
+  </div> <!-- /row -->
+</form>
+
+
+<script>
+  function submit()
+  {
+    var form = $('#butt_form');
+    form.submit();
+  }
+</script>

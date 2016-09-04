@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   root 'design_templates#index'
 
   get '/tools' => 'home#tools'
+  get '/trans_butt' => 'home#trans_butt'
+  get '/trans_butt_settings' => 'home#trans_butt_settings'
+
 
   get '/do_process_version' => 'remote#do_process_version'
   get '/do_extract_tags' => 'remote#do_extract_tags'

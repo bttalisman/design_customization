@@ -4,6 +4,9 @@
   <div class='col col-md-1'></div>
   <div class='col col-md-10'>
 
+    <a class='btn btn-default' onclick='trans_butt();'>Trans-Butt Texter</a>
+    <br></br>
+
     <a class='btn btn-default' onclick='delete_all_versions();'>Delete ALL Versions</a>
     <br></br>
 
@@ -33,6 +36,11 @@
 
 <script>
 
+
+  function trans_butt()
+  {
+    window.location = 'http://localhost:3000/trans_butt';
+  }
 
   function make_zombie_template()
   {
