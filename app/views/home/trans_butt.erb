@@ -25,16 +25,18 @@
             </input>
           </div>
 
-          <div class='input-group' style='margin-bottom:20px;'>
-            <span class='input-group-addon' id='basic-addon3'>Color</span>
-            <input type='text' class='form-control' id='color' name='color' aria-describedby='basic-addon3'>
-            </input>
-          </div>
 
-          <div class='input-group' style='margin-bottom:20px;'>
-            <span class='input-group-addon' id='basic-addon4'>Width</span>
-            <input type='text' class='form-control' id='width' name='width' aria-describedby='basic-addon4'>
-            </input>
+          <div id='colorpicker_container' style='display:inline-block; margin-bottom:20px;'>
+            <div class='input-group' style='float:left; width:90%;'>
+              <span class='input-group-addon' id='basic-addon4'>Text Color</span>
+              <select name='color' id='color_val' style='width:98%;' aria-describedby='basic-addon4' class='form-control'>
+                <option disabled selected='selected'>Pick a Color</option>
+  <%=           @colors.each do |c| %>
+                  <option title='<%= c.description %>' value='<%= c.hex_code %>' <%= if( c.hex_code == @text_color ) then 'selected' end %> ><%= c.hex_code %></option>
+  <%            end %>
+              </select>
+            </div>
+            <div id='swatch' style='display:inline-block; float:left; height:27px; width:27px; background:<%= @text_color %>'></div>
           </div>
 
 
@@ -67,4 +69,37 @@
     var form = $('#butt_form');
     form.submit();
   }
+
+
+  $(document).ready(function() {
+    $("[id^='color_val']").select2({
+      templateResult: formatColor
+    });
+
+    $("[id^='colorpicker_container']").each( bindSwatch );
+  });
+
+  function bindSwatch( ) {
+    $(this).find( 'select' ).change( { swatch:$(this).find( "[id^='swatch']" ) }, changeTextColor );
+  }
+
+  function formatColor (color) {
+    if (!color.id) { return color.text; }
+    var $color = $(
+      '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div><div style="height:20px; margin-left:5px; display:inline-block; vertical-align:top;">' + color.text + '</div></span>'
+    );
+    return $color;
+  }
+
+
+  function changeTextColor( event )
+  {
+    var swatch = event.data.swatch;
+    var select = event.target;
+    var val = select.value;
+    swatch.css( 'background', val );
+  }
+
+
+
 </script>

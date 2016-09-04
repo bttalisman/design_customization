@@ -57,6 +57,9 @@ class DesignTemplatesController < ApplicationController
     # extract the image-related settings from the parameters object, and set
     # this template's prompts property.
     set_image_prompts( @design_template, params )
+    # extract trans-butt-related settings from the parameters object, and
+    # set prompts.
+    set_trans_butt_prompts( @design_template, params )
 
     if @design_template.save
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - SUCCESS!'
@@ -138,6 +141,6 @@ class DesignTemplatesController < ApplicationController
 
   def design_template_params
     params.require( :design_template )\
-          .permit( :orig_file_path, :name, :tags, :original_file )
+          .permit( :orig_file_path, :name, :tags, :original_file, :is_trans_butt )
   end
 end

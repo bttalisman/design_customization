@@ -1,3 +1,14 @@
+<%
+Rails.logger.info 'edit.html.erb - is_trans_butt: ' + @design_template.is_trans_butt.to_s
+
+if @design_template.is_trans_butt
+  tb_checked = 'checked'
+else
+  tb_checked = ''
+end
+%>
+
+
 <%=
 form_for @design_template, html: { multipart: true, id: 'design_template_form' } do |form|
 %>
@@ -5,21 +16,30 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
     <div class='col col-md-1'></div>
     <div class='col col-md-4'>
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Edit Template</h3>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'>Edit Template</h3>
         </div>
-        <div class="panel-body">
+        <div class='panel-body'>
 
           <div class='input-group' style='margin-bottom:20px;'>
-            <span class="input-group-addon" id="basic-addon1">Name</span>
-            <input type='text' class='form-control' name='design_template[name]' id='design_template_name' aria-describedby="basic-addon1" value='<%= @design_template.name %>'></input>
+            <span class='input-group-addon' id='basic-addon1'>Name</span>
+            <input type='text' class='form-control' name='design_template[name]' id='design_template_name' aria-describedby='basic-addon1' value='<%= @design_template.name %>'></input>
           </div>
+
+          <div class='clearfix'>
+            <label class='checkbox-label' style='margin-left:30px;'>
+              Contains Trans-Butt Text
+              <input type='checkbox' data-label-id='label' name='design_template[is_trans_butt]' id='design_template_is_trans_butt' <%= tb_checked %> class='checkbox-input' value='true'>
+              </input>
+            </label>
+          </div>
+          <div class='spacer'></div>
 
           <a class='btn btn-default' href='<%= local_host %>/force_process?id=<%= @design_template.id %>'>Reprocess</a>
           <a class='btn btn-default' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</a>
           <a class='btn btn-default' href='<%= local_host %>/design_templates/<%= @design_template.id %>'>Cancel</a>
-          <a class="btn btn-default" href="/design_templates/<%= @design_template.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+          <a class='btn btn-default' href='/design_templates/<%= @design_template.id %>' data-confirm='Are you sure?' data-method='delete' rel='nofollow'>Delete</a>
 
         </div> <!-- /panel body -->
       </div> <!-- /panel -->

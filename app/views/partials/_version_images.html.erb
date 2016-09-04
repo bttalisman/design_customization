@@ -15,6 +15,7 @@ i = 0
   image_settings = image[ 1 ]
 
   next if( image_settings[ PROMPTS_KEY_REPLACE_IMG ] == '' )
+  next if( is_trans_butt_image( @design_template, image[0] ) )
 
   image_name = image[ 0 ]
 

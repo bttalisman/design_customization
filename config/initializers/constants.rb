@@ -17,6 +17,8 @@ DESIGN_TEMPLATE_STATS_KEY_STATUS = 'status'.freeze
 
 PROMPTS_KEY_TAG_SETTINGS = 'tag_settings'.freeze
 PROMPTS_KEY_IMAGE_SETTINGS = 'image_settings'.freeze
+PROMPTS_KEY_TRANS_BUTT_SETTINGS = 'trans_butt_settings'.freeze
+
 PROMPTS_KEY_PROMPT = 'prompt'.freeze
 PROMPTS_KEY_MAX_L = 'max_length'.freeze
 PROMPTS_KEY_MIN_L = 'min_length'.freeze
@@ -28,7 +30,15 @@ PROMPTS_KEY_FIT_IMG = 'fit_image'.freeze
 PROMPTS_KEY_ORIGINAL_IMAGE = 'original_image'.freeze
 PROMPTS_KEY_ORIGINAL_HEIGHT = 'original_height'.freeze
 PROMPTS_KEY_ORIGINAL_WIDTH = 'original_width'.freeze
+PROMPTS_KEY_TRANS_BUTT_LEFT_IMAGE_NAME = 'left_image_name'.freeze
+PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME = 'right_image_name'.freeze
+PROMPTS_KEY_TRANS_BUTT_SET_COLOR = 'tb_set_color'.freeze
 
+
+PROMPTS_VALUE_TRUE = 'checked'.freeze
+PROMPTS_VALUE_FALSE = ''.freeze
+
+# todo - get rid of these
 PROMPTS_VALUE_REPLACE_IMG_TRUE = 'checked'.freeze
 PROMPTS_VALUE_REPLACE_IMG_FALSE = ''.freeze
 PROMPTS_VALUE_PICK_COLOR_TRUE = 'checked'.freeze
@@ -42,6 +52,12 @@ PROMPTS_VALUE_FIT_IMG_FALSE = ''.freeze
 # any changes must be reflected there.
 VERSION_VALUES_KEY_IMAGE_SETTINGS = 'image_settings'.freeze
 VERSION_VALUES_KEY_TAG_SETTINGS = 'tag_settings'.freeze
+VERSION_VALUES_KEY_TRANS_BUTT_SETTINGS = 'trans_butt_settings'.freeze
+
+VERSION_VALUES_KEY_TB_TEXT = 'tb_text'.freeze
+VERSION_VALUES_KEY_TB_COLOR = 'tb_color'.freeze
+VERSION_VALUES_KEY_TB_HW_RATIO = 'tb_hw_ratio'.freeze
+VERSION_VALUES_KEY_TB_V_ALIGN = 'tb_v_align'.freeze
 
 # Hash keys for object describing a replacement tag in Version.values
 #

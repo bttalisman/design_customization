@@ -1,0 +1,69 @@
+<!-- This partial generates the  -->
+
+<%
+if @images.nil?
+  return
+end
+
+if !@prompts.nil?
+
+  # we'll try to look up any previously set values for this tag.
+  all_trans_butt_settings = @prompts[ PROMPTS_KEY_TRANS_BUTT_SETTINGS ]
+
+  if !all_trans_butt_settings.nil?
+    set_color = all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_SET_COLOR ]
+    left_butt = all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_LEFT_IMAGE_NAME ]
+    right_butt = all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME ]
+  end
+end
+
+%>
+
+<div class='panel panel-success'>
+  <div class='panel-heading'><h3 class='panel-title'>Trans-Butt Settings</h3></div>
+  <div class='panel-body'>
+
+    <label class='checkbox-label'>
+      Set Color?
+      <input type='checkbox' class='checkbox-input' <%= set_color.to_s %> value='true' name='trans-butt-set-color' id='trans-butt-set-color'>
+      </input>
+    </label>
+
+    <label class='checkbox-label'>
+      Left-butt Image
+      <select name='left-butt' id='left-butt'>
+<%      @images.each { |image|
+          selected = false
+          if( image == left_butt )
+            selected = true
+          end %>
+          <option <%= if selected then 'selected="selected"' end %> value='<%= image.to_s %>'>
+<%=         image.to_s %>
+          </option>
+<%      } %>
+      </select>
+    </label>
+
+    <label class='checkbox-label'>
+      Right-butt Image
+      <select name='right-butt' id='right-butt'>
+<%      @images.each { |image|
+          selected = false
+          if( image == right_butt )
+            selected = true
+          end %>
+          <option <%= if selected then 'selected="selected"' end %> value='<%= image.to_s %>'>
+<%=         image.to_s %>
+          </option>
+<%      } %>
+      </select>
+    </label>
+
+
+  </div>
+</div>
+
+
+<script>
+
+</script>

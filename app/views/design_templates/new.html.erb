@@ -5,24 +5,31 @@ entering these values, clicking Save and Set Prefs takes the user to the edit vi
   <div class='col col-md-4'>
 
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">New Template</h3>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>New Template</h3>
       </div>
-      <div class="panel-body">
+      <div class='panel-body'>
 <%=
         form_for @design_template, html: { multipart: true, onsubmit: 'return validate();'  } do |form|
 %>
           <div class='input-group' style='margin-bottom:20px;'>
-            <span class="input-group-addon" id="basic-addon1">Name</span>
-            <input type='text' class='form-control' id='design_template_name' name='design_template[name]' aria-describedby="basic-addon1" value='<%= @design_template.name %>'></input>
+            <span class='input-group-addon' id='basic-addon1'>Name</span>
+            <input type='text' class='form-control' id='design_template_name' name='design_template[name]' aria-describedby='basic-addon1' value='<%= @design_template.name %>'></input>
           </div>
+          <div class='clearfix'>
+            <label class='checkbox-label' style='margin-left:30px;'>
+              Contains Trans-Butt Text
+              <input type='checkbox' data-label-id='label' name='design_template[is_trans_butt]' id='design_template_is_trans_butt' class='checkbox-input' value='true'>
+              </input>
+            </label>
+          </div>
+          <div class='spacer'></div>
 
           <div id='selected_file_name' style='display: none;'></div>
-
-          <span class="btn btn-default fileinput-button" id='file_input_container'>
+          <span class='btn btn-default fileinput-button' id='file_input_container'>
             <span>Select file</span>
-            <input type="file" onchange='fileInputChange( event );' name="design_template[original_file]" id="design_template_original_file">
+            <input type='file' onchange='fileInputChange( event );' name='design_template[original_file]' id='design_template_original_file'>
           </span>
 
 

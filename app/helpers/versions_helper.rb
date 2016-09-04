@@ -234,6 +234,29 @@ module VersionsHelper
     end
   end
 
+  def set_trans_butt_values( version, params )
+    Rails.logger.info 'VERSIONS_HELPER - set_trans_butt_values() - params: '\
+      + params.to_s
+
+    all_trans_butt_settings = {}
+    all_trans_butt_settings[ VERSION_VALUES_KEY_TB_TEXT ] = params[ 'text' ]
+    all_trans_butt_settings[ VERSION_VALUES_KEY_TB_COLOR ] = params[ 'color' ]
+    all_trans_butt_settings[ VERSION_VALUES_KEY_TB_HW_RATIO ] = params[ 'h_to_w' ]
+    all_trans_butt_settings[ VERSION_VALUES_KEY_TB_V_ALIGN ] = params[ 'align' ]
+
+    values = get_values_object( version )
+    values[ VERSION_VALUES_KEY_TRANS_BUTT_SETTINGS ] = all_trans_butt_settings
+    version.values = values.to_json
+
+    Rails.logger.info 'VERSIONS_HELPER - set_trans_butt_values() - values: '\
+      + JSON.pretty_generate( values )
+
+    Rails.logger.info 'VERSIONS_HELPER - set_trans_butt_values() - version saved!'\
+      if version.save
+
+  end
+
+
   # This method updates a version's values json and associated ReplacementImages
   # and Collages.
   # params must contain an 'image_count' property.

@@ -132,12 +132,30 @@ module DesignTemplatesHelper
     extracted_image_data = get_images_array( design_template )
     found_obj = {}
     extracted_image_data.each { |i|
-      if( i[ 'name' ] == image_name ) then
+      if( i[ 'name' ] == image_name )
         found_obj = i
         break
       end
     }
     found_obj
+  end
+
+  def is_trans_butt_image( design_template, image_name )
+    Rails.logger.info 'design_templates_helper - is_trans_butt_image() - image_name: ' + image_name.to_s
+    prompts = get_prompts_object( design_template )
+    Rails.logger.info 'design_templates_helper - is_trans_butt_image() - prompts: '\
+      + JSON.pretty_generate( prompts )
+
+    b = false
+    tb_settings = prompts[ PROMPTS_KEY_TRANS_BUTT_SETTINGS ]
+    if( !tb_settings.nil? )
+      left = tb_settings[ PROMPTS_KEY_TRANS_BUTT_LEFT_IMAGE_NAME ]
+      right = tb_settings[ PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME ]
+      if( (left == image_name) || (right == image_name) )
+        b = true
+      end
+    end
+    b
   end
 
   def get_original_width( design_template, image_name )
@@ -182,16 +200,16 @@ module DesignTemplatesHelper
 
       p_name = 'colorp' + i.to_s
       if params[ p_name ]
-        tag_settings[ PROMPTS_KEY_PICK_COLOR ] = PROMPTS_VALUE_PICK_COLOR_TRUE
+        tag_settings[ PROMPTS_KEY_PICK_COLOR ] = PROMPTS_VALUE_TRUE
       else
-        tag_settings[ PROMPTS_KEY_PICK_COLOR ] = PROMPTS_VALUE_PICK_COLOR_FALSE
+        tag_settings[ PROMPTS_KEY_PICK_COLOR ] = PROMPTS_VALUE_FALSE
       end
 
       p_name = 'use_pal' + i.to_s
       if params[ p_name ]
-        tag_settings[ PROMPTS_KEY_USE_PALETTE ] = PROMPTS_VALUE_USE_PALETTE_TRUE
+        tag_settings[ PROMPTS_KEY_USE_PALETTE ] = PROMPTS_VALUE_TRUE
       else
-        tag_settings[ PROMPTS_KEY_USE_PALETTE ] = PROMPTS_VALUE_USE_PALETTE_FALSE
+        tag_settings[ PROMPTS_KEY_USE_PALETTE ] = PROMPTS_VALUE_FALSE
       end
 
       p_name = 'select_pal' + i.to_s
@@ -206,6 +224,32 @@ module DesignTemplatesHelper
     prompts_string = prompts.to_json
     template.prompts = prompts_string
   end
+
+  def set_trans_butt_prompts( template, params )
+    Rails.logger.info 'design_templates_helper - set_image_prompts() - params: '\
+      + params.to_s
+
+    left_image_name = params[ 'left-butt' ]
+    right_image_name = params[ 'right-butt' ]
+    set_color = params[ 'trans-butt-set-color' ]
+
+    all_trans_butt_settings = {}
+    all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_LEFT_IMAGE_NAME ] = left_image_name
+    all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME ] = right_image_name
+
+    if( set_color )
+      all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_SET_COLOR ] = PROMPTS_VALUE_TRUE
+    else
+      all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_SET_COLOR ] = PROMPTS_VALUE_FALSE
+    end
+
+    prompts_string = template.prompts
+    prompts = JSON.parse( prompts_string )
+    prompts[ PROMPTS_KEY_TRANS_BUTT_SETTINGS ] = all_trans_butt_settings
+    prompts_string = prompts.to_json
+    template.prompts = prompts_string
+  end
+
 
   # This method constructs a new json string for the prompts field.  This
   # method must be coordinated with parameters as set in

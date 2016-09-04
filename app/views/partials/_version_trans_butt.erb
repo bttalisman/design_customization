@@ -1,0 +1,115 @@
+<!-- This partial generates the  -->
+
+<%
+if !@trans_butt_values.nil?
+
+  text = @trans_butt_values[ VERSION_VALUES_KEY_TB_TEXT ]
+  color = @trans_butt_values[ VERSION_VALUES_KEY_TB_COLOR ]
+  hw_ratio = @trans_butt_values[ VERSION_VALUES_KEY_TB_HW_RATIO ]
+  align = @trans_butt_values[ VERSION_VALUES_KEY_TB_V_ALIGN ]
+
+  top_selected, center_selected, bottom_selected = ''
+
+  case align
+  when 'top'
+    top_selected = 'selected="selected"'
+  when 'center'
+    center_selected = 'selected="selected"'
+  when 'bottom'
+    bottom_selected = 'selected="selected"'
+  end
+
+
+end
+%>
+
+<div class='panel panel-success'>
+  <div class='panel-heading'><h3 class='panel-title'>Trans-Butt Settings</h3></div>
+  <div class='panel-body'>
+
+    <div class='input-group' style='margin-bottom:20px;'>
+      <span class='input-group-addon' id='basic-addon1'>Text</span>
+      <input type='text' class='form-control' value='<%= text.to_s %>' id='text' name='text' aria-describedby='basic-addon1'>
+      </input>
+    </div>
+
+    <div class='input-group' style='margin-bottom:20px;'>
+      <span class='input-group-addon' id='basic-addon2'>Height to Width Ratio</span>
+      <input type='text' class='form-control' value='<%= hw_ratio.to_s %>' id='h_to_w' name='h_to_w' aria-describedby='basic-addon2'>
+      </input>
+    </div>
+
+
+    <div id='colorpicker_container' style='display:inline-block; margin-bottom:20px;'>
+      <div class='input-group' style='float:left; width:90%;'>
+        <span class='input-group-addon' id='basic-addon4'>Text Color</span>
+        <select name='color' id='color_val' style='width:98%;' aria-describedby='basic-addon4' class='form-control'>
+          <option disabled selected='selected'>Pick a Color</option>
+<%=           @colors.each do |c| %>
+            <option title='<%= c.description %>' value='<%= c.hex_code %>' <%= if( c.hex_code == @text_color ) then 'selected' end %> ><%= c.hex_code %></option>
+<%            end %>
+        </select>
+      </div>
+      <div id='swatch' style='display:inline-block; float:left; height:27px; width:27px; background:<%= @text_color %>'></div>
+    </div>
+
+    <div class='input-group' style='margin-bottom:20px;'>
+      <span class='input-group-addon' id='basic-addon5'>Alignment</span>
+      <select class='form-control' style='width:200px;' name='align' id='align'>
+        <option <%= top_selected.to_s %> value='top'>Top</option>
+        <option <%= center_selected.to_s %> value='center'>Center</option>
+        <option <%= bottom_selected.to_s %> value='bottom'>Bottom</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+
+
+  function validate_trans_butt_values()
+  {
+    return true;
+  }
+
+  function submit()
+  {
+    var form = $('#butt_form');
+    form.submit();
+  }
+
+
+  $(document).ready(function() {
+    $("[id^='color_val']").select2({
+      templateResult: formatColor
+    });
+
+    $("[id^='colorpicker_container']").each( bindSwatch );
+  });
+
+  function bindSwatch( ) {
+    $(this).find( 'select' ).change( { swatch:$(this).find( "[id^='swatch']" ) }, changeTextColor );
+  }
+
+  function formatColor (color) {
+    if (!color.id) { return color.text; }
+    var $color = $(
+      '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div><div style="height:20px; margin-left:5px; display:inline-block; vertical-align:top;">' + color.text + '</div></span>'
+    );
+    return $color;
+  }
+
+
+  function changeTextColor( event )
+  {
+    var swatch = event.data.swatch;
+    var select = event.target;
+    var val = select.value;
+    swatch.css( 'background', val );
+  }
+
+
+
+</script>

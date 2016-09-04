@@ -11,6 +11,8 @@ class HomeController < ApplicationController
   end
 
   def trans_butt
+    @colors = Color.all
+    @text_color = @colors.first
   end
 
   def trans_butt_settings

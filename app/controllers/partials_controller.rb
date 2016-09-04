@@ -7,6 +7,12 @@ class PartialsController < ApplicationController
 
   layout 'partials'
 
+  def trans_butt_settings
+    logger.info 'PARTIALS_CONTROLLER - trans_butt_settings()'
+    template_id = params[ :id ]
+  end
+
+
   # This action presents the tags extracted from the AI file, with any
   # tag-specific options, for use when creating or editing a DesignTemplate.
   # See partials_controller_test.rb.
@@ -114,6 +120,7 @@ class PartialsController < ApplicationController
       if !values.nil?
         @image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
         @tag_values = values[ VERSION_VALUES_KEY_TAG_SETTINGS ]
+        @trans_butt_values = values [ VERSION_VALUES_KEY_TRANS_BUTT_SETTINGS ]
       end
 
     end

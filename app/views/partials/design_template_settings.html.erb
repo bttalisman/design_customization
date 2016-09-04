@@ -27,6 +27,12 @@ extracting information. -->
 %>
 <%=   render :partial => 'design_template_images' %>
 <%  end
+  end
+
+  if @design_template.is_trans_butt %>
+  <%=
+    render :partial => 'design_template_trans_butt' %>
+<%
   end %>
 
 <script>
