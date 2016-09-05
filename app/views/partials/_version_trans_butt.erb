@@ -19,8 +19,6 @@ if !@trans_butt_values.nil?
     when 'bottom'
       bottom_selected = 'selected="selected"'
   end
-
-
 end
 %>
 
@@ -46,12 +44,12 @@ end
         <span class='input-group-addon' id='basic-addon4'>Text Color</span>
         <select name='color' id='color_val' style='width:98%;' aria-describedby='basic-addon4' class='form-control'>
           <option disabled selected='selected'>Pick a Color</option>
-<%=           @colors.each do |c| %>
-                <option title='<%= c.description %>' value='<%= c.hex_code %>' <%= if( c.hex_code == color ) then 'selected' end %> ><%= c.hex_code %></option>
-<%            end %>
+<%=         @colors.each do |c| %>
+              <option title='<%= c.description %>' value='<%= c.hex_code %>' <%= if( c.hex_code == color ) then 'selected' end %> ><%= c.hex_code %></option>
+<%          end %>
         </select>
       </div>
-      <div id='swatch' style='display:inline-block; float:left; height:27px; width:27px; background:<%= @text_color %>'></div>
+      <div id='swatch' style='display:inline-block; float:left; height:27px; width:27px; background:<%= color %>'></div>
     </div>
 
     <div class='input-group' style='margin-bottom:20px;'>
@@ -78,7 +76,6 @@ end
 
 
 <script>
-
 
   function validate_trans_butt_values()
   {
