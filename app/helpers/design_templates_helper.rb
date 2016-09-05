@@ -159,7 +159,6 @@ module DesignTemplatesHelper
   end
 
 
-
   def is_trans_butt_image( design_template, image_name )
     prompts = get_prompts_object( design_template )
 
@@ -326,23 +325,6 @@ module DesignTemplatesHelper
   # A design_template's prompts describes any extensible settings
   # presented by versions of this template, such as replace this image?, allow
   # users to set the color of this text?
-  #
-  # tag_settings:
-  #   tag_name:
-  #     prompt: 'stuff'
-  #     max_length: '33'
-  #     min_length: '2'
-  #     pick_color: 'checked'
-  #     use_palette: 'checked'
-  #     palette_id: '4'
-  #
-  # image_settings:
-  #   image_name:
-  #     replace_image: 'checked'
-  #     fit_image: 'checked'
-  #     original_image:
-  #       original_height: '356'
-  #       original_width: '343'
   def get_prompts_object( design_template )
     prompts_string = design_template.prompts
     Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\

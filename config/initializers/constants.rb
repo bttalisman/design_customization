@@ -58,6 +58,8 @@ VERSION_VALUES_KEY_TB_TEXT = 'tb_text'.freeze
 VERSION_VALUES_KEY_TB_COLOR = 'tb_color'.freeze
 VERSION_VALUES_KEY_TB_HW_RATIO = 'tb_hw_ratio'.freeze
 VERSION_VALUES_KEY_TB_V_ALIGN = 'tb_v_align'.freeze
+VERSION_VALUES_KEY_TB_FONT = 'tb_font'.freeze
+
 
 # Hash keys for object describing a replacement tag in Version.values
 #

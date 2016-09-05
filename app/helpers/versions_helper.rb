@@ -24,20 +24,6 @@ module VersionsHelper
 
   # A version's values is a json obj describing all extensible settings,
   # set by the user.
-  # tag_settings:
-  #   tag_name:
-  #     replacement_text: 'stuff'
-  #     text_color: '#333333'
-  #
-  # image_settings:
-  #   image_name:
-  #     replacement_image_id: 345
-  #     path: '/path/to/thing.jpg'
-  #     type: 'ReplacementImage'
-  #   another_name:
-  #     collage_id: 333
-  #     path: '/path/to/folder'
-  #     type: 'Collage'
   def get_values_object( version )
     values_string = version.values
     values = {}
@@ -243,6 +229,7 @@ module VersionsHelper
     all_trans_butt_settings[ VERSION_VALUES_KEY_TB_COLOR ] = params[ 'color' ]
     all_trans_butt_settings[ VERSION_VALUES_KEY_TB_HW_RATIO ] = params[ 'h_to_w' ]
     all_trans_butt_settings[ VERSION_VALUES_KEY_TB_V_ALIGN ] = params[ 'align' ]
+    all_trans_butt_settings[ VERSION_VALUES_KEY_TB_FONT ] = params[ 'font' ]
 
     values = get_values_object( version )
     values[ VERSION_VALUES_KEY_TRANS_BUTT_SETTINGS ] = all_trans_butt_settings
@@ -610,7 +597,6 @@ module VersionsHelper
 
     maybe_bail_out( version, tags, images, params )
 
-
     # Generate trans-butt images
     process_trans_butt_images( version )
 
@@ -711,6 +697,7 @@ module VersionsHelper
     data[ 'color' ] = trans_butt_values[ VERSION_VALUES_KEY_TB_COLOR ]
     data[ 'width' ] = 1000
     data[ 'align' ] = trans_butt_values[ VERSION_VALUES_KEY_TB_V_ALIGN ]
+    data[ 'font' ] = trans_butt_values[ VERSION_VALUES_KEY_TB_FONT ]
 
     File.open( path_to_data, 'w' ) do |f|
       f.write( data.to_json )

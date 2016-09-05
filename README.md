@@ -56,3 +56,55 @@ All generally known UI is found in the views for each model as expected.  All ex
 Extensible UI is only provided by the ‘edit’ views for versions and templates.  Ajax requests are made by the ‘edit’ views to the partials controller, requesting UI for the template or version as necessary.  Extensible UI for these objects is only available after the version or template has been created and saved, due to the way attachments are created and associated.
 
 When a user clicks Save, pending javaScript validation a json object containing all settings, both extensible and general, is created and posted to the appropriate controller.
+
+
+## Settings schema
+
+### design_template.prompts
+
+  tag_settings:
+    tag_name:
+      prompt: 'stuff'
+      max_length: '33'
+      min_length: '2'
+      pick_color: 'checked'
+      use_palette: 'checked'
+      palette_id: '4'
+
+  image_settings:
+    image_name:
+      replace_image: 'checked'
+      fit_image: 'checked'
+      original_image:
+      original_height: '356'
+      original_width: '343'
+
+  trans_butt_settings:
+    left_image_name: 'lefty'
+    right_image_name: 'rigty'
+    tb_set_color: 'checked'
+
+
+### version.values
+
+  tag_settings:
+    tag_name:
+      replacement_text: 'stuff'
+      text_color: '#333333'
+
+  image_settings:
+    image_name:
+      replacement_image_id: 345
+      path: '/path/to/thing.jpg'
+      type: 'ReplacementImage'
+    another_name:
+      collage_id: 333
+      path: '/path/to/folder'
+      type: 'Collage'
+
+  trans_butt_settings:
+    tb_text: 'JUICY'
+    tb_color: '0xffaacc'
+    tb_hw_ratio: '1.4'
+    tb_v_align: 'center'
+    tb_font: 'helvetica'

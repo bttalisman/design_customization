@@ -9,7 +9,6 @@ class PartialsController < ApplicationController
 
   def trans_butt_settings
     logger.info 'PARTIALS_CONTROLLER - trans_butt_settings()'
-    template_id = params[ :id ]
   end
 
 
@@ -80,6 +79,7 @@ class PartialsController < ApplicationController
     @tags = get_tags_array( @design_template )
     @images = get_images_array( @design_template )
     @colors = Color.all
+    @fonts = get_ai_fonts()
     @palettes = get_palettes( @design_template )
 
     logger.info 'PARTIALS_CONTROLLER - version_settings() - @tags: '\
