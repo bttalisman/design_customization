@@ -11,12 +11,12 @@ if !@trans_butt_values.nil?
   top_selected, center_selected, bottom_selected = ''
 
   case align
-  when 'top'
-    top_selected = 'selected="selected"'
-  when 'center'
-    center_selected = 'selected="selected"'
-  when 'bottom'
-    bottom_selected = 'selected="selected"'
+    when 'top'
+      top_selected = 'selected="selected"'
+    when 'center'
+      center_selected = 'selected="selected"'
+    when 'bottom'
+      bottom_selected = 'selected="selected"'
   end
 
 
@@ -46,7 +46,7 @@ end
         <select name='color' id='color_val' style='width:98%;' aria-describedby='basic-addon4' class='form-control'>
           <option disabled selected='selected'>Pick a Color</option>
 <%=           @colors.each do |c| %>
-            <option title='<%= c.description %>' value='<%= c.hex_code %>' <%= if( c.hex_code == @text_color ) then 'selected' end %> ><%= c.hex_code %></option>
+                <option title='<%= c.description %>' value='<%= c.hex_code %>' <%= if( c.hex_code == color ) then 'selected' end %> ><%= c.hex_code %></option>
 <%            end %>
         </select>
       </div>

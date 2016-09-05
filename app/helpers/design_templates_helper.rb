@@ -140,11 +140,28 @@ module DesignTemplatesHelper
     found_obj
   end
 
-  def is_trans_butt_image( design_template, image_name )
-    Rails.logger.info 'design_templates_helper - is_trans_butt_image() - image_name: ' + image_name.to_s
+  def get_left_butt_image_name( design_template )
     prompts = get_prompts_object( design_template )
-    Rails.logger.info 'design_templates_helper - is_trans_butt_image() - prompts: '\
-      + JSON.pretty_generate( prompts )
+    tb_settings = prompts[ PROMPTS_KEY_TRANS_BUTT_SETTINGS ]
+    if( !tb_settings.nil? )
+      image_name = tb_settings[ PROMPTS_KEY_TRANS_BUTT_LEFT_IMAGE_NAME ]
+    end
+    image_name
+  end
+
+  def get_right_butt_image_name( design_template )
+    prompts = get_prompts_object( design_template )
+    tb_settings = prompts[ PROMPTS_KEY_TRANS_BUTT_SETTINGS ]
+    if( !tb_settings.nil? )
+      image_name = tb_settings[ PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME ]
+    end
+    image_name
+  end
+
+
+
+  def is_trans_butt_image( design_template, image_name )
+    prompts = get_prompts_object( design_template )
 
     b = false
     tb_settings = prompts[ PROMPTS_KEY_TRANS_BUTT_SETTINGS ]

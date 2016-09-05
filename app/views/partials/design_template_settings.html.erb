@@ -8,6 +8,21 @@ extracting information. -->
   rendering_tags_form = false
   rendering_images_form = false
 
+
+  if @design_template.is_trans_butt %>
+<%=  render :partial => 'design_template_trans_butt' %>
+<%
+  end
+
+  if !@images.nil?
+    if !@images.empty?
+      rendering_images_form = true
+      logger.info 'design_template_settings.html - About to render images.' %>
+<%=   render :partial => 'design_template_images' %>
+<%  end
+  end
+
+
   if !@tags.nil?
     if !@tags.empty?
       rendering_tags_form = true
@@ -16,23 +31,6 @@ extracting information. -->
 <%=   render :partial => 'design_template_tags' %>
 <%
     end
-  end
-%>
-
-<%
-  if !@images.nil?
-    if !@images.empty?
-      rendering_images_form = true
-      logger.info 'design_template_settings.html - About to render images.'
-%>
-<%=   render :partial => 'design_template_images' %>
-<%  end
-  end
-
-  if @design_template.is_trans_butt %>
-  <%=
-    render :partial => 'design_template_trans_butt' %>
-<%
   end %>
 
 <script>

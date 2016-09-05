@@ -610,6 +610,10 @@ module VersionsHelper
 
     maybe_bail_out( version, tags, images, params )
 
+
+    # Generate trans-butt images
+    process_trans_butt_images( version )
+
     paths = get_paths( version )
 
     original_file_path = paths[ :original_file_path ]
@@ -666,6 +670,78 @@ module VersionsHelper
   rescue => e
     Rails.logger.info 'versions_helper - Bailing Out! - ' + e.inspect
     Rails.logger.info JSON.pretty_generate( JSON.parse( e.backtrace.to_s ) )
+  end
+
+
+  def process_trans_butt_images( version )
+    return if !version.design_template.is_trans_butt
+
+    Rails.logger.info 'version_helper - process_trans_butt_images()'
+
+    app_config = Rails.application.config_for( :customization )
+    text_processing_folder = app_config[ 'path_to_text_processing_folder' ]
+    script_path = app_config[ 'path_to_split_text_script' ]
+    path_to_doc = text_processing_folder + 'text_processing.ai'
+    path_to_config = text_processing_folder + 'config.json'
+    path_to_data = text_processing_folder + 'text_data.jsn'
+    output_folder = text_processing_folder + 'output/'
+
+    config = {}
+    config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = path_to_doc
+    config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = script_path
+    config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = output_folder
+    config[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ] = ''
+
+    File.open( path_to_config, 'w' ) do |f|
+      f.write( config.to_json )
+    end
+
+    values = get_values_object( version )
+    trans_butt_values = values[ VERSION_VALUES_KEY_TRANS_BUTT_SETTINGS ]
+    return if trans_butt_values.nil?
+
+    Rails.logger.info 'version_helper - process_trans_butt_images() - trans_butt_values: '\
+      + trans_butt_values.to_s
+    Rails.logger.info 'version_helper - process_trans_butt_images() - path_to_data: '\
+      + path_to_data.to_s
+
+    data = {}
+    data[ 'text' ] = trans_butt_values[ VERSION_VALUES_KEY_TB_TEXT ]
+    data[ 'heightToWidthRatio' ] = trans_butt_values[ VERSION_VALUES_KEY_TB_HW_RATIO ]
+    data[ 'color' ] = trans_butt_values[ VERSION_VALUES_KEY_TB_COLOR ]
+    data[ 'width' ] = 1000
+    data[ 'align' ] = trans_butt_values[ VERSION_VALUES_KEY_TB_V_ALIGN ]
+
+    File.open( path_to_data, 'w' ) do |f|
+      f.write( data.to_json )
+    end
+
+    runner_path = app_config[ 'path_to_runner_script' ]
+    sys_com = 'ruby ' + runner_path + ' "' + path_to_config + '"'
+    Rails.logger.info 'version_helper - process_trans_butt_images() - about to run '\
+      + 'sys_com: ' + sys_com.to_s
+    system( sys_com )
+
+
+    ri_path = output_folder + 'left.png'
+    file = File.new( ri_path )
+    ri = ReplacementImage.new
+    ri.uploaded_file = file
+    ri.save
+
+    image_name = get_left_butt_image_name( version.design_template )
+    add_replacement_image_to_version( ri, image_name, version )
+
+
+    ri_path = output_folder + 'right.png'
+    file = File.new( ri_path )
+    ri = ReplacementImage.new
+    ri.uploaded_file = file
+    ri.save
+
+    image_name = get_right_butt_image_name( version.design_template )
+    add_replacement_image_to_version( ri, image_name, version )
+
   end
 
 

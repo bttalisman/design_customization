@@ -67,7 +67,7 @@ class VersionsController < ApplicationController
     # collection.
     set_image_values( @version, params )
 
-    #
+    # extract trans-butt related settings and add these values to version.values
     set_trans_butt_values( @version, params )
 
     # do anything that needs to be done to replacement_images.  The version's

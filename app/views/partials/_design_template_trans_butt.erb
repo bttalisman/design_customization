@@ -12,8 +12,8 @@ if !@prompts.nil?
 
   if !all_trans_butt_settings.nil?
     set_color = all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_SET_COLOR ]
-    left_butt = all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_LEFT_IMAGE_NAME ]
-    right_butt = all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME ]
+    left_butt_image_name = all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_LEFT_IMAGE_NAME ]
+    right_butt_image_name = all_trans_butt_settings[ PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME ]
   end
 end
 
@@ -31,10 +31,11 @@ end
 
     <label class='checkbox-label'>
       Left-butt Image
-      <select name='left-butt' id='left-butt'>
+      <select name='left-butt' id='left-butt-select' onchange='butt_change( event );'>
+        <option value='none'>Pick the left butt image!</option>
 <%      @images.each { |image|
           selected = false
-          if( image == left_butt )
+          if( image == left_butt_image_name )
             selected = true
           end %>
           <option <%= if selected then 'selected="selected"' end %> value='<%= image.to_s %>'>
@@ -46,10 +47,12 @@ end
 
     <label class='checkbox-label'>
       Right-butt Image
-      <select name='right-butt' id='right-butt'>
+      <select name='right-butt' id='right-butt-select' onchange='butt_change( event );'>
+        <option value='none'>Pick the right butt image!</option>
+
 <%      @images.each { |image|
           selected = false
-          if( image == right_butt )
+          if( image == right_butt_image_name )
             selected = true
           end %>
           <option <%= if selected then 'selected="selected"' end %> value='<%= image.to_s %>'>
@@ -65,5 +68,79 @@ end
 
 
 <script>
+
+
+
+  function butt_change( event )
+  {
+    var leftImageName = $( '#left-butt-select' ).val();
+    var rightImageName = $( '#right-butt-select' ).val();
+
+    disable_for_tb( leftImageName, rightImageName );
+    re_enable( leftImageName, rightImageName );
+  }
+
+  function re_enable( leftImageName, rightImageName )
+  {
+    $( ':checkbox' ).each( function() {
+      var cb = $(this);
+      if( (cb.attr( 'data-image-name' ) !== leftImageName ) &&
+          (cb.attr( 'data-image-name' ) !== rightImageName ) )
+      {
+        // the cb is neight the left nor right butt image
+        var label;
+
+        if( (cb.attr('name').substring(0, 3) === 'rep') )
+        {
+          // yet it is a replace checkbox
+
+          label = cb.parent();
+          label.removeClass( 'disabled' );
+          cb.prop( 'disabled', false );
+          cb.prop( 'checked', false );
+        }
+
+        if( cb.attr('name').substring(0, 3) === 'fit' )
+        {
+          // yet it is a fit checkbox
+
+          label = cb.parent();
+          label.addClass( 'disabled' );
+          cb.prop( 'disabled', true );
+          cb.prop( 'checked', false );
+        }
+      }
+    } );
+  }
+
+  function disable_for_tb( leftImageName, rightImageName )
+  {
+    $( ':checkbox' ).each( function() {
+      var cb = $(this);
+      if( (cb.attr( 'data-image-name' ) === leftImageName ) ||
+          (cb.attr( 'data-image-name' ) === rightImageName ) )
+      {
+        if( cb.attr('name').substring(0, 3) === 'rep' ) {
+          // replace image checkbox
+
+          var label = cb.parent();
+          label.addClass( 'disabled' );
+          cb.prop( 'disabled', true );
+          cb.prop( 'checked', true );
+
+        }
+        if( cb.attr('name').substring(0, 3) === 'fit' ) {
+          // fit image checkbox
+
+          var label = cb.parent();
+
+          label.addClass( 'disabled' );
+          cb.prop( 'checked', false );
+          cb.prop( 'disabled', true );
+        }
+      }
+    });
+
+  }
 
 </script>
