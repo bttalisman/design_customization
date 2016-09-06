@@ -527,8 +527,9 @@ module VersionsHelper
       output_folder_files = output_folder + '.'
       original_file_path = paths[ :original_file_path ]
       original_file_base_name = paths[ :original_file_base_name ]
+      output_file_base_name = paths[ :output_file_base_name ]
 
-      png_file = original_file_base_name + '_final.png'
+      png_file = output_file_base_name + '.png'
 
       Dir.entries(output_folder_files).each do |name|
         # skip folders
@@ -674,6 +675,11 @@ module VersionsHelper
     path_to_config = text_processing_folder + 'config.json'
     path_to_data = text_processing_folder + 'text_data.jsn'
     output_folder = text_processing_folder + 'output/'
+
+    Rails.logger.info 'version_helper - process_trans_butt_images() - text_processing_folder: ' + text_processing_folder.to_s
+
+    FileUtils.mkdir_p( text_processing_folder )\
+      unless File.directory?( text_processing_folder )
 
     config = {}
     config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = path_to_doc
