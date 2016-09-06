@@ -546,6 +546,9 @@ module VersionsHelper
   end
 
   def get_paths( version )
+
+    version_name = version.name
+
     original_file = version.design_template.original_file
     original_file_path = original_file.path
     original_file_name = File.basename( original_file_path )
@@ -553,7 +556,7 @@ module VersionsHelper
     version_folder = get_version_folder( version )
     version_file_path = version_folder + '/' + original_file_name
     output_folder = get_output_folder( version )
-    output_file_base_name = original_file_base_name.to_s + '_final'
+    output_file_base_name = version_name.to_s + '_final'
     intermediate_output = output_folder.to_s + output_file_base_name + '.ai'
 
     o = {
