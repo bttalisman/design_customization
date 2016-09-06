@@ -45,6 +45,8 @@ class VersionsController < ApplicationController
     @design_template_id = @design_template.id
     @values = get_values_object( @version )
     @root_folder = Rails.root.to_s
+    @rendered_images = get_render_image_paths( @version )
+    
   end
 
   def update

@@ -64,6 +64,7 @@
 
 </script>
 
+
 <%=
 form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 %>
@@ -109,9 +110,9 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
             Run Illustrator?
             <input type='checkbox' name='runai' id='runai' class='checkbox-input' onchange='toggle_runai( event );' value='true'></input>
           </label>
-          <label id='render_label' class='checkbox-label'>
+          <label id='render_label' class='checkbox-label disabled'>
             Send to Render?
-            <input type='checkbox' name='render' id='render' class='checkbox-input' value='true'></input>
+            <input type='checkbox' disabled name='render' id='render' class='checkbox-input' value='true'></input>
           </label>
 
           <div class='spacer'></div>

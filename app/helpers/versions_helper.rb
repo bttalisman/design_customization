@@ -22,6 +22,34 @@ module VersionsHelper
     version_output_folder
   end
 
+  def get_render_folder( version )
+    app_config = Rails.application.config_for( :customization )
+    render_root_folder = app_config[ 'path_to_render_folder' ]
+
+    paths = get_paths( version )
+#    output_file_base_name = paths[ :output_file_base_name ]
+    output_file_base_name = 'Tartan_Rainbow_V1S13b'
+
+    render_folder = render_root_folder + output_file_base_name
+    render_folder
+  end
+
+  def get_render_image_paths( version )
+
+    render_folder = get_render_folder( version )
+    paths = []
+
+    Dir.entries( render_folder ).each do |name|
+      # skip folders
+      next if File.directory? name
+      name = render_folder + name
+      paths << name
+    end # each entry in dir
+    paths
+  end
+
+
+
   # A version's values is a json obj describing all extensible settings,
   # set by the user.
   def get_values_object( version )
@@ -546,10 +574,10 @@ module VersionsHelper
     end # if do_render
   end
 
+
+
   def get_paths( version )
-
     version_name = version.name
-
     original_file = version.design_template.original_file
     original_file_path = original_file.path
     original_file_name = File.basename( original_file_path )
@@ -742,7 +770,8 @@ module VersionsHelper
 
 
   # This method iterates through all of the replacement_images associated
-  # with a version, and performs any processing necessary.
+  # with a version, and performs any processing necessary. ZIP files are
+  # unziped, image files are scaled and cropped
   def process_replacement_images( version )
     Rails.logger.info 'versions_helper - process_replacement_images()'
     design_template = version.design_template
