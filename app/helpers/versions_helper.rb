@@ -536,7 +536,7 @@ module VersionsHelper
         Rails.logger.info 'versions_helper - send_to_render() - name: ' + name.to_s
         if( name == png_file )
           from_path = output_folder + name
-          to_path = '/abyss/NEW_DESIGNS/ToRender/' + name
+          to_path = '/Volumes/abyss/NEW_DESIGNS/ToRender/' + name
           Rails.logger.info 'versions_helper - send_to_render() - from_path: ' + from_path.to_s
           Rails.logger.info 'versions_helper - send_to_render() - to_path: ' + to_path.to_s
           FileUtils.cp from_path, to_path

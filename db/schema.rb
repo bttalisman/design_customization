@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20160904174235) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.integer  "version_id", limit: 4
+    t.string   "image_name", limit: 255
   end
 
   create_table "colors", force: :cascade do |t|
@@ -48,31 +49,6 @@ ActiveRecord::Schema.define(version: 20160904174235) do
     t.boolean  "is_trans_butt",              limit: 1,     default: false
   end
 
-  create_table "designs", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
-  create_table "designs_instagrams", id: false, force: :cascade do |t|
-    t.integer "design_id",    limit: 4
-    t.integer "instagram_id", limit: 4
-  end
-
-  create_table "instagrams", force: :cascade do |t|
-    t.string   "insta_id",     limit: 255
-    t.string   "image_url",    limit: 255
-    t.string   "open_link",    limit: 255
-    t.integer  "created_time", limit: 4
-    t.string   "approved",     limit: 255
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.string   "media_type",   limit: 255
-    t.integer  "height",       limit: 4
-    t.integer  "width",        limit: 4
-    t.integer  "click_count",  limit: 4
-  end
-
   create_table "palettes", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.datetime "created_at",              null: false
@@ -92,15 +68,6 @@ ActiveRecord::Schema.define(version: 20160904174235) do
     t.integer  "uploaded_file_file_size",    limit: 4
     t.datetime "uploaded_file_updated_at"
     t.string   "image_name",                 limit: 255
-  end
-
-  create_table "uploads", force: :cascade do |t|
-    t.string   "pic_file_name",    limit: 255
-    t.string   "pic_content_type", limit: 255
-    t.integer  "pic_file_size",    limit: 4
-    t.datetime "pic_updated_at"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
   end
 
   create_table "versions", force: :cascade do |t|
