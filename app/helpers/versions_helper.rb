@@ -22,6 +22,34 @@ module VersionsHelper
     version_output_folder
   end
 
+  def get_render_folder( version )
+    app_config = Rails.application.config_for( :customization )
+    render_root_folder = app_config[ 'path_to_render_folder' ]
+
+    paths = get_paths( version )
+#    output_file_base_name = paths[ :output_file_base_name ]
+    output_file_base_name = 'Tartan_Rainbow_V1S13b'
+
+    render_folder = render_root_folder + output_file_base_name
+    render_folder
+  end
+
+  def get_render_image_paths( version )
+
+    render_folder = get_render_folder( version )
+    paths = []
+
+    Dir.entries( render_folder ).each do |name|
+      # skip folders
+      next if File.directory? name
+      name = render_folder + name
+      paths << name
+    end # each entry in dir
+    paths
+  end
+
+
+
   # A version's values is a json obj describing all extensible settings,
   # set by the user.
   def get_values_object( version )
@@ -527,8 +555,9 @@ module VersionsHelper
       output_folder_files = output_folder + '.'
       original_file_path = paths[ :original_file_path ]
       original_file_base_name = paths[ :original_file_base_name ]
+      output_file_base_name = paths[ :output_file_base_name ]
 
-      png_file = original_file_base_name + '_final.png'
+      png_file = output_file_base_name + '.png'
 
       Dir.entries(output_folder_files).each do |name|
         # skip folders
@@ -536,7 +565,7 @@ module VersionsHelper
         Rails.logger.info 'versions_helper - send_to_render() - name: ' + name.to_s
         if( name == png_file )
           from_path = output_folder + name
-          to_path = '/abyss/NEW_DESIGNS/ToRender/' + name
+          to_path = '/Volumes/abyss/NEW_DESIGNS/ToRender/' + name
           Rails.logger.info 'versions_helper - send_to_render() - from_path: ' + from_path.to_s
           Rails.logger.info 'versions_helper - send_to_render() - to_path: ' + to_path.to_s
           FileUtils.cp from_path, to_path
@@ -545,10 +574,10 @@ module VersionsHelper
     end # if do_render
   end
 
+
+
   def get_paths( version )
-
     version_name = version.name
-
     original_file = version.design_template.original_file
     original_file_path = original_file.path
     original_file_name = File.basename( original_file_path )
@@ -675,6 +704,11 @@ module VersionsHelper
     path_to_data = text_processing_folder + 'text_data.jsn'
     output_folder = text_processing_folder + 'output/'
 
+    Rails.logger.info 'version_helper - process_trans_butt_images() - text_processing_folder: ' + text_processing_folder.to_s
+
+    FileUtils.mkdir_p( text_processing_folder )\
+      unless File.directory?( text_processing_folder )
+
     config = {}
     config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = path_to_doc
     config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = script_path
@@ -736,7 +770,8 @@ module VersionsHelper
 
 
   # This method iterates through all of the replacement_images associated
-  # with a version, and performs any processing necessary.
+  # with a version, and performs any processing necessary. ZIP files are
+  # unziped, image files are scaled and cropped
   def process_replacement_images( version )
     Rails.logger.info 'versions_helper - process_replacement_images()'
     design_template = version.design_template

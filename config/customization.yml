@@ -14,6 +14,7 @@ development:
   path_to_collage_root: <%= Rails.root.to_s + '/working/collages/' %>
   path_to_zombie_templates_root: <%= Rails.root.to_s + '/working/zombies/design_templates/' %>
   path_to_text_processing_folder: <%= Rails.root.to_s + '/working/text_processing/' %>
+  path_to_render_folder: '/Volumes/abyss/RENDERINGS/RenderArchive/'
 
   run_remotely: false
   remote_server_uri: 'http://localhost:3000'
@@ -38,6 +39,7 @@ test:
   path_to_collage_root: <%= Rails.root.to_s + '/working/test_collages/' %>
   path_to_zombie_templates_root: <%= Rails.root.to_s + '/working/zombies/design_templates/' %>
   path_to_text_processing_folder: <%= Rails.root.to_s + '/working/text_processing/' %>
+  path_to_render_folder: '/Volumes/abyss/RENDERINGS/RenderArchive/'
 
   run_remotely: false
   remote_server_uri: 'http://localhost:3000'
@@ -61,6 +63,7 @@ production:
   path_to_collage_root: <%= Rails.root.to_s + '/collages' %>
   path_to_zombie_templates_root: <%= Rails.root.to_s + '/zombies/design_templates/' %>
   path_to_text_processing_folder: <%= Rails.root.to_s + '/working/text_processing/' %>
+  path_to_render_folder: '/Volumes/abyss/RENDERINGS/RenderArchive/'
 
   run_remotely: false
   remote_server_uri: 'http://localhost:3000'
