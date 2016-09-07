@@ -1,7 +1,11 @@
+require 'google_drive'
+
+
 # Versions Helper
 module VersionsHelper
   include CollagesHelper
   include ImageHelper
+
 
   # Every version has its own folder, used for building modified AI files.
   # This folder will contain a copy of the AI file from the template,
@@ -68,8 +72,23 @@ module VersionsHelper
     i
   end
 
+
+  # client id:   930891786165-n9gjv9ripqhkhlg5r6r4cusupk0605kl.apps.googleusercontent.com
+  # client secret:    PZrT8soO43xQl-_I0aAPG-XD
+
   def update_local_render_folder( version )
     Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder()'
+
+    session = GoogleDrive::Session.from_config("config.json")
+
+    session.files.each do |file|
+      Rails.logger.info 'file.title: ' + file.title
+    end
+
+
+
+
+
     remote_render_folder = get_remote_render_folder( version )
     local_render_folder = get_local_render_folder( version )
 
