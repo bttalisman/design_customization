@@ -2,25 +2,75 @@
   <div class='col col-md-1'></div>
   <div class='col col-md-4'>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= @version.name.to_s %></h3>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'><%= @version.name.to_s %></h3>
       </div>
-      <div class="panel-body">
+      <div class='panel-body'>
 
         <div class='input-group' style='margin-bottom:20px;'>
-          <span class="input-group-addon" id="basic-addon1">Template</span>
-          <span class='form-control' aria-describedby="basic-addon1"><%= link_to @design_template.name, @design_template %></span>
+          <span class='input-group-addon' id='basic-addon1'>Template</span>
+          <span class='form-control' aria-describedby='basic-addon1'><%= link_to @design_template.name, @design_template %></span>
         </div>
 
         <div class='input-group' style='margin-bottom:20px;'>
-          <span class="input-group-addon" id="basic-addon2">Output Folder</span>
-          <input type='text' disabled class="form-control" id='version_output_folder_path' title='<%= @version.output_folder_path %>' value='<%= @version.output_folder_path %>' name='version[output_folder_path]'></input>
+          <span class='input-group-addon' id='basic-addon2'>Output Folder</span>
+          <input type='text' disabled class='form-control'
+            id='version_output_folder_path' title='<%= @version.output_folder_path %>'
+            value='<%= @version.output_folder_path %>' name='version[output_folder_path]'>
+          </input>
         </div>
 
         <a class='btn btn-default' href='<%= edit_version_path %>'>Edit this Version</a>
-        <a class="btn btn-default" href="/versions/<%= @version.id %>" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Delete</a>
+        <a class='btn btn-default' href='/versions/<%= @version.id %>'
+          data-confirm='Are you sure?' data-method='delete' rel='nofollow'>Delete</a>
 
       </div> <!-- /panel body -->
     </div> <!-- / panel -->
+  </div> <!-- / col -->
+
+
+  <div class='col col-md-1'>
   </div>
+
+  <div class='col col-md-5'>
+    <div class='spritespin'></div>
+  </div>
+
+  <div class='col col-md-1'>
+  </div>
+
+</div>
+
+
+<script>
+
+
+
+
+  $(document).ready( function() {
+
+    $('.spritespin').spritespin({
+      // generate an array of image urls.
+      // this is a helper function that takes a {frame} placeholder
+
+      source: SpriteSpin.sourceArray('<%= @render_url.to_s %>', {
+        // this ramge of numbers is interpolated into the {frame} placeholder
+        frame: [ 1, <%= @render_image_count.to_s %> ],
+        // the frame placeholder will be padded with leading '0' up to the number of 'digits'
+        digits: 3
+      }),
+      // Specify the display width and height of the frame.
+      // Optionally the size of the container can be defined with CSS.
+      width: 480,
+      height: 327,
+      // Sense controls the direction and speed of the animation for mouse/touch interactions.
+      // Here a negative value is chosen to invert the rotation, so the animation 'follows' the drag direction.
+      // Values towards 0 will slow the animation down.
+      sense: -1
+      });
+  });
+
+
+
+</script>

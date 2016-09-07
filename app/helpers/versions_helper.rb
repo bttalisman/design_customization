@@ -22,32 +22,74 @@ module VersionsHelper
     version_output_folder
   end
 
-  def get_render_folder( version )
+  def get_remote_render_folder( version )
     app_config = Rails.application.config_for( :customization )
-    render_root_folder = app_config[ 'path_to_render_folder' ]
+    render_root_folder = app_config[ 'path_to_remote_render_folder_root' ]
 
     paths = get_paths( version )
 #    output_file_base_name = paths[ :output_file_base_name ]
-    output_file_base_name = 'Tartan_Rainbow_V1S13b'
+    output_file_base_name = 'BitchPlanetBW'
 
-    render_folder = render_root_folder + output_file_base_name
+    render_folder = render_root_folder + output_file_base_name + '/'
     render_folder
   end
 
-  def get_render_image_paths( version )
+  def get_local_render_folder( version )
+    app_config = Rails.application.config_for( :customization )
+    render_root_folder = app_config[ 'path_to_local_render_folder_root' ]
 
-    render_folder = get_render_folder( version )
-    paths = []
+    paths = get_paths( version )
+#    output_file_base_name = paths[ :output_file_base_name ]
+    output_file_base_name = 'BitchPlanetBW'
 
-    Dir.entries( render_folder ).each do |name|
-      # skip folders
-      next if File.directory? name
-      name = render_folder + name
-      paths << name
-    end # each entry in dir
-    paths
+    render_folder = render_root_folder + output_file_base_name + '/'
+    render_folder
   end
 
+  def get_render_url( version )
+    paths = get_paths( version )
+#    output_file_base_name = paths[ :output_file_base_name ]
+    output_file_base_name = 'BitchPlanetBW'
+
+    url = '/RENDERINGS/' + output_file_base_name + '/image_{frame}.png'
+    url
+  end
+
+  def get_local_render_image_count( version )
+    local_render_folder = get_local_render_folder( version )
+
+    # Copy everything from the remote render folder to the local one
+    i = 0
+    Dir.entries( local_render_folder ).each do |name|
+      # skip folders
+      next if File.directory? name
+      i += 1
+    end # each entry in dir
+    i
+  end
+
+  def update_local_render_folder( version )
+    Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder()'
+    remote_render_folder = get_remote_render_folder( version )
+    local_render_folder = get_local_render_folder( version )
+
+    FileUtils.mkdir_p( local_render_folder )\
+      unless File.directory?( local_render_folder )
+
+    if File.directory? remote_render_folder
+
+      # Copy everything from the remote render folder to the local one
+      i = 1
+      Dir.entries( remote_render_folder ).each do |name|
+        # skip folders
+        next if File.directory? name
+        from_path = remote_render_folder + name
+        to_path = local_render_folder + 'image_' + i.to_s.rjust( 3, '0' ) + '.png'
+        FileUtils.cp( from_path, to_path )
+        i += 1
+      end # each entry in dir
+    end # remote render folder exists
+  end
 
 
   # A version's values is a json obj describing all extensible settings,
@@ -599,8 +641,8 @@ module VersionsHelper
       intermediate_output: intermediate_output
     }
 
-    Rails.logger.info 'versions_helper - get_paths() - o: '\
-      + JSON.pretty_generate( o )
+    #Rails.logger.info 'versions_helper - get_paths() - o: '\
+    #  + JSON.pretty_generate( o )
     o
   end
 

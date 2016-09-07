@@ -45,8 +45,6 @@ class VersionsController < ApplicationController
     @design_template_id = @design_template.id
     @values = get_values_object( @version )
     @root_folder = Rails.root.to_s
-    @rendered_images = get_render_image_paths( @version )
-    
   end
 
   def update
@@ -132,6 +130,10 @@ class VersionsController < ApplicationController
     if !@design_template.nil?
       @data_file = path_to_data_file( @version.design_template.original_file.path.to_s )
     end
+
+    update_local_render_folder( @version )
+    @render_url = get_render_url( @version )
+    @render_image_count = get_local_render_image_count( @version )
 
     logger.info 'version_controller - show - @version: ' + @version.to_s
     logger.info 'version_controller - show - @design_template: '\
