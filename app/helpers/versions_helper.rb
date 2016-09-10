@@ -1,4 +1,17 @@
-require 'google_drive'
+require 'google/apis/drive_v3'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+
+require 'fileutils'
+
+
+OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+APPLICATION_NAME = 'Drive API Ruby Quickstart'
+CLIENT_SECRETS_PATH = 'client_secret.json'
+CREDENTIALS_PATH = File.join(Dir.home, '.credentials',
+                             "drive-ruby-quickstart.yaml")
+SCOPE = Google::Apis::DriveV3::AUTH_DRIVE
+
 
 
 # Versions Helper
@@ -79,35 +92,26 @@ module VersionsHelper
   def update_local_render_folder( version )
     Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder()'
 
-    session = GoogleDrive::Session.from_config("config.json")
-
-    session.files.each do |file|
-      Rails.logger.info 'file.title: ' + file.title
-    end
-
-
-
-
-
     remote_render_folder = get_remote_render_folder( version )
     local_render_folder = get_local_render_folder( version )
 
     FileUtils.mkdir_p( local_render_folder )\
       unless File.directory?( local_render_folder )
 
-    if File.directory? remote_render_folder
 
-      # Copy everything from the remote render folder to the local one
-      i = 1
-      Dir.entries( remote_render_folder ).each do |name|
-        # skip folders
-        next if File.directory? name
-        from_path = remote_render_folder + name
-        to_path = local_render_folder + 'image_' + i.to_s.rjust( 3, '0' ) + '.png'
-        FileUtils.cp( from_path, to_path )
-        i += 1
-      end # each entry in dir
-    end # remote render folder exists
+    # Initialize the API
+    service = Google::Apis::DriveV3::DriveService.new
+    service.client_options.application_name = APPLICATION_NAME
+    service.authorization = authorize
+
+    folder_id = '0B0Pbgd52b3LYd3lfQ2xRQ2VVaXc'
+
+    response = service.list_files( q: "'0B0Pbgd52b3LYd3lfQ2xRQ2VVaXc' in parents" )
+
+    response.files.each do |file|
+      puts "#{file.name} (#{file.id})"
+    end
+
   end
 
 
