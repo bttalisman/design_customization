@@ -1,5 +1,3 @@
-require 'google_drive'
-
 
 # Versions Helper
 module VersionsHelper
@@ -32,7 +30,7 @@ module VersionsHelper
 
     paths = get_paths( version )
 #    output_file_base_name = paths[ :output_file_base_name ]
-    output_file_base_name = 'BitchPlanetBW'
+    output_file_base_name = 'MapleHaze_V2S13b'
 
     render_folder = render_root_folder + output_file_base_name + '/'
     render_folder
@@ -44,7 +42,7 @@ module VersionsHelper
 
     paths = get_paths( version )
 #    output_file_base_name = paths[ :output_file_base_name ]
-    output_file_base_name = 'BitchPlanetBW'
+    output_file_base_name = 'MapleHaze_V2S13b'
 
     render_folder = render_root_folder + output_file_base_name + '/'
     render_folder
@@ -53,7 +51,7 @@ module VersionsHelper
   def get_render_url( version )
     paths = get_paths( version )
 #    output_file_base_name = paths[ :output_file_base_name ]
-    output_file_base_name = 'BitchPlanetBW'
+    output_file_base_name = 'MapleHaze_V2S13b'
 
     url = '/RENDERINGS/' + output_file_base_name + '/image_{frame}.png'
     url
@@ -79,15 +77,6 @@ module VersionsHelper
   def update_local_render_folder( version )
     Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder()'
 
-    session = GoogleDrive::Session.from_config("config.json")
-
-    session.files.each do |file|
-      Rails.logger.info 'file.title: ' + file.title
-    end
-
-
-
-
 
     remote_render_folder = get_remote_render_folder( version )
     local_render_folder = get_local_render_folder( version )
@@ -102,8 +91,16 @@ module VersionsHelper
       Dir.entries( remote_render_folder ).each do |name|
         # skip folders
         next if File.directory? name
+        next if name.include? 'Plus'
+        next if (File.size (remote_render_folder + name)).to_i < 10
+
         from_path = remote_render_folder + name
         to_path = local_render_folder + 'image_' + i.to_s.rjust( 3, '0' ) + '.png'
+
+        Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder() - name: '\
+          + name.to_s
+        Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder() - copying to: '\
+          + to_path.to_s
         FileUtils.cp( from_path, to_path )
         i += 1
       end # each entry in dir
@@ -626,7 +623,7 @@ module VersionsHelper
         Rails.logger.info 'versions_helper - send_to_render() - name: ' + name.to_s
         if( name == png_file )
           from_path = output_folder + name
-          to_path = '/Volumes/abyss/NEW_DESIGNS/ToRender/' + name
+          to_path = '/Volumes/krucible/Users/bombsheller/BombshellerGoogleDrive/Chasma/NEW_DESIGNS/ToRender/' + name
           Rails.logger.info 'versions_helper - send_to_render() - from_path: ' + from_path.to_s
           Rails.logger.info 'versions_helper - send_to_render() - to_path: ' + to_path.to_s
           FileUtils.cp from_path, to_path

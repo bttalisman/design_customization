@@ -14,7 +14,7 @@ development:
   path_to_collage_root: <%= Rails.root.to_s + '/working/collages/' %>
   path_to_zombie_templates_root: <%= Rails.root.to_s + '/working/zombies/design_templates/' %>
   path_to_text_processing_folder: <%= Rails.root.to_s + '/working/text_processing/' %>
-  path_to_remote_render_folder_root: <%= '/Volumes/abyss/RENDERINGS/RenderArchive/' %>
+  path_to_remote_render_folder_root: <%= '/Volumes/krucible/Users/bombsheller/BombshellerGoogleDrive/Chasma/NEW_DESIGNS/ForCatalog/' %>
   path_to_local_render_folder_root: <%= Rails.root.to_s + '/public/RENDERINGS/' %>
 
   run_remotely: false
@@ -40,7 +40,7 @@ test:
   path_to_collage_root: <%= Rails.root.to_s + '/working/test_collages/' %>
   path_to_zombie_templates_root: <%= Rails.root.to_s + '/working/zombies/design_templates/' %>
   path_to_text_processing_folder: <%= Rails.root.to_s + '/working/text_processing/' %>
-  path_to_remote_render_folder_root: <%= '/Volumes/abyss/RENDERINGS/RenderArchive/' %>
+  path_to_remote_render_folder_root: <%= '/Volumes/krucible/Users/bombsheller/BombshellerGoogleDrive/Chasma/NEW_DESIGNS/ForCatalog/' %>
   path_to_local_render_folder_root: <%= Rails.root.to_s + '/public/RENDERINGS/' %>
 
   run_remotely: false
@@ -65,7 +65,7 @@ production:
   path_to_collage_root: <%= Rails.root.to_s + '/collages' %>
   path_to_zombie_templates_root: <%= Rails.root.to_s + '/zombies/design_templates/' %>
   path_to_text_processing_folder: <%= Rails.root.to_s + '/working/text_processing/' %>
-  path_to_remote_render_folder_root: <%= '/Volumes/abyss/RENDERINGS/RenderArchive/' %>
+  path_to_remote_render_folder_root: <%= '/Volumes/krucible/Users/bombsheller/BombshellerGoogleDrive/Chasma/NEW_DESIGNS/ForCatalog/' %>
   path_to_local_render_folder_root: <%= Rails.root.to_s + '/public/RENDERINGS/' %>
 
   run_remotely: false
