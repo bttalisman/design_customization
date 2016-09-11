@@ -2,13 +2,6 @@ source 'https://rubygems.org'
 
 ruby '2.3.0'
 
-<<<<<<< HEAD
-gem 'google_drive'
-
-gem 'google-api-client', '~> 0.7.1'
-
-=======
->>>>>>> 8e7d811b396cb683aa2b63897dbd9a3df4a856f0
 gem 'rubyzip'
 
 gem 'watir-rails'

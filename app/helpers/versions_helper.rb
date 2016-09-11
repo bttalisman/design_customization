@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-require 'google/apis/drive_v3'
-require 'googleauth'
-require 'googleauth/stores/file_token_store'
-
-require 'fileutils'
-
-
-OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
-APPLICATION_NAME = 'Drive API Ruby Quickstart'
-CLIENT_SECRETS_PATH = 'client_secret.json'
-CREDENTIALS_PATH = File.join(Dir.home, '.credentials',
-                             "drive-ruby-quickstart.yaml")
-SCOPE = Google::Apis::DriveV3::AUTH_DRIVE
-
-
-=======
->>>>>>> 8e7d811b396cb683aa2b63897dbd9a3df4a856f0
 
 # Versions Helper
 module VersionsHelper
@@ -89,60 +71,67 @@ module VersionsHelper
   end
 
 
-  # client id:   930891786165-n9gjv9ripqhkhlg5r6r4cusupk0605kl.apps.googleusercontent.com
-  # client secret:    PZrT8soO43xQl-_I0aAPG-XD
+  def get_google_drive_folder_id( folder_name )
+    command = %Q[ gdrive list -q 'name = "#{folder_name}" and mimeType = "application/vnd.google-apps.folder"' > tmp/output.txt ]
+    system( command )
+
+    file = File.new( 'tmp/output.txt', 'r' )
+    first_line = file.gets
+    second_line = file.gets
+    file.close
+
+    id = second_line.split( ' ' )[ 0 ]
+    Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() id: ' + id.to_s
+    id
+  end
+
 
   def update_local_render_folder( version )
-    Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder()'
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 8e7d811b396cb683aa2b63897dbd9a3df4a856f0
+    app_config = Rails.application.config_for( :customization )
+    render_root_folder = app_config[ 'path_to_local_render_folder_root' ]
     remote_render_folder = get_remote_render_folder( version )
     local_render_folder = get_local_render_folder( version )
+
+    paths = get_paths( version )
+#    output_file_base_name = paths[ :output_file_base_name ]
+    output_file_base_name = 'MapleHaze_V2S13b'
+
 
     FileUtils.mkdir_p( local_render_folder )\
       unless File.directory?( local_render_folder )
 
+    folder_id = get_google_drive_folder_id( output_file_base_name )
 
-<<<<<<< HEAD
-    # Initialize the API
-    service = Google::Apis::DriveV3::DriveService.new
-    service.client_options.application_name = APPLICATION_NAME
-    service.authorization = authorize
+    command = %Q[ gdrive download --recursive --path #{render_root_folder} #{folder_id} ]
+    system( command )
 
-    folder_id = '0B0Pbgd52b3LYd3lfQ2xRQ2VVaXc'
+    path = render_root_folder + output_file_base_name
 
-    response = service.list_files( q: "'0B0Pbgd52b3LYd3lfQ2xRQ2VVaXc' in parents" )
-
-    response.files.each do |file|
-      puts "#{file.name} (#{file.id})"
+    i = 0
+    Dir.open( path ).each do |p|
+      next if File.extname(p) != '.png'
+      next if p.to_s.include?( 'Plus' )
+      newname = 'image_' + i.to_s.rjust( 3, '0' ) + '.png'
+      begin
+        FileUtils.mv( "#{path}/#{p}", "#{path}/#{newname}", { :force => true } )
+      rescue ArgumentError
+      end
+      i += 1
     end
 
-=======
-      # Copy everything from the remote render folder to the local one
-      i = 1
-      Dir.entries( remote_render_folder ).each do |name|
-        # skip folders
-        next if File.directory? name
-        next if name.include? 'Plus'
-        next if (File.size (remote_render_folder + name)).to_i < 10
+    i = 0
+    Dir.open( path ).each do |p|
+      next if File.extname(p) != '.png'
+      next if !p.to_s.include?( 'Plus' )
+      newname = 'image_Plus_' + i.to_s.rjust( 3, '0' ) + '.png'
+      begin
+        FileUtils.mv( "#{path}/#{p}", "#{path}/#{newname}", { :force => true } )
+      rescue ArgumentError
+      end
+      i += 1
+    end
 
-        from_path = remote_render_folder + name
-        to_path = local_render_folder + 'image_' + i.to_s.rjust( 3, '0' ) + '.png'
-
-        Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder() - name: '\
-          + name.to_s
-        Rails.logger.info 'VERSIONS_HELPER - update_local_render_folder() - copying to: '\
-          + to_path.to_s
-        FileUtils.cp( from_path, to_path )
-        i += 1
-      end # each entry in dir
-    end # remote render folder exists
->>>>>>> 8e7d811b396cb683aa2b63897dbd9a3df4a856f0
   end
-
 
   # A version's values is a json obj describing all extensible settings,
   # set by the user.
@@ -646,25 +635,17 @@ module VersionsHelper
     if do_render
       paths = get_paths( version )
       output_folder = paths[ :output_folder ]
-      output_folder_files = output_folder + '.'
       original_file_path = paths[ :original_file_path ]
       original_file_base_name = paths[ :original_file_base_name ]
       output_file_base_name = paths[ :output_file_base_name ]
 
-      png_file = output_file_base_name + '.png'
+      png_file = output_folder + output_file_base_name + '.png'
 
-      Dir.entries(output_folder_files).each do |name|
-        # skip folders
-        next if File.directory? name
-        Rails.logger.info 'versions_helper - send_to_render() - name: ' + name.to_s
-        if( name == png_file )
-          from_path = output_folder + name
-          to_path = '/Volumes/krucible/Users/bombsheller/BombshellerGoogleDrive/Chasma/NEW_DESIGNS/ToRender/' + name
-          Rails.logger.info 'versions_helper - send_to_render() - from_path: ' + from_path.to_s
-          Rails.logger.info 'versions_helper - send_to_render() - to_path: ' + to_path.to_s
-          FileUtils.cp from_path, to_path
-        end
-      end # each entry in dir
+      command = %Q[ gdrive upload -p 0B0Pbgd52b3LYU3pheTJVVzZvVW8 #{png_file} ]
+
+      Rails.logger.info 'VERSION_HELPER - send_to_render() - command: ' + command.to_s
+      system( command )
+        
     end # if do_render
   end
 
