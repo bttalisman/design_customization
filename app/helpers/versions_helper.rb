@@ -35,6 +35,9 @@ module VersionsHelper
     render_folder = render_root_folder + output_file_base_name + '/'
     FileUtils.mkdir_p( render_folder ) unless File.directory?( render_folder )
 
+    Rails.logger.info 'VERSIONS_HELPER - get_local_render_folder() -'\
+      + ' render_folder: ' + render_folder.to_s
+
     render_folder
   end
 
@@ -45,8 +48,25 @@ module VersionsHelper
     output_file_base_name = paths[ :output_file_base_name ]
     url = '/RENDERINGS/' + output_file_base_name + '/image_###.png|0..'\
       + (get_local_render_image_count( version, plus_size ) - 1).to_s
+
+    Rails.logger.info ''
+    Rails.logger.info ''
+    Rails.logger.info ''
+
+    Rails.logger.info 'VERSIONS_HELPER - get_render_url() -'\
+      + ' url: ' + url.to_s
     url
   end
+
+  # This is the url that specifies the set of rendered images. Formatted to
+  # suit jquery reel, http://jquery.vostrel.cz/reel
+  def get_render_image_url( version, plus_size )
+    paths = get_paths( version )
+    output_file_base_name = paths[ :output_file_base_name ]
+    url = '/RENDERINGS/' + output_file_base_name + '/image_000.png'
+    url
+  end
+
 
   # Returns the number of rendered images in the render folder.
   def get_local_render_image_count( version, plus_size )
@@ -55,6 +75,11 @@ module VersionsHelper
     Dir.entries( local_render_folder ).each do |name|
       # skip folders
       next if File.directory? name
+      next if name == '.DS_Store'
+
+      Rails.logger.info 'VERSIONS_HELPER - get_local_render_image_count() - name: '\
+        + name.to_s
+
       if plus_size
         next if !name.to_s.include?( 'Plus' )
       else
@@ -72,7 +97,11 @@ module VersionsHelper
 
   def get_google_drive_folder_id( folder_name )
     command = %Q[ gdrive list -q 'name = "#{folder_name}" and mimeType = "application/vnd.google-apps.folder"' > tmp/output.txt ]
-    system( command )
+
+    begin
+      system( command )
+    rescue Error
+    end
 
     file = File.new( 'tmp/output.txt', 'r' )
     first_line = file.gets
@@ -81,7 +110,7 @@ module VersionsHelper
 
     if second_line
       data = second_line.split( ' ' )
-      id = data[0] if datas.kind_of?(Array)
+      id = data[0] if data.kind_of?(Array)
     end
 
     Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() id: ' + id.to_s
@@ -99,15 +128,32 @@ module VersionsHelper
     paths = get_paths( version )
     output_file_base_name = paths[ :output_file_base_name ]
 
+
     FileUtils.mkdir_p( local_render_folder )\
       unless File.directory?( local_render_folder )
 
     folder_id = get_google_drive_folder_id( output_file_base_name )
 
     command = %Q[ gdrive download --recursive --path #{render_root_folder} #{folder_id} ]
-    system( command )
+
+    Rails.logger.info 'versions_helper - update_local_render_folder() - render_root_folder: '\
+      + render_root_folder.to_s
+    Rails.logger.info 'versions_helper - update_local_render_folder() - local_render_folder: '\
+      + local_render_folder.to_s
+    Rails.logger.info 'versions_helper - update_local_render_folder() - folder_id: '\
+      + folder_id.to_s
+    Rails.logger.info 'versions_helper - update_local_render_folder() - command: '\
+      + command.to_s
+
+    begin
+      system( command )
+    rescue Error
+    end
 
     path = render_root_folder + output_file_base_name
+
+    Rails.logger.info 'versions_helper - update_local_render_folder() - about to rename contents of : '\
+      + path.to_s
 
     i = 0
     Dir.open( path ).each do |p|
