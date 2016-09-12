@@ -88,6 +88,12 @@ class VersionsController < ApplicationController
     @root_folder = Rails.root.to_s
   end
 
+  def update_render_folder
+    @version = Version.find( params[ :id ] )
+    update_local_render_folder( @version )
+    render nothing: true
+  end
+
   def quick_new
     app_config = Rails.application.config_for(:customization)
     logger.info 'VERSIONS_CONTROLLER - QUICK_NEW'
@@ -131,9 +137,8 @@ class VersionsController < ApplicationController
       @data_file = path_to_data_file( @version.design_template.original_file.path.to_s )
     end
 
-    update_local_render_folder( @version )
-    @render_url = get_render_url( @version )
-    @render_image_count = get_local_render_image_count( @version )
+    @render_url = get_render_url( @version, false )
+    @render_image_count = get_local_render_image_count( @version, false )
 
     logger.info 'version_controller - show - @version: ' + @version.to_s
     logger.info 'version_controller - show - @design_template: '\

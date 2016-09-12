@@ -24,49 +24,48 @@ module VersionsHelper
     version_output_folder
   end
 
-  def get_remote_render_folder( version )
-    app_config = Rails.application.config_for( :customization )
-    render_root_folder = app_config[ 'path_to_remote_render_folder_root' ]
-
-    paths = get_paths( version )
-#    output_file_base_name = paths[ :output_file_base_name ]
-    output_file_base_name = 'MapleHaze_V2S13b'
-
-    render_folder = render_root_folder + output_file_base_name + '/'
-    render_folder
-  end
-
+  # This is the folder into which rendered images are placed.
   def get_local_render_folder( version )
     app_config = Rails.application.config_for( :customization )
     render_root_folder = app_config[ 'path_to_local_render_folder_root' ]
 
     paths = get_paths( version )
-#    output_file_base_name = paths[ :output_file_base_name ]
-    output_file_base_name = 'MapleHaze_V2S13b'
+    output_file_base_name = paths[ :output_file_base_name ]
 
     render_folder = render_root_folder + output_file_base_name + '/'
+    FileUtils.mkdir_p( render_folder ) unless File.directory?( render_folder )
+
     render_folder
   end
 
-  def get_render_url( version )
+  # This is the url that specifies the set of rendered images. Formatted to
+  # suit jquery reel, http://jquery.vostrel.cz/reel
+  def get_render_url( version, plus_size )
     paths = get_paths( version )
-#    output_file_base_name = paths[ :output_file_base_name ]
-    output_file_base_name = 'MapleHaze_V2S13b'
-
-    url = '/RENDERINGS/' + output_file_base_name + '/image_{frame}.png'
+    output_file_base_name = paths[ :output_file_base_name ]
+    url = '/RENDERINGS/' + output_file_base_name + '/image_###.png|0..'\
+      + (get_local_render_image_count( version, plus_size ) - 1).to_s
     url
   end
 
-  def get_local_render_image_count( version )
+  # Returns the number of rendered images in the render folder.
+  def get_local_render_image_count( version, plus_size )
     local_render_folder = get_local_render_folder( version )
-
-    # Copy everything from the remote render folder to the local one
     i = 0
     Dir.entries( local_render_folder ).each do |name|
       # skip folders
       next if File.directory? name
+      if plus_size
+        next if !name.to_s.include?( 'Plus' )
+      else
+        next if name.to_s.include?( 'Plus' )
+      end
       i += 1
     end # each entry in dir
+    Rails.logger.info 'VERSIONS_HELPER - get_local_render_image_count() - plus_size: '\
+      + plus_size.to_s
+    Rails.logger.info 'VERSIONS_HELPER - get_local_render_image_count() - i: '\
+      + i.to_s
     i
   end
 
@@ -80,22 +79,25 @@ module VersionsHelper
     second_line = file.gets
     file.close
 
-    id = second_line.split( ' ' )[ 0 ]
+    if second_line
+      data = second_line.split( ' ' )
+      id = data[0] if datas.kind_of?(Array)
+    end
+
     Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() id: ' + id.to_s
     id
   end
 
-
+  # This method copies rendered images from the remote render folder on
+  # Google drive into the local render folder.  It then renames all images
+  # to image_###.png or image_Plus_###.png
   def update_local_render_folder( version )
     app_config = Rails.application.config_for( :customization )
     render_root_folder = app_config[ 'path_to_local_render_folder_root' ]
-    remote_render_folder = get_remote_render_folder( version )
     local_render_folder = get_local_render_folder( version )
 
     paths = get_paths( version )
-#    output_file_base_name = paths[ :output_file_base_name ]
-    output_file_base_name = 'MapleHaze_V2S13b'
-
+    output_file_base_name = paths[ :output_file_base_name ]
 
     FileUtils.mkdir_p( local_render_folder )\
       unless File.directory?( local_render_folder )
@@ -645,7 +647,7 @@ module VersionsHelper
 
       Rails.logger.info 'VERSION_HELPER - send_to_render() - command: ' + command.to_s
       system( command )
-        
+
     end # if do_render
   end
 

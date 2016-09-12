@@ -24,6 +24,7 @@
         <a class='btn btn-default' href='<%= edit_version_path %>'>Edit this Version</a>
         <a class='btn btn-default' href='/versions/<%= @version.id %>'
           data-confirm='Are you sure?' data-method='delete' rel='nofollow'>Delete</a>
+        <a class='btn btn-default' onclick='update_render_folder();' >Check for Renderings</a>
 
       </div> <!-- /panel body -->
     </div> <!-- / panel -->
@@ -34,7 +35,25 @@
   </div>
 
   <div class='col col-md-5'>
-    <div class='spritespin'></div>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>Render</h3>
+      </div>
+      <div class='panel-body'>
+
+<%      if @render_image_count > 0 %>
+          <img src='/RENDERINGS/nicks/image_000.png' width='300'
+            class='reel'
+            id='image'
+            data-velocity='2'
+            data-frames='<%= @render_image_count.to_s %>'
+            data-images='<%= @render_url.to_s %>'>
+<%      else %>
+          No rendered images yet.
+<%      end %>
+
+      </div> <!-- / panel body -->
+    </div> <!-- /panel -->
   </div>
 
   <div class='col col-md-1'>
@@ -45,28 +64,12 @@
 
 <script>
 
-
-
-
-  $(document).ready( function() {
-
-    $('.spritespin').spritespin({
-      // generate an array of image urls.
-      // this is a helper function that takes a {frame} placeholder
-
-      source: SpriteSpin.sourceArray('<%= @render_url.to_s %>', {
-        // this ramge of numbers is interpolated into the {frame} placeholder
-        frame: [ 1, <%= @render_image_count.to_s %> ],
-        // the frame placeholder will be padded with leading '0' up to the number of 'digits'
-        digits: 3
-      }),
-      // Sense controls the direction and speed of the animation for mouse/touch interactions.
-      // Here a negative value is chosen to invert the rotation, so the animation 'follows' the drag direction.
-      // Values towards 0 will slow the animation down.
-      sense: -1
-      });
-  });
-
-
+  function update_render_folder()
+  {
+    $.ajax({
+      url: '/versions/<%= @version.id.to_s %>/update_render_folder',
+    }).done(function() {
+    });
+  }
 
 </script>

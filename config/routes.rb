@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   get '/versions/delete_all' => 'versions#delete_all'
   get '/versions/:id/cancel' => 'versions#cancel'
   get '/versions/quick_new' => 'versions#quick_new'
+  get '/versions/:id/update_render_folder' => 'versions#update_render_folder'
 
   post '/design_templates/create' => 'design_templates#create'
   get '/design_templates/:id/edit' => 'design_templates#edit'
