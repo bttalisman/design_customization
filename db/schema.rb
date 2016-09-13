@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160904174235) do
+ActiveRecord::Schema.define(version: 20160913175052) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -47,32 +47,24 @@ ActiveRecord::Schema.define(version: 20160904174235) do
     t.integer  "original_file_file_size",    limit: 4
     t.datetime "original_file_updated_at"
     t.boolean  "is_trans_butt",              limit: 1,     default: false
+    t.integer  "managed_asset_id",           limit: 4
+    t.boolean  "has_been_post_processed",    limit: 1,     default: false
   end
 
-  create_table "designs", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+  add_index "design_templates", ["managed_asset_id"], name: "index_design_templates_on_managed_asset_id", using: :btree
+
+  create_table "managed_assets", force: :cascade do |t|
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "design_template_id", limit: 4
+    t.string   "image_file_name",    limit: 255
+    t.string   "image_content_type", limit: 255
+    t.integer  "image_file_size",    limit: 4
+    t.datetime "image_updated_at"
+    t.string   "name",               limit: 255
   end
 
-  create_table "designs_instagrams", id: false, force: :cascade do |t|
-    t.integer "design_id",    limit: 4
-    t.integer "instagram_id", limit: 4
-  end
-
-  create_table "instagrams", force: :cascade do |t|
-    t.string   "insta_id",     limit: 255
-    t.string   "image_url",    limit: 255
-    t.string   "open_link",    limit: 255
-    t.integer  "created_time", limit: 4
-    t.string   "approved",     limit: 255
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.string   "media_type",   limit: 255
-    t.integer  "height",       limit: 4
-    t.integer  "width",        limit: 4
-    t.integer  "click_count",  limit: 4
-  end
+  add_index "managed_assets", ["design_template_id"], name: "index_managed_assets_on_design_template_id", using: :btree
 
   create_table "palettes", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -95,15 +87,6 @@ ActiveRecord::Schema.define(version: 20160904174235) do
     t.string   "image_name",                 limit: 255
   end
 
-  create_table "uploads", force: :cascade do |t|
-    t.string   "pic_file_name",    limit: 255
-    t.string   "pic_content_type", limit: 255
-    t.integer  "pic_file_size",    limit: 4
-    t.datetime "pic_updated_at"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-  end
-
   create_table "versions", force: :cascade do |t|
     t.string   "output_folder_path", limit: 255
     t.text     "values",             limit: 65535
@@ -111,8 +94,11 @@ ActiveRecord::Schema.define(version: 20160904174235) do
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
     t.string   "name",               limit: 255
+    t.datetime "last_render_date"
   end
 
   add_foreign_key "colors", "palettes"
+  add_foreign_key "design_templates", "managed_assets"
+  add_foreign_key "managed_assets", "design_templates"
   add_foreign_key "palettes", "colors"
 end

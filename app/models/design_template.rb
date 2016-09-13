@@ -1,6 +1,7 @@
 # DesignTemplate Model
 class DesignTemplate < ActiveRecord::Base
   has_many :versions, dependent: :destroy
+  has_many :managed_assets, dependent: :destroy
 
   has_attached_file :original_file,
                     default_url: '/images/missing.png',

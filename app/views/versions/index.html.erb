@@ -20,6 +20,10 @@
             <span id='updated_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
+          <th><a onclick='toggle_last_render_date();'>Last Render</a>
+            <span id='last_render_date_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
           <th><a onclick='toggle_tags();'>Tags?</a>
             <span id='tags_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
@@ -46,6 +50,9 @@
             </td>
             <td id='updated<%= i.to_s %>'>
               <%= v[:updated] %>
+            </td>
+            <td id='last_render_date<%= i.to_s %>'>
+              <%= v[:last_render_date] %>
             </td>
             <td id='tags<%= i.to_s %>'>
               <%= bool_display_text( v[:tags] ) %>
@@ -76,6 +83,8 @@
   var IMAGES_FLIP = true;
   var CREATED_FLIP = true;
   var UPDATED_FLIP = true;
+  var LAST_RENDER_DATE_FLIP = true;
+
 
 
   function show_version( id )
@@ -179,6 +188,22 @@
   }
 
 
+  function toggle_last_render_date()
+  {
+    var versions = get_versions();
+    LAST_RENDER_DATE_FLIP = !LAST_RENDER_DATE_FLIP;
+
+    versions.sort( function( obj1, obj2 )
+    {
+      return my_sort( obj1, obj2, 'last_render_date', LAST_RENDER_DATE_FLIP );
+    });
+
+    put_versions( versions );
+    toggle_arrow( $('#last_render_date_arrow') );
+    drawPage();
+  }
+
+
   function toggle_tags()
   {
     var versions = get_versions();
@@ -243,6 +268,10 @@
       s = '#updated' + container_index.toString();
       el = $(s);
       el.text( o.updated );
+
+      s = '#last_render_date' + container_index.toString();
+      el = $(s);
+      el.text( o.last_render_date );
 
       s = '#images' + container_index.toString();
       el = $(s);

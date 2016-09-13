@@ -3,29 +3,47 @@
     <div class='col col-md-1'></div>
     <div class='col col-md-4'>
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title"><%= @design_template.name.to_s %> Template</h3>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'><%= @design_template.name.to_s %> Template</h3>
         </div>
-        <div class="panel-body">
+        <div class='panel-body'>
 
           <div class='input-group' style='margin-bottom:20px;'>
-            <span class="input-group-addon" id="basic-addon1">Original File</span>
-            <input type='text' disabled class='form-control' aria-describedby="basic-addon1" title='<%= @design_template.original_file.url %>' value='<%= @design_template.original_file.url %>'></input>
+            <span class='input-group-addon' id='basic-addon1'>Original File</span>
+            <input type='text' disabled class='form-control'
+              aria-describedby='basic-addon1' title='<%= @design_template.original_file.url %>'
+              value='<%= @design_template.original_file.url %>'></input>
           </div>
 
           <div class='input-group' style='margin-bottom:20px;'>
-            <span class="input-group-addon" id="basic-addon2">Source Folder</span>
-            <input type='text' disabled class='form-control' aria-describedby="basic-addon2" title='<%= @folder %>' value='<%= @folder %>'></input>
+            <span class='input-group-addon' id='basic-addon2'>Source Folder</span>
+            <input type='text' disabled class='form-control'
+              aria-describedby='basic-addon2' title='<%= @folder %>'
+              value='<%= @folder %>'></input>
           </div>
 
 <%        if @stats[ 'valid' ] %>
-            <div class="input-group">
-              <div class="input-group-btn">
+            <div class='input-group'>
+              <div class='input-group-btn'>
                 <a class='btn btn-default' href='<%= local_host %>/versions/quick_new?template_id=<%= @design_template.id %>'>Quick Version</a><br>
               </div><!-- /btn-group -->
               <input disabled class='form-control' title='<%= @quick_new_partial_url %>' value='<%= @quick_new_partial_url %>'></input>
             </div><!-- /input-group -->
+            <div class='spacer'></div>
+            <a class='btn btn-default' href='<%= edit_design_template_path %>'>Edit this Template</a>
+            <div class='spacer'></div>
+
+<%        end %>
+
+<%        if !@design_template.managed_assets.empty? %>
+            <h4>Assets</h4>
+            <ul class='list-group'>
+<%
+              @design_template.managed_assets.each do |a| %>
+                <li class='list-group-item'> <%= link_to a.name.to_s, a %> </li>
+<%            end %>
+            </ul>
             <div class='spacer'></div>
 <%        end %>
 
@@ -36,12 +54,10 @@
               @versions.each do |v| %>
                 <li class='list-group-item'> <%= link_to v.name, v %> </li>
 <%            end %>
-            </ul>            
+            </ul>
             <div class='spacer'></div>
 <%        end %>
 
-
-          <a class='btn btn-default' href='<%= edit_design_template_path %>'>Edit this Template</a>
         </div> <!-- /panel body -->
       </div> <!-- /panel -->
     </div> <!-- /col -->

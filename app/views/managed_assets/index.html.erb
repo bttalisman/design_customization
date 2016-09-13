@@ -1,0 +1,16 @@
+
+<div class='row'>
+
+  <div class='col col-md-1'></div>
+  <div class='col col-md-10'>
+<%
+    @managed_assets.each { |a| %>
+      <a href='<%= local_host %>/assets/<%= a.id %>/'>
+        Asset
+      </a>
+<%
+    } %>
+  </div>
+
+  <div class='col col-md-1'></div>
+</div>

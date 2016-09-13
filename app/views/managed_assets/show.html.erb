@@ -1,0 +1,45 @@
+
+<div class='row'>
+  <div class='col col-md-1'></div>
+  <div class='col col-md-4'>
+
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>Asset - <%= @managed_asset.name.to_s %></h3>
+      </div>
+      <div class='panel-body'>
+
+        <div class='input-group' style='margin-bottom:20px;'>
+          <span class='input-group-addon' id='basic-addon1'>Image File</span>
+          <input type='text' disabled class='form-control'
+            aria-describedby='basic-addon1' title='<%= @managed_asset.image.url %>'
+            value='<%= @managed_asset.image.url %>'></input>
+        </div>
+
+        <div class='spacer'></div>
+
+        <a class='btn btn-default' href='<%= edit_managed_asset_path %>'>Edit this Asset</a>
+        <a class='btn btn-default' onclick='show_template( <%= @managed_asset.design_template.id %> );' >Back to Template</a>
+        <a class='btn btn-default' href='/managed_assets/<%= @managed_asset.id %>'
+          data-method='delete' rel='nofollow'>Delete</a>
+
+      </div> <!-- / panel body -->
+    </div> <!-- / panel -->
+  </div> <!-- / col -->
+</div> <!-- / row -->
+
+
+<script>
+
+
+  function show_template( id )
+  {
+    window.location = '/design_templates/' + id;
+  }
+
+
+  $(document).ready(function(){
+
+  });
+
+</script>

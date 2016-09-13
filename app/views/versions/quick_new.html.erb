@@ -42,10 +42,6 @@
   {
     if( validate() )
     {
-      // this funtion is defined in the version_settings.html.erb controlled by partials controller
-//      var oReturn = build();
-//      $('#version_data').attr( 'value', JSON.stringify( oReturn ) );
-
       var form = $('#version_form');
       form.submit();
     }
@@ -64,35 +60,55 @@
 form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 %>
 
-<div class='row'>
-  <div class='col col-md-1'></div>
-  <div class='col col-md-4'>
+  <div class='row'>
+    <div class='col col-md-1'></div>
+    <div class='col col-md-4'>
 
-    <div class='panel panel-default'>
-      <div class='panel-heading'>
-        <h3 class='panel-title'>Quick New Version</h3>
-      </div>
-      <div class='panel-body'>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'>Quick New Version of <%= @version.design_template.name %></h3>
+        </div>
+        <div class='panel-body'>
 
-        <input type='text' style='display:none;' class='form-control' id='version_name' value='<%= @version.name %>' name='version[name]'></input>
-        <input type='text' style='display:none;' class='form-control' id='version_output_folder_path' value='<%= @version.output_folder_path %>' name='version[output_folder_path]'></input>
-        <input type='checkbox' style='display:none;' checked name='runai' id='runai' class='checkbox-input' value='true'></input>
+          <input type='text' style='display:none;' class='form-control'
+            id='version_name' value='<%= @version.name %>' name='version[name]'>
+          </input>
+          <input type='text' style='display:none;' class='form-control'
+            id='version_output_folder_path' value='<%= @version.output_folder_path %>'
+            name='version[output_folder_path]'>
+          </input>
+          <input type='checkbox' style='display:none;' checked name='runai'
+            id='runai' class='checkbox-input' value='true'></input>
+          <input type='checkbox' style='display:none;' checked name='render'
+            id='render' class='checkbox-input' value='true'></input>
 
-        <a class='btn btn-default' onclick='cancel();' href='<%= local_host %>/design_templates/'>Cancel</a>
-        <a class='btn btn-default' id='create' onclick='create_version(); return false;'>Create</a>
+          <a class='btn btn-default' onclick='cancel();' href='<%= local_host %>/design_templates/'>Cancel</a>
+          <a class='btn btn-default' id='create' onclick='create_version(); return false;'>Create</a>
 
-      </div> <!-- / panel body -->
-    </div> <!-- / panel -->
-  </div> <!-- / col -->
+        </div> <!-- / panel body -->
+      </div> <!-- / panel -->
 
-  <div class='col-md-1'></div>
+      <%  @version.design_template.managed_assets.each { |asset| %>
+      <%=   image_tag( asset.image, width: '200' ) %>
+      <%  } %>
 
-  <div class='col-md-5'>
-    <div id='values_container'></div>
-    <input name='version_data' id='version_data' style='display:none;'></input>
-  </div>
 
-</div> <!-- / row -->
+    </div> <!-- / col -->
+
+    <div class='col-md-1'></div>
+
+    <div class='col-md-5'>
+      <div id='values_container'></div>
+    </div>
+
+  </div> <!-- / row -->
+
+
+  <div class='row'>
+    <div class='col col-md-1'></div>
+    <div class='col col-md-4'>
+    </div>
+  </div> <!-- /row -->
 
 <%
 end # form %>

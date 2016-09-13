@@ -24,9 +24,15 @@ class VersionsController < ApplicationController
             id: v.id.to_s,
             template_id: v.design_template.id.to_s,
             created: time_display_text( v.created_at ),
-            updated: time_display_text( v.updated_at ) }
+            updated: time_display_text( v.updated_at ),
+            last_render_date: time_display_text( v.last_render_date ) }
       @versions << o
     end
+
+    logger.info 'VERSION_COTROLLER - index - @versions: '\
+      + JSON.pretty_generate( @versions )
+
+
   end
 
   def edit

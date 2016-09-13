@@ -123,6 +123,12 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 
         </div> <!-- / panel body -->
       </div> <!-- / panel -->
+
+      <%  @version.design_template.managed_assets.each { |asset| %>
+      <%=   image_tag( asset.image, width: '200' ) %>
+      <%  } %>
+
+
     </div>  <!-- / col -->
     <div class='col col-md-1'></div>
     <div class='col col-md-5'>

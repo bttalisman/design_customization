@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   get '/colors/:id/update' => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'
 
+  get '/managed_assets/:id/update' => 'managed_assets#update'
+
   get '/palettes/:id/update' => 'palettes#update'
   get '/palettes/:id/add' => 'palettes#add'
   get '/palettes/:id/remove' => 'palettes#remove'
@@ -55,6 +57,7 @@ Rails.application.routes.draw do
   resources :colors
   resources :palettes
   resources :replacement_images
+  resources :managed_assets
 
 
 

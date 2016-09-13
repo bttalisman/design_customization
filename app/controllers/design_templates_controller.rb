@@ -51,6 +51,8 @@ class DesignTemplatesController < ApplicationController
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.update( design_template_params )
 
+    set_assets( @design_template, params )
+
     # extract the tag-related settings from the parameters object, and set
     # this template's prompts property.
     set_tag_prompts( @design_template, params )

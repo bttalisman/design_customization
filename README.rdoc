@@ -1,4 +1,10 @@
-rails s -b 10.1.10.8
+
+Binding to a port:  rails s -b 10.1.10.8
+Start MySQL on mac:  mysql.server start
+
+
+
+
 
 
 

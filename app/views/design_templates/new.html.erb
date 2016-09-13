@@ -15,12 +15,16 @@ entering these values, clicking Save and Set Prefs takes the user to the edit vi
 %>
           <div class='input-group' style='margin-bottom:20px;'>
             <span class='input-group-addon' id='basic-addon1'>Name</span>
-            <input type='text' class='form-control' id='design_template_name' name='design_template[name]' aria-describedby='basic-addon1' value='<%= @design_template.name %>'></input>
+            <input type='text' class='form-control' id='design_template_name'
+              name='design_template[name]' aria-describedby='basic-addon1'
+              value='<%= @design_template.name %>'></input>
           </div>
           <div class='clearfix'>
             <label class='checkbox-label' style='margin-left:30px;'>
               Contains Trans-Butt Text
-              <input type='checkbox' data-label-id='label' name='design_template[is_trans_butt]' id='design_template_is_trans_butt' class='checkbox-input' value='true'>
+              <input type='checkbox' data-label-id='label'
+                name='design_template[is_trans_butt]' id='design_template_is_trans_butt'
+                class='checkbox-input' value='true'>
               </input>
             </label>
           </div>
@@ -28,14 +32,16 @@ entering these values, clicking Save and Set Prefs takes the user to the edit vi
 
           <div id='selected_file_name' style='display: none;'></div>
           <span class='btn btn-default fileinput-button' id='file_input_container'>
-            <span>Select file</span>
-            <input type='file' onchange='fileInputChange( event );' name='design_template[original_file]' id='design_template_original_file'>
+            <span>Upload AI File</span>
+            <input type='file' onchange='fileInputChange( event );'
+              name='design_template[original_file]' id='design_template_original_file'>
           </span>
 
 
           <input name='stayAfterSave' id='stayAfterSave' style='display:none;'></input>
 
-          <button class='btn btn-default' id='set_prefs' onclick='setPrefs();' style='display: none;'>Save and Set Preferences</button>
+          <button class='btn btn-default' id='set_prefs' onclick='setPrefs();'
+            style='display: none;'>Save and Set Preferences</button>
           <a class='btn btn-default' href='<%= local_host %>/design_templates'>Cancel</a>
 
 <%      end  %>

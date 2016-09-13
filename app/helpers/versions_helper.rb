@@ -24,7 +24,7 @@ module VersionsHelper
     version_output_folder
   end
 
-  # This is the folder into which rendered images are placed.
+  # This is the local public folder into which rendered images are placed.
   def get_local_render_folder( version )
     app_config = Rails.application.config_for( :customization )
     render_root_folder = app_config[ 'path_to_local_render_folder_root' ]
@@ -69,7 +69,6 @@ module VersionsHelper
     i
   end
 
-
   def get_google_drive_folder_id( folder_name )
     command = %Q[ gdrive list -q 'name = "#{folder_name}" and mimeType = "application/vnd.google-apps.folder"' > tmp/output.txt ]
     system( command )
@@ -109,6 +108,7 @@ module VersionsHelper
 
     path = render_root_folder + output_file_base_name
 
+    # Rename non plus-sized images
     i = 0
     Dir.open( path ).each do |p|
       next if File.extname(p) != '.png'
@@ -121,6 +121,7 @@ module VersionsHelper
       i += 1
     end
 
+    # Rename plus-sized images
     i = 0
     Dir.open( path ).each do |p|
       next if File.extname(p) != '.png'
@@ -648,6 +649,8 @@ module VersionsHelper
       Rails.logger.info 'VERSION_HELPER - send_to_render() - command: ' + command.to_s
       system( command )
 
+      version.last_render_date = DateTime.now
+      version.save
     end # if do_render
   end
 

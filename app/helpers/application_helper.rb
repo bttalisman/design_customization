@@ -76,6 +76,7 @@ module ApplicationHelper
   end
 
   def time_display_text( datetime )
+    return '' if datetime.nil?
     time = datetime.in_time_zone( 'Pacific Time (US & Canada)' )
     time.strftime( '%-m/%-d/%y: %H:%M %Z' )
   end

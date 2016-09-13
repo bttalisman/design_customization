@@ -5,28 +5,32 @@
     <div class='col col-md-1'></div>
     <div class='col col-md-4'>
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Edit Color</h3>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'>Edit Color</h3>
         </div>
-        <div class="panel-body">
+        <div class='panel-body'>
 
-          <div class="form-group">
-            <input type="text" id="hex_code" name='color[hex_code]' class="form-control" data-control="hue" value="<%= @color.hex_code %>">
+          <div class='form-group'>
+            <input type='text' id='hex_code' name='color[hex_code]'
+              class='form-control' data-control='hue' value='<%= @color.hex_code %>'>
           </div>
           <div class='spacer'></div>
 
           <div class='alert alert-warning'>Customers may see this description!</div>
           <div class='input-group' style='margin-bottom:20px;'>
-            <span class="input-group-addon" id="basic-addon1">Description</span>
-            <input type='text' class='form-control' id='color_description' name='color[description]' value='<%= @color.description %>' aria-describedby="basic-addon1" ></input>
+            <span class='input-group-addon' id='basic-addon1'>Description</span>
+            <input type='text' class='form-control' id='color_description'
+              name='color[description]' value='<%= @color.description %>'
+              aria-describedby='basic-addon1' ></input>
           </div>
           <div class='spacer'></div>
 
 
           <input type='submit' value='Save' class='btn btn-default'></input>
           <a class='btn btn-default' href='/colors'>Cancel</a>
-          <a class="btn btn-default" href="/colors/<%= @color.id %>"  data-method="delete" rel="nofollow">Delete</a>
+          <a class='btn btn-default' href='/colors/<%= @color.id %>'
+            data-method='delete' rel='nofollow'>Delete</a>
 
         </div> <!-- / panel body -->
       </div> <!-- / panel -->

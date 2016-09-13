@@ -184,6 +184,25 @@ module DesignTemplatesHelper
     o[ 'height' ]
   end
 
+
+  def set_assets( template, params )
+    Rails.logger.info 'design_templates_helper - set_assets() - params: '\
+      + params.to_s
+
+    assets = params[ 'managed_asset' ]
+    if( assets )
+      image = assets[ 'image' ]
+
+      if( image )
+        ma_name = image.original_filename
+        o = { image: image,
+              name: ma_name }
+        a = template.managed_assets.create( o )
+        a.save
+      end
+    end
+  end
+
   # This method constructs a new json string for the prompts field.  This
   # method must be coordinated with parameters as set in
   # views/partials/_design_template_tags.html.erb
@@ -473,6 +492,11 @@ module DesignTemplatesHelper
 
 
   def post_process( design_template )
+
+    return if design_template.has_been_post_processed
+    design_template.has_been_post_processed = true
+    design_template.save
+
     app_config = Rails.application.config_for( :customization )
     run_remotely = app_config[ 'run_remotely' ]
 

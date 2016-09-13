@@ -36,6 +36,18 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
           </div>
           <div class='spacer'></div>
 
+          <div class='input-group upload-group'>
+            <span class='input-group-btn' id='basic-addon2'>
+              <span class='btn btn-default fileinput-button'>
+                <span>Upload an Image</span>
+                <input type='file' data-input-id='path_input' name='managed_asset[image]'
+                  id='managed_asset_image' onchange='fileInputChange( this );' >
+              </span>
+            </span>
+            <input type='text' disabled id='path_input' class='form-control' title=''></input>
+          </div>
+          <div class='spacer'></div>
+
           <a class='btn btn-default' href='<%= local_host %>/force_process?id=<%= @design_template.id %>'>Reprocess</a>
           <a class='btn btn-default' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</a>
           <a class='btn btn-default' href='<%= local_host %>/design_templates/<%= @design_template.id %>'>Cancel</a>
@@ -53,6 +65,30 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
 end %>
 
 <script>
+
+  function fileInputChange( element )
+  {
+    var s, e, inputId;
+    var filePath = event.target.value;
+    filePath = filePath.replace(/.*[\/\\]/, '');
+
+    s = '#' + element.id;
+    e = $( s );
+
+    inputId = e.attr( 'data-input-id' );
+
+    s = '#' + inputId;
+    e = $( s );
+
+    if( filePath !== '' )
+    {
+      e.val( filePath );
+    }
+  }
+
+
+
+
   function validate()
   {
     var dtName = $('#design_template_name').val();

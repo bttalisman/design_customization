@@ -1,29 +1,31 @@
 
-
-
 <div class='row'>
   <div class='col col-md-1'></div>
   <div class='col col-md-4'>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Color</h3>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>Color</h3>
       </div>
-      <div class="panel-body">
+      <div class='panel-body'>
 
-        <div class="form-group" id="new_color_picker_container">
-          <input type="text" disabled id="hex_code" name='color[hex_code]' class="form-control" data-control="hue" value="<%= @color.hex_code %>">
+        <div class='form-group' id='new_color_picker_container'>
+          <input type='text' disabled id='hex_code' name='color[hex_code]'
+            class='form-control' data-control='hue' value='<%= @color.hex_code %>'>
         </div>
         <div class='spacer'></div>
 
         <div class='input-group' style='margin-bottom:20px;'>
-          <span class="input-group-addon" id="basic-addon1">Description</span>
-          <input type='text' disabled class='form-control' id='color_description' name='color[description]' value='<%= @color.description %>' aria-describedby="basic-addon1" ></input>
+          <span class='input-group-addon' id='basic-addon1'>Description</span>
+          <input type='text' disabled class='form-control' id='color_description'
+            name='color[description]' value='<%= @color.description %>'
+            aria-describedby='basic-addon1' ></input>
         </div>
         <div class='spacer'></div>
 
         <a class='btn btn-default' href='<%= edit_color_path %>'>Edit this Color</a>
-        <a class="btn btn-default" href="/colors/<%= @color.id %>"  data-method="delete" rel="nofollow">Delete</a>
+        <a class='btn btn-default' href='/colors/<%= @color.id %>'
+          data-method='delete' rel='nofollow'>Delete</a>
 
 
       </div> <!-- / panel body -->
