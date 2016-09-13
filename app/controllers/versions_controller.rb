@@ -28,11 +28,6 @@ class VersionsController < ApplicationController
             last_render_date: time_display_text( v.last_render_date ) }
       @versions << o
     end
-
-    logger.info 'VERSION_COTROLLER - index - @versions: '\
-      + JSON.pretty_generate( @versions )
-
-
   end
 
   def edit

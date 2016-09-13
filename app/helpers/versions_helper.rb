@@ -644,7 +644,7 @@ module VersionsHelper
 
       png_file = output_folder + output_file_base_name + '.png'
 
-      command = %Q[ gdrive upload -p 0B0Pbgd52b3LYU3pheTJVVzZvVW8 #{png_file} ]
+      command = %Q[ gdrive upload -p 0B0Pbgd52b3LYU3pheTJVVzZvVW8 '#{png_file}' ]
 
       Rails.logger.info 'VERSION_HELPER - send_to_render() - command: ' + command.to_s
       system( command )

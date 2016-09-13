@@ -178,16 +178,14 @@ i = 0
 
     for( var i = 0; i < count; i++ )
     {
-//    todo, validate stuff smartly
-//      s = '#replacement_path' + i;
-//      o = $(s);
-//      if( o.val() == '' )
-//      {
-//        alert( 'Please upload a file.' );
-//        return false;
-//      }
+      s = '#replacement_path' + i;
+      o = $(s);
+      if( o.val() === '' )
+      {
+        alert( 'Please upload a file.' );
+        return false;
+      }
     }
-
     return true;
   }
 

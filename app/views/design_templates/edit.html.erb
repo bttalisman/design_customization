@@ -27,6 +27,13 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
             <input type='text' class='form-control' name='design_template[name]' id='design_template_name' aria-describedby='basic-addon1' value='<%= @design_template.name %>'></input>
           </div>
 
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class='input-group-addon' id='basic-addon1'>Original File</span>
+            <input type='text' disabled class='form-control'
+              aria-describedby='basic-addon1' title='<%= @design_template.original_file.url %>'
+              value='<%= @design_template.original_file.url %>'></input>
+          </div>
+
           <div class='clearfix'>
             <label class='checkbox-label' style='margin-left:30px;'>
               Contains Trans-Butt Text
