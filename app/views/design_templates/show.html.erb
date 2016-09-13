@@ -36,17 +36,6 @@
 
 <%        end %>
 
-<%        if !@design_template.managed_assets.empty? %>
-            <h4>Assets</h4>
-            <ul class='list-group'>
-<%
-              @design_template.managed_assets.each do |a| %>
-                <li class='list-group-item'> <%= link_to a.name.to_s, a %> </li>
-<%            end %>
-            </ul>
-            <div class='spacer'></div>
-<%        end %>
-
 <%        if !@versions.empty? %>
             <h4>Versions</h4>
             <ul class='list-group'>

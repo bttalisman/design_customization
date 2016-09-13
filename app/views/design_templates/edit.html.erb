@@ -35,18 +35,31 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
           </div>
 
           <div class='clearfix'>
-            <label class='checkbox-label' style='margin-left:30px;'>
+            <label class='checkbox-label disabled' style='margin-left:30px;'>
               Contains Trans-Butt Text
-              <input type='checkbox' data-label-id='label' name='design_template[is_trans_butt]' id='design_template_is_trans_butt' <%= tb_checked %> class='checkbox-input' value='true'>
+              <input type='checkbox' data-label-id='label'
+                name='design_template[is_trans_butt]' id='design_template_is_trans_butt'
+                <%= tb_checked %> class='checkbox-input' value='true' disabled='disabled'>
               </input>
             </label>
           </div>
           <div class='spacer'></div>
 
+<%        if !@design_template.managed_assets.empty? %>
+            <h4>Descriptive Assets</h4>
+            <ul class='list-group'>
+<%
+              @design_template.managed_assets.each do |a| %>
+                <li class='list-group-item'> <%= link_to a.name.to_s, a %> </li>
+<%            end %>
+            </ul>
+            <div class='spacer'></div>
+<%        end %>
+
           <div class='input-group upload-group'>
             <span class='input-group-btn' id='basic-addon2'>
               <span class='btn btn-default fileinput-button'>
-                <span>Upload an Image</span>
+                <span>Upload an Image Asset</span>
                 <input type='file' data-input-id='path_input' name='managed_asset[image]'
                   id='managed_asset_image' onchange='fileInputChange( this );' >
               </span>
@@ -54,6 +67,8 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
             <input type='text' disabled id='path_input' class='form-control' title=''></input>
           </div>
           <div class='spacer'></div>
+
+
 
           <a class='btn btn-default' href='<%= local_host %>/force_process?id=<%= @design_template.id %>'>Reprocess</a>
           <a class='btn btn-default' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</a>

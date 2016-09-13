@@ -103,7 +103,7 @@ module VersionsHelper
 
     folder_id = get_google_drive_folder_id( output_file_base_name )
 
-    command = %Q[ gdrive download --recursive --path #{render_root_folder} #{folder_id} ]
+    command = %Q[ gdrive download --recursive --path '#{render_root_folder}' #{folder_id} ]
     system( command )
 
     path = render_root_folder + output_file_base_name

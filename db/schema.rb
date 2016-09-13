@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160913175052) do
+ActiveRecord::Schema.define(version: 20160913194729) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -54,14 +54,15 @@ ActiveRecord::Schema.define(version: 20160913175052) do
   add_index "design_templates", ["managed_asset_id"], name: "index_design_templates_on_managed_asset_id", using: :btree
 
   create_table "managed_assets", force: :cascade do |t|
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "design_template_id", limit: 4
     t.string   "image_file_name",    limit: 255
     t.string   "image_content_type", limit: 255
     t.integer  "image_file_size",    limit: 4
     t.datetime "image_updated_at"
     t.string   "name",               limit: 255
+    t.text     "description",        limit: 65535
   end
 
   add_index "managed_assets", ["design_template_id"], name: "index_managed_assets_on_design_template_id", using: :btree
