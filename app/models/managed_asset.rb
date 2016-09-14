@@ -1,3 +1,4 @@
+
 class ManagedAsset < ActiveRecord::Base
   belongs_to :design_template
 

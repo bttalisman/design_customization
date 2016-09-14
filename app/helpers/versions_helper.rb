@@ -82,7 +82,7 @@ module VersionsHelper
       data = second_line.split( ' ' )
       id = data[0] if datas.kind_of?(Array)
     end
-
+    Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() folder_name: ' + folder_name.to_s
     Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() id: ' + id.to_s
     id
   end
@@ -102,8 +102,10 @@ module VersionsHelper
       unless File.directory?( local_render_folder )
 
     folder_id = get_google_drive_folder_id( output_file_base_name )
-
     command = %Q[ gdrive download --recursive --path '#{render_root_folder}' #{folder_id} ]
+    Rails.logger.info '!!!!!!!!!!!!!!!!!!! ----- VERSIONS_HELPER - update_local_render_folder() command: ' + command.to_s
+
+    return if folder_id.nil?
     system( command )
 
     path = render_root_folder + output_file_base_name
@@ -654,8 +656,6 @@ module VersionsHelper
     end # if do_render
   end
 
-
-
   def get_paths( version )
     version_name = version.name
     original_file = version.design_template.original_file
@@ -665,7 +665,7 @@ module VersionsHelper
     version_folder = get_version_folder( version )
     version_file_path = version_folder + '/' + original_file_name
     output_folder = get_output_folder( version )
-    output_file_base_name = version_name.to_s + '_final'
+    output_file_base_name = make_suitable_file_name( version_name.to_s ) + '_final'
     intermediate_output = output_folder.to_s + output_file_base_name + '.ai'
 
     o = {

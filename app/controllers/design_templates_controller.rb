@@ -118,6 +118,10 @@ class DesignTemplatesController < ApplicationController
 
   def delete_all
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all()'
+
+    assets = ManagedAsset.all
+    assets.each( &:delete )
+
     dts = DesignTemplate.all
     dts.each( &:delete )
     render nothing: true

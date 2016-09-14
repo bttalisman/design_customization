@@ -75,6 +75,13 @@ module ApplicationHelper
     t
   end
 
+  def make_suitable_file_name( s )
+    s = s.downcase
+    s = s.gsub(/\s+/, '_')
+    s
+  end
+
+
   def time_display_text( datetime )
     return '' if datetime.nil?
     time = datetime.in_time_zone( 'Pacific Time (US & Canada)' )

@@ -6,7 +6,7 @@ class PartialsController < ApplicationController
   include PartialsHelper
 
   layout 'partials'
-
+ 
   def trans_butt_settings
     logger.info 'PARTIALS_CONTROLLER - trans_butt_settings()'
   end

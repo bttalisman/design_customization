@@ -7,6 +7,9 @@ require 'fileutils'
 # illustrator_processing/searchAndReplaceImages.jsx, when using a ReplacementImage,
 # will just ask Illustrator to place this file.
 class ReplacementImage < ActiveRecord::Base
+
+  include ApplicationHelper
+  
   belongs_to :version
 
   has_attached_file :uploaded_file,
@@ -16,6 +19,9 @@ class ReplacementImage < ActiveRecord::Base
 
   validates_attachment_content_type :uploaded_file,
                                     content_type: ['image/jpeg', 'image/png', 'application/zip']
+
+  before_post_process :rename_uploaded_file
+
 
   # This method gets the path of this ReplacementImage.  If the uploaded_file
   # is an image, the returned path is just the path to that image file.  If
@@ -30,6 +36,15 @@ class ReplacementImage < ActiveRecord::Base
     Rails.logger.info 'replacement_image - get_path() - return_path: ' + return_path.to_s
     return_path
   end
+
+
+  def rename_uploaded_file
+      extension = File.extname(uploaded_file_file_name).downcase
+      base_name= File.basename(uploaded_file_file_name, '.*' )
+      base_name = make_suitable_file_name( base_name )
+      self.uploaded_file.instance_write :file_name, "#{base_name}#{extension}"
+  end
+
 
   def unzip
     uploaded_file = self.uploaded_file

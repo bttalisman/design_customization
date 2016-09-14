@@ -16,9 +16,11 @@ Each Version object encapsulates a customer’s specifications of how one partic
 
 Colors and Palettes are used to manage color usage.  Color objects can be created for appealing colors, and grouped into Palettes. In this way a customer's choices can be limited.
 
-A Replacement Image is essentially an uploaded file that will replace a 'placed item' found in an AI file.
+A Replacement Image is essentially an uploaded file that will replace a 'placed item' found in an AI file.  ReplacementImages may contain image files or zip archives containing image files. In the case that a ReplacementImage is a zip, its items will be cycled through randomly when replacing placed items for a version.
 
-A Collage is an alternative to a Replacement Image, essentially being a collection of images, currently implemented as a connection to Instagram.  When created, a collage downloads a collection of images from Instagram into an OS folder.  
+A Collage is an alternative to a Replacement Image, essentially being a collection of images, currently implemented as a connection to Instagram.  When created, a collage downloads a collection of images from Instagram into an OS folder.
+
+A ManagedAsset is an image or a block of text that can be associated with a template.  Versions of a template will display these images and text.  The intention is to give the user creating the version a clue about what can be produced.
 
 
 ![alt text]( https://github.com/bttalisman/design_customization/blob/master/diagram.jpg "Diagram")
@@ -62,6 +64,8 @@ When a user clicks Save, pending javaScript validation a json object containing 
 
 ### design_template.prompts
 
+JSON object describing constraints on how versions can be made, other properties of the template such as the dimensions of placed items that may affect versions.  These settings affect the creation of a version only indirectly.
+
   tag_settings:
     tag_name:
       prompt: 'stuff'
@@ -81,11 +85,13 @@ When a user clicks Save, pending javaScript validation a json object containing 
 
   trans_butt_settings:
     left_image_name: 'lefty'
-    right_image_name: 'rigty'
+    right_image_name: 'righty'
     tb_set_color: 'checked'
 
 
 ### version.values
+
+JSON object describing the user's final input into how the version will be made.  This object is saved to the file system before the illustrator scripts are run, making these data available to the script.
 
   tag_settings:
     tag_name:
