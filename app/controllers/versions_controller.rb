@@ -139,6 +139,7 @@ class VersionsController < ApplicationController
     end
 
     @render_url = get_render_url( @version, false )
+    @render_image_url = get_render_image_url( @version, false )
     @render_image_count = get_local_render_image_count( @version, false )
 
     logger.info 'version_controller - show - @version: ' + @version.to_s

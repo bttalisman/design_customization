@@ -40,11 +40,22 @@ module VersionsHelper
 
   # This is the url that specifies the set of rendered images. Formatted to
   # suit jquery reel, http://jquery.vostrel.cz/reel
+  def get_render_image_url( version, plus_size )
+    paths = get_paths( version )
+    output_file_base_name = paths[ :output_file_base_name ]
+    url = '/RENDERINGS/' + output_file_base_name + '/image_000.png'
+    url
+  end
+
+  # This is the url that specifies the set of rendered images. Formatted to
+  # suit jquery reel, http://jquery.vostrel.cz/reel
   def get_render_url( version, plus_size )
     paths = get_paths( version )
     output_file_base_name = paths[ :output_file_base_name ]
     url = '/RENDERINGS/' + output_file_base_name + '/image_###.png|0..'\
       + (get_local_render_image_count( version, plus_size ) - 1).to_s
+
+    Rails.logger.info 'versions_helper - get_render_url() + url: ' + url.to_s
     url
   end
 
@@ -80,7 +91,7 @@ module VersionsHelper
 
     if second_line
       data = second_line.split( ' ' )
-      id = data[0] if datas.kind_of?(Array)
+      id = data[0] if data.kind_of?(Array)
     end
     Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() folder_name: ' + folder_name.to_s
     Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() id: ' + id.to_s

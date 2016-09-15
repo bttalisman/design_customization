@@ -44,7 +44,7 @@
       <div class='panel-body'>
 
 <%      if @render_image_count > 0 %>
-          <img src='/RENDERINGS/nicks/image_000.png' width='300'
+          <img src='<%= @render_image_url.to_s %>' width='300'
             class='reel'
             id='image'
             data-velocity='2'

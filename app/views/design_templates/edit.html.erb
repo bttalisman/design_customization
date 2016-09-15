@@ -94,11 +94,8 @@ end %>
   function detroy_all_managed_assets()
   {
     uri = '/design_templates/<%= @design_template.id.to_s %>/detroy_all_managed_assets';
-
-    $.get( uri, function(data, status)
-    {
-      location.reload();
-    });
+    $.get( uri, function(data, status) {
+      location.reload(); });
   }
 
 
@@ -113,11 +110,7 @@ end %>
     }
   }
 
-  function post_callback()
-  {
-  }
-
-  function add_text_asset()
+  function add_asset()
   {
     var $form = $( '#managed_asset_form' );
     $form.submit();
@@ -133,7 +126,7 @@ end %>
       yes_button = modal.find('#yes_btn');
       // clear any previously set handlers
       yes_button.off( 'click' );
-      yes_button.on( 'click', {}, add_text_asset );
+      yes_button.on( 'click', {}, add_asset );
     });
   }
 
@@ -152,11 +145,8 @@ end %>
 <%  end %>
 
     uri = '<%= local_host %>' + '/partials/extracted_settings/' + templateId;
-
-    $.get( uri, function(data, status)
-    {
-      $('#panel_container').html( data );
-    });
+    $.get( uri, function(data, status) {
+      $('#panel_container').html( data ); });
   }
 
 
@@ -177,17 +167,28 @@ end %>
         <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
           <span aria-hidden='true'>&times;</span>
         </button>
-        <h4 class='modal-title' id='exampleModalLabel'>Add some descriptive text.</h4>
+        <h4 class='modal-title' id='exampleModalLabel'>What's Going On?</h4>
       </div>
 
 <%=   form_for @managed_asset, html: { multipart: true, id: 'managed_asset_form' } do |form| %>
-        <textarea id='text_asset' name='managed_asset[description]'
-          class='form-control' rows='3'></textarea>
-        <input type='file' data-input-id='path_input' name='managed_asset[image]'
-          id='managed_asset_image' onchange='fileInputChange( this );' ></input>
-        <input name='design_template_id' value='<%= @design_template.id.to_s %>'
-          style='display:none;'>
-        </input>
+
+        <div style='margin:10px;'>
+
+          <div class='spacer'></div>
+          <textarea id='text_asset' name='managed_asset[description]'
+            class='form-control' rows='3'></textarea>
+          <div class='spacer'></div>
+          <span class='btn btn-default fileinput-button' id='file_input_container'>
+            <span>Upload an Image</span>
+            <input class='btn btn-default' type='file' name='managed_asset[image]' >
+            </input>
+          </span>
+          <input name='design_template_id' value='<%= @design_template.id.to_s %>'
+            style='display:none;'>
+          </input>
+
+        </div>
+
 <%    end %>
 
       <div class='modal-footer'>
