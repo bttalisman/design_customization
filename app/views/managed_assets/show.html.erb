@@ -18,6 +18,15 @@
 
         <div class='spacer'></div>
 
+        <div class='input-group' style='margin-bottom:20px;'>
+          <span class='input-group-addon' id='basic-addon1'>Description</span>
+          <input type='text' disabled class='form-control' id='color_description'
+            name='managed_asset[description]' value='<%= @managed_asset.description %>'
+            aria-describedby='basic-addon1' ></input>
+        </div>
+
+        <div class='spacer'></div>
+
         <a class='btn btn-default' href='<%= edit_managed_asset_path %>'>Edit this Asset</a>
         <a class='btn btn-default' onclick='show_template( <%= @managed_asset.design_template.id %> );' >Back to Template</a>
         <a class='btn btn-default' href='/managed_assets/<%= @managed_asset.id %>'

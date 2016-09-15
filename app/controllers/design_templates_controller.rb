@@ -44,6 +44,8 @@ class DesignTemplatesController < ApplicationController
     @tags = get_tags_array( @design_template )
     # this is an array of image names, extracted from the AI file
     @images = get_images_array( @design_template )
+
+    @managed_asset = ManagedAsset.new
   end
 
   def update
@@ -116,6 +118,7 @@ class DesignTemplatesController < ApplicationController
     redirect_to @design_template
   end
 
+
   def delete_all
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all()'
 
@@ -132,6 +135,14 @@ class DesignTemplatesController < ApplicationController
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.destroy
     redirect_to :design_templates
+  end
+
+  def detroy_all_managed_assets
+    logger.info 'VERSIONS_CONTROLLER - detroy_all_managed_assets()'
+    @design_template = DesignTemplate.find( params[ :id ] )
+    assets = @design_template.managed_assets.all
+    assets.each( &:delete )
+    render nothing: true
   end
 
   # This action makes a design_template with no Illustrator file associated.

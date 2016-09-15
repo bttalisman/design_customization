@@ -44,8 +44,11 @@ Rails.application.routes.draw do
   get '/design_templates/edit' => 'design_templates#edit'
   post '/design_templates/:id/update' => 'design_templates#update'
   post '/design_templates/:id/settings' => 'design_templates#all_settings'
+  post '/design_templates/:id/add_asset' => 'design_templates#add_asset'
   get '/design_templates/delete_all' => 'design_templates#delete_all'
   get '/design_templates/make_zombie' => 'design_templates#make_zombie'
+  get '/design_templates/:id/detroy_all_managed_assets' => 'design_templates#detroy_all_managed_assets'
+
 
   get 'force_process' => 'design_templates#force_process'
 

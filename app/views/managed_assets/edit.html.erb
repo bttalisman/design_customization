@@ -1,5 +1,6 @@
-
-<form action='update' id='color_form'>
+<%=
+form_for @managed_asset, html: { id: 'managed_asset_form' } do |form|
+%>
 
   <div class='row'>
     <div class='col col-md-1'></div>
@@ -28,6 +29,11 @@
 
           <div class='spacer'></div>
 
+          <textarea class='form-control' name='managed_asset[description]' rows='3'><%= @managed_asset.description %></textarea>
+
+          <div class='spacer'></div>
+
+
           <input type='submit' value='Save' class='btn btn-default'></input>
           <a class='btn btn-default' href='/design_templates/<%= @managed_asset.design_template.id %>'>Cancel</a>
           <a class='btn btn-default' href='/managed_assets/<%= @managed_asset.id %>'
@@ -38,7 +44,9 @@
     </div> <!-- / col -->
   </div> <!-- / row -->
 
-</form>
+
+<%
+end %>
 
 
 <script>
