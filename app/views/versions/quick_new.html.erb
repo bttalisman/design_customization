@@ -88,10 +88,11 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
         </div> <!-- / panel body -->
       </div> <!-- / panel -->
 
-      <%  @version.design_template.managed_assets.each { |asset| %>
-      <%=   image_tag( asset.image, width: '200' ) %>
-      <%  } %>
-
+<%    @version.design_template.managed_assets.each { |asset|
+        if !asset.image.original_filename.nil? %>
+<%=       image_tag( asset.image, width: '49%' ) %>
+<%      end %>
+<%    } %>
 
     </div> <!-- / col -->
 

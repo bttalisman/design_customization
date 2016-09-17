@@ -54,21 +54,24 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 
           <div class='input-group'>
             <span class='input-group-addon' id='basic-addon1'>Name</span>
-            <input type='text' class='form-control' id='version_name' name='version[name]' aria-describedby='basic-addon1'></input>
+            <input type='text' class='form-control' id='version_name'
+              name='version[name]' aria-describedby='basic-addon1'></input>
           </div>
 
           <div class='spacer'></div>
 
           <div class='input-group'>
             <span class='input-group-addon' id='basic-addon1'>Folder</span>
-            <input type='text' class='form-control' id='version_output_folder_path' value='<%= @root_folder.to_s + '/output/' %>' name='version[output_folder_path]'></input>
+            <input type='text' class='form-control' id='version_output_folder_path'
+              value='<%= @root_folder.to_s + '/output/' %>' name='version[output_folder_path]'></input>
           </div>
 
           <div class='spacer'></div>
 
           <div class='input-group'>
             <span class='input-group-addon' id='basic-addon1'>Template</span>
-            <select class='form-control' style='width:200px;' name='version[design_template_id]' id='version_design_template_id'>
+            <select class='form-control' style='width:200px;'
+              name='version[design_template_id]' id='version_design_template_id'>
               <option value='' disabled selected>Select a Template</option>
 
 <%              @design_templates.each { |t|
@@ -78,7 +81,8 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 <%                else
                     selected = false
                   end %>
-                  <option <%= if selected then 'selected="selected"' end %> value='<%= t.id.to_s %>'><%= t.name %></option>
+                  <option <%= if selected then 'selected="selected"' end %>
+                    value='<%= t.id.to_s %>'><%= t.name %></option>
 <%              } %>
             </select>
           </div>
@@ -86,7 +90,8 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
           <div class='spacer'></div>
 
           <a class='btn btn-default' href='<%= local_host %>/versions/'>Cancel</a>
-          <a class='btn btn-default' id='create' onclick='create_version(); return false;'>Create and Edit</a>
+          <a class='btn btn-default' id='create'
+            onclick='create_version(); return false;'>Create and Edit</a>
 
         </div> <!-- / panel body -->
       </div> <!-- / panel -->

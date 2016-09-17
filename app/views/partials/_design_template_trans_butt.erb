@@ -23,39 +23,40 @@ end
   <div class='panel-heading'><h3 class='panel-title'>Trans-Butt Settings</h3></div>
   <div class='panel-body'>
 
-    <label class='checkbox-label'>
-      Left-butt Image
-      <select name='left-butt' id='left-butt-select' onchange='butt_change( event );'>
-        <option value='none'>Pick the left butt image!</option>
-<%      @images.each { |image|
-          selected = false
-          if( image == left_butt_image_name )
-            selected = true
-          end %>
-          <option <%= if selected then 'selected="selected"' end %> value='<%= image.to_s %>'>
-<%=         image.to_s %>
-          </option>
-<%      } %>
-      </select>
-    </label>
-
-    <label class='checkbox-label'>
-      Right-butt Image
-      <select name='right-butt' id='right-butt-select' onchange='butt_change( event );'>
-        <option value='none'>Pick the right butt image!</option>
-
-<%      @images.each { |image|
-          selected = false
-          if( image == right_butt_image_name )
-            selected = true
-          end %>
-          <option <%= if selected then 'selected="selected"' end %> value='<%= image.to_s %>'>
-<%=         image.to_s %>
-          </option>
-<%      } %>
-      </select>
-    </label>
-
+    <div class='input-group'>
+      <span class='input-group-addon' id='basic-addon1'>Left-Butt Image</span>
+        <select class='form-control' style='width:200px;' name='left-butt' id='left-butt-select' onchange='butt_change( event );'>
+          <option value='none'>Pick the left butt image!</option>
+<%        @images.each { |image|
+            selected = false
+            if( image == left_butt_image_name )
+              selected = true
+            end %>
+            <option <%= if selected then 'selected="selected"' end %> value='<%= image.to_s %>'>
+<%=           image.to_s %>
+            </option>
+<%        } %>
+        </select>
+      </span>
+    </div>
+    <div class='spacer'></div>
+    <div class='input-group'>
+      <span class='input-group-addon' id='basic-addon1'>Right-Butt Image</span>
+        <select class='form-control' style='width:200px;' name='right-butt' id='right-butt-select' onchange='butt_change( event );'>
+          <option value='none'>Pick the right butt image!</option>
+<%        @images.each { |image|
+            selected = false
+            if( image == right_butt_image_name )
+              selected = true
+            end %>
+            <option <%= if selected then 'selected="selected"' end %> value='<%= image.to_s %>'>
+<%=           image.to_s %>
+            </option>
+<%        } %>
+        </select>
+      </span>
+    </div>
+    <div class='spacer'></div>
 
   </div>
 </div>

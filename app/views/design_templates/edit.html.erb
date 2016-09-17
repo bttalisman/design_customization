@@ -47,9 +47,8 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
 <%        if !@design_template.managed_assets.empty? %>
             <h4>Descriptive Assets</h4>
             <ul class='list-group'>
-<%
-              @design_template.managed_assets.each do |a| %>
-                <li class='list-group-item'> <%= link_to a.name.to_s, a %> </li>
+<%            @design_template.managed_assets.each do |a| %>
+                <li class='list-group-item'> <%= link_to a.name.to_s, [:edit, a] %> </li>
 <%            end %>
             </ul>
             <div class='spacer'></div>
