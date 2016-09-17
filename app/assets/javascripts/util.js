@@ -16,6 +16,7 @@
       o2 = obj1;
     }
 
+
     var s1 = '';
     if( o1[key] !== null ) {
       s1 = o1[key].toLowerCase();
@@ -35,6 +36,7 @@
     }
 
     var comp;
+
     if( s1 < s2 )
     {
       comp = -1;
