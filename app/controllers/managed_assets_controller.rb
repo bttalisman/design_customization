@@ -27,34 +27,32 @@ class ManagedAssetsController < ApplicationController
   end
 
 
-    def create
-      logger.info 'MANAGED_ASSETS_CONTROLLER - create() - params: ' + params.to_s
+  def create
+    logger.info 'MANAGED_ASSETS_CONTROLLER - create() - params: ' + params.to_s
 
-      dt_id = params[ 'design_template_id' ]
-      @design_template = DesignTemplate.find( dt_id )
-      @managed_asset = @design_template.managed_assets.create( managed_asset_params )
+    dt_id = params[ 'design_template_id' ]
+    @design_template = DesignTemplate.find( dt_id )
+    @managed_asset = @design_template.managed_assets.create( managed_asset_params )
 
-      desc = params[ 'managed_asset' ][ 'description' ]
-      image = params[ 'managed_asset' ][ 'image' ]
+    desc = params[ 'managed_asset' ][ 'description' ]
+    image = params[ 'managed_asset' ][ 'image' ]
 
-      if !desc.empty?
-        @managed_asset.name = 'Text: ' + desc[0..10] + '...'
-      elsif !image.nil?
-        @managed_asset.name = 'Image: ' + image.original_filename.to_s
-      else
-        @managed_asset.name = 'Asset'
-      end
-
-      if @managed_asset.save
-        redirect_to '/design_templates/' + @managed_asset.design_template.id.to_s\
-          + '/edit'
-      else
-        logger.info 'MANAGED_ASSETS_CONTROLLER - create() - FAILURE!'
-        render 'new'
-      end
+    if !desc.empty?
+      @managed_asset.name = 'Text: ' + desc[0..10] + '...'
+    elsif !image.nil?
+      @managed_asset.name = 'Image: ' + image.original_filename.to_s
+    else
+      @managed_asset.name = 'Asset'
     end
 
-
+    if @managed_asset.save
+      redirect_to '/design_templates/' + @managed_asset.design_template.id.to_s\
+        + '/edit'
+    else
+      logger.info 'MANAGED_ASSETS_CONTROLLER - create() - FAILURE!'
+      render 'new'
+    end
+  end
 
 
   def update
@@ -62,7 +60,6 @@ class ManagedAssetsController < ApplicationController
     @managed_asset = ManagedAsset.find( params[:id] )
 
     @managed_asset.update( managed_asset_params )
-    @managed_asset.name = 'Bob'
 
     if @managed_asset.save
       redirect_to '/design_templates/' + @managed_asset.design_template.id.to_s\

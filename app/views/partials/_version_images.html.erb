@@ -25,6 +25,7 @@ i = 0
   replacement_path = ''
   raplacement_name = ''
   replacement_image_id = ''
+  replacement_url = ''
   collage_query = ''
   collage_checked = ''
   ri_checked = true
@@ -44,8 +45,11 @@ i = 0
         collage_query = collage.query
         collage_checked = 'checked'
         collage_display = ''
-        ri_checked = false
-        ri_display = 'display:none;'
+        ri_local_checked = false
+        ri_local_display = 'display:none;'
+        ri_web_checked = false
+        ri_web_display = 'display:none;'
+
         query_obj = JSON.parse( collage_query )
         collage_query_type = query_obj[ 'instagram' ][ 'type' ]
         collage_query_string = query_obj[ 'instagram' ][ 'query_string' ]
@@ -55,9 +59,28 @@ i = 0
 
     else
       replacement_path = get_local_image_path( image_name, @version )
+      replacement_url = get_url( image_name, @version )
       replacement_name = get_uploaded_file_name( image_name, @version )
       replacement_image_id = get_replacement_image_id( image_name, @version )
-      ri_display = ''
+
+      if !replacement_url.nil?
+        # upload from web
+        collage_checked = ''
+        collage_display = 'display:none;'
+        ri_local_checked = ''
+        ri_local_display = 'display:none;'
+        ri_web_checked = 'checked'
+        ri_web_display = ''
+      else
+        # upload from local computer
+        collage_checked = ''
+        collage_display = 'display:none;'
+        ri_local_checked = 'checked'
+        ri_local_display = ''
+        ri_web_checked = ''
+        ri_web_display = 'display:none;'
+      end
+
     end
 
     logger.info '_VERSION_IMAGES.html.erb - ri_display: ' + ri_display.to_s
@@ -71,14 +94,22 @@ i = 0
     <div class='panel-heading'><h3 class='panel-title'><%= image_name %> - Image Replace</h3></div>
     <div class='panel-body'>
 
-      <div id='wah' class='btn-group' data-upload-desc-id= 'upload-desc<%= i.to_s %>' data-upload-gp-id='upload-gp<%= i.to_s %>' data-inst-gp-id='inst-gp<%= i.to_s %>'>
-        <label class='btn'>
-          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= 'checked' if ri_checked %> value='upload'></input>
-            <span>Upload</span>
+      <div class='btn-group'>
+        <label class='btn' style='width:100%;'>
+          <input type='radio' style='float:left;' onchange='changeType( event );'
+            name='type<%= i.to_s %>' <%= ri_local_checked.to_s %> value='upload'>
+          </input>
+            <span style='float:left; margin-left:5px;' >Upload from this computer</span>
         </label>
-        <label class='btn'>
-          <input type='radio' onchange='changeType( event );' name='type<%= i.to_s %>' <%= 'checked' if !ri_checked %> value='instagram'></input>
-          <span>Instagram</span>
+        <label class='btn' style='width:100%;'>
+          <input type='radio' style='float:left;' onchange='changeType( event );' name='type<%= i.to_s %>'
+            value='web' <%= ri_web_checked.to_s %>></input>
+          <span style='float:left; margin-left:5px;'>Upload from the Web</span>
+        </label>
+        <label class='btn' style='width:100%;'>
+          <input type='radio' style='float:left;' onchange='changeType( event );' name='type<%= i.to_s %>'
+            <%= collage_checked.to_s %> value='instagram'></input>
+          <span style='float:left; margin-left:5px;'>Instagram</span>
         </label>
       </div>
 
@@ -88,25 +119,39 @@ i = 0
         Upload a single image or a zip of many.
       </div>
 
-      <div class='input-group upload-group' style='<%= ri_display %>' id='upload-gp<%= i.to_s %>'>
+      <div class='input-group upload-group' style='<%= ri_local_display %>' id='upload-gp<%= i.to_s %>'>
         <span class='input-group-btn' id='basic-addon2'>
           <span  class='btn btn-default fileinput-button' id='file_input_container'>
             <span>Upload</span>
-            <input type='file' data-input-id='replacement_path<%= i.to_s %>' name='replacement_image<%= i.to_s %>[uploaded_file]' id='replacement_image_uploaded_file<%= i.to_s %>' onchange='fileInputChange( this );' >
+            <input type='file' data-input-id='replacement_path<%= i.to_s %>'
+              name='replacement_image<%= i.to_s %>[uploaded_file]'
+              id='replacement_image_uploaded_file<%= i.to_s %>'
+              onchange='fileInputChange( this );' >
           </span>
         </span>
-        <input type='text' disabled class='form-control' title='<%= replacement_path %>' value='<%= replacement_name %>' id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'></input>
+        <input type='text' disabled class='form-control'
+          title='<%= replacement_path %>' value='<%= replacement_name %>'
+          id='replacement_path<%= i.to_s %>' data-image-name='<%= image_name %>'>
+        </input>
       </div>
 
-      <div class='input-group instagram-group' style='width:100%;<%= collage_display %>' id='inst-gp<%= i.to_s %>'>
-
-        <select style='width:30%;' id='collage_query_type<%= i.to_s %>' name='collage_query_type<%= i.to_s %>' class='form-control'>
+      <div class='input-group instagram-group'
+        style='width:100%;<%= collage_display %>' id='inst-gp<%= i.to_s %>'>
+        <select style='width:30%;' id='collage_query_type<%= i.to_s %>'
+          name='collage_query_type<%= i.to_s %>' class='form-control'>
           <option value='user'>Instagram User</option>
           <option value='tag'>Hash Tag</option>
         </select>
+        <input style='width:70%;' type='text' class='form-control'
+          id='collage_query_string<%= i.to_s %>' value='<%= collage_query_string %>'
+          name='collage_query_string<%= i.to_s %>'></input>
+      </div>
 
-        <input style='width:70%;' type='text' class='form-control' id='collage_query_string<%= i.to_s %>' value='<%= collage_query_string %>' name='collage_query_string<%= i.to_s %>'></input>
 
+      <div class='input-group web-group' style='width:100%;<%= ri_web_display.to_s %>' id='web-gp<%= i.to_s %>'>
+        <span class='input-group-addon' id='basic-addon1'>Image URL</span>
+        <input type='text' class='form-control' id='url<%= i.to_s %>' name='url<%= i.to_s %>'
+          value='<%= replacement_url.to_s %>' aria-describedby='basic-addon1'></input>
       </div>
 
       <div class='spacer'></div>
@@ -143,10 +188,19 @@ i = 0
     {
       parent.find( '.upload-group' ).show();
       parent.find( '.instagram-group' ).hide();
+      parent.find( '.web-group' ).hide();
     }
-    else {
+    else if( type == 'web')
+    {
+      parent.find( '.upload-group' ).hide();
+      parent.find( '.instagram-group' ).hide();
+      parent.find( '.web-group' ).show();
+    }
+    else
+    {
       parent.find( '.upload-group' ).hide();
       parent.find( '.instagram-group' ).show();
+      parent.find( '.web-group' ).hide();
     }
   }
 
@@ -180,7 +234,7 @@ i = 0
     {
 
 
-// todo, must account for different types 
+// todo, must account for different types
 //      s = '#replacement_path' + i;
 //      o = $(s);
 //      if( o.val() === '' )

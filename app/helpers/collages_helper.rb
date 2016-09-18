@@ -15,7 +15,7 @@ module CollagesHelper
 
   # I use miniMagick to reformat the image because jpgs retrieved from
   # Instagram cause errors in AI.
-  def crop_and_save_image( image, index, path, collage )
+  def crop_and_save_collage_image( image, index, path, collage )
 
     design_template = collage.version.design_template
     image_name = collage.image_name
@@ -47,6 +47,9 @@ module CollagesHelper
     end
     return_data = { 'data' => data, 'max_id' => max_id, 'has_next_page' => has_next_page }
     return_data
+  rescue NoMethodError
+    Rails.logger.info 'collages_helper - extract_insta_data() - No Data!'
+    nil
   end
 
 
@@ -77,6 +80,7 @@ module CollagesHelper
     # all data are stored on this page-level object.
     o = b.execute_script( 'return window._sharedData;')
     o = extract_insta_data( o, query_type )
+
     data = o[ 'data' ]
     has_next_page = o[ 'has_next_page' ]
     max_id = o[ 'max_id' ]
@@ -85,7 +89,7 @@ module CollagesHelper
       break if index >= max_items
       url = item[ 'thumbnail_src' ]
       image = MiniMagick::Image.open( url )
-      index += 1 if crop_and_save_image( image, index, path, collage )
+      index += 1 if crop_and_save_collage_image( image, index, path, collage )
     }
 
     while( has_next_page && (index < max_items) )
@@ -104,9 +108,12 @@ module CollagesHelper
         break if index >= max_items
         url = item[ 'thumbnail_src' ]
         image = MiniMagick::Image.open( url )
-        index += 1 if crop_and_save_image( image, index, path, collage )
+        index += 1 if crop_and_save_collage_image( image, index, path, collage )
       }
     end
     b.close # IMPORTANT!
+  rescue
+    Rails.logger.info 'collages_helper - fetch_content() - Error scraping Instagram.'
+    b.close
   end
 end

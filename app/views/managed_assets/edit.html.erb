@@ -1,5 +1,5 @@
 <%=
-form_for @managed_asset, html: { id: 'managed_asset_form' } do |form|
+form_for @managed_asset, html: { multipart: true, id: 'managed_asset_form' } do |form|
 %>
 
   <div class='row'>
@@ -11,7 +11,6 @@ form_for @managed_asset, html: { id: 'managed_asset_form' } do |form|
           <h3 class='panel-title'>Edit Asset</h3>
         </div>
         <div class='panel-body'>
-
 
           <div class='input-group' style='margin-bottom:20px;'>
             <span class='input-group-addon' id='basic-addon1'>Name</span>
@@ -25,6 +24,13 @@ form_for @managed_asset, html: { id: 'managed_asset_form' } do |form|
             <input type='text' disabled class='form-control'
               aria-describedby='basic-addon1' title='<%= @managed_asset.image.url %>'
               value='<%= @managed_asset.image.url %>'></input>
+          </div>
+
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class='input-group-addon' id='basic-addon1'>Image File</span>
+            <input type='file' class='form-control' name='managed_asset[image]'
+              aria-describedby='basic-addon1' title='<%= @managed_asset.image.url %>'
+              value='<%= @managed_asset.image %>'></input>
           </div>
 
           <div class='spacer'></div>

@@ -6,7 +6,7 @@ module ImageHelper
 
     if( (extension == '.jpg') ||
         (extension == '.jpeg') ||
-        (extension == '.png') )        
+        (extension == '.png') )
       return true
     end
     false
@@ -68,6 +68,8 @@ module ImageHelper
     height = get_original_height( design_template, image_name )
     width = get_original_width( design_template, image_name )
 
+    Rails.logger.info 'image_helper - resize_image_from_image_file() - path: '\
+      + path.to_s
     image = MiniMagick::Image.open( path )
     image = resize_with_crop( image, width.to_f, height.to_f )
     image.write( path )

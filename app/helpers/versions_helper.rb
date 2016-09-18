@@ -2,8 +2,8 @@
 # Versions Helper
 module VersionsHelper
   include CollagesHelper
+  include ReplacementImagesHelper
   include ImageHelper
-
 
   # Every version has its own folder, used for building modified AI files.
   # This folder will contain a copy of the AI file from the template,
@@ -193,8 +193,8 @@ module VersionsHelper
     else
       Rails.logger.info 'VERSIONS_HELPER - get_values_object() - INVALID JSON!!'
     end
-    Rails.logger.info 'versions_helper - get_values_object() - values: '\
-      + JSON.pretty_generate( values )
+#    Rails.logger.info 'versions_helper - get_values_object() - values: '\
+#      + JSON.pretty_generate( values )
     values
   end
 
@@ -223,8 +223,6 @@ module VersionsHelper
     image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]\
       unless values.nil?
     col_id = ''
-    Rails.logger.info 'VERSIONS_HELPER - get_collage_id() - image_values: '\
-      + image_values.to_s
     if image_values
       vals = image_values[ image_name ]
       col_id = vals[ VERSION_VALUES_KEY_COLLAGE_ID ] if vals
@@ -280,6 +278,11 @@ module VersionsHelper
     co
   rescue
     nil
+  end
+
+  def get_url( image_name, version )
+    ri = get_replacement_image( image_name, version )
+    ri.url
   end
 
   def get_replacement_image( image_name, version )
@@ -405,6 +408,7 @@ module VersionsHelper
   end
 
 
+
   # This method updates a version's values json and associated ReplacementImages
   # and Collages.
   # params must contain an 'image_count' property.
@@ -433,6 +437,9 @@ module VersionsHelper
     image_count.times do |i|
       p_name = 'type' + i.to_s
       type = params[ p_name ]
+
+      p_name = 'url' + i.to_s
+      url = params[ p_name ]
 
       p_name = 'replacement_image' + i.to_s
       replacement_image = params[ p_name ]
@@ -467,9 +474,9 @@ module VersionsHelper
 
           if my_file
             clear_image_associations( image_name, version )
-            o = { uploaded_file: my_file }
-            replacement_image = version.replacement_images.create( o )
-            replacement_image.image_name = image_name
+            replacement_image = version.replacement_images.create( { uploaded_file: my_file,
+                                                                     image_name: image_name } )
+#            replacement_image.image_name = image_name
             replacement_image.save
 
             # this will set version.values to reflect any user-set properties
@@ -479,6 +486,24 @@ module VersionsHelper
                                               image_name, version )
           end # my_file
         end # we have a replacement_image
+      elsif( type == 'web' )
+        Rails.logger.info 'VERSIONS_HELPER - set_image_values() - WEB URL!'
+        Rails.logger.info 'VERSIONS_HELPER - set_image_values() - url: ' + url.to_s
+
+        clear_image_associations( image_name, version )
+        replacement_image = version.replacement_images.create( { image_name: image_name,
+                                                                 url: url } )
+        replacement_image.save
+
+        fetch_image( replacement_image )
+
+        # this will set version.values to reflect any user-set properties
+        # for this version, these values will eventually be read by
+        # the AI script
+        add_replacement_image_to_version( replacement_image,\
+                                          image_name, version )
+
+
       else
         # type = instagram collage
         Rails.logger.info 'VERSIONS_HELPER - set_image_values() - Instagram collage!'

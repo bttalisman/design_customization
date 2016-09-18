@@ -9,7 +9,7 @@ require 'fileutils'
 class ReplacementImage < ActiveRecord::Base
 
   include ApplicationHelper
-  
+
   belongs_to :version
 
   has_attached_file :uploaded_file,
@@ -28,12 +28,23 @@ class ReplacementImage < ActiveRecord::Base
   # the uploaded_file is a zip archive, the returned path is the path to the
   # folder into which images are extracted.
   def get_path
-    return_path = uploaded_file.path
-    ext_name = File.extname( return_path )
 
-    return_path = File.dirname( return_path ) + '/'\
-      + ZIP_FILE_EXTRACTED_SUBFOLDER_NAME + '/' if( ext_name == '.zip' )
+    if uploaded_file.path
+      Rails.logger.info 'replacement_image - get_path() - has uploaded_file.path!'
+      return_path = uploaded_file.path
+      ext_name = File.extname( return_path )
+      return_path = File.dirname( return_path ) + '/'\
+        + ZIP_FILE_EXTRACTED_SUBFOLDER_NAME + '/' if( ext_name == '.zip' )
+    else
+      Rails.logger.info 'replacement_image - get_path() - does not have uploaded_file.path!'
+      app_config = Rails.application.config_for( :customization )
+      ri_root = app_config[ 'path_to_replacement_image_root' ]
+      return_path = ri_root + self[:id].to_s.rjust(3, '0') + '/'
+      Dir.mkdir( return_path ) if !Dir.exist?( return_path )
+    end
+
     Rails.logger.info 'replacement_image - get_path() - return_path: ' + return_path.to_s
+
     return_path
   end
 

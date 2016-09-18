@@ -87,7 +87,6 @@ class VersionsController < ApplicationController
     logger.info 'VERSIONS_CONTROLLER - NEW'
     @version = Version.new
     @design_templates = DesignTemplate.all
-    @root_folder = Rails.root.to_s
   end
 
   def update_render_folder
