@@ -101,17 +101,31 @@
 
   function get_versions()
   {
-    var versions_element = $('#versions');
-    var versions_text = versions_element.text();
-    var versions_array = JSON.parse( versions_text );
+
+    var versions_array = Cookies.get( 'ver' );
+
+
+    alert( 'got versions_array: ' + JSON.stringify( versions_array ) );
+
+    if( versions_array === undefined )
+    {
+      var versions_element = $('#versions');
+      var versions_text = versions_element.text();
+      versions_array = JSON.parse( versions_text );
+    }
+
     return versions_array;
   }
 
 
   function put_versions( array )
   {
-    var versions_element = $('#versions');
-    versions_element.text( JSON.stringify( array ) );
+    //var versions_element = $('#versions');
+    //versions_element.text( JSON.stringify( array ) );
+    s = JSON.stringify( array );
+    alert( 'setting s: ' + s );
+
+    Cookies.set( 'ver', array );
   }
 
   function toggle_arrow( e )
