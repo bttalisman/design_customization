@@ -102,7 +102,9 @@ form_for @version, html: { multipart: true, id: 'version_form'  } do |form|
 <%        end %>
         </div>
         <div style='height:100px; width:250px; vertical-align:top; margin-left:10px; margin-top:10px; margin-right:10px; display:inline-block; position:relative;'>
-<%=       asset.description.to_s %>
+          <p class='lead'>
+<%=         asset.description.to_s %>
+          </p>
         </div>
 <%    } %>
 
