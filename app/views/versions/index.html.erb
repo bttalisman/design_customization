@@ -86,7 +86,6 @@
   var LAST_RENDER_DATE_FLIP = true;
 
 
-
   function show_version( id )
   {
     window.location = '/versions/' + id;
@@ -102,12 +101,18 @@
   function get_versions()
   {
 
-    var versions_array = Cookies.get( 'ver' );
+    var versions_array;
 
+    // try to get the versions array from the session, but if that fails
+    // get it from the server-generated html.
+    try {
+      versions_array = localStorage.getItem( 'versions-data' );
+      versions_array = JSON.parse( versions_array );
+    } catch (e) {
 
-    alert( 'got versions_array: ' + JSON.stringify( versions_array ) );
+    }
 
-    if( versions_array === undefined )
+    if( !versions_array )
     {
       var versions_element = $('#versions');
       var versions_text = versions_element.text();
@@ -120,18 +125,38 @@
 
   function put_versions( array )
   {
-    //var versions_element = $('#versions');
-    //versions_element.text( JSON.stringify( array ) );
-    s = JSON.stringify( array );
-    alert( 'setting s: ' + s );
-
-    Cookies.set( 'ver', array );
+    var s = JSON.stringify( array );
+    localStorage.setItem( 'versions-data', s );
   }
+
+  function put_arrow( e )
+  {
+    localStorage.setItem( 'arrow-id', e.attr( 'id' ) );
+    localStorage.setItem( 'arrow-classes', e.attr( 'class' ) );
+  }
+
+  function get_arrow()
+  {
+    var id = localStorage.getItem( 'arrow-id' );
+    var classes = localStorage.getItem( 'arrow-classes' );
+
+    hide_arrows();
+
+    var e = $( '#' + id );
+    e.show();
+    e.attr( 'class', classes );
+  }
+
+  function hide_arrows()
+  {
+    $( '.menu-arrow' ).hide();    // hide arrows
+    $( '.arrow-spacer' ).show();  // show all of the arrow spacers
+  }
+
 
   function toggle_arrow( e )
   {
-    $( '.menu-arrow' ).hide();
-    $( '.arrow-spacer' ).show();  // show all of the arrow spacers
+    hide_arrows();
     e.show();
     e.toggleClass( 'glyphicon-menu-up' );
     e.toggleClass( 'glyphicon-menu-down' );
@@ -148,9 +173,11 @@
       return my_sort( obj1, obj2, 'name', NAME_FLIP );
     });
 
+    var arrow = $('#name_arrow');
     put_versions( versions );
-    toggle_arrow( $('#name_arrow') );
-    drawPage();
+    toggle_arrow( arrow );
+    put_arrow( arrow );
+    fill_container();
   }
 
 
@@ -164,9 +191,12 @@
       return my_sort( obj1, obj2, 'template', TEMPLATE_FLIP );
     });
 
+    var arrow = $('#template_arrow');
     put_versions( versions );
-    toggle_arrow( $('#template_arrow') );
-    drawPage();
+    toggle_arrow( arrow );
+    put_arrow( arrow );
+    fill_container();
+
   }
 
 
@@ -180,9 +210,13 @@
       return my_sort( obj1, obj2, 'created', CREATED_FLIP );
     });
 
+
+    var arrow = $('#created_arrow');
     put_versions( versions );
-    toggle_arrow( $('#created_arrow') );
-    drawPage();
+    toggle_arrow( arrow );
+    put_arrow( arrow );
+    fill_container();
+
   }
 
 
@@ -196,9 +230,12 @@
       return my_sort( obj1, obj2, 'updated', UPDATED_FLIP );
     });
 
+    var arrow = $('#updated_arrow');
     put_versions( versions );
-    toggle_arrow( $('#updated_arrow') );
-    drawPage();
+    toggle_arrow( arrow );
+    put_arrow( arrow );
+    fill_container();
+
   }
 
 
@@ -212,9 +249,12 @@
       return my_sort( obj1, obj2, 'last_render_date', LAST_RENDER_DATE_FLIP );
     });
 
+    var arrow = $('#last_render_date_arrow');
     put_versions( versions );
-    toggle_arrow( $('#last_render_date_arrow') );
-    drawPage();
+    toggle_arrow( arrow );
+    put_arrow( arrow );
+    fill_container();
+
   }
 
 
@@ -228,9 +268,12 @@
       return my_sort( obj1, obj2, 'tags', TAGS_FLIP );
     });
 
+    var arrow = $('#tags_arrow');
     put_versions( versions );
-    toggle_arrow( $('#tags_arrow') );
-    drawPage();
+    toggle_arrow( arrow );
+    put_arrow( arrow );
+    fill_container();
+
   }
 
 
@@ -244,14 +287,20 @@
       return my_sort( obj1, obj2, 'images', IMAGES_FLIP );
     });
 
+
+    var arrow = $('#images_arrow');
     put_versions( versions );
-    toggle_arrow( $('#images_arrow') );
-    drawPage();
-  }
+    toggle_arrow( arrow );
+    put_arrow( arrow );
+    fill_container();
+
+}
 
 
   function fill_container( )
   {
+    get_arrow();
+
     var versions = get_versions();
     var o, s, el;
     var d;
@@ -296,14 +345,8 @@
   }
 
 
-  function drawPage()
-  {
-    fill_container();
-  }
-
-
   $(document).ready( function() {
-    toggle_name();
+    fill_container();
   });
 
 </script>
