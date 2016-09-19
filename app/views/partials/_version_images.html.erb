@@ -26,12 +26,15 @@ i = 0
   raplacement_name = ''
   replacement_image_id = ''
   replacement_url = ''
+
   collage_query = ''
+
   collage_checked = ''
-  ri_checked = true
-  ri_display = ''
   collage_display = 'display:none;'
-  is_collage = false
+  ri_local_checked = 'checked'
+  ri_local_display = ''
+  ri_web_checked = ''
+  ri_web_display = 'display:none;'
 
   if @version
 
@@ -45,9 +48,9 @@ i = 0
         collage_query = collage.query
         collage_checked = 'checked'
         collage_display = ''
-        ri_local_checked = false
+        ri_local_checked = ''
         ri_local_display = 'display:none;'
-        ri_web_checked = false
+        ri_web_checked = ''
         ri_web_display = 'display:none;'
 
         query_obj = JSON.parse( collage_query )
@@ -83,8 +86,15 @@ i = 0
 
     end
 
-    logger.info '_VERSION_IMAGES.html.erb - ri_display: ' + ri_display.to_s
+    logger.info '_VERSION_IMAGES.html.erb - collage_checked: ' + collage_checked.to_s
     logger.info '_VERSION_IMAGES.html.erb - collage_display: ' + collage_display.to_s
+    logger.info '_VERSION_IMAGES.html.erb - ri_local_checked: ' + ri_local_checked.to_s
+    logger.info '_VERSION_IMAGES.html.erb - ri_local_display: ' + ri_local_display.to_s
+    logger.info '_VERSION_IMAGES.html.erb - ri_web_checked: ' + ri_web_checked.to_s
+    logger.info '_VERSION_IMAGES.html.erb - ri_web_display: ' + ri_web_display.to_s
+
+
+
 
 
   end
@@ -115,7 +125,7 @@ i = 0
 
       <div class='spacer'></div>
 
-      <div style='<%= ri_display %>' class='upload-group' id='upload-desc<%= i.to_s %>'>
+      <div style='<%= ri_local_display %>' class='upload-group' id='upload-desc<%= i.to_s %>'>
         Upload a single image or a zip of many.
       </div>
 

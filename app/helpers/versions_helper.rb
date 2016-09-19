@@ -282,7 +282,8 @@ module VersionsHelper
 
   def get_url( image_name, version )
     ri = get_replacement_image( image_name, version )
-    ri.url
+    url = ri.url if ri
+    url
   end
 
   def get_replacement_image( image_name, version )

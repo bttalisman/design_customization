@@ -78,6 +78,7 @@ module ApplicationHelper
   def make_suitable_file_name( s )
     s = s.downcase
     s = s.gsub(/\s+/, '_')
+    s = s.gsub( /-/, '_' )
     s
   end
 
