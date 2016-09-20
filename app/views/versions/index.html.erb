@@ -6,31 +6,31 @@
         <tr>
           <th><a onclick='toggle_name();'>Version Name</a>
             <span id='name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_template();'>Template</a>
             <span id='template_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_created();'>Created</a>
             <span id='created_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_updated();'>Updated</a>
             <span id='updated_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_last_render_date();'>Last Render</a>
             <span id='last_render_date_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_tags();'>Tags?</a>
             <span id='tags_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_images();'>Images?</a>
             <span id='images_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
         </tr>
       </thead>
@@ -72,236 +72,61 @@
 
 </div> <!-- / row -->
 
-<div style='display:none' id='versions'><%= @versions.to_json %></div>
+<div style='display:none' id='<%= @cache_name.to_s %>'><%= @versions.to_json %></div>
 
 
 <script>
 
-  var NAME_FLIP = true;
-  var TEMPLATE_FLIP = true;
-  var TAGS_FLIP = true;
-  var IMAGES_FLIP = true;
-  var CREATED_FLIP = true;
-  var UPDATED_FLIP = true;
-  var LAST_RENDER_DATE_FLIP = true;
-
+  var CACHE_NAME = '<%= @cache_name.to_s %>';
 
   function show_version( id )
   {
     window.location = '/versions/' + id;
   }
 
-
   function show_template( id )
   {
     window.location = '/design_templates/' + id;
   }
 
+  function get_cached_versions() {
+    return get_cached_json( CACHE_NAME ); }
 
-  function get_versions()
-  {
+  function cache_versions( versions_array ) {
+    cache_json( versions_array, CACHE_NAME ); }
 
-    var versions_array;
-
-    // try to get the versions array from the session, but if that fails
-    // get it from the server-generated html.
-    try {
-      versions_array = localStorage.getItem( 'versions-data' );
-      versions_array = JSON.parse( versions_array );
-    } catch (e) {
-
-    }
-
-    if( !versions_array )
-    {
-      var versions_element = $('#versions');
-      var versions_text = versions_element.text();
-      versions_array = JSON.parse( versions_text );
-    }
-
-    return versions_array;
-  }
+  function cache_arrow( e ) {
+    cache_arrow_by_name( e, CACHE_NAME ); }
 
 
-  function put_versions( array )
-  {
-    var s = JSON.stringify( array );
-    localStorage.setItem( 'versions-data', s );
-  }
-
-  function put_arrow( e )
-  {
-    localStorage.setItem( 'arrow-id', e.attr( 'id' ) );
-    localStorage.setItem( 'arrow-classes', e.attr( 'class' ) );
-  }
-
-  function get_arrow()
-  {
-    var id = localStorage.getItem( 'arrow-id' );
-    var classes = localStorage.getItem( 'arrow-classes' );
-
-    hide_arrows();
-
-    var e = $( '#' + id );
-    e.show();
-    e.attr( 'class', classes );
-  }
-
-  function hide_arrows()
-  {
-    $( '.menu-arrow' ).hide();    // hide arrows
-    $( '.arrow-spacer' ).show();  // show all of the arrow spacers
-  }
 
 
-  function toggle_arrow( e )
-  {
-    hide_arrows();
-    e.show();
-    e.toggleClass( 'glyphicon-menu-up' );
-    e.toggleClass( 'glyphicon-menu-down' );
-    e.next().hide();  // hide the arrow spacer immediately following the clicked element.
-  }
+  function toggle_name() {
+    toggle_header_item( 'name_arrow', get_cached_versions, cache_versions, 'name' ); }
 
-  function toggle_name()
-  {
-    var versions = get_versions();
-    NAME_FLIP = !NAME_FLIP;
+  function toggle_created() {
+    toggle_header_item( 'created_arrow', get_cached_versions, cache_versions, 'created' ); }
 
-    versions.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'name', NAME_FLIP );
-    });
+  function toggle_updated() {
+    toggle_header_item( 'updated_arrow', get_cached_versions, cache_versions, 'updated' ); }
 
-    var arrow = $('#name_arrow');
-    put_versions( versions );
-    toggle_arrow( arrow );
-    put_arrow( arrow );
-    fill_container();
-  }
+  function toggle_template() {
+    toggle_header_item( 'template_arrow', get_cached_versions, cache_versions, 'template' ); }
 
+  function toggle_last_render_date() {
+    toggle_header_item( 'last_render_date_arrow', get_cached_versions, cache_versions, 'last_render_date' ); }
 
-  function toggle_template()
-  {
-    var versions = get_versions();
-    TEMPLATE_FLIP = !TEMPLATE_FLIP;
+  function toggle_tags() {
+    toggle_header_item( 'tags_arrow', get_cached_versions, cache_versions, 'tags' ); }
 
-    versions.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'template', TEMPLATE_FLIP );
-    });
-
-    var arrow = $('#template_arrow');
-    put_versions( versions );
-    toggle_arrow( arrow );
-    put_arrow( arrow );
-    fill_container();
-
-  }
-
-
-  function toggle_created()
-  {
-    var versions = get_versions();
-    CREATED_FLIP = !CREATED_FLIP;
-
-    versions.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'created', CREATED_FLIP );
-    });
-
-
-    var arrow = $('#created_arrow');
-    put_versions( versions );
-    toggle_arrow( arrow );
-    put_arrow( arrow );
-    fill_container();
-
-  }
-
-
-  function toggle_updated()
-  {
-    var versions = get_versions();
-    UPDATED_FLIP = !UPDATED_FLIP;
-
-    versions.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'updated', UPDATED_FLIP );
-    });
-
-    var arrow = $('#updated_arrow');
-    put_versions( versions );
-    toggle_arrow( arrow );
-    put_arrow( arrow );
-    fill_container();
-
-  }
-
-
-  function toggle_last_render_date()
-  {
-    var versions = get_versions();
-    LAST_RENDER_DATE_FLIP = !LAST_RENDER_DATE_FLIP;
-
-    versions.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'last_render_date', LAST_RENDER_DATE_FLIP );
-    });
-
-    var arrow = $('#last_render_date_arrow');
-    put_versions( versions );
-    toggle_arrow( arrow );
-    put_arrow( arrow );
-    fill_container();
-
-  }
-
-
-  function toggle_tags()
-  {
-    var versions = get_versions();
-    TAGS_FLIP = !TAGS_FLIP;
-
-    versions.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'tags', TAGS_FLIP );
-    });
-
-    var arrow = $('#tags_arrow');
-    put_versions( versions );
-    toggle_arrow( arrow );
-    put_arrow( arrow );
-    fill_container();
-
-  }
-
-
-  function toggle_images()
-  {
-    var versions = get_versions();
-    IMAGES_FLIP = !IMAGES_FLIP;
-
-    versions.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'images', IMAGES_FLIP );
-    });
-
-
-    var arrow = $('#images_arrow');
-    put_versions( versions );
-    toggle_arrow( arrow );
-    put_arrow( arrow );
-    fill_container();
-
-}
+  function toggle_images() {
+  toggle_header_item( 'images_arrow', get_cached_versions, cache_versions, 'images' ); }
 
 
   function fill_container( )
   {
-    get_arrow();
-
-    var versions = get_versions();
+    update_arrows( CACHE_NAME );
+    var versions = get_cached_versions();
     var o, s, el;
     var d;
     var container_index = 0;

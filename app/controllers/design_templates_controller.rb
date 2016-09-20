@@ -6,7 +6,7 @@ class DesignTemplatesController < ApplicationController
   def index
     templates = DesignTemplate.all
     @design_templates = []
-
+    @cache_name = 'dt_cache'
     templates.each do |t|
       o = { name: t.name.to_s,
             tags: bool_display_text( tags?(t) ),

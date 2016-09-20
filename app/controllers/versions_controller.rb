@@ -14,6 +14,7 @@ class VersionsController < ApplicationController
   def index
     versions = Version.all
     @versions = []
+    @cache_name = 'v_cache'
 
     versions.each do |v|
       next if !v.design_template

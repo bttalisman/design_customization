@@ -61,28 +61,12 @@
 
 </div> <!-- / row -->
 
-<div style='display:none' id='templates'><%= @design_templates.to_json %></div>
+<div style='display:none' id='<%= @cache_name.to_s %>'><%= @design_templates.to_json %></div>
 
 
 <script>
 
-  var NAME_FLIP = true;
-  var TAGS_FLIP = true;
-  var IMAGES_FLIP = true;
-  var CREATED_FLIP = true;
-  var UPDATED_FLIP = true;
-
-
-
-  function toggle_arrow( e )
-  {
-    $( '.menu-arrow' ).hide();
-    $( '.arrow-spacer' ).show();  // show all of the arrow spacers
-    e.show();
-    e.toggleClass( 'glyphicon-menu-up' );
-    e.toggleClass( 'glyphicon-menu-down' );
-    e.next().hide();  // hide the arrow spacer immediately following the clicked element.
-  }
+  var CACHE_NAME = '<%= @cache_name.to_s %>';
 
 
   function show_template( id )
@@ -90,104 +74,42 @@
     window.location = '/design_templates/' + id;
   }
 
-  function get_templates()
-  {
-    var templates_element = $('#templates');
-    var templates_text = templates_element.text();
-    var templates_array = JSON.parse( templates_text );
-    return templates_array;
-  }
+  function get_cached_templates() {
+    return get_cached_json( CACHE_NAME ); }
 
-  function put_templates( array )
-  {
-    var templates_element = $('#templates');
-    templates_element.text( JSON.stringify( array ) );
-  }
+  function cache_templates( templates_array ) {
+    cache_json( templates_array, CACHE_NAME ); }
 
-  function toggle_name()
-  {
-    var templates = get_templates();
-    NAME_FLIP = !NAME_FLIP;
-
-    templates.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'name', NAME_FLIP );
-    });
-
-    put_templates( templates );
-    toggle_arrow( $('#name_arrow') );
-    fill_container();
-  }
+  function cache_arrow( e ) {
+    cache_arrow_by_name( e, CACHE_NAME ); }
 
 
-  function toggle_created()
-  {
-    var templates = get_templates();
-    CREATED_FLIP = !CREATED_FLIP;
 
-    templates.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'created', CREATED_FLIP );
-    });
+  function toggle_name() {
+    toggle_header_item( 'name_arrow', get_cached_templates, cache_templates, 'name' ); }
 
-    put_templates( templates );
-    toggle_arrow( $('#created_arrow') );
-    fill_container();
-  }
+  function toggle_created() {
+    toggle_header_item( 'created_arrow', get_cached_templates, cache_templates, 'created' ); }
 
-  function toggle_updated()
-  {
-    var templates = get_templates();
-    UPDATED_FLIP = !UPDATED_FLIP;
+  function toggle_updated() {
+    toggle_header_item( 'updated_arrow', get_cached_templates, cache_templates, 'updated' ); }
 
-    templates.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'updated', UPDATED_FLIP );
-    });
+  function toggle_tags() {
+    toggle_header_item( 'tags_arrow', get_cached_templates, cache_templates, 'tags' ); }
 
-    put_templates( templates );
-    toggle_arrow( $('#updated_arrow') );
-    fill_container();
-  }
+  function toggle_images() {
+    toggle_header_item( 'images_arrow', get_cached_templates, cache_templates, 'images' ); }
 
-  function toggle_tags()
-  {
-    var templates = get_templates();
-    TAGS_FLIP = !TAGS_FLIP;
 
-    templates.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'tags', TAGS_FLIP );
-    });
-
-    put_templates( templates );
-    toggle_arrow( $('#tags_arrow') );
-    fill_container();
-  }
-
-  function toggle_images()
-  {
-    var templates = get_templates();
-    IMAGES_FLIP = !IMAGES_FLIP;
-
-    templates.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'images', IMAGES_FLIP );
-    });
-
-    put_templates( templates );
-    toggle_arrow( $('#images_arrow') );
-    fill_container();
-  }
 
 
   function fill_container( )
   {
-    var templates = get_templates();
+    update_arrows( CACHE_NAME );
+    var templates = get_cached_templates();
     var o, s, el;
     var d;
     var container_index = 0;
-
 
     for( var i = 0; i < templates.length; i++ )
     {
@@ -220,7 +142,7 @@
 
 
   $(document).ready( function() {
-    toggle_name();
+    fill_container();
   });
 
 </script>
