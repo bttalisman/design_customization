@@ -7,6 +7,40 @@ module ApplicationHelper
   end
 
 
+
+
+  def do_get_shopify_users
+    logger.info 'application_helper - get_shopify_users()'
+    shop_url = 'https://770e59b9b5298644177f12c642038d60:7e5376e9526b536'\
+      + '62df6d5aa252ae400@bombsheller-shop.myshopify.com/admin'
+    ShopifyAPI::Base.site = shop_url
+    limit = 250
+    array = []
+
+    products = ShopifyAPI::Product.find(:all, :params => {:limit => limit,
+                                        :since_id => 0})
+    products.each { |p|
+      name = p.title
+      array.push( name )
+    }
+
+    while products.length == limit do
+      since_id = products.last.id
+      products = ShopifyAPI::Product.find(:all, :params => {:limit => limit,
+                                          :since_id => since_id})
+      products.each { |p|
+        name = p.title
+        array.push( name )
+      }
+    end
+
+    ShopifyAPI::Base.site = nil
+    array = array.sort
+    logger.info 'application_helper - get_shopify_users() - array: ' + array.to_s
+    array
+  end
+
+
   def local_host
     request.protocol + request.host + ':' + request.port.to_s
   end

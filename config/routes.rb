@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get '/tools' => 'home#tools'
   get '/trans_butt' => 'home#trans_butt'
   get '/trans_butt_settings' => 'home#trans_butt_settings'
+  get '/get_shopify_users' => 'home#get_shopify_users'
 
 
   get '/do_process_version' => 'remote#do_process_version'

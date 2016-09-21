@@ -10,6 +10,11 @@ class HomeController < ApplicationController
   def tools
   end
 
+  def get_shopify_users
+    do_get_shopify_users
+    render nothing: true
+  end
+
   def trans_butt
     @colors = Color.all
     @text_color = @colors.first
