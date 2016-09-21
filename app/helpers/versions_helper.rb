@@ -577,18 +577,22 @@ module VersionsHelper
   # This method writes the current version's values string to a file sitting
   # right next to an AI file, named with _data.jsn.
   def write_temp_data_file( version, path_to_ai_file )
-    Rails.logger.info 'versions_helper - write_temp_data_file()'\
-      + ' - path_to_ai_file: ' + path_to_ai_file.to_s
     temp_values_file = path_to_data_file( path_to_ai_file )
+
+    Rails.logger.info 'versions_helper - write_temp_data_file()'\
+      + ' - temp_values_file: ' + temp_values_file.to_s
+    Rails.logger.info 'versions_helper - write_temp_data_file()'\
+      + ' - version.values.to_s: ' + version.values.to_s
 
     # we'll create a temporary file containing necessary info, sitting right
     # next to the original ai file.
     File.open( temp_values_file, 'w' ) do |f|
-      f.write( version.values.to_s )
+      f.write( 'version.values.to_s' )
     end
   end
 
   def remove_data_file( path_to_ai_file )
+    Rails.logger.info 'versions_helper - remove_data_file() !!!!!!!!!!!'
     temp_values_file = path_to_data_file( path_to_ai_file )
     File.delete( temp_values_file )
   end
@@ -622,7 +626,13 @@ module VersionsHelper
       + config_file_name( 'version' => version ) + '"'
     Rails.logger.info 'versions_helper - system_call() - about to run '\
       + 'sys_com: ' + sys_com.to_s
-    system( sys_com )
+
+    t = Thread.new do
+      system( sys_com )
+    end
+
+
+
   end
 
   def process_version_send_remote( version )

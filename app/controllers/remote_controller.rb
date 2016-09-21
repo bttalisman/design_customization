@@ -9,7 +9,8 @@ class RemoteController < ApplicationController
     logger.info 'REMOTECONTROLLER - do_process_version() - params: '\
       + params.to_s
 
-    process_version_system_call( 'version_id' => version_id )
+    version = Version.find( version_id )
+    process_version_system_call( version ) if !version.nil?
 
     logger.info 'REMOTECONTROLLER - do_process_version() - DONE!'
     render nothing: true

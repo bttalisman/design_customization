@@ -19,7 +19,7 @@ development:
   path_to_replacement_image_root: <%= Rails.root.to_s + '/public/system/replacement_images/uploaded_files/000/000/' %>
 
   run_remotely: false
-  remote_server_uri: 'http://localhost:3000'
+  remote_server_uri: 'http://armory.bombsheller.net:3000'
 
   collages_max_items_to_retrieve: 25
   collages_min_width_pixels: 500
