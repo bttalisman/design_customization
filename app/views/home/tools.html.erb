@@ -5,7 +5,7 @@
   <div class='col col-md-10'>
 
 
-    <a class='btn btn-default' onclick='get_shopify_users();'>Get Shopify Users</a>
+    <a class='btn btn-default' onclick='update_users();'>Update Users</a>
     <br></br>
 
     <a class='btn btn-default' onclick='delete_all_versions();'>Delete ALL Versions</a>
@@ -49,10 +49,10 @@
   }
 
 
-  function get_shopify_users()
+  function update_users()
   {
     $.ajax({
-      url: '/get_shopify_users/',
+      url: '/update_users/',
     }).done(function() {
     });
   }

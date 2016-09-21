@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Version</title>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+
+    <%= javascript_include_tag 'bootstrap.js', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag    'bootstrap-responsive.css', media: 'all', 'data-turbolinks-track' => true %>
+
+    <%= javascript_include_tag 'jquery.minicolors.js', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag    'jquery.minicolors.css', media: 'all', 'data-turbolinks-track' => true %>
+
+    <%= javascript_include_tag 'select2.js', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag    'select2.css', media: 'all', 'data-turbolinks-track' => true %>
+
+    <%= javascript_include_tag 'jquery.reel-min.js', 'data-turbolinks-track' => true %>
+
+
+  </head>
+  <body>
+
+    <div id='loading-indicator'>
+      <div class="loader"></div>
+    </div>
+
+    <div class='container-fluid'>
+      
+      <div style='margin-top:20px;'>
+        <%= yield %>
+      </div>
+
+    </div>
+  </body>
+</html>
+
+<script>
+
+  $(document).ready( function() {
+
+    $loading = $('#loading-indicator');
+    $loading.hide();  // hide it initially.
+
+    $(document)
+      .ajaxStart(function () {
+        $loading.show();
+      })
+      .ajaxStop(function () {
+        $loading.hide();
+      });
+
+  });
+
+</script>

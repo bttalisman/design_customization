@@ -11,19 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160918232423) do
-
-  create_table "assets", force: :cascade do |t|
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.integer  "design_template_id", limit: 4
-    t.string   "image_file_name",    limit: 255
-    t.string   "image_content_type", limit: 255
-    t.integer  "image_file_size",    limit: 4
-    t.datetime "image_updated_at"
-  end
-
-  add_index "assets", ["design_template_id"], name: "index_assets_on_design_template_id", using: :btree
+ActiveRecord::Schema.define(version: 20160921202637) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -61,10 +49,8 @@ ActiveRecord::Schema.define(version: 20160918232423) do
     t.boolean  "is_trans_butt",              limit: 1,     default: false
     t.integer  "managed_asset_id",           limit: 4
     t.boolean  "has_been_post_processed",    limit: 1,     default: false
-    t.integer  "asset_id",                   limit: 4
   end
 
-  add_index "design_templates", ["asset_id"], name: "index_design_templates_on_asset_id", using: :btree
   add_index "design_templates", ["managed_asset_id"], name: "index_design_templates_on_managed_asset_id", using: :btree
 
   create_table "managed_assets", force: :cascade do |t|
@@ -103,6 +89,23 @@ ActiveRecord::Schema.define(version: 20160918232423) do
     t.string   "url",                        limit: 255
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string   "first_name", limit: 255
+    t.string   "last_name",  limit: 255
+    t.string   "email",      limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "version_id", limit: 4
+    t.string   "shopify_id", limit: 255
+  end
+
+  add_index "users", ["version_id"], name: "index_users_on_version_id", using: :btree
+
+  create_table "users_versions", id: false, force: :cascade do |t|
+    t.integer "version_id", limit: 4, null: false
+    t.integer "user_id",    limit: 4, null: false
+  end
+
   create_table "versions", force: :cascade do |t|
     t.string   "output_folder_path", limit: 255
     t.text     "values",             limit: 65535
@@ -111,12 +114,15 @@ ActiveRecord::Schema.define(version: 20160918232423) do
     t.datetime "updated_at",                       null: false
     t.string   "name",               limit: 255
     t.datetime "last_render_date"
+    t.integer  "user_id",            limit: 4
   end
 
-  add_foreign_key "assets", "design_templates"
+  add_index "versions", ["user_id"], name: "index_versions_on_user_id", using: :btree
+
   add_foreign_key "colors", "palettes"
-  add_foreign_key "design_templates", "assets"
   add_foreign_key "design_templates", "managed_assets"
   add_foreign_key "managed_assets", "design_templates"
   add_foreign_key "palettes", "colors"
+  add_foreign_key "users", "versions"
+  add_foreign_key "versions", "users"
 end

@@ -4,6 +4,8 @@ class Version < ActiveRecord::Base
   has_many :collages, dependent: :destroy
 
   belongs_to :design_template
+  belongs_to :user
+
   before_save :default_values
 
   def default_values

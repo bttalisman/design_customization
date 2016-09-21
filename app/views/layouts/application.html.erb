@@ -30,6 +30,7 @@
       <ul class="nav nav-tabs">
         <li role="presentation" class='<%= if params[:controller] == 'design_templates' then 'active' end %>' ><a href="<%= design_templates_path %>">Templates</a></li>
         <li role="presentation" class='<%= if params[:controller] == 'versions' then 'active' end %>' ><a href="<%= versions_path %>">Versions</a></li>
+        <li role="presentation" class='<%= if params[:controller] == 'users' then 'active' end %>' ><a href="<%= users_path %>">Users</a></li>
         <li role="presentation" class='<%= if params[:controller] == 'colors' then 'active' end %>' ><a href="<%= colors_path %>">Colors</a></li>
         <li role="presentation" class='<%= if params[:controller] == 'palettes' then 'active' end %>' ><a href="<%= palettes_path %>">Palettes</a></li>
         <li role="presentation" class='<%= if params[:controller] == 'home' then 'active' end %>' ><a href="/tools">Tools</a></li>

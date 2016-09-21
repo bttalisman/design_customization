@@ -10,8 +10,8 @@ class HomeController < ApplicationController
   def tools
   end
 
-  def get_shopify_users
-    do_get_shopify_users
+  def update_users
+    do_update_users
     render nothing: true
   end
 

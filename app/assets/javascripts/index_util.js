@@ -130,13 +130,13 @@ function my_sort( obj1, obj2, key, flip )
 
 
   var s1 = '';
-  if( o1[key] !== null ) {
+  if( (o1[key] !== null) && (o1[key] !== undefined) ) {
     s1 = o1[key].toLowerCase();
     d1 = Date.parse( s1 );
   }
 
   var s2 = '';
-  if( o2[key] !== null ) {
+  if( (o2[key] !== null) && (o2[key] !== undefined) ) {
     s2 = o2[key].toLowerCase();
     d2 = Date.parse( s2 );
   }

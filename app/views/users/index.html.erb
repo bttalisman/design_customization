@@ -1,0 +1,127 @@
+
+
+<div class='row'>
+
+  <div class='col col-md-1'></div>
+  <div class='col col-md-10'>
+    <table class='table table-hover'>
+      <thead>
+        <tr>
+          <th><a onclick='toggle_first_name();'>First Name</a>
+            <span id='first_name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_last_name();'>Last Name</a>
+            <span id='last_name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_shopify_id();'>Shopify ID</a>
+            <span id='shopify_id_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_email();'>Email</a>
+            <span id='email_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+    <%
+        i = 0
+        @users.each { |u| %>
+          <tr>
+            <td id='first_name<%= i.to_s %>'>
+              <%= u[:first_name] %>
+            </td>
+            <td id='last_name<%= i.to_s %>'>
+              <%= u[:last_name] %>
+            </td>
+            <td id='shopify_id<%= i.to_s %>'>
+              <%= u[:shopify_id] %>
+            </td>
+            <td id='email<%= i.to_s %>'>
+              <%= u[:email] %>
+            </td>
+          </tr>
+    <%    i += 1
+        } %>
+      </tbody>
+    </table>
+  </div> <!-- / col -->
+
+  <div class='col col-md-1'>
+  </div>
+
+</div> <!-- / row -->
+
+<div style='display:none' id='<%= @cache_name.to_s %>'><%= @users.to_json %></div>
+
+
+<script>
+
+  var CACHE_NAME = '<%= @cache_name.to_s %>';
+
+
+  function get_cached_users() {
+    return get_cached_json( CACHE_NAME ); }
+
+  function cache_users( users_array ) {
+    cache_json( users_array, CACHE_NAME ); }
+
+  function cache_arrow( e ) {
+    cache_arrow_by_name( e, CACHE_NAME ); }
+
+
+  function toggle_first_name() {
+    toggle_header_item( 'first_name_arrow', get_cached_users, cache_users, 'first_name' ); }
+
+  function toggle_last_name() {
+    toggle_header_item( 'last_name_arrow', get_cached_users, cache_users, 'last_name' ); }
+
+  function toggle_shopify_id() {
+    toggle_header_item( 'shopify_id_arrow', get_cached_users, cache_users, 'shopify_id' ); }
+
+  function toggle_email() {
+    toggle_header_item( 'email_arrow', get_cached_users, cache_users, 'email' ); }
+
+
+
+
+  function fill_container( )
+  {
+    update_arrows( CACHE_NAME );
+    var users = get_cached_users();
+    var o, s, el;
+    var d;
+    var container_index = 0;
+
+    for( var i = 0; i < users.length; i++ )
+    {
+      o = users[i];
+
+      s = '#first_name' + container_index.toString();
+      el = $(s);
+      el.text( o.first_name );
+
+      s = '#last_name' + container_index.toString();
+      el = $(s);
+      el.text( o.last_name );
+
+      s = '#shopify_id' + container_index.toString();
+      el = $(s);
+      el.text( o.shopify_id );
+
+      s = '#email' + container_index.toString();
+      el = $(s);
+      el.text( o.email );
+
+      container_index++;
+    }
+  }
+
+
+  $(document).ready( function() {
+    fill_container();
+  });
+
+</script>

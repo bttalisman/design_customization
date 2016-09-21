@@ -7,35 +7,63 @@ module ApplicationHelper
   end
 
 
+  def do_update_users
+    logger.info 'application_helper - do_update_users()'
+
+    users_array = get_shopify_users
+    users_array.each { |u|
+      logger.info 'application_helper - do_update_users() - looking up user: '\
+        + u[ :shopify_id ].to_s
+
+      db_u = nil
+      db_u = User.find_by( :shopify_id => u[ :shopify_id ] )
+
+      if db_u.nil?
+        logger.info 'application_helper - do_update_users() - CREATING user: '\
+          + u[ :shopify_id ].to_s
+        User.create( u )
+      end
+    }
+  end
 
 
-  def do_get_shopify_users
+  def get_shopify_users
     logger.info 'application_helper - get_shopify_users()'
     shop_url = 'https://770e59b9b5298644177f12c642038d60:7e5376e9526b536'\
       + '62df6d5aa252ae400@bombsheller-shop.myshopify.com/admin'
     ShopifyAPI::Base.site = shop_url
     limit = 250
     array = []
+    count = 0
 
-    products = ShopifyAPI::Product.find(:all, :params => {:limit => limit,
+    customers = ShopifyAPI::Customer.find(:all, :params => {:limit => limit,
                                         :since_id => 0})
-    products.each { |p|
-      name = p.title
-      array.push( name )
+    customers.each { |c|
+      o = {
+        shopify_id: c.id.to_s,
+        first_name: c.first_name,
+        last_name: c.last_name,
+        email: c.email }
+
+      array.push( o )
     }
 
-    while products.length == limit do
-      since_id = products.last.id
-      products = ShopifyAPI::Product.find(:all, :params => {:limit => limit,
+    while ( customers.length == limit ) do
+      since_id = customers.last.id
+      customers = ShopifyAPI::Customer.find(:all, :params => {:limit => limit,
                                           :since_id => since_id})
-      products.each { |p|
-        name = p.title
-        array.push( name )
+      customers.each { |c|
+        o = {
+          shopify_id: c.id.to_s,
+          first_name: c.first_name,
+          last_name: c.last_name,
+          email: c.email }
+
+        array.push( o )
       }
     end
 
     ShopifyAPI::Base.site = nil
-    array = array.sort
     logger.info 'application_helper - get_shopify_users() - array: ' + array.to_s
     array
   end
