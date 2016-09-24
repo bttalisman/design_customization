@@ -147,6 +147,7 @@ module ApplicationHelper
     s = s.downcase
     s = s.gsub(/\s+/, '_')
     s = s.gsub( /-/, '_' )
+    s = s.gsub( /'/, '' )
     s
   end
 
