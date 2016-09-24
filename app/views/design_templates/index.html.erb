@@ -19,14 +19,11 @@
             <span id='updated_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
-          <th><a onclick='toggle_tags();'>Tags?</a>
-            <span id='tags_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+          <th><a onclick='toggle_owner();'>Owner</a>
+            <span id='owner_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
-          <th><a onclick='toggle_images();'>Images?</a>
-            <span id='images_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
-          </th>
+
         </tr>
       </thead>
       <tbody>
@@ -43,12 +40,10 @@
             <td id='updated<%= i.to_s %>'>
               <%= t[:updated] %>
             </td>
-            <td id='tags<%= i.to_s %>'>
-              <%= t[:tags] %>
+            <td id='owner<%= i.to_s %>'>
+              <%= t[:owner] %>
             </td>
-            <td id='images<%= i.to_s %>'>
-              <%= t[:images] %>
-            </td>
+
           </tr>
     <%    i += 1
         } %>
@@ -94,11 +89,8 @@
   function toggle_updated() {
     toggle_header_item( 'updated_arrow', get_cached_templates, cache_templates, 'updated' ); }
 
-  function toggle_tags() {
-    toggle_header_item( 'tags_arrow', get_cached_templates, cache_templates, 'tags' ); }
-
-  function toggle_images() {
-    toggle_header_item( 'images_arrow', get_cached_templates, cache_templates, 'images' ); }
+  function toggle_owner() {
+    toggle_header_item( 'owner_arrow', get_cached_templates, cache_templates, 'owner' ); }
 
 
 
@@ -120,10 +112,6 @@
       el.text( o.name );
       el.attr( 'onclick', 'show_template("' + o.id + '")' );
 
-      s = '#tags' + container_index.toString();
-      el = $(s);
-      el.text( o.tags );
-
       s = '#created' + container_index.toString();
       el = $(s);
       el.text( o.created );
@@ -132,9 +120,9 @@
       el = $(s);
       el.text( o.updated );
 
-      s = '#images' + container_index.toString();
+      s = '#owner' + container_index.toString();
       el = $(s);
-      el.text( o.images );
+      el.text( o.owner );
 
       container_index++;
     }

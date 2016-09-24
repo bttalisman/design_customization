@@ -2,6 +2,7 @@
 class DesignTemplatesController < ApplicationController
   include ApplicationHelper
   include DesignTemplatesHelper
+  include UsersHelper
 
   def index
     user = get_logged_in_user
@@ -20,7 +21,8 @@ class DesignTemplatesController < ApplicationController
             images: bool_display_text( images?(t) ),
             id: t.id.to_s,
             created: time_display_text( t.created_at ),
-            updated: time_display_text( t.updated_at ) }
+            updated: time_display_text( t.updated_at ),
+            owner: get_full_name( t.user_id ) }
       @design_templates << o
     end
 
