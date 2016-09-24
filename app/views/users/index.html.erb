@@ -30,7 +30,7 @@
         i = 0
         @users.each { |u| %>
           <tr>
-            <td id='first_name<%= i.to_s %>'>
+            <td onclick='log_in( "<%= u[:shopify_id]%>" );' id='first_name<%= i.to_s %>'>
               <%= u[:first_name] %>
             </td>
             <td id='last_name<%= i.to_s %>'>
@@ -54,12 +54,24 @@
 
 </div> <!-- / row -->
 
-<div style='display:none' id='<%= @cache_name.to_s %>'><%= @users.to_json %></div>
+<div style='display:none' id='<%= CACHE_KEY_USERS.to_s %>'><%= CACHE_KEY_USERS.to_json %></div>
 
 
 <script>
 
   var CACHE_NAME = '<%= @cache_name.to_s %>';
+
+  function log_in( id )
+  {
+    $.ajax({
+      url: '/process_log_in?shopify_id=' + id ,
+    }).done(function() {
+      clear_users_cache();
+      clear_design_templates_cache();
+      clear_versions_cache();
+      location.reload();
+    });
+  }
 
 
   function get_cached_users() {
@@ -102,18 +114,26 @@
       s = '#first_name' + container_index.toString();
       el = $(s);
       el.text( o.first_name );
+      el.off( 'click' );
+      el.attr( 'onclick', 'log_in("' + o.shopify_id + '")' );
 
       s = '#last_name' + container_index.toString();
       el = $(s);
       el.text( o.last_name );
+      el.off( 'click' );
+      el.attr( 'onclick', 'log_in("' + o.shopify_id + '")' );
 
       s = '#shopify_id' + container_index.toString();
       el = $(s);
       el.text( o.shopify_id );
+      el.off( 'click' );
+      el.attr( 'onclick', 'log_in("' + o.shopify_id + '")' );
 
       s = '#email' + container_index.toString();
       el = $(s);
       el.text( o.email );
+      el.off( 'click' );
+      el.attr( 'onclick', 'log_in("' + o.shopify_id + '")' );
 
       container_index++;
     }

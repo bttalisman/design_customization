@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160921202637) do
+ActiveRecord::Schema.define(version: 20160922173453) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -49,9 +49,16 @@ ActiveRecord::Schema.define(version: 20160921202637) do
     t.boolean  "is_trans_butt",              limit: 1,     default: false
     t.integer  "managed_asset_id",           limit: 4
     t.boolean  "has_been_post_processed",    limit: 1,     default: false
+    t.integer  "user_id",                    limit: 4
   end
 
   add_index "design_templates", ["managed_asset_id"], name: "index_design_templates_on_managed_asset_id", using: :btree
+  add_index "design_templates", ["user_id"], name: "index_design_templates_on_user_id", using: :btree
+
+  create_table "design_templates_users", id: false, force: :cascade do |t|
+    t.integer "design_template_id", limit: 4, null: false
+    t.integer "user_id",            limit: 4, null: false
+  end
 
   create_table "managed_assets", force: :cascade do |t|
     t.datetime "created_at",                       null: false
@@ -97,8 +104,10 @@ ActiveRecord::Schema.define(version: 20160921202637) do
     t.datetime "updated_at",             null: false
     t.integer  "version_id", limit: 4
     t.string   "shopify_id", limit: 255
+    t.integer  "user_id",    limit: 4
   end
 
+  add_index "users", ["user_id"], name: "index_users_on_user_id", using: :btree
   add_index "users", ["version_id"], name: "index_users_on_version_id", using: :btree
 
   create_table "users_versions", id: false, force: :cascade do |t|
@@ -121,8 +130,10 @@ ActiveRecord::Schema.define(version: 20160921202637) do
 
   add_foreign_key "colors", "palettes"
   add_foreign_key "design_templates", "managed_assets"
+  add_foreign_key "design_templates", "users"
   add_foreign_key "managed_assets", "design_templates"
   add_foreign_key "palettes", "colors"
+  add_foreign_key "users", "users"
   add_foreign_key "users", "versions"
   add_foreign_key "versions", "users"
 end

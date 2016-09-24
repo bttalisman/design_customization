@@ -6,6 +6,13 @@ module ApplicationHelper
   class BailOutOfProcessing < StandardError
   end
 
+  def get_logged_in_user
+    shopify_id = session[ :shopify_id ]
+    if shopify_id
+      user = User.find_by( :shopify_id => shopify_id )
+    end
+    user
+  end
 
   def do_update_users
     logger.info 'application_helper - do_update_users()'
@@ -64,7 +71,6 @@ module ApplicationHelper
     end
 
     ShopifyAPI::Base.site = nil
-    logger.info 'application_helper - get_shopify_users() - array: ' + array.to_s
     array
   end
 

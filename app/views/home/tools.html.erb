@@ -5,6 +5,10 @@
   <div class='col col-md-10'>
 
 
+
+    <a class='btn btn-default' onclick='log_out();'>Log Out</a>
+    <br></br>
+
     <a class='btn btn-default' onclick='update_users();'>Update Users</a>
     <br></br>
 
@@ -48,7 +52,6 @@
     });
   }
 
-
   function update_users()
   {
     $.ajax({
@@ -56,6 +59,7 @@
     }).done(function() {
     });
   }
+
 
 
   function clear_token()

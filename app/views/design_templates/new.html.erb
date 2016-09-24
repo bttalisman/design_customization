@@ -60,15 +60,10 @@ entering these values, clicking Save and Set Prefs takes the user to the edit vi
 
 <script>
 
-  function save()
-  {
-    // I took this option out, used to be u could save without setting prefs
-    $('#stayAfterSave').val( 'false');
-  }
-
   function setPrefs()
   {
     $('#stayAfterSave').val( 'true');
+    clear_design_templates_cache();
   }
 
 

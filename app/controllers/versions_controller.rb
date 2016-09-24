@@ -3,6 +3,7 @@ class VersionsController < ApplicationController
   include ApplicationHelper
   include VersionsHelper
   include DesignTemplatesHelper
+  include UsersHelper
 
   def delete_all
     logger.info 'VERSIONS_CONTROLLER - delete_all'
@@ -12,24 +13,39 @@ class VersionsController < ApplicationController
   end
 
   def index
-    versions = Version.all
-    @versions = []
-    @cache_name = 'v_cache'
+    user = get_logged_in_user
 
-    versions.each do |v|
-      next if !v.design_template
-      o = { name: v.name.to_s,
-            template: v.design_template.name.to_s,
-            tags: bool_display_text( tags?( v.design_template ) ),
-            images: bool_display_text( images?( v.design_template ) ),
-            id: v.id.to_s,
-            template_id: v.design_template.id.to_s,
-            created: time_display_text( v.created_at ),
-            updated: time_display_text( v.updated_at ),
-            last_render_date: time_display_text( v.last_render_date )
-          }
-      @versions << o
+    if user
+      user_id = user.id
+      versions = Version.where( user_id: user_id )
+    else
+      versions = Version.all
     end
+
+    @versions = []
+
+    if versions
+      versions.each do |v|
+        next if !v.design_template
+        o = { name: v.name.to_s,
+              template: v.design_template.name.to_s,
+              tags: bool_display_text( tags?( v.design_template ) ),
+              images: bool_display_text( images?( v.design_template ) ),
+              id: v.id.to_s,
+              template_id: v.design_template.id.to_s,
+              created: time_display_text( v.created_at ),
+              updated: time_display_text( v.updated_at ),
+              owner: get_full_name( v.user_id ),
+              last_render_date: time_display_text( v.last_render_date )
+            }
+        @versions << o
+      end
+    end
+
+    logger.info 'VERSIONS_CONTROLLER - index() - @versions: '\
+      + JSON.pretty_generate( @versions )
+
+
   end
 
   def edit
@@ -119,6 +135,10 @@ class VersionsController < ApplicationController
   def create
     logger.info 'VERSIONS_CONTROLLER - CREATE'
     @version = Version.new( version_params )
+
+    user = get_logged_in_user
+    @version.update( { user_id: user.id } ) if user
+
 
     if @version.save
       redirect_to action: 'edit', id: @version.id

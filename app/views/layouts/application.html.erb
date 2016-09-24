@@ -25,29 +25,50 @@
       <div class='loader'></div>
     </div>
 
-    <div class='container-fluid'>
+    <div class='container-fluid' style='margin:0px; padding:0px;'>
 
-      <ul class="nav nav-tabs">
-        <li role="presentation" class='<%= if params[:controller] == 'design_templates' then 'active' end %>' ><a href="<%= design_templates_path %>">Templates</a></li>
-        <li role="presentation" class='<%= if params[:controller] == 'versions' then 'active' end %>' ><a href="<%= versions_path %>">Versions</a></li>
-        <li role="presentation" class='<%= if params[:controller] == 'users' then 'active' end %>' ><a href="<%= users_path %>">Users</a></li>
-        <li role="presentation" class='<%= if params[:controller] == 'colors' then 'active' end %>' ><a href="<%= colors_path %>">Colors</a></li>
-        <li role="presentation" class='<%= if params[:controller] == 'palettes' then 'active' end %>' ><a href="<%= palettes_path %>">Palettes</a></li>
-        <li role="presentation" class='<%= if params[:controller] == 'home' then 'active' end %>' ><a href="/tools">Tools</a></li>
+      <div class='page-header' style='border:none; margin:0px 0px 0px 0px; padding:10px 10px 10px 10px; background:#ffaaaa;'>
+        <h1 style='margin:0px; width:400px; display:inline-block; '>Custom Designs</h1>
 
-        <li role="presentation" class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            New <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li><%= link_to "Template", new_design_template_path %></li>
-            <li><%= link_to "Version", new_version_path %></li>
-            <li><%= link_to "Color", new_color_path %></li>
-            <li><%= link_to "Palette", new_palette_path %></li>
-          </ul>
-        </li>
+        <div class='text-right' style='display:inline-block; width:400px; float:right;'>
+          <h4 style='margin:0px; color:#fafafa'>
+<%          if @user %>
+              Hi <%= @user.first_name.to_s %>!
+              <div style='display:inline-block; margin:5px; color:#000000;'>|</div> <a onclick='log_out();'>log out</a>
+<%          else %>
+              <div style='display:inline-block; margin:5px;'><a href='/log_in'>log in</a></div>
+<%          end %>
+          </h4>
+        </div>
 
-      </ul>
+      </div>
+
+
+      <nav style='border:none;' class="navbar navbar-light bg-faded">
+
+        <ul style='background:#eff57a' class="nav nav-tabs">
+          <li role="presentation" class='<%= if params[:controller] == 'design_templates' then 'active' end %>' ><a href="<%= design_templates_path %>">Templates</a></li>
+          <li role="presentation" class='<%= if params[:controller] == 'versions' then 'active' end %>' ><a href="<%= versions_path %>">Versions</a></li>
+          <li role="presentation" class='<%= if params[:controller] == 'users' then 'active' end %>' ><a href="<%= users_path %>">Users</a></li>
+          <li role="presentation" class='<%= if params[:controller] == 'colors' then 'active' end %>' ><a href="<%= colors_path %>">Colors</a></li>
+          <li role="presentation" class='<%= if params[:controller] == 'palettes' then 'active' end %>' ><a href="<%= palettes_path %>">Palettes</a></li>
+          <li role="presentation" class='<%= if params[:controller] == 'home' && params[:action] == 'tools' then 'active' end %>' ><a href="/tools">Tools</a></li>
+
+          <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              New <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= link_to "Template", new_design_template_path %></li>
+              <li><%= link_to "Version", new_version_path %></li>
+              <li><%= link_to "Color", new_color_path %></li>
+              <li><%= link_to "Palette", new_palette_path %></li>
+            </ul>
+          </li>
+        </ul>
+
+
+      </nav>
 
       <div style='margin-top:20px;'>
         <%= yield %>

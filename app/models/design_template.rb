@@ -2,9 +2,11 @@
 class DesignTemplate < ActiveRecord::Base
 
   include ApplicationHelper
-  
+
   has_many :versions, dependent: :destroy
   has_many :managed_assets, dependent: :destroy
+  belongs_to :user
+
 
   has_attached_file :original_file,
                     default_url: '/images/missing.png',

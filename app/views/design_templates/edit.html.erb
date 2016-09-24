@@ -104,6 +104,7 @@ end %>
   {
     if( validate() )
     {
+      clear_design_templates_cache();
       var form = $('#design_template_form');
       form.submit();
     }

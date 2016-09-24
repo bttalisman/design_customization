@@ -587,7 +587,7 @@ module VersionsHelper
     # we'll create a temporary file containing necessary info, sitting right
     # next to the original ai file.
     File.open( temp_values_file, 'w' ) do |f|
-      f.write( 'version.values.to_s' )
+      f.write( version.values.to_s )
     end
   end
 
@@ -627,12 +627,7 @@ module VersionsHelper
     Rails.logger.info 'versions_helper - system_call() - about to run '\
       + 'sys_com: ' + sys_com.to_s
 
-    t = Thread.new do
-      system( sys_com )
-    end
-
-
-
+    system( sys_com )
   end
 
   def process_version_send_remote( version )

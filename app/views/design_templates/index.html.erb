@@ -61,12 +61,12 @@
 
 </div> <!-- / row -->
 
-<div style='display:none' id='<%= @cache_name.to_s %>'><%= @design_templates.to_json %></div>
+<div style='display:none' id='<%= CACHE_KEY_DESIGN_TEMPLATES.to_s %>'><%= @design_templates.to_json %></div>
 
 
 <script>
 
-  var CACHE_NAME = '<%= @cache_name.to_s %>';
+  var CACHE_NAME = '<%= CACHE_KEY_DESIGN_TEMPLATES.to_s %>';
 
 
   function show_template( id )

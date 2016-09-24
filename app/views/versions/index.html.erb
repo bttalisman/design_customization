@@ -24,14 +24,11 @@
             <span id='last_render_date_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
-          <th><a onclick='toggle_tags();'>Tags?</a>
-            <span id='tags_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+          <th><a onclick='toggle_owner();'>Owner</a>
+            <span id='owner_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
-          <th><a onclick='toggle_images();'>Images?</a>
-            <span id='images_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
-          </th>
+
         </tr>
       </thead>
       <tbody>
@@ -54,11 +51,8 @@
             <td id='last_render_date<%= i.to_s %>'>
               <%= v[:last_render_date] %>
             </td>
-            <td id='tags<%= i.to_s %>'>
-              <%= bool_display_text( v[:tags] ) %>
-            </td>
-            <td id='images<%= i.to_s %>'>
-              <%= bool_display_text( v[:images] ) %>
+            <td id='owner<%= i.to_s %>'>
+              <%= v[:owner] %>
             </td>
           </tr>
     <%    i += 1
@@ -72,12 +66,12 @@
 
 </div> <!-- / row -->
 
-<div style='display:none' id='<%= @cache_name.to_s %>'><%= @versions.to_json %></div>
+<div style='display:none' id='<%= CACHE_KEY_VERSIONS.to_s %>'><%= @versions.to_json %></div>
 
 
 <script>
 
-  var CACHE_NAME = '<%= @cache_name.to_s %>';
+  var CACHE_NAME = '<%= CACHE_KEY_VERSIONS.to_s %>';
 
   function show_version( id )
   {
@@ -100,6 +94,9 @@
 
 
 
+
+  function toggle_owner() {
+    toggle_header_item( 'owner_arrow', get_cached_versions, cache_versions, 'owner' ); }
 
   function toggle_name() {
     toggle_header_item( 'name_arrow', get_cached_versions, cache_versions, 'name' ); }
@@ -145,10 +142,6 @@
       el.text( o.template );
       el.attr( 'onclick', 'show_template("' + o.template_id + '")' );
 
-      s = '#tags' + container_index.toString();
-      el = $(s);
-      el.text( o.tags );
-
       s = '#created' + container_index.toString();
       el = $(s);
       el.text( o.created );
@@ -161,9 +154,9 @@
       el = $(s);
       el.text( o.last_render_date );
 
-      s = '#images' + container_index.toString();
+      s = '#owner' + container_index.toString();
       el = $(s);
-      el.text( o.images );
+      el.text( o.owner );
 
       container_index++;
     }

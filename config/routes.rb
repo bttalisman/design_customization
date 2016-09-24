@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   get '/trans_butt' => 'home#trans_butt'
   get '/trans_butt_settings' => 'home#trans_butt_settings'
   get '/update_users' => 'home#update_users'
+  get '/log_in/' => 'home#log_in'
+  get '/process_log_in/' => 'home#process_log_in'
+  get '/log_out/' => 'home#log_out'
 
 
   get '/do_process_version' => 'remote#do_process_version'

@@ -4,9 +4,16 @@ class DesignTemplatesController < ApplicationController
   include DesignTemplatesHelper
 
   def index
-    templates = DesignTemplate.all
+    user = get_logged_in_user
+
+    if user
+      user_id = user.id
+      templates = DesignTemplate.where( user_id: user_id )
+    else
+      templates = DesignTemplate.all
+    end
+
     @design_templates = []
-    @cache_name = 'dt_cache'
     templates.each do |t|
       o = { name: t.name.to_s,
             tags: bool_display_text( tags?(t) ),
@@ -16,6 +23,9 @@ class DesignTemplatesController < ApplicationController
             updated: time_display_text( t.updated_at ) }
       @design_templates << o
     end
+
+    Rails.logger.info 'design_templates_controller - index() - @design_templates: '\
+      + JSON.pretty_generate( @design_templates )
   end
 
   def show
@@ -87,6 +97,9 @@ class DesignTemplatesController < ApplicationController
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - create()!'
     @design_template = DesignTemplate.new( design_template_params )
 
+    user = get_logged_in_user
+    @design_template.update( { user_id: user.id } ) if user
+
     stay_after_save = params[ 'stayAfterSave' ]
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - create() - design_template_params: '\
     + design_template_params.to_s
@@ -117,7 +130,6 @@ class DesignTemplatesController < ApplicationController
     process_original( @design_template )
     redirect_to @design_template
   end
-
 
   def delete_all
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all()'

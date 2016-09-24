@@ -1,6 +1,7 @@
 # Palettes Controller
 class PalettesController < ApplicationController
   def index
+        
     @palettes = Palette.all
 
     palettes = Palette.all
