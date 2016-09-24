@@ -6,7 +6,7 @@ class PartialsController < ApplicationController
   include PartialsHelper
 
   layout 'partials'
- 
+
   def trans_butt_settings
     logger.info 'PARTIALS_CONTROLLER - trans_butt_settings()'
   end
@@ -49,9 +49,18 @@ class PartialsController < ApplicationController
   def quick_new
     app_config = Rails.application.config_for(:customization)
     template_id = params[ :template_id ]
+    @user_id = params[ :user_id ]
+
+    Rails.logger.info 'partials_controller - quick_new() - template_id: ' + template_id.to_s
+    Rails.logger.info 'partials_controller - quick_new() - user_id: ' + @user_id.to_s
+
     @design_template = DesignTemplate.find( template_id )
 
     config_hash = { design_template_id: template_id }
+    config_hash[ :user_id ] = @user_id if !@user_id.nil?
+    Rails.logger.info 'partials_controller - quick_new() - config_hash: '\
+      + config_hash.to_s
+    
     @version = Version.new( config_hash )
     @version.save
 

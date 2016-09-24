@@ -43,7 +43,7 @@ class DesignTemplatesController < ApplicationController
     end
 
     @quick_new_partial_url = local_host + '/partials/quick_new?template_id='\
-                              + @design_template.id.to_s
+                              + @design_template.id.to_s + '&user_id=<SHOPIFY_USER_ID>'
   end
 
   def edit

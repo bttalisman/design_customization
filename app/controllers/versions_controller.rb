@@ -112,24 +112,15 @@ class VersionsController < ApplicationController
     render nothing: true
   end
 
+  # The real action behind this action is controlled by the partials controller.
+  # This action uses the application layout, which includes all js libraries,
+  # the partials#quick_new action generates all the html.
   def quick_new
-    app_config = Rails.application.config_for(:customization)
     logger.info 'VERSIONS_CONTROLLER - QUICK_NEW'
-    template_id = params[ :template_id ]
-    @design_template = DesignTemplate.find( template_id )
+    @template_id = params[ :template_id ]
 
-    config_hash = { design_template_id: template_id }
-
-    @version = Version.new( config_hash )
-    @version.save
-
-    version_folder_path = app_config[ 'path_to_quick_version_root' ] + 'template_'\
-      + @design_template.id.to_s + '/version_' + @version.id.to_s + '/'
-    version_name = @design_template.name + '_' + @version.id.to_s
-
-    @version.name = version_name
-    @version.output_folder_path = version_folder_path
-    @version.save
+    user = get_logged_in_user
+    @user_id = user.id if !user.nil?
   end
 
   def create
@@ -138,7 +129,6 @@ class VersionsController < ApplicationController
 
     user = get_logged_in_user
     @version.update( { user_id: user.id } ) if user
-
 
     if @version.save
       redirect_to action: 'edit', id: @version.id
