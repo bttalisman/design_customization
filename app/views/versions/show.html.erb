@@ -44,12 +44,26 @@
       <div class='panel-body'>
 
 <%      if @render_image_count > 0 %>
-          <img src='<%= @render_image_url.to_s %>' width='300'
+          <img src='<%= @render_image_url.to_s %>' id='reel_viewer' width='300'
             class='reel'
-            id='image'
+            data-klass='reel-class'
             data-velocity='2'
+            data-steppable=false
             data-frames='<%= @render_image_count.to_s %>'
             data-images='<%= @render_url.to_s %>'>
+
+          <button class='btn btn-default'
+            onclick='button_click();'
+            class='reel-annotation'
+            id='close_up'
+            data-for='reel_viewer'
+            data-x='0'
+            data-y='0'>
+            Open
+          </button>
+
+
+
 <%      else %>
           No rendered images yet.
 <%      end %>
@@ -63,8 +77,16 @@
 
 </div>
 
-
 <script>
+
+  function button_click()
+  {
+    var reel = $('#reel_viewer');
+    var d = reel.data();
+    var frame = reel.reel('frame');
+    var url = d.images[ frame - 1 ];
+    window.open( url );
+  }
 
   function update_render_folder()
   {
@@ -73,5 +95,11 @@
     }).done(function() {
     });
   }
+
+
+
+  $(document).ready( function() {
+  });
+
 
 </script>
