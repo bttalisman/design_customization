@@ -1,0 +1,35 @@
+
+<%
+  index = 0
+  @assets.each { |asset|
+    if index % 2 == 0
+      alt_style = 'float:right; margin-left:10px;'
+    else
+      alt_style = 'float:left; margin-right:10px;'
+    end
+    index += 1 %>
+    <div style='<%= alt_style.to_s %> width:20%; display:inline-block; position:relative;'>
+<%    if !asset.image.original_filename.nil? %>
+        <a onclick='image_click("<%= asset.image.url.to_s %>");'>
+          <%= image_tag( asset.image, { width: '100%', height: '100%' } ) %>
+        </a>
+<%    end %>
+    </div>
+
+    <div style='width:75%; vertical-align:top; display:inline-block; position:relative;'>
+      <p class=''>
+<%=     asset.description.to_s %>
+      </p>
+    </div>
+    <div style='display:inline-block; width:100%; height:5px;'></div>
+<%
+  } %>
+
+<script>
+
+  function image_click( url )
+  {
+    window.open( url );
+  }
+
+</script>

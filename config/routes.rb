@@ -32,6 +32,8 @@ Rails.application.routes.draw do
   get '/partials/version_settings' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
   get '/partials/quick_new' => 'partials#quick_new'
+  get '/partials/_managed_assets' => 'partials#_managed_assets'
+
 
   get '/versions/create' => 'versions#create'
   get '/versions/:id/update' => 'versions#update'

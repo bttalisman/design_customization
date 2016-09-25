@@ -52,15 +52,23 @@
     var uri;
     uri = '<%= local_host %>/partials/version_settings?template_id=' + templateId + '&version_id=' + <%= @version.id %>;
 
-    $.get( uri, function(data, status)
-      {
-        $('#values_container').html( data );
-      } );
+    $.get( uri, function(data, status) {
+        $('#values_container').html( data ); });
   }
 
+  function getManagedAssetsHTML( templateId )
+  {
+    var o;
+    var uri;
+    uri = '<%= local_host %>/partials/_managed_assets?template_id=' + templateId;
+
+    $.get( uri, function(data, status) {
+      $('#managed_assets_container').html( data ); });
+  }
 
   $(document).ready( function() {
     getTemplateHTML( <%= @design_template.id %> );
+    getManagedAssetsHTML( <%= @design_template.id %> );
   });
 
 </script>
@@ -134,26 +142,7 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
         </div> <!-- / panel body -->
       </div> <!-- / panel -->
 
-<%    index = 0
-      @version.design_template.managed_assets.each { |asset|
-        if index % 2 == 0
-          alt_style = 'float:right;'
-        else
-          alt_style = 'float:left;'
-        end
-        index += 1 %>
-        <div style='<%= alt_style.to_s %> height:100px; width:100px; margin-top:10px; display:inline-block; position:relative;'>
-<%        if !asset.image.original_filename.nil? %>
-<%=         link_to( image_tag( asset.image, { width: '100%', height: '100%' } ), asset ) %>
-<%        end %>
-        </div>
-        <div style='height:100px; width:250px; vertical-align:top; margin-left:10px; margin-top:10px; margin-right:10px; display:inline-block; position:relative;'>
-          <p class='lead'>
-<%=         asset.description.to_s %>
-          </p>
-        </div>
-<%    } %>
-
+      <div id='managed_assets_container'></div>
 
     </div>  <!-- / col -->
     <div class='col col-md-1'></div>

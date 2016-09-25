@@ -7,10 +7,23 @@ class PartialsController < ApplicationController
 
   layout 'partials'
 
+
+  def _managed_assets
+    logger.info 'PARTIALS_CONTROLLER - _managed_assets()'
+    app_config = Rails.application.config_for(:customization)
+    template_id = params[ :template_id ]
+
+    Rails.logger.info 'partials_controller - _managed_assets() - template_id: '\
+      + template_id.to_s
+
+    design_template = DesignTemplate.find( template_id )
+    @assets = design_template.managed_assets
+  end
+
+
   def trans_butt_settings
     logger.info 'PARTIALS_CONTROLLER - trans_butt_settings()'
   end
-
 
   # This action presents the tags extracted from the AI file, with any
   # tag-specific options, for use when creating or editing a DesignTemplate.
@@ -60,7 +73,7 @@ class PartialsController < ApplicationController
     config_hash[ :user_id ] = @user_id if !@user_id.nil?
     Rails.logger.info 'partials_controller - quick_new() - config_hash: '\
       + config_hash.to_s
-    
+
     @version = Version.new( config_hash )
     @version.save
 
