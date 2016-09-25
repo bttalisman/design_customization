@@ -8,10 +8,20 @@ module ApplicationHelper
 
   def get_logged_in_user
     shopify_id = session[ :shopify_id ]
+    Rails.logger.info 'application_helper - get_logged_in_user() - shopify_id: '\
+      + shopify_id.to_s
     if shopify_id
       user = User.find_by( :shopify_id => shopify_id )
     end
     user
+  end
+
+  def is_super_user
+    shopify_id = session[ :shopify_id ]
+    Rails.logger.info 'application_helper - is_super_user() - shopify_id: '\
+      + shopify_id.to_s
+    return true if shopify_id.to_i === 3483014343
+    false
   end
 
   def do_update_users
@@ -51,7 +61,6 @@ module ApplicationHelper
         first_name: c.first_name,
         last_name: c.last_name,
         email: c.email }
-
       array.push( o )
     }
 

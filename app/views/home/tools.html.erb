@@ -4,11 +4,6 @@
   <div class='col col-md-1'></div>
   <div class='col col-md-10'>
 
-
-
-    <a class='btn btn-default' onclick='log_out();'>Log Out</a>
-    <br></br>
-
     <a class='btn btn-default' onclick='update_users();'>Update Users</a>
     <br></br>
 
@@ -24,9 +19,6 @@
     <a class='btn btn-default' onclick='delete_all_palettes();'>Delete ALL Palettes</a>
     <br></br>
 
-    <a class='btn btn-default' onclick='clear_token();'>Clear Instagram Token</a>
-    <br></br>
-
     <a class='btn btn-default' onclick='make_zombie_template();'>Make Zombie Template</a>
     <br></br>
 
@@ -37,12 +29,6 @@
 
 
 <script>
-
-
-  function trans_butt()
-  {
-    window.location = 'http://localhost:3000/trans_butt';
-  }
 
   function make_zombie_template()
   {
@@ -56,16 +42,6 @@
   {
     $.ajax({
       url: '/update_users/',
-    }).done(function() {
-    });
-  }
-
-
-
-  function clear_token()
-  {
-    $.ajax({
-      url: '/clear_token/',
     }).done(function() {
     });
   }

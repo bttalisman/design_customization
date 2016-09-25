@@ -44,25 +44,27 @@
       </div>
 
 
-      <nav style='border:none;' class="navbar navbar-light bg-faded">
+      <nav style='border:none;' class='navbar navbar-light bg-faded'>
 
-        <ul style='background:#eff57a' class="nav nav-tabs">
-          <li role="presentation" class='<%= if params[:controller] == 'design_templates' then 'active' end %>' ><a href="<%= design_templates_path %>">Templates</a></li>
-          <li role="presentation" class='<%= if params[:controller] == 'versions' then 'active' end %>' ><a href="<%= versions_path %>">Versions</a></li>
-          <li role="presentation" class='<%= if params[:controller] == 'users' then 'active' end %>' ><a href="<%= users_path %>">Users</a></li>
-          <li role="presentation" class='<%= if params[:controller] == 'colors' then 'active' end %>' ><a href="<%= colors_path %>">Colors</a></li>
-          <li role="presentation" class='<%= if params[:controller] == 'palettes' then 'active' end %>' ><a href="<%= palettes_path %>">Palettes</a></li>
-          <li role="presentation" class='<%= if params[:controller] == 'home' && params[:action] == 'tools' then 'active' end %>' ><a href="/tools">Tools</a></li>
+        <ul style='background:#eff57a' class='nav nav-tabs'>
+          <li role='presentation' class='menu-item <%= if params[:controller] == 'design_templates' then 'active' end %>' ><a href='<%= design_templates_path %>'>Templates</a></li>
+          <li role='presentation' class='menu-item <%= if params[:controller] == 'versions' then 'active' end %>' ><a href='<%= versions_path %>'>Versions</a></li>
+          <li role='presentation' class='menu-item <%= if params[:controller] == 'users' then 'active' end %>' ><a href='<%= users_path %>'>Users</a></li>
+          <li role='presentation' class='menu-item <%= if params[:controller] == 'colors' then 'active' end %>' ><a href='<%= colors_path %>'>Colors</a></li>
+          <li role='presentation' class='menu-item <%= if params[:controller] == 'palettes' then 'active' end %>' ><a href='<%= palettes_path %>'>Palettes</a></li>
+<%        if is_super_user %>
+            <li role='presentation' class='menu-item <%= if params[:controller] == 'home' && params[:action] == 'tools' then 'active' end %>' ><a href='/tools'>Tools</a></li>
+<%        end %>
 
-          <li role="presentation" class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              New <span class="caret"></span>
+          <li role='presentation' class='menu-item dropdown'>
+            <a class='dropdown-toggle' data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false'>
+              New <span class='caret'></span>
             </a>
-            <ul class="dropdown-menu">
-              <li><%= link_to "Template", new_design_template_path %></li>
-              <li><%= link_to "Version", new_version_path %></li>
-              <li><%= link_to "Color", new_color_path %></li>
-              <li><%= link_to "Palette", new_palette_path %></li>
+            <ul class='dropdown-menu'>
+              <li><%= link_to 'Template', new_design_template_path %></li>
+              <li><%= link_to 'Version', new_version_path %></li>
+              <li><%= link_to 'Color', new_color_path %></li>
+              <li><%= link_to 'Palette', new_palette_path %></li>
             </ul>
           </li>
         </ul>
