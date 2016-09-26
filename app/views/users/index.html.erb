@@ -54,12 +54,12 @@
 
 </div> <!-- / row -->
 
-<div style='display:none' id='<%= CACHE_KEY_USERS.to_s %>'><%= CACHE_KEY_USERS.to_json %></div>
+<div style='display:none' id='<%= CACHE_KEY_USERS.to_s %>'><%= @users.to_json %></div>
 
 
 <script>
 
-  var CACHE_NAME = '<%= @cache_name.to_s %>';
+  var CACHE_NAME = '<%= CACHE_KEY_USERS.to_s %>';
 
   function log_in( id )
   {

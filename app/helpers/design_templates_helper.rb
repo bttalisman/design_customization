@@ -128,6 +128,9 @@ module DesignTemplatesHelper
     names
   end
 
+  # This method gets the object literal describing the placed item with the
+  # specified image_name.  This is pulled from the json file describing placed
+  # items, located at path_to_images_file()
   def get_image_object( design_template, image_name )
     extracted_image_data = get_images_array( design_template )
     found_obj = {}
@@ -140,6 +143,8 @@ module DesignTemplatesHelper
     found_obj
   end
 
+  # This method returns the image_name that references the placed item which
+  # is the left-butt image.
   def get_left_butt_image_name( design_template )
     prompts = get_prompts_object( design_template )
     tb_settings = prompts[ PROMPTS_KEY_TRANS_BUTT_SETTINGS ]
@@ -149,6 +154,8 @@ module DesignTemplatesHelper
     image_name
   end
 
+  # This method returns the image_name that references the placed item which
+  # is the right-butt image.
   def get_right_butt_image_name( design_template )
     prompts = get_prompts_object( design_template )
     tb_settings = prompts[ PROMPTS_KEY_TRANS_BUTT_SETTINGS ]
@@ -158,7 +165,8 @@ module DesignTemplatesHelper
     image_name
   end
 
-
+  # This method returns true if the placed item referenced by image_name is
+  # either the left-butt image or the right-butt image.
   def is_trans_butt_image( design_template, image_name )
     prompts = get_prompts_object( design_template )
 
@@ -174,38 +182,49 @@ module DesignTemplatesHelper
     b
   end
 
+  # This method returns the width of the original image that is a placed item
+  # in the AI file.  This is the width in pixels of the image before any transformations
+  # have been made.  Replacement images may be scaled and cropped to match this
+  # size. In this case, after transformations are made to the replacement image,
+  # the result should be the same size and shape as the placed item in the
+  # template file.
   def get_original_width( design_template, image_name )
     o = get_image_object( design_template, image_name )
     o[ 'width' ]
   end
 
+  # Same here.
   def get_original_height( design_template, image_name )
     o = get_image_object( design_template, image_name )
     o[ 'height' ]
   end
 
+  # This method processes the params object, creating any ManagedAssets
+  # specified.
+#  def set_assets( template, params )
+#    Rails.logger.info 'design_templates_helper - set_assets() - params: '\
+#      + params.to_s
 
-  def set_assets( template, params )
-    Rails.logger.info 'design_templates_helper - set_assets() - params: '\
-      + params.to_s
+#    assets = params[ 'managed_asset' ]
+#    if( assets )
+#      image = assets[ 'image' ]
+#      user = get_logged_in_user
+#      u_id = user.id if user
 
-    assets = params[ 'managed_asset' ]
-    if( assets )
-      image = assets[ 'image' ]
-
-      if( image )
-        ma_name = image.original_filename
-        o = { image: image,
-              name: ma_name }
-        a = template.managed_assets.create( o )
-        a.save
-      end
-    end
-  end
+#      if( image )
+#        ma_name = image.original_filename
+#        o = { image: image,
+#              name: ma_name,
+#              user_id: u_id }
+#        a = template.managed_assets.create( o )
+#        a.save
+#      end
+#    end
+#  end
 
   # This method constructs a new json string for the prompts field.  This
   # method must be coordinated with parameters as set in
-  # views/partials/_design_template_tags.html.erb
+  # views/partials/_design_template_tags.html.erb.
   def set_tag_prompts( template, params )
     Rails.logger.info 'design_templates_helper - set_tag_prompts() - params: '\
       + params.to_s
@@ -260,6 +279,10 @@ module DesignTemplatesHelper
     template.prompts = prompts_string
   end
 
+  # This method constructs a new json string for the prompts field.  This
+  # method must be coordinated with parameters as set in
+  # views/partials/_design_template_trans_butt.html.erb.
+  # See README.md for the format of the prompts json.
   def set_trans_butt_prompts( template, params )
     Rails.logger.info 'design_templates_helper - set_image_prompts() - params: '\
       + params.to_s
@@ -389,7 +412,10 @@ module DesignTemplatesHelper
     source_folder
   end
 
-
+  # This method returns the path to the configuration file for post-processing
+  # the AI file.
+  # This path is to be used as an argument to the run_AI_script script.  The options
+  # parameter must contain either 'design_template_id' or 'design_template'
   def post_process_config_file_name( options = {} )
     dt_id = options[ 'design_template_id' ]
     design_template = options[ 'design_template' ]
@@ -411,7 +437,9 @@ module DesignTemplatesHelper
     config_file
   end
 
-
+  # This method returns the path to the configuration file for extracting tags,
+  # to be used as an argument to the run_AI_script script.  The options
+  # parameter must contain either 'design_template_id' or 'design_template'
   def tags_config_file_name( options = {} )
     dt_id = options[ 'design_template_id' ]
     design_template = options[ 'design_template' ]
@@ -514,7 +542,7 @@ module DesignTemplatesHelper
       f.write( config.to_json )
     end
 
-    make_output_folder( design_template )
+    #make_output_folder( design_template )
 
     if run_remotely
       post_process_send_remote( design_template )
@@ -524,6 +552,8 @@ module DesignTemplatesHelper
     remove_prompts_file( design_template )
   end
 
+  # This method runs the AI script that extracts all tag related information
+  # from the AI file.
   def extract_tags( design_template )
     app_config = Rails.application.config_for( :customization )
     run_remotely = app_config[ 'run_remotely' ]
@@ -549,6 +579,8 @@ module DesignTemplatesHelper
     end
   end
 
+  # This method runs the script that extracts all image-related information
+  # from the AI file.
   def extract_images( design_template )
     app_config = Rails.application.config_for(:customization)
     run_remotely = app_config[ 'run_remotely' ]

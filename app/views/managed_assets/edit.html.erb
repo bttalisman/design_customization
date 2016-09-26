@@ -60,7 +60,7 @@ end %>
 
   function edit_template( )
   {
-    window.location = '/design_templates/<%= @managed_asset.design_template.id.to_s %>/edit';
+    window.location = '/design_templates/<%= @managed_asset.design_template_id.to_s %>/edit';
   }
 
   $(document).ready(function(){

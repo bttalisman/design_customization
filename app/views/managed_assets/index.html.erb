@@ -1,16 +1,100 @@
 
+
 <div class='row'>
 
   <div class='col col-md-1'></div>
   <div class='col col-md-10'>
-<%
-    @managed_assets.each { |a| %>
-      <a href='<%= local_host %>/assets/<%= a.id %>/'>
-        Asset
-      </a>
-<%
-    } %>
+    <table class='table table-hover'>
+      <thead>
+        <tr>
+          <th><a onclick='toggle_name();'>Name</a>
+            <span id='name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_owner();'>Owner</a>
+            <span id='owner_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+    <%
+        i = 0
+        @managed_assets.each { |a| %>
+          <tr>
+            <td id='name<%= i.to_s %>'>
+              <%= a[:name] %>
+            </td>
+            <td id='owner<%= i.to_s %>'>
+              <%= a[:owner] %>
+            </td>
+          </tr>
+    <%    i += 1
+        } %>
+      </tbody>
+    </table>
+  </div> <!-- / col -->
+
+  <div class='col col-md-1'>
   </div>
 
-  <div class='col col-md-1'></div>
-</div>
+</div> <!-- / row -->
+
+<div style='display:none' id='<%= CACHE_KEY_MANAGED_ASSETS.to_s %>'><%= @managed_assets.to_json %></div>
+
+
+<script>
+
+  var CACHE_NAME = '<%= CACHE_KEY_MANAGED_ASSETS.to_s %>';
+
+
+
+  function get_cached_assets() {
+    return get_cached_json( CACHE_NAME ); }
+
+  function cache_assets( assets_array ) {
+    cache_json( assets_array, CACHE_NAME ); }
+
+  function cache_arrow( e ) {
+    cache_arrow_by_name( e, CACHE_NAME ); }
+
+
+  function toggle_name() {
+    toggle_header_item( 'name_arrow', get_cached_assets, cache_assets, 'name' ); }
+
+  function toggle_owner() {
+    toggle_header_item( 'owner_arrow', get_cached_assets, cache_assets, 'owner' ); }
+
+
+
+
+  function fill_container( )
+  {
+    update_arrows( CACHE_NAME );
+    var assets = get_cached_assets();
+    var o, s, el;
+    var d;
+    var container_index = 0;
+
+    for( var i = 0; i < assets.length; i++ )
+    {
+      o = assets[i];
+
+      s = '#name' + container_index.toString();
+      el = $(s);
+      el.text( o.name );
+
+      s = '#owner' + container_index.toString();
+      el = $(s);
+      el.text( o.owner );
+
+      container_index++;
+    }
+  }
+
+
+  $(document).ready( function() {
+    fill_container();
+  });
+
+</script>

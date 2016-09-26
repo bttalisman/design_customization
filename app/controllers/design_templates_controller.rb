@@ -65,7 +65,7 @@ class DesignTemplatesController < ApplicationController
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.update( design_template_params )
 
-    set_assets( @design_template, params )
+#    set_assets( @design_template, params )
 
     # extract the tag-related settings from the parameters object, and set
     # this template's prompts property.
@@ -151,11 +151,12 @@ class DesignTemplatesController < ApplicationController
     redirect_to :design_templates
   end
 
-  def detroy_all_managed_assets
-    logger.info 'VERSIONS_CONTROLLER - detroy_all_managed_assets()'
+  def remove_all_managed_assets
+    logger.info 'VERSIONS_CONTROLLER - remove_all_managed_assets()'
     @design_template = DesignTemplate.find( params[ :id ] )
-    assets = @design_template.managed_assets.all
-    assets.each( &:delete )
+    @design_template.managed_assets.clear
+#    assets = @design_template.managed_assets.all
+#    assets.each( &:delete )
     render nothing: true
   end
 

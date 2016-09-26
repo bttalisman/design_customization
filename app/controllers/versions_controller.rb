@@ -42,10 +42,8 @@ class VersionsController < ApplicationController
       end
     end
 
-    logger.info 'VERSIONS_CONTROLLER - index() - @versions: '\
-      + JSON.pretty_generate( @versions )
-
-
+#    logger.info 'VERSIONS_CONTROLLER - index() - @versions: '\
+#      + JSON.pretty_generate( @versions )
   end
 
   def edit

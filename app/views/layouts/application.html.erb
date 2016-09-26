@@ -53,6 +53,7 @@
           <li role='presentation' class='menu-item <%= if params[:controller] == 'colors' then 'active' end %>' ><a href='<%= colors_path %>'>Colors</a></li>
           <li role='presentation' class='menu-item <%= if params[:controller] == 'palettes' then 'active' end %>' ><a href='<%= palettes_path %>'>Palettes</a></li>
 <%        if is_super_user %>
+            <li role='presentation' class='menu-item <%= if params[:controller] == 'managed_assets' then 'active' end %>' ><a href='<%= managed_assets_path %>'>Assets</a></li>
             <li role='presentation' class='menu-item <%= if params[:controller] == 'home' && params[:action] == 'tools' then 'active' end %>' ><a href='/tools'>Tools</a></li>
 <%        end %>
 

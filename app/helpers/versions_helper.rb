@@ -68,7 +68,8 @@ module VersionsHelper
   end
 
   # This is the url that specifies the set of rendered images. Formatted to
-  # suit jquery reel, http://jquery.vostrel.cz/reel
+  # suit jquery reel, http://jquery.vostrel.cz/reel.  Not sure why reel wants
+  # this when it has the whole set of images.
   def get_render_image_url( version, plus_size )
     paths = get_paths( version )
     output_file_base_name = paths[ :output_file_base_name ]
@@ -103,6 +104,7 @@ module VersionsHelper
     i
   end
 
+  # This id is used for downloading rendered images.
   def get_google_drive_folder_id( folder_name )
     command = %Q[ gdrive list -q 'name = "#{folder_name}" and mimeType = "application/vnd.google-apps.folder"' > tmp/output.txt ]
 
@@ -184,7 +186,7 @@ module VersionsHelper
   end
 
   # A version's values is a json obj describing all extensible settings,
-  # set by the user.
+  # set by the user.  See README.md
   def get_values_object( version )
     values_string = version.values
     values = {}

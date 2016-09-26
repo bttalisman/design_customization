@@ -4,9 +4,9 @@ class PartialsController < ApplicationController
   include DesignTemplatesHelper
   include VersionsHelper
   include PartialsHelper
+  include ManagedAssetsHelper
 
   layout 'partials'
-
 
   def _managed_assets
     logger.info 'PARTIALS_CONTROLLER - _managed_assets()'
@@ -17,7 +17,28 @@ class PartialsController < ApplicationController
       + template_id.to_s
 
     design_template = DesignTemplate.find( template_id )
-    @assets = design_template.managed_assets
+    all_assets = design_template.managed_assets
+    @image_only_assets = []
+    @description_only_assets = []
+    @assets = []
+
+    all_assets.each { |a|
+
+      if( has_image( a ) && !has_description( a ) )
+        @image_only_assets << a
+      elsif( !has_image( a ) && has_description( a ) )
+        @description_only_assets << a
+      else
+        # must have both?
+        @assets << a
+      end
+    }
+    Rails.logger.info 'partials_controller - _managed_assets() - image_only_assets: '\
+      + @image_only_assets.to_s
+    Rails.logger.info 'partials_controller - _managed_assets() - description_only_assets: '\
+      + @description_only_assets.to_s
+    Rails.logger.info 'partials_controller - _managed_assets() - assets: '\
+      + @assets.to_s
   end
 
 
@@ -77,7 +98,7 @@ class PartialsController < ApplicationController
     @version = Version.new( config_hash )
     @version.save
 
-    version_folder_path = app_config[ 'path_to_quick_version_root' ] + '/template_'\
+    version_folder_path = app_config[ 'path_to_quick_version_root' ] + 'template_'\
       + @design_template.id.to_s + '/version_' + @version.id.to_s + '/'
     version_name = @design_template.name + '_' + @version.id.to_s
 

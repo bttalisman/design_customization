@@ -4,7 +4,6 @@ class UsersController < ApplicationController
   def index
     users = User.all
     @users = []
-    @cache_name = 'users_cache'
 
     users.each do |u|
       o = { first_name: u.first_name.to_s,

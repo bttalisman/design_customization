@@ -1,10 +1,22 @@
 # Assets Controller
 class ManagedAssetsController < ApplicationController
   include ApplicationHelper
+  include UsersHelper
 
   def index
-    @managed_assets = ManagedAsset.all
+    managed_assets = ManagedAsset.all
+    @managed_assets = []
+
+    managed_assets.each do |a|
+      o = { name: a.name.to_s,
+            owner: get_full_name( a.user_id ) }
+      @managed_assets << o
+    end
+
+    Rails.logger.info 'managed_assets_controller - index() - @managed_assets.length: '\
+      + @managed_assets.length.to_s
   end
+
 
   def new
   end
@@ -45,8 +57,11 @@ class ManagedAssetsController < ApplicationController
       @managed_asset.name = 'Asset'
     end
 
+    user = get_logged_in_user
+    @managed_asset.user_id = user.id if user
+
     if @managed_asset.save
-      redirect_to '/design_templates/' + @managed_asset.design_template.id.to_s\
+      redirect_to '/design_templates/' + @managed_asset.design_template_id.to_s\
         + '/edit'
     else
       logger.info 'MANAGED_ASSETS_CONTROLLER - create() - FAILURE!'
@@ -62,7 +77,7 @@ class ManagedAssetsController < ApplicationController
     @managed_asset.update( managed_asset_params )
 
     if @managed_asset.save
-      redirect_to '/design_templates/' + @managed_asset.design_template.id.to_s\
+      redirect_to '/design_templates/' + @managed_asset.design_template_id.to_s\
         + '/edit'
     else
       logger.info 'MANAGED_ASSETS_CONTROLLER - update() - FAILURE!'

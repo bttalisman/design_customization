@@ -54,8 +54,8 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
             <div class='spacer'></div>
 <%        end %>
 
-          <a class='btn btn-default' onclick='$("#textModal").modal();' >Add Asset</a>
-          <a class='btn btn-default' onclick='detroy_all_managed_assets();'>Delete All Assets</a>
+          <a class='btn btn-default' onclick='$("#textModal").modal();' >Create Asset</a>
+          <a class='btn btn-default' onclick='remove_all_managed_assets();'>Remove All Assets</a>
 
           <div class='spacer'></div>
 
@@ -90,9 +90,10 @@ end %>
     return validate_design_template_settings();
   }
 
-  function detroy_all_managed_assets()
+  function remove_all_managed_assets()
   {
-    uri = '/design_templates/<%= @design_template.id.to_s %>/detroy_all_managed_assets';
+    clear_managed_assets_cache();
+    uri = '/design_templates/<%= @design_template.id.to_s %>/remove_all_managed_assets';
     $.get( uri, function(data, status) {
       location.reload(); });
   }
@@ -112,6 +113,7 @@ end %>
 
   function add_asset()
   {
+    clear_managed_assets_cache();
     var $form = $( '#managed_asset_form' );
     $form.submit();
   }

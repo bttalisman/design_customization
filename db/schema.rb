@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922173453) do
+ActiveRecord::Schema.define(version: 20160926042127) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -70,9 +70,11 @@ ActiveRecord::Schema.define(version: 20160922173453) do
     t.datetime "image_updated_at"
     t.string   "name",               limit: 255
     t.text     "description",        limit: 65535
+    t.integer  "user_id",            limit: 4
   end
 
   add_index "managed_assets", ["design_template_id"], name: "index_managed_assets_on_design_template_id", using: :btree
+  add_index "managed_assets", ["user_id"], name: "index_managed_assets_on_user_id", using: :btree
 
   create_table "palettes", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -94,6 +96,7 @@ ActiveRecord::Schema.define(version: 20160922173453) do
     t.datetime "uploaded_file_updated_at"
     t.string   "image_name",                 limit: 255
     t.string   "url",                        limit: 255
+    t.string   "text",                       limit: 255
   end
 
   create_table "users", force: :cascade do |t|
@@ -132,6 +135,7 @@ ActiveRecord::Schema.define(version: 20160922173453) do
   add_foreign_key "design_templates", "managed_assets"
   add_foreign_key "design_templates", "users"
   add_foreign_key "managed_assets", "design_templates"
+  add_foreign_key "managed_assets", "users"
   add_foreign_key "palettes", "colors"
   add_foreign_key "users", "users"
   add_foreign_key "users", "versions"

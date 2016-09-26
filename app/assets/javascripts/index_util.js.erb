@@ -21,6 +21,11 @@ function clear_users_cache()
   clear_cache( '<%= CACHE_KEY_USERS.to_s %>' );
 }
 
+function clear_managed_assets_cache()
+{
+  clear_cache( '<%= CACHE_KEY_MANAGED_ASSETS.to_s %>' );
+}
+
 
 function log_out()
 {
