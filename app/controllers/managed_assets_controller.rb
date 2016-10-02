@@ -61,8 +61,7 @@ class ManagedAssetsController < ApplicationController
     @managed_asset.user_id = user.id if user
 
     if @managed_asset.save
-      redirect_to '/design_templates/' + @managed_asset.design_template_id.to_s\
-        + '/edit'
+      redirect_to '/design_templates/' + dt_id + '/edit'
     else
       logger.info 'MANAGED_ASSETS_CONTROLLER - create() - FAILURE!'
       render 'new'

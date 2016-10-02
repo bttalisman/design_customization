@@ -4,7 +4,8 @@ class DesignTemplate < ActiveRecord::Base
   include ApplicationHelper
 
   has_many :versions, dependent: :destroy
-  has_many :managed_assets, dependent: :destroy
+  has_and_belongs_to_many :managed_assets
+
   belongs_to :user
 
 

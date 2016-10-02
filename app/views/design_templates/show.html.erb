@@ -26,14 +26,16 @@
 <%        if @stats[ 'valid' ] %>
             <div class='input-group'>
               <div class='input-group-btn'>
-                <a class='btn btn-default' href='<%= local_host %>/versions/quick_new?template_id=<%= @design_template.id %>'>Quick Version</a><br>
+                <a class='btn btn-default' href='<%= local_host %>/versions/quick_new?template_id=<%= @design_template.id %>'>
+                  Quick Version</a><br>
               </div><!-- /btn-group -->
-              <input disabled class='form-control' title='<%= @quick_new_partial_url %>' value='<%= @quick_new_partial_url %>'></input>
+              <input disabled class='form-control' title='<%= @quick_new_partial_url %>'
+                value='<%= @quick_new_partial_url %>'></input>
             </div><!-- /input-group -->
+
             <div class='spacer'></div>
             <a class='btn btn-default' href='<%= edit_design_template_path %>'>Edit this Template</a>
             <div class='spacer'></div>
-
 <%        end %>
 
 <%        if !@versions.empty? %>
@@ -46,8 +48,8 @@
             </ul>
             <div class='spacer'></div>
 <%        end %>
-
         </div> <!-- /panel body -->
+
       </div> <!-- /panel -->
     </div> <!-- /col -->
   </div> <!-- /row -->

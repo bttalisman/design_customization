@@ -54,6 +54,8 @@ Rails.application.routes.draw do
   get '/design_templates/delete_all' => 'design_templates#delete_all'
   get '/design_templates/make_zombie' => 'design_templates#make_zombie'
   get '/design_templates/:id/remove_all_managed_assets' => 'design_templates#remove_all_managed_assets'
+  get '/design_templates/:id/remove_managed_asset' => 'design_templates#remove_managed_asset'
+  get '/design_templates/:id/add_managed_asset' => 'design_templates#add_managed_asset'
 
 
   get 'force_process' => 'design_templates#force_process'

@@ -134,12 +134,14 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
 
           <div class='spacer'></div>
 
+        </div> <!-- / panel body -->
+
+        <div class='panel panel-footer'>
           <a class='btn btn-default' id='update' onclick='create_version(); return false;'>Update</a>
           <a class='btn btn-default' href='<%= local_host %>/versions/<%= @version.id %>'>Cancel</a>
           <a class='btn btn-default' href='/versions/<%= @version.id %>' data-confirm='Are you sure?'
             data-method='delete' rel='nofollow'>Delete</a>
-
-        </div> <!-- / panel body -->
+        </div> <!-- / panel footer -->
       </div> <!-- / panel -->
 
       <div id='managed_assets_container'></div>

@@ -58,6 +58,7 @@ class DesignTemplatesController < ApplicationController
     @images = get_images_array( @design_template )
 
     @managed_asset = ManagedAsset.new
+    @managed_assets = ManagedAsset.all
   end
 
   def update
@@ -152,13 +153,35 @@ class DesignTemplatesController < ApplicationController
   end
 
   def remove_all_managed_assets
-    logger.info 'VERSIONS_CONTROLLER - remove_all_managed_assets()'
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - remove_all_managed_assets()'
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.managed_assets.clear
 #    assets = @design_template.managed_assets.all
 #    assets.each( &:delete )
     render nothing: true
   end
+
+
+
+  def add_managed_asset
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - add_managed_asset()'
+    design_template = DesignTemplate.find( params[ :id ] )
+    asset = ManagedAsset.find( params[ :managed_asset_id ] )
+    design_template.managed_assets << asset
+    render nothing: true
+  end
+
+  def remove_managed_asset
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - remove_managed_asset()'
+    design_template = DesignTemplate.find( params[ :id ] )
+    asset = ManagedAsset.find( params[ :managed_asset_id ] )
+    design_template.managed_assets.delete( asset )
+    render nothing: true
+  end
+
+
+
+
 
   # This action makes a design_template with no Illustrator file associated.
   # tags and images json files are created, and the template should function
