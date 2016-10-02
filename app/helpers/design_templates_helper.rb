@@ -379,6 +379,81 @@ module DesignTemplatesHelper
     prompts
   end
 
+  def move_asset_up( design_template, asset )
+    prefs = get_asset_prefs_object( design_template )
+    order = prefs[ ASSET_PREFS_KEY_ORDER ]
+
+    i = order.index( asset.id )
+    return if i.nil?
+    return if i == 0
+
+    prev = order[ i-1 ]
+    order[ i-1 ] = asset.id
+    order[ i ] = prev
+  end
+
+  def move_asset_down( design_template, asset )
+    prefs = get_asset_prefs_object( design_template )
+    order = prefs[ ASSET_PREFS_KEY_ORDER ]
+
+    i = order.index( asset.id )
+    return if i.nil?
+    return if i == (asset.length - 1)
+
+    next_val = order[ i+1 ]
+    order[ i+1 ] = asset.id
+    order[ i ] = next_val
+
+    design_template.asset_prefs = prefs.to_json
+    design_template.save
+  end
+
+
+  def add_managed_asset_and_process_prefs( design_template, asset )
+    Rails.logger.info 'design_tempaltes_helper - add_managed_asset_and_process_prefs()'
+    design_template.managed_assets << asset
+    prefs = get_asset_prefs_object( design_template )
+    order = prefs[ ASSET_PREFS_KEY_ORDER ]
+    order << asset.id
+
+    design_template.asset_prefs = prefs.to_json
+    design_template.save
+  end
+
+  def remove_managed_asset_and_process_prefs( design_template, asset )
+    Rails.logger.info 'design_tempaltes_helper - remove_managed_asset_and_process_prefs()'
+    design_template.managed_assets.delete( asset )
+    prefs = get_asset_prefs_object( design_template )
+    order = prefs[ ASSET_PREFS_KEY_ORDER ]
+    order.delete( asset.id )
+
+    design_template.asset_prefs = prefs.to_json
+    design_template.save
+  end
+
+
+  def get_asset_prefs_object( design_template )
+    ap_string = design_template.asset_prefs
+
+    # if the asset prefs weren't set, save the template and try again.  Saving
+    # sets the default value.
+    if ap_string.nil?
+      design_template.save
+      ap_string = design_template.asset_prefs
+    end
+
+    Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_asset_prefs_object() - '\
+      + 'ap_string: ' + ap_string.to_s
+    if json?( ap_string )
+      prefs = JSON.parse( ap_string )
+      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_asset_prefs_object() - '\
+        + 'prefs: ' + JSON.pretty_generate( prefs )
+    end
+    prefs
+  end
+
+
+
   # This method makes a folder to temporarily hold output.  The folder is
   # called 'output' and it's located in the design template folder.
   def make_output_folder( design_template )

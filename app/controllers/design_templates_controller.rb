@@ -59,6 +59,7 @@ class DesignTemplatesController < ApplicationController
 
     @managed_asset = ManagedAsset.new
     @managed_assets = ManagedAsset.all
+    @asset_prefs = get_asset_prefs_object( @design_template )
   end
 
   def update
@@ -167,7 +168,7 @@ class DesignTemplatesController < ApplicationController
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - add_managed_asset()'
     design_template = DesignTemplate.find( params[ :id ] )
     asset = ManagedAsset.find( params[ :managed_asset_id ] )
-    design_template.managed_assets << asset
+    add_managed_asset_and_process_prefs( design_template, asset )
     render nothing: true
   end
 
@@ -175,12 +176,27 @@ class DesignTemplatesController < ApplicationController
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - remove_managed_asset()'
     design_template = DesignTemplate.find( params[ :id ] )
     asset = ManagedAsset.find( params[ :managed_asset_id ] )
-    design_template.managed_assets.delete( asset )
+    remove_managed_asset_and_process_prefs( design_template, asset )
     render nothing: true
   end
 
 
+  def move_asset_up
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - move_asset_up()'
+    design_template = DesignTemplate.find( params[ :id ] )
+    asset = ManagedAsset.find( params[ :managed_asset_id ] )
 
+
+    render nothing: true
+  end
+
+  def move_asset_down
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - move_asset_down()'
+    design_template = DesignTemplate.find( params[ :id ] )
+    asset = ManagedAsset.find( params[ :managed_asset_id ] )
+    remove_managed_asset_and_process_prefs( design_template, asset )
+    render nothing: true
+  end
 
 
   # This action makes a design_template with no Illustrator file associated.

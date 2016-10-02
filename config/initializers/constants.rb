@@ -21,6 +21,8 @@ DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'.freeze
 DESIGN_TEMPLATE_STATS_KEY_MESSAGE = 'message'.freeze
 DESIGN_TEMPLATE_STATS_KEY_STATUS = 'status'.freeze
 
+ASSET_PREFS_KEY_ORDER = 'ap_order'.freeze
+
 PROMPTS_KEY_TAG_SETTINGS = 'tag_settings'.freeze
 PROMPTS_KEY_IMAGE_SETTINGS = 'image_settings'.freeze
 PROMPTS_KEY_TRANS_BUTT_SETTINGS = 'trans_butt_settings'.freeze

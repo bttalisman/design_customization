@@ -47,12 +47,25 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
 <%        if !@design_template.managed_assets.empty? %>
             <h4>Descriptive Assets</h4>
             <ul class='list-group'>
-<%            @design_template.managed_assets.each do |a| %>
+<%            i = 0
+              length = @design_template.managed_assets.length
+              @design_template.managed_assets.each do |a|
+
+%>
                 <li class='list-group-item'>
                   <%= link_to a.name.to_s, [:edit, a] %>
+
                   <a onclick='remove_asset( <%= a.id %> );' style='float:right;'>
                     <span id='updated_arrow' class='glyphicon glyphicon-remove' aria-hidden='true'></span>
                   </a>
+
+                  <a onclick='move_asset_up( <%= a.id %> );' style='float:right;'>
+                    <span id='up_arrow' class='glyphicon glyphicon-arrow-up' aria-hidden='true'></span>
+                  </a>
+                  <a onclick='move_asset_dow ( <%= a.id %> );' style='float:right;'>
+                    <span id='down_arrow' class='glyphicon glyphicon-arrow-down' aria-hidden='true'></span>
+                  </a>
+
                 </li>
 <%            end %>
             </ul>
@@ -97,6 +110,23 @@ end %>
     return validate_design_template_settings();
   }
 
+
+
+  function move_asset_up( id )
+  {
+    uri = '/design_templates/<%= @design_template.id.to_s %>/move_asset_up';
+    uri = uri + '?managed_asset_id=' + id;
+    $.get( uri, function(data, status) {
+      location.reload(); });
+  }
+
+  function move_asset_down( id )
+  {
+    uri = '/design_templates/<%= @design_template.id.to_s %>/move_asset_down';
+    uri = uri + '?managed_asset_id=' + id;
+    $.get( uri, function(data, status) {
+      location.reload(); });
+  }
 
   function remove_asset( id )
   {

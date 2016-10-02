@@ -18,12 +18,18 @@ class DesignTemplate < ActiveRecord::Base
                                     content_type: 'application/postscript'
 
   before_save :default_prompts
+  before_save :default_asset_prefs
   before_post_process :rename_original_file
 
   def default_prompts
     self.prompts ||= '{ "' + PROMPTS_KEY_TAG_SETTINGS + '" : {}, "'\
       + PROMPTS_KEY_IMAGE_SETTINGS + '" : {} }'
   end
+
+  def default_asset_prefs
+    self.asset_prefs ||= '{ "' + ASSET_PREFS_KEY_ORDER + '" : [] }'
+  end
+
 
   def rename_original_file
       extension = File.extname(original_file_file_name).downcase
