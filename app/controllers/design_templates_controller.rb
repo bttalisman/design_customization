@@ -147,6 +147,12 @@ class DesignTemplatesController < ApplicationController
   def destroy
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - destroy()'
     @design_template = DesignTemplate.find( params[ :id ] )
+
+
+    assets = @design_template.managed_assets.all
+    assets.each( &:delete )
+
+
     @design_template.destroy
     redirect_to :design_templates
   end

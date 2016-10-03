@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926042127) do
+ActiveRecord::Schema.define(version: 20160926180522) do
+
+  create_table "assets", force: :cascade do |t|
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "design_template_id", limit: 4
+    t.string   "image_file_name",    limit: 255
+    t.string   "image_content_type", limit: 255
+    t.integer  "image_file_size",    limit: 4
+    t.datetime "image_updated_at"
+  end
+
+  add_index "assets", ["design_template_id"], name: "index_assets_on_design_template_id", using: :btree
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -49,9 +61,11 @@ ActiveRecord::Schema.define(version: 20160926042127) do
     t.boolean  "is_trans_butt",              limit: 1,     default: false
     t.integer  "managed_asset_id",           limit: 4
     t.boolean  "has_been_post_processed",    limit: 1,     default: false
+    t.integer  "asset_id",                   limit: 4
     t.integer  "user_id",                    limit: 4
   end
 
+  add_index "design_templates", ["asset_id"], name: "index_design_templates_on_asset_id", using: :btree
   add_index "design_templates", ["managed_asset_id"], name: "index_design_templates_on_managed_asset_id", using: :btree
   add_index "design_templates", ["user_id"], name: "index_design_templates_on_user_id", using: :btree
 
@@ -96,7 +110,6 @@ ActiveRecord::Schema.define(version: 20160926042127) do
     t.datetime "uploaded_file_updated_at"
     t.string   "image_name",                 limit: 255
     t.string   "url",                        limit: 255
-    t.string   "text",                       limit: 255
   end
 
   create_table "users", force: :cascade do |t|
@@ -131,7 +144,9 @@ ActiveRecord::Schema.define(version: 20160926042127) do
 
   add_index "versions", ["user_id"], name: "index_versions_on_user_id", using: :btree
 
+  add_foreign_key "assets", "design_templates"
   add_foreign_key "colors", "palettes"
+  add_foreign_key "design_templates", "assets"
   add_foreign_key "design_templates", "managed_assets"
   add_foreign_key "design_templates", "users"
   add_foreign_key "managed_assets", "design_templates"

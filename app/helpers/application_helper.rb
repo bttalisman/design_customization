@@ -153,10 +153,16 @@ module ApplicationHelper
   end
 
   def make_suitable_file_name( s )
+    Rails.logger.info 'application_helper - make_suitable_file_name() - s: ' + s.to_s
     s = s.downcase
     s = s.gsub(/\s+/, '_')
     s = s.gsub( /-/, '_' )
     s = s.gsub( /'/, '' )
+    s = s.gsub( /"/, '' )
+    s = s.gsub( /,/, '' )
+    s = s.gsub( /;/, '' )
+    s = s.gsub( /:/, '' )
+    Rails.logger.info 'application_helper - make_suitable_file_name() - s: ' + s.to_s
     s
   end
 
