@@ -44,34 +44,26 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
           </div>
           <div class='spacer'></div>
 
-<%        if !@design_template.managed_assets.empty? %>
-            <h4>Descriptive Assets</h4>
-            <ul class='list-group'>
-<%            @design_template.managed_assets.each do |a| %>
-                <li class='list-group-item'> <%= link_to a.name.to_s, [:edit, a] %> </li>
-<%            end %>
-            </ul>
-            <div class='spacer'></div>
-<%        end %>
+          <div id='managed_assets_container'></div>
 
-          <a class='btn btn-default' onclick='$("#textModal").modal();' >Create Asset</a>
-          <a class='btn btn-default' onclick='remove_all_managed_assets();'>Remove All Assets</a>
+        </div> <!-- /panel body -->
 
-          <div class='spacer'></div>
-
+        <div class='panel panel-footer'>
           <a class='btn btn-default' href='<%= local_host %>/force_process?id=<%= @design_template.id %>'>Reprocess</a>
           <a class='btn btn-default' onclick='update_template( <%= @design_template.id %> ); return false;'>Update</a>
           <a class='btn btn-default' href='<%= local_host %>/design_templates/<%= @design_template.id %>'>Cancel</a>
           <a class='btn btn-default' href='/design_templates/<%= @design_template.id %>' data-confirm='Are you sure?' data-method='delete' rel='nofollow'>Delete</a>
+        </div>
 
-        </div> <!-- /panel body -->
       </div> <!-- /panel -->
-    </div> <!--  -->
+    </div> <!-- /col -->
+
     <div class='col-md-1'></div>
     <div class='col-md-5'>
       <div id='panel_container'></div>
     </div>
   </div> <!-- /row -->
+
 <%
 end %>
 
@@ -90,14 +82,6 @@ end %>
     return validate_design_template_settings();
   }
 
-  function remove_all_managed_assets()
-  {
-    clear_managed_assets_cache();
-    uri = '/design_templates/<%= @design_template.id.to_s %>/remove_all_managed_assets';
-    $.get( uri, function(data, status) {
-      location.reload(); });
-  }
-
 
   // This function is called when the user clicks save.  Data from the form
   // is gathered and posted to the design_template controller.
@@ -111,26 +95,25 @@ end %>
     }
   }
 
-  function add_asset()
+  function submit_created_asset_form()
   {
     clear_managed_assets_cache();
     var $form = $( '#managed_asset_form' );
     $form.submit();
   }
 
-  function make_dialog()
+  function add_selected_asset()
   {
-    // This dialog lets the user set the media type for images in the database
-    // without the media type set
-    $('#textModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget); // Button that triggered the modal
-      var modal = $(this);
-      yes_button = modal.find('#yes_btn');
-      // clear any previously set handlers
-      yes_button.off( 'click' );
-      yes_button.on( 'click', {}, add_asset );
-    });
+    var e = $('#asset_select');
+    var asset_id = e.val();
+    var uri = '/design_templates/<%= @design_template.id.to_s %>/add_managed_asset';
+    uri = uri + '?managed_asset_id=' + asset_id;
+    $.get( uri, function(data, status) {
+      location.reload(); });
   }
+
+
+
 
 
 
@@ -152,53 +135,21 @@ end %>
   }
 
 
+  function getManagedAssetsHTML( templateId )
+  {
+    var o;
+    var uri;
+    uri = '<%= local_host %>/partials/_design_template_managed_assets?template_id=' + templateId;
+
+    $.get( uri, function(data, status) {
+      $('#managed_assets_container').html( data ); });
+  }
+
+
   $(document).ready(function() {
     getTemplateHTML( <%= @design_template.id %> );
-    make_dialog();
+    getManagedAssetsHTML( <%= @design_template.id %> );
   } );
 
 
 </script>
-
-
-
-<div class='modal fade' id='textModal' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel'>
-  <div class='modal-dialog modal-sm' role='document'>
-    <div class='modal-content'>
-      <div class='modal-header'>
-        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-          <span aria-hidden='true'>&times;</span>
-        </button>
-        <h4 class='modal-title' id='exampleModalLabel'>What's Going On?</h4>
-      </div>
-
-<%=   form_for @managed_asset, html: { multipart: true, id: 'managed_asset_form' } do |form| %>
-
-        <div style='margin:10px;'>
-
-          <div class='spacer'></div>
-          <textarea id='text_asset' name='managed_asset[description]'
-            class='form-control' rows='3'></textarea>
-          <div class='spacer'></div>
-          <span class='btn btn-default fileinput-button' id='file_input_container'>
-            <span>Upload an Image</span>
-            <input class='btn btn-default' type='file' name='managed_asset[image]' >
-            </input>
-          </span>
-          <input name='design_template_id' value='<%= @design_template.id.to_s %>'
-            style='display:none;'>
-          </input>
-
-        </div>
-
-<%    end %>
-
-      <div class='modal-footer'>
-        <button type='button' id='vid_btn' class='btn btn-default'
-          data-dismiss='modal'>Cancel</button>
-        <button type='button' id='yes_btn' class='btn btn-default'
-          data-dismiss='modal'>Add</button>
-      </div>
-    </div>
-  </div>
-</div>

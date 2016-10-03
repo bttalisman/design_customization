@@ -8,37 +8,47 @@ class PartialsController < ApplicationController
 
   layout 'partials'
 
-  def _managed_assets
-    logger.info 'PARTIALS_CONTROLLER - _managed_assets()'
+  def _version_managed_assets
+    logger.info 'PARTIALS_CONTROLLER - _version_managed_assets()'
     app_config = Rails.application.config_for(:customization)
     template_id = params[ :template_id ]
 
-    Rails.logger.info 'partials_controller - _managed_assets() - template_id: '\
+    Rails.logger.info 'partials_controller - _version_managed_assets() - template_id: '\
       + template_id.to_s
 
     design_template = DesignTemplate.find( template_id )
-    all_assets = design_template.managed_assets
+    all_assets = get_sorted_managed_assets( design_template )
     @image_only_assets = []
-    @description_only_assets = []
     @assets = []
 
     all_assets.each { |a|
-
       if( has_image( a ) && !has_description( a ) )
         @image_only_assets << a
-      elsif( !has_image( a ) && has_description( a ) )
-        @description_only_assets << a
       else
-        # must have both?
         @assets << a
       end
     }
-    Rails.logger.info 'partials_controller - _managed_assets() - image_only_assets: '\
+    Rails.logger.info 'partials_controller - _version_managed_assets() - image_only_assets: '\
       + @image_only_assets.to_s
-    Rails.logger.info 'partials_controller - _managed_assets() - description_only_assets: '\
+    Rails.logger.info 'partials_controller - _version_managed_assets() - description_only_assets: '\
       + @description_only_assets.to_s
-    Rails.logger.info 'partials_controller - _managed_assets() - assets: '\
+    Rails.logger.info 'partials_controller - _version_managed_assets() - assets: '\
       + @assets.to_s
+  end
+
+
+  def _design_template_managed_assets
+    logger.info 'PARTIALS_CONTROLLER - _design_template_managed_assets()'
+    app_config = Rails.application.config_for(:customization)
+    template_id = params[ :template_id ]
+
+    Rails.logger.info 'partials_controller - _design_template_managed_assets() - template_id: '\
+      + template_id.to_s
+
+    @design_template = DesignTemplate.find( template_id )
+    @assets = get_sorted_managed_assets( @design_template )
+    @managed_asset = ManagedAsset.new
+    @managed_assets = ManagedAsset.all
   end
 
 

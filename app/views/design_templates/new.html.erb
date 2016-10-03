@@ -4,15 +4,14 @@ entering these values, clicking Save and Set Prefs takes the user to the edit vi
   <div class='col col-md-1'></div>
   <div class='col col-md-4'>
 
-
-    <div class='panel panel-default'>
-      <div class='panel-heading'>
-        <h3 class='panel-title'>New Template</h3>
-      </div>
-      <div class='panel-body'>
 <%=
-        form_for @design_template, html: { multipart: true, onsubmit: 'return validate();'  } do |form|
-%>
+    form_for @design_template, html: { multipart: true, onsubmit: 'return validate();'  } do |form| %>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'>New Template</h3>
+        </div>
+        <div class='panel-body'>
+
           <div class='input-group' style='margin-bottom:20px;'>
             <span class='input-group-addon' id='basic-addon1'>Name</span>
             <input type='text' class='form-control' id='design_template_name'
@@ -36,18 +35,20 @@ entering these values, clicking Save and Set Prefs takes the user to the edit vi
             <input type='file' onchange='fileInputChange( event );'
               name='design_template[original_file]' id='design_template_original_file'>
           </span>
-
-
           <input name='stayAfterSave' id='stayAfterSave' style='display:none;'></input>
+        </div> <!-- /panel body -->
 
+
+        <div class='panel panel-footer'>
           <button class='btn btn-default' id='set_prefs' onclick='setPrefs();'
             style='display: none;'>Save and Set Preferences</button>
           <a class='btn btn-default' href='<%= local_host %>/design_templates'>Cancel</a>
+        </div> <!-- /panel footer -->
+      </div> <!-- / panel -->
+<%  end  %>
 
-<%      end  %>
 
-      </div> <!-- /panel body -->
-    </div> <!-- / panel -->
+
   </div> <!-- /col -->
 
   <div class='col-md-1'></div>

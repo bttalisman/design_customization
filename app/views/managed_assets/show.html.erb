@@ -1,12 +1,30 @@
 
-<div>
-<%=
-  image_tag( @managed_asset.image ) %>
+  <div class='row'>
+    <div class='col col-md-1'></div>
+    <div class='col col-md-4'>
 
-</div>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'><%= @managed_asset.name.to_s %></h3>
+        </div>
+        <div class='panel-body'>
 
-<div>
-<%=
-  @managed_asset.description.to_s %>
-  
-</div>
+          <div class='input-group' style='margin-bottom:20px;'>
+            <span class='input-group-addon' id='basic-addon1'>Image</span>
+            <input type='text' disabled class='form-control'
+              aria-describedby='basic-addon1' title='<%= @managed_asset.image.url %>'
+              value='<%= @managed_asset.image.url %>'></input>
+          </div>
+
+        </div> <!-- /panel body -->
+
+
+        <div class='panel panel-footer'>
+          <a class='btn btn-default' href='<%= edit_managed_asset_path %>'>Edit</a>
+          <a class='btn btn-default' href='/managed_assets/<%= @managed_asset.id %>'
+            data-confirm='Are you sure?' data-method='delete' rel='nofollow'>Delete</a>
+        </div> <!-- /panel footer -->
+
+      </div> <!-- /panel -->
+    </div> <!-- /col -->
+  </div> <!-- /row -->

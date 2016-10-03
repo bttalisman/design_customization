@@ -66,6 +66,7 @@ When a user clicks Save, pending javaScript validation a json object containing 
 
 JSON object describing constraints on how versions can be made, other properties of the template such as the dimensions of placed items that may affect versions.  These settings affect the creation of a version only indirectly.
 
+```json
   tag_settings:
     tag_name:
       prompt: 'stuff'
@@ -87,12 +88,13 @@ JSON object describing constraints on how versions can be made, other properties
     left_image_name: 'lefty'
     right_image_name: 'righty'
     tb_set_color: 'checked'
-
+```
 
 ### version.values
 
 JSON object describing the user's final input into how the version will be made.  This object is saved to the file system before the illustrator scripts are run, making these data available to the script.
 
+```json
   tag_settings:
     tag_name:
       replacement_text: 'stuff'
@@ -114,3 +116,4 @@ JSON object describing the user's final input into how the version will be made.
     tb_hw_ratio: '1.4'
     tb_v_align: 'center'
     tb_font: 'helvetica'
+```

@@ -15,11 +15,11 @@ class VersionsController < ApplicationController
   def index
     user = get_logged_in_user
 
-    if user
+    if is_super_user || user.nil?
+      versions = Version.all
+    else
       user_id = user.id
       versions = Version.where( user_id: user_id )
-    else
-      versions = Version.all
     end
 
     @versions = []

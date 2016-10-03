@@ -1,0 +1,197 @@
+
+<%
+  if !@assets.empty? %>
+    <h4>Descriptive Assets</h4>
+    <ul class='list-group'>
+<%    i = 0
+      length = @assets.length
+      @assets.each do |a|
+
+%>
+        <li class='list-group-item'>
+          <a href='<%= local_host %>/managed_assets/<%= a.id.to_s %>/edit?design_template_id=<%= @design_template.id.to_s %>'>
+            <%= a.name.to_s %>
+          </a>
+
+          <a onclick='remove_asset( <%= a.id %> );' style='float:right;'>
+            <span id='updated_arrow' class='glyphicon glyphicon-remove' aria-hidden='true'></span>
+          </a>
+
+<%        if i != 0 %>
+            <a onclick='move_asset_up( <%= a.id %> );' style='float:right;'>
+              <span id='up_arrow' class='glyphicon glyphicon-arrow-up' aria-hidden='true'></span>
+            </a>
+<%        end %>
+
+<%        if i < (length - 1) %>
+            <a onclick='move_asset_down( <%= a.id %> );' style='float:right;'>
+              <span id='down_arrow' class='glyphicon glyphicon-arrow-down' aria-hidden='true'></span>
+              </a>
+<%        end %>
+
+        </li>
+<%    i += 1
+      end %>
+    </ul>
+    <div class='spacer'></div>
+<%
+  end %>
+
+  <a class='btn btn-default' onclick='$("#createAssetModal").modal();' >Create Asset</a>
+  <a class='btn btn-default' onclick='$("#addAssetModal").modal();'>Add Assets</a>
+
+
+
+
+  <div class='modal fade' id='createAssetModal' tabindex='-1' role='dialog'
+    aria-labelledby='exampleModalLabel'>
+    <div class='modal-dialog modal-sm' role='document'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+          </button>
+          <h4 class='modal-title' id='exampleModalLabel'>Describe this Template</h4>
+        </div>
+  <%=   form_for @managed_asset, html: { multipart: true, id: 'managed_asset_form' } do |form| %>
+          <div style='margin:10px;'>
+            <div class='spacer'></div>
+            <textarea id='text_asset' name='managed_asset[description]'
+              class='form-control' rows='3'></textarea>
+            <div class='spacer'></div>
+            <div id='selected_file_name' style='display:none;'></div>
+            <span class='btn btn-default fileinput-button' id='file_input_container'>
+              <span>Upload an Image</span>
+              <input class='btn btn-default' type='file' onchange='fileInputChange( event );'
+                name='managed_asset[image]' >
+              </input>
+            </span>
+            <input name='design_template_id' value='<%= @design_template.id.to_s %>'
+              style='display:none;'>
+            </input>
+          </div>
+  <%    end %>
+        <div class='modal-footer'>
+          <button type='button' id='vid_btn' class='btn btn-default'
+            data-dismiss='modal'>Cancel</button>
+          <button type='button' id='yes_btn' class='btn btn-default'
+            data-dismiss='modal'>Add</button>
+        </div>
+      </div>
+    </div>
+  </div> <!-- / createAssetModal  -->
+
+
+
+
+  <div class='modal fade' id='addAssetModal' tabindex='-1' role='dialog'
+    aria-labelledby='exampleModalLabel'>
+    <div class='modal-dialog modal-sm' role='document'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+          </button>
+          <h4 class='modal-title' id='exampleModalLabel'>Add an Asset</h4>
+        </div>
+
+          <div style='margin:10px;'>
+
+            <select class='form-control' style='width:100%;' id='asset_select'>
+              <option value='' disabled selected>Select an Asset</option>
+  <%            @managed_assets.each { |a| %>
+                  <option value='<%= a.id.to_s %>'><%= a.name %></option>
+  <%            } %>
+            </select>
+
+            <div class='spacer'></div>
+
+          </div>
+
+        <div class='modal-footer'>
+          <button type='button' id='vid_btn' class='btn btn-default'
+            data-dismiss='modal'>Cancel</button>
+          <button type='button' id='yes_btn' class='btn btn-default'
+            data-dismiss='modal'>Add</button>
+        </div>
+
+      </div>
+    </div>
+  </div> <!-- / addAssetModal  -->
+
+
+
+  <script>
+
+
+    function fileInputChange( event )
+    {
+      var filePath = event.target.value;
+      filePath = filePath.replace(/.*[\/\\]/, '');
+
+      if( filePath !== '' )
+      {
+        var $FileName = $('#selected_file_name');
+        $FileName.text( filePath );
+        $FileName.show();
+
+        $('#file_input_container').hide();
+        $('#set_prefs').show();
+      }
+    }
+
+    function move_asset_up( id )
+    {
+      uri = '/design_templates/<%= @design_template.id.to_s %>/move_asset_up';
+      uri = uri + '?managed_asset_id=' + id;
+      $.get( uri, function(data, status) {
+        location.reload(); });
+    }
+
+    function move_asset_down( id )
+    {
+      uri = '/design_templates/<%= @design_template.id.to_s %>/move_asset_down';
+      uri = uri + '?managed_asset_id=' + id;
+      $.get( uri, function(data, status) {
+        location.reload(); });
+    }
+
+    function remove_asset( id )
+    {
+      uri = '/design_templates/<%= @design_template.id.to_s %>/remove_managed_asset';
+      uri = uri + '?managed_asset_id=' + id;
+      $.get( uri, function(data, status) {
+        location.reload(); });
+    }
+
+
+    function make_dialog()
+    {
+      // This dialog lets the user set the media type for images in the database
+      // without the media type set
+      $('#createAssetModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var modal = $(this);
+        yes_button = modal.find('#yes_btn');
+        // clear any previously set handlers
+        yes_button.off( 'click' );
+        yes_button.on( 'click', {}, submit_created_asset_form );
+      });
+
+      $('#addAssetModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var modal = $(this);
+        yes_button = modal.find('#yes_btn');
+        // clear any previously set handlers
+        yes_button.off( 'click' );
+        yes_button.on( 'click', {}, add_selected_asset );
+      });
+
+    }
+
+
+    $(document).ready(function() {
+      make_dialog();
+    } );
+
+  </script>

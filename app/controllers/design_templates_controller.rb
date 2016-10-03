@@ -2,16 +2,17 @@
 class DesignTemplatesController < ApplicationController
   include ApplicationHelper
   include DesignTemplatesHelper
+  include ManagedAssetsHelper
   include UsersHelper
 
   def index
     user = get_logged_in_user
 
-    if user
+    if is_super_user || user.nil?
+      templates = DesignTemplate.all
+    else
       user_id = user.id
       templates = DesignTemplate.where( user_id: user_id )
-    else
-      templates = DesignTemplate.all
     end
 
     @design_templates = []
@@ -56,8 +57,6 @@ class DesignTemplatesController < ApplicationController
     @tags = get_tags_array( @design_template )
     # this is an array of image names, extracted from the AI file
     @images = get_images_array( @design_template )
-
-    @managed_asset = ManagedAsset.new
   end
 
   def update
@@ -158,13 +157,49 @@ class DesignTemplatesController < ApplicationController
   end
 
   def remove_all_managed_assets
-    logger.info 'VERSIONS_CONTROLLER - remove_all_managed_assets()'
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - remove_all_managed_assets()'
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.managed_assets.clear
 #    assets = @design_template.managed_assets.all
 #    assets.each( &:delete )
     render nothing: true
   end
+
+
+
+  def add_managed_asset
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - add_managed_asset()'
+    design_template = DesignTemplate.find( params[ :id ] )
+    asset = ManagedAsset.find( params[ :managed_asset_id ] )
+    add_managed_asset_and_process_prefs( design_template, asset )
+    render nothing: true
+  end
+
+  def remove_managed_asset
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - remove_managed_asset()'
+    design_template = DesignTemplate.find( params[ :id ] )
+    asset = ManagedAsset.find( params[ :managed_asset_id ] )
+    remove_managed_asset_and_process_prefs( design_template, asset )
+    render nothing: true
+  end
+
+
+  def move_asset_up
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - move_asset_up()'
+    design_template = DesignTemplate.find( params[ :id ] )
+    asset = ManagedAsset.find( params[ :managed_asset_id ] )
+    move_asset_up_helper( design_template, asset )
+    render nothing: true
+  end
+
+  def move_asset_down
+    logger.info 'DESIGN_TEMPLATES_CONTROLLER - move_asset_down()'
+    design_template = DesignTemplate.find( params[ :id ] )
+    asset = ManagedAsset.find( params[ :managed_asset_id ] )
+    move_asset_down_helper( design_template, asset )
+    render nothing: true
+  end
+
 
   # This action makes a design_template with no Illustrator file associated.
   # tags and images json files are created, and the template should function

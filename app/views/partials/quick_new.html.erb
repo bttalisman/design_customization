@@ -28,6 +28,7 @@
         } );
     }
 
+    // Handled by partials_controller#version_settings
     function getTemplateHTML( templateId )
     {
       var o;
@@ -37,12 +38,12 @@
           $('#values_container').html( data ); });
     }
 
-
+    // Handled by partials_controller#_version_managed_assets
     function getManagedAssetsHTML( templateId )
     {
       var o;
       var uri;
-      uri = '<%= local_host %>/partials/_managed_assets?template_id=' + templateId;
+      uri = '<%= local_host %>/partials/_version_managed_assets?template_id=' + templateId;
 
       $.get( uri, function(data, status) {
         $('#managed_assets_container').html( data ); });
@@ -60,6 +61,7 @@
 
     function validate()
     {
+      // This function defined in partials/version_settings.html.erb
       return validate_version_settings();
     }
 
@@ -93,12 +95,15 @@
             <input type='checkbox' style='display:none;' checked name='render'
               id='render' class='checkbox-input' value='true'></input>
 
-            <a class='btn btn-default' onclick='cancel();' href='<%= local_host %>/design_templates/'>Cancel</a>
-            <a class='btn btn-default' id='create' onclick='create_version(); return false;'>Create</a>
+            <a class='btn btn-default' onclick='cancel();'
+              href='<%= local_host %>/design_templates/'>Cancel</a>
+            <a class='btn btn-default' id='create'
+              onclick='create_version(); return false;'>Create</a>
 
           </div> <!-- / panel body -->
         </div> <!-- / panel -->
 
+        <div class='spacer'></div>
         <div id='managed_assets_container'></div>
 
       </div> <!-- / col -->

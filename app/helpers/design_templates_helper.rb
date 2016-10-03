@@ -379,6 +379,28 @@ module DesignTemplatesHelper
     prompts
   end
 
+  def get_asset_prefs_object( design_template )
+    ap_string = design_template.asset_prefs
+
+    # if the asset prefs weren't set, save the template and try again.  Saving
+    # sets the default value.
+    if ap_string.nil?
+      design_template.save
+      ap_string = design_template.asset_prefs
+    end
+
+    Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_asset_prefs_object() - '\
+      + 'ap_string: ' + ap_string.to_s
+    if json?( ap_string )
+      prefs = JSON.parse( ap_string )
+      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_asset_prefs_object() - '\
+        + 'prefs: ' + JSON.pretty_generate( prefs )
+    end
+    prefs
+  end
+
+
+
   # This method makes a folder to temporarily hold output.  The folder is
   # called 'output' and it's located in the design template folder.
   def make_output_folder( design_template )

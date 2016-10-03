@@ -11,17 +11,15 @@ Rails.application.routes.draw do
   get '/process_log_in/' => 'home#process_log_in'
   get '/log_out/' => 'home#log_out'
 
-
   get '/do_process_version' => 'remote#do_process_version'
   get '/do_extract_tags' => 'remote#do_extract_tags'
   get '/do_extract_images' => 'remote#do_extract_images'
-
-  get 'git_fetch' => 'application#git_fetch'
 
   get '/colors/:id/update' => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'
 
   get '/managed_assets/:id/update' => 'managed_assets#update'
+  get '/managed_assets/delete_all' => 'managed_assets#delete_all'
 
   get '/palettes/:id/update' => 'palettes#update'
   get '/palettes/:id/add' => 'palettes#add'
@@ -32,7 +30,8 @@ Rails.application.routes.draw do
   get '/partials/version_settings' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
   get '/partials/quick_new' => 'partials#quick_new'
-  get '/partials/_managed_assets' => 'partials#_managed_assets'
+  get '/partials/_version_managed_assets' => 'partials#_version_managed_assets'
+  get '/partials/_design_template_managed_assets' => 'partials#_design_template_managed_assets'
 
 
   get '/versions/create' => 'versions#create'
@@ -54,6 +53,10 @@ Rails.application.routes.draw do
   get '/design_templates/delete_all' => 'design_templates#delete_all'
   get '/design_templates/make_zombie' => 'design_templates#make_zombie'
   get '/design_templates/:id/remove_all_managed_assets' => 'design_templates#remove_all_managed_assets'
+  get '/design_templates/:id/remove_managed_asset' => 'design_templates#remove_managed_asset'
+  get '/design_templates/:id/add_managed_asset' => 'design_templates#add_managed_asset'
+  get '/design_templates/:id/move_asset_up' => 'design_templates#move_asset_up'
+  get '/design_templates/:id/move_asset_down' => 'design_templates#move_asset_down'
 
 
   get 'force_process' => 'design_templates#force_process'
