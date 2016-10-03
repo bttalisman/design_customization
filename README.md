@@ -94,6 +94,7 @@ JSON object describing constraints on how versions can be made, other properties
 
 JSON object describing the user's final input into how the version will be made.  This object is saved to the file system before the illustrator scripts are run, making these data available to the script.
 
+```json
   tag_settings:
     tag_name:
       replacement_text: 'stuff'
@@ -115,3 +116,4 @@ JSON object describing the user's final input into how the version will be made.
     tb_hw_ratio: '1.4'
     tb_v_align: 'center'
     tb_font: 'helvetica'
+```
