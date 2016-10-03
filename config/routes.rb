@@ -11,12 +11,9 @@ Rails.application.routes.draw do
   get '/process_log_in/' => 'home#process_log_in'
   get '/log_out/' => 'home#log_out'
 
-
   get '/do_process_version' => 'remote#do_process_version'
   get '/do_extract_tags' => 'remote#do_extract_tags'
   get '/do_extract_images' => 'remote#do_extract_images'
-
-  get 'git_fetch' => 'application#git_fetch'
 
   get '/colors/:id/update' => 'colors#update'
   get '/colors/delete_all' => 'colors#delete_all'

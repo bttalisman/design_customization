@@ -93,8 +93,7 @@ class ManagedAssetsController < ApplicationController
     @managed_asset.update( managed_asset_params )
 
     if @managed_asset.save
-      redirect_to '/design_templates/' + @managed_asset.design_template_id.to_s\
-        + '/edit'
+      redirect_to '/managed_assets/'
     else
       logger.info 'MANAGED_ASSETS_CONTROLLER - update() - FAILURE!'
       render 'new'

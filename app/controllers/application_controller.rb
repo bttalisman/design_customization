@@ -9,32 +9,10 @@ class ApplicationController < ActionController::Base
 
   before_filter :get_logged_in_user
 
+  # Return the shopify id saved on the session
   def get_logged_in_user
-
     id = session[ :shopify_id ]
     @user = User.find_by( :shopify_id => id ) if !id.nil?
-
-  end
-
-
-  # This action is invoked to remotely cause the rails server to get the latest
-  # code from the git repo.
-  def git_fetch
-    sys_com = 'git fetch'
-    success = system( sys_com )
-    Rails.logger.info( 'ApplicationController - git_fetch() sys_com: '\
-      + sys_com.to_s )
-    Rails.logger.info( 'ApplicationController - git_fetch() success: '\
-      + success.to_s )
-
-    sys_com = 'git merge -m "Remotely requested merge."'
-    success = system( sys_com )
-    Rails.logger.info( 'ApplicationController - git_fetch() sys_com: '\
-      + sys_com.to_s )
-    Rails.logger.info( 'ApplicationController - git_fetch() success: '\
-      + success.to_s )
-
-    render nothing: true
   end
 
 end

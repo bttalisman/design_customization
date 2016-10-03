@@ -1,7 +1,7 @@
+
 <%=
 form_for @managed_asset, html: { multipart: true, id: 'managed_asset_form' } do |form|
 %>
-
   <div class='row'>
     <div class='col col-md-1'></div>
     <div class='col col-md-4'>
@@ -20,50 +20,54 @@ form_for @managed_asset, html: { multipart: true, id: 'managed_asset_form' } do 
           </div>
 
           <div class='input-group' style='margin-bottom:20px;'>
-            <span class='input-group-addon' id='basic-addon1'>Image File</span>
+            <span class='input-group-addon' id='basic-addon1'>Image</span>
             <input type='text' disabled class='form-control'
               aria-describedby='basic-addon1' title='<%= @managed_asset.image.url %>'
               value='<%= @managed_asset.image.url %>'></input>
           </div>
 
           <div class='input-group' style='margin-bottom:20px;'>
-            <span class='input-group-addon' id='basic-addon1'>Image File</span>
-            <input type='file' class='form-control' name='managed_asset[image]'
-              aria-describedby='basic-addon1' title='<%= @managed_asset.image.url %>'
-              value='<%= @managed_asset.image %>'></input>
+            <span class='input-group-addon' id='basic-addon1'>Description</span>
+            <input type='text' class='form-control' id='managed_asset_description'
+              name='managed_asset[description]' value='<%= @managed_asset.description %>'
+              aria-describedby='basic-addon1' ></input>
           </div>
-
           <div class='spacer'></div>
 
-          <textarea class='form-control' name='managed_asset[description]' rows='3'><%= @managed_asset.description %></textarea>
+        </div> <!-- /panel body -->
 
-          <div class='spacer'></div>
-
-
-          <input type='submit' value='Save' class='btn btn-default'></input>
-          <a class='btn btn-default' onclick='edit_template();' >Cancel</a>
+        <div class='panel panel-footer'>
+          <a class='btn btn-default' onclick='update_asset( <%= @managed_asset.id %> ); return false;'>Update</a>
+          <a class='btn btn-default' href='<%= local_host %>/managed_assets/<%= @managed_asset.id %>'>Cancel</a>
           <a class='btn btn-default' href='/managed_assets/<%= @managed_asset.id %>'
-            data-method='delete' rel='nofollow'>Delete</a>
+            data-confirm='Are you sure?' data-method='delete' rel='nofollow'>Delete</a>
+        </div>
 
-        </div> <!-- / panel body -->
-      </div> <!-- / panel -->
-    </div> <!-- / col -->
-  </div> <!-- / row -->
+      </div> <!-- /panel -->
+    </div> <!-- /col -->
 
+    <div class='col-md-1'></div>
+    <div class='col-md-5'>
+      <div id='panel_container'></div>
+    </div>
+  </div> <!-- /row -->
 
 <%
 end %>
 
-
 <script>
 
-
-  function edit_template()
+  // This function is called when the user clicks save.  Data from the form
+  // is gathered and posted to the design_template controller.
+  function update_asset( assetId )
   {
-    window.location = '<%= @cancel_link.to_s %>';
+    clear_managed_assets_cache();
+    var form = $('#managed_asset_form');
+    form.submit();
   }
 
-  $(document).ready(function(){
-  });
+
+  $(document).ready(function() { } );
+
 
 </script>
