@@ -13,6 +13,10 @@ module ManagedAssetsHelper
     has_desc
   end
 
+  def template_has_asset( design_template, asset )
+    design_template.managed_assets.exists?( asset )
+  end
+
   def get_sorted_managed_assets( design_template )
     Rails.logger.info '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
     Rails.logger.info 'managed_assets_helper - get_sorted_managed_assets()'
@@ -25,7 +29,11 @@ module ManagedAssetsHelper
 
     if order.length > 0
       order.each { |id|
-        a = ManagedAsset.find( id )
+        begin
+          a = ManagedAsset.find( id )
+        rescue => e
+          a = nil
+        end
         assets << a if a
       }
     else

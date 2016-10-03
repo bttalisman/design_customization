@@ -41,8 +41,7 @@
   <a class='btn btn-default' onclick='$("#addAssetModal").modal();'>Add Assets</a>
 
 
-
-
+  <!--  Create Asset Modal -->
   <div class='modal fade' id='createAssetModal' tabindex='-1' role='dialog'
     aria-labelledby='exampleModalLabel'>
     <div class='modal-dialog modal-sm' role='document'>
@@ -83,7 +82,7 @@
 
 
 
-
+  <!--  Add Asset Modal -->
   <div class='modal fade' id='addAssetModal' tabindex='-1' role='dialog'
     aria-labelledby='exampleModalLabel'>
     <div class='modal-dialog modal-sm' role='document'>
@@ -99,9 +98,11 @@
 
             <select class='form-control' style='width:100%;' id='asset_select'>
               <option value='' disabled selected>Select an Asset</option>
-  <%            @managed_assets.each { |a| %>
-                  <option value='<%= a.id.to_s %>'><%= a.name %></option>
-  <%            } %>
+  <%            @managed_assets.each { |a|
+                  if !template_has_asset( @design_template, a ) %>
+                    <option value='<%= a.id.to_s %>'><%= a.name %></option>
+  <%              end
+                } %>
             </select>
 
             <div class='spacer'></div>
