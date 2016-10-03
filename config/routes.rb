@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get '/colors/delete_all' => 'colors#delete_all'
 
   get '/managed_assets/:id/update' => 'managed_assets#update'
+  get '/managed_assets/delete_all' => 'managed_assets#delete_all'
 
   get '/palettes/:id/update' => 'palettes#update'
   get '/palettes/:id/add' => 'palettes#add'
@@ -32,7 +33,8 @@ Rails.application.routes.draw do
   get '/partials/version_settings' => 'partials#version_settings'
   get '/partials/extracted_settings/:id' => 'partials#design_template_settings'
   get '/partials/quick_new' => 'partials#quick_new'
-  get '/partials/_managed_assets' => 'partials#_managed_assets'
+  get '/partials/_version_managed_assets' => 'partials#_version_managed_assets'
+  get '/partials/_design_template_managed_assets' => 'partials#_design_template_managed_assets'
 
 
   get '/versions/create' => 'versions#create'

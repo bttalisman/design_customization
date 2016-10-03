@@ -4,6 +4,9 @@
   <div class='col col-md-1'></div>
   <div class='col col-md-10'>
 
+    <a class='btn btn-default' onclick='delete_all_assets();'>Delete All Assets</a>
+    <br></br>
+
     <a class='btn btn-default' onclick='update_users();'>Update Users</a>
     <br></br>
 
@@ -54,6 +57,16 @@
     });
 
   }
+
+
+  function delete_all_assets()
+  {
+    $.ajax({
+      url: '/managed_assets/delete_all/',
+    }).done(function() {
+    });
+  }
+
 
   function delete_all_versions()
   {

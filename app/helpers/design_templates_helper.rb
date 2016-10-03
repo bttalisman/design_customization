@@ -379,59 +379,6 @@ module DesignTemplatesHelper
     prompts
   end
 
-  def move_asset_up( design_template, asset )
-    prefs = get_asset_prefs_object( design_template )
-    order = prefs[ ASSET_PREFS_KEY_ORDER ]
-
-    i = order.index( asset.id )
-    return if i.nil?
-    return if i == 0
-
-    prev = order[ i-1 ]
-    order[ i-1 ] = asset.id
-    order[ i ] = prev
-  end
-
-  def move_asset_down( design_template, asset )
-    prefs = get_asset_prefs_object( design_template )
-    order = prefs[ ASSET_PREFS_KEY_ORDER ]
-
-    i = order.index( asset.id )
-    return if i.nil?
-    return if i == (asset.length - 1)
-
-    next_val = order[ i+1 ]
-    order[ i+1 ] = asset.id
-    order[ i ] = next_val
-
-    design_template.asset_prefs = prefs.to_json
-    design_template.save
-  end
-
-
-  def add_managed_asset_and_process_prefs( design_template, asset )
-    Rails.logger.info 'design_tempaltes_helper - add_managed_asset_and_process_prefs()'
-    design_template.managed_assets << asset
-    prefs = get_asset_prefs_object( design_template )
-    order = prefs[ ASSET_PREFS_KEY_ORDER ]
-    order << asset.id
-
-    design_template.asset_prefs = prefs.to_json
-    design_template.save
-  end
-
-  def remove_managed_asset_and_process_prefs( design_template, asset )
-    Rails.logger.info 'design_tempaltes_helper - remove_managed_asset_and_process_prefs()'
-    design_template.managed_assets.delete( asset )
-    prefs = get_asset_prefs_object( design_template )
-    order = prefs[ ASSET_PREFS_KEY_ORDER ]
-    order.delete( asset.id )
-
-    design_template.asset_prefs = prefs.to_json
-    design_template.save
-  end
-
-
   def get_asset_prefs_object( design_template )
     ap_string = design_template.asset_prefs
 

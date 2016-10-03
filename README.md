@@ -66,28 +66,29 @@ When a user clicks Save, pending javaScript validation a json object containing 
 
 JSON object describing constraints on how versions can be made, other properties of the template such as the dimensions of placed items that may affect versions.  These settings affect the creation of a version only indirectly.
 
-  tag_settings:
-    tag_name:
-      prompt: 'stuff'
-      max_length: '33'
-      min_length: '2'
-      pick_color: 'checked'
-      use_palette: 'checked'
-      palette_id: '4'
+```json
+-  tag_settings:
+-    tag_name:
+-      prompt: 'stuff'
+-      max_length: '33'
+-      min_length: '2'
+-      pick_color: 'checked'
+-      use_palette: 'checked'
+-      palette_id: '4'
 
-  image_settings:
-    image_name:
-      replace_image: 'checked'
-      fit_image: 'checked'
-      original_image:
-      original_height: '356'
-      original_width: '343'
+-  image_settings:
+-    image_name:
+-      replace_image: 'checked'
+-      fit_image: 'checked'
+-      original_image:
+-      original_height: '356'
+-      original_width: '343'
 
-  trans_butt_settings:
-    left_image_name: 'lefty'
-    right_image_name: 'righty'
-    tb_set_color: 'checked'
-
+-  trans_butt_settings:
+-    left_image_name: 'lefty'
+-    right_image_name: 'righty'
+-    tb_set_color: 'checked'
+```
 
 ### version.values
 

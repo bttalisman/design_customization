@@ -60,7 +60,7 @@
   {
     var o;
     var uri;
-    uri = '<%= local_host %>/partials/_managed_assets?template_id=' + templateId;
+    uri = '<%= local_host %>/partials/_version_managed_assets?template_id=' + templateId;
 
     $.get( uri, function(data, status) {
       $('#managed_assets_container').html( data ); });

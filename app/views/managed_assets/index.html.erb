@@ -66,6 +66,10 @@
     toggle_header_item( 'owner_arrow', get_cached_assets, cache_assets, 'owner' ); }
 
 
+  function show_asset( id )
+  {
+    window.location = '/managed_assets/' + id;
+  }
 
 
   function fill_container( )
@@ -83,6 +87,7 @@
       s = '#name' + container_index.toString();
       el = $(s);
       el.text( o.name );
+      el.attr( 'onclick', 'show_asset("' + o.id + '")' );
 
       s = '#owner' + container_index.toString();
       el = $(s);

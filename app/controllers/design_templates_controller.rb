@@ -2,16 +2,17 @@
 class DesignTemplatesController < ApplicationController
   include ApplicationHelper
   include DesignTemplatesHelper
+  include ManagedAssetsHelper
   include UsersHelper
 
   def index
     user = get_logged_in_user
 
-    if user
+    if is_super_user || user.nil?
+      templates = DesignTemplate.all
+    else
       user_id = user.id
       templates = DesignTemplate.where( user_id: user_id )
-    else
-      templates = DesignTemplate.all
     end
 
     @design_templates = []
@@ -56,10 +57,6 @@ class DesignTemplatesController < ApplicationController
     @tags = get_tags_array( @design_template )
     # this is an array of image names, extracted from the AI file
     @images = get_images_array( @design_template )
-
-    @managed_asset = ManagedAsset.new
-    @managed_assets = ManagedAsset.all
-    @asset_prefs = get_asset_prefs_object( @design_template )
   end
 
   def update
@@ -185,8 +182,7 @@ class DesignTemplatesController < ApplicationController
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - move_asset_up()'
     design_template = DesignTemplate.find( params[ :id ] )
     asset = ManagedAsset.find( params[ :managed_asset_id ] )
-
-
+    move_asset_up_helper( design_template, asset )
     render nothing: true
   end
 
@@ -194,7 +190,7 @@ class DesignTemplatesController < ApplicationController
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - move_asset_down()'
     design_template = DesignTemplate.find( params[ :id ] )
     asset = ManagedAsset.find( params[ :managed_asset_id ] )
-    remove_managed_asset_and_process_prefs( design_template, asset )
+    move_asset_down_helper( design_template, asset )
     render nothing: true
   end
 

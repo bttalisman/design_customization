@@ -58,9 +58,9 @@ end %>
 <script>
 
 
-  function edit_template( )
+  function edit_template()
   {
-    window.location = '/design_templates/<%= @managed_asset.design_template_id.to_s %>/edit';
+    window.location = '<%= @cancel_link.to_s %>';
   }
 
   $(document).ready(function(){
