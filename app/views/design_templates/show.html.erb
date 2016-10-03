@@ -50,19 +50,21 @@
     aria-labelledby='exampleModalLabel'>
     <div class='modal-dialog modal-sm' style='overflow-y:initial;' role='document'>
       <div class='modal-content' style='height:250px; overflow-y:auto;'>
-        <div class='modal-header' style='background:white; border-radius:6px; position:fixed; top:0; left:0; right:0; z-index:100;'>
+        <div class='modal-header' style='background:rgba(255, 255, 255, 0.8); border-radius:6px; position:fixed; top:0; left:0; right:0; z-index:100;'>
           <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
             <span aria-hidden='true'>&times;</span>
           </button>
           <h4 class='modal-title' id='exampleModalLabel'>Versions</h4>
         </div>
-<%      if !@versions.empty? %>
-          <ul class='list-group'>
-<%          @versions.each do |v| %>
-              <li class='list-group-item'> <%= link_to v.name, v %> </li>
-<%          end %>
-          </ul>
-<%      end %>
+        <div style='margin-top:54px;'>
+<%        if !@versions.empty? %>
+            <ul class='list-group'>
+<%            @versions.each do |v| %>
+                <li class='list-group-item'> <%= link_to v.name, v %> </li>
+<%              end %>
+            </ul>
+<%        end %>
+        </div>
       </div>
     </div>
   </div> <!-- / listVersionsModal  -->
