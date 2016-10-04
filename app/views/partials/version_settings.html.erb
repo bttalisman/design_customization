@@ -6,11 +6,13 @@ customer to specify the ultimate appearance of a design.  -->
 <%
   rendering_tags_form = false
   rendering_images_form = false
+  rendering_colors_form = false
   rendering_trans_butt_form = false
 
   if !@prompts.nil?
     @tag_settings = @prompts[ PROMPTS_KEY_TAG_SETTINGS ]
     @image_settings = @prompts[ PROMPTS_KEY_IMAGE_SETTINGS ]
+    @color_settings = @prompts[ PROMPTS_KEY_COLOR_SETTINGS ]
   end
 
 
@@ -31,6 +33,13 @@ customer to specify the ultimate appearance of a design.  -->
     if !@image_settings.empty?
       rendering_images_form = true %>
 <%=   render :partial => 'version_images' %>
+<%  end
+  end
+
+  if !@color_settings.nil?
+    if !@color_settings.empty?
+      rendering_colors_form = true %>
+<%=   render :partial => 'version_colors' %>
 <%  end
   end %>
 
@@ -56,6 +65,13 @@ customer to specify the ultimate appearance of a design.  -->
 
 <%  if rendering_trans_butt_form %>
       if( !validate_trans_butt_values() )
+      {
+        return false;
+      }
+<%  end %>
+
+<%  if rendering_colors_form %>
+      if( !validate_color_values() )
       {
         return false;
       }

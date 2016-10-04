@@ -22,8 +22,8 @@ class DesignTemplate < ActiveRecord::Base
   before_post_process :rename_original_file
 
   def default_prompts
-    self.prompts ||= '{ "' + PROMPTS_KEY_TAG_SETTINGS + '" : {}, "'\
-      + PROMPTS_KEY_IMAGE_SETTINGS + '" : {} }'
+    self.prompts ||= '{ "' + PROMPTS_KEY_TAG_SETTINGS + '": {}, "'\
+      + PROMPTS_KEY_IMAGE_SETTINGS + '" : {}, "' + PROMPTS_KEY_COLOR_SETTINGS + '": {} }'
   end
 
   def default_asset_prefs

@@ -24,7 +24,14 @@ module PartialsHelper
       else
         palettes[ t[0] ] = Color.all
       end
-    end
+    end # each tag setting
+
+    color_settings = prompts[ PROMPTS_KEY_COLOR_SETTINGS ]
+
+    color_settings.each do |c|
+      palettes[ c[0] ] = Color.all
+    end # each color setting
+
 
     Rails.logger.info 'PartialsHelper - get_palettes() - palettes: '\
       + JSON.pretty_generate( palettes )

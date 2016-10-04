@@ -15,6 +15,7 @@ RUNNER_CONFIG_KEY_SOURCE_FILE = 'source file'.freeze
 
 RUNNER_TAGS_CONFIG_FILE_NAME = 'config_extract_tags.jsn'.freeze
 RUNNER_IMAGES_CONFIG_FILE_NAME = 'config_extract_images.jsn'.freeze
+RUNNER_COLORS_CONFIG_FILE_NAME = 'config_extract_colors.jsn'.freeze
 RUNNER_POST_PROCESS_CONFIG_FILE_NAME = 'config_post_process.jsn'.freeze
 
 DESIGN_TEMPLATE_STATS_KEY_VALID = 'valid'.freeze
@@ -25,6 +26,7 @@ ASSET_PREFS_KEY_ORDER = 'ap_order'.freeze
 
 PROMPTS_KEY_TAG_SETTINGS = 'tag_settings'.freeze
 PROMPTS_KEY_IMAGE_SETTINGS = 'image_settings'.freeze
+PROMPTS_KEY_COLOR_SETTINGS = 'color_settings'.freeze
 PROMPTS_KEY_TRANS_BUTT_SETTINGS = 'trans_butt_settings'.freeze
 
 PROMPTS_KEY_PROMPT = 'prompt'.freeze
@@ -41,12 +43,13 @@ PROMPTS_KEY_ORIGINAL_WIDTH = 'original_width'.freeze
 PROMPTS_KEY_TRANS_BUTT_LEFT_IMAGE_NAME = 'left_image_name'.freeze
 PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME = 'right_image_name'.freeze
 PROMPTS_KEY_TRANS_BUTT_SET_COLOR = 'tb_set_color'.freeze
-
+PROMPTS_KEY_REPLACE_COLOR = 'replace_color'.freeze
+PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX = 'rep_co_orig_co_hex'.freeze
 
 PROMPTS_VALUE_TRUE = 'checked'.freeze
 PROMPTS_VALUE_FALSE = ''.freeze
 
-# todo - get rid of these
+# todo - get rid of these?
 PROMPTS_VALUE_REPLACE_IMG_TRUE = 'checked'.freeze
 PROMPTS_VALUE_REPLACE_IMG_FALSE = ''.freeze
 PROMPTS_VALUE_PICK_COLOR_TRUE = 'checked'.freeze
@@ -61,6 +64,8 @@ PROMPTS_VALUE_FIT_IMG_FALSE = ''.freeze
 VERSION_VALUES_KEY_IMAGE_SETTINGS = 'image_settings'.freeze
 VERSION_VALUES_KEY_TAG_SETTINGS = 'tag_settings'.freeze
 VERSION_VALUES_KEY_TRANS_BUTT_SETTINGS = 'trans_butt_settings'.freeze
+VERSION_VALUES_KEY_COLOR_SETTINGS = 'color_settings'.freeze
+
 
 VERSION_VALUES_KEY_TB_TEXT = 'tb_text'.freeze
 VERSION_VALUES_KEY_TB_COLOR = 'tb_color'.freeze
@@ -84,6 +89,9 @@ VERSION_VALUES_KEY_RI_ID = 'replacement_image_id'.freeze
 VERSION_VALUES_KEY_COLLAGE_ID = 'collage_id'.freeze
 VERSION_VALUES_KEY_PATH = 'path'.freeze
 VERSION_VALUES_KEY_TYPE = 'type'.freeze
+
+VESION_VALUES_KEY_COLOR_ID = 'color_id'.freeze
+
 
 # Code in bin/illustrator_processing/searchAndReplaceImages.jsx uses
 # these key values also, so any changes must be reflected there.

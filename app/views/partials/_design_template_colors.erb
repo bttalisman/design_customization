@@ -1,0 +1,72 @@
+<!-- This partial generates the html prompting the user for specifics on how versions
+of this template will ask about each color extracted from the original file.  For example,
+should this color be replaced? -->
+
+<%
+if !@colors.nil?
+
+  logger.info '_design_template_images.html.erb - @prompts: ' + @prompts.to_s
+  logger.info '_design_template_images.html.erb - @images: ' + @images.to_s
+
+%>
+  <div class='panel panel-success'>
+    <div class='panel-heading'><h3 class='panel-title'>Color Replacement</h3></div>
+    <div class='panel-body'>
+
+<%
+      i = 0
+      @colors.each { |color|
+        logger.info '_design_template_images.html.erb - color: ' + color.to_s
+
+        color_name = get_prompts_key_for_color( color )
+        color_hex = get_hex_string_for_color( color )
+
+        if !@prompts.nil? && (color != '') && !color.nil? && !color_name.nil?
+          colorProps = @prompts[ PROMPTS_KEY_COLOR_SETTINGS ][ color_name.to_s ]
+          logger.info '_design_template_images.html.erb - colorProps: ' + colorProps.to_s
+
+          if !colorProps.nil?
+            # we've got color props, these settings have been previously set
+            replaceColor = colorProps[ PROMPTS_KEY_REPLACE_COLOR ]
+            if( replaceColor == 'checked' )
+              replaceLabelClass = ''
+            else
+              replaceLabelClass = 'disabled="disabled"'
+            end
+          end # colorProps not nil
+        end # @prompts not nil %>
+
+
+        <input type='hidden' name='color_name<%= i.to_s %>' value='<%= color_name.to_s %>'></input>
+        <input type='hidden' name='orig_color<%= i.to_s %>' value='<%= color_hex.to_s %>'></input>
+
+
+        <div style='width:50px; display:inline-block; margin:10px;'>
+          <div style='width:40px; height:40px; background:<%= color_hex.to_s %>'>
+          </div>
+          <input type='checkbox' <%= replaceColor.to_s %> class='checkbox-input' value='true'
+            name='replace_color<%= i.to_s %>' id='replace_color<%= i.to_s %>' >
+          </input>
+        </div>
+<%
+        i += 1
+      } # each color
+%>
+      </div>
+    </div>
+  <input type='hidden' name='color_count' value='<%= i.to_s %>'></input>
+<%
+end #colors is not nil
+%>
+
+
+<script>
+
+  function validate_color_values()
+  {
+    // not really anything to do here.
+    return true;
+  }
+
+
+</script>

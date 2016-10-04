@@ -57,14 +57,14 @@ class DesignTemplatesController < ApplicationController
     @tags = get_tags_array( @design_template )
     # this is an array of image names, extracted from the AI file
     @images = get_images_array( @design_template )
+    # this is an array of colors, extracted from AI file
+    @colors = get_colors_array( @design_template )
   end
 
   def update
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - update! - params: ' + params.to_s
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.update( design_template_params )
-
-#    set_assets( @design_template, params )
 
     # extract the tag-related settings from the parameters object, and set
     # this template's prompts property.
@@ -75,6 +75,8 @@ class DesignTemplatesController < ApplicationController
     # extract trans-butt-related settings from the parameters object, and
     # set prompts.
     set_trans_butt_prompts( @design_template, params )
+
+    set_color_prompts( @design_template, params )
 
     if @design_template.save
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - SUCCESS!'
@@ -147,10 +149,8 @@ class DesignTemplatesController < ApplicationController
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - destroy()'
     @design_template = DesignTemplate.find( params[ :id ] )
 
-
     assets = @design_template.managed_assets.all
     assets.each( &:delete )
-
 
     @design_template.destroy
     redirect_to :design_templates
@@ -160,12 +160,8 @@ class DesignTemplatesController < ApplicationController
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - remove_all_managed_assets()'
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.managed_assets.clear
-#    assets = @design_template.managed_assets.all
-#    assets.each( &:delete )
     render nothing: true
   end
-
-
 
   def add_managed_asset
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - add_managed_asset()'

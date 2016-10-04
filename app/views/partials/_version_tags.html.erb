@@ -47,7 +47,8 @@ i = 0
     elsif( min_length == '' )
       title = '(Please enter at most ' + max_length + ' characters.)'
     else
-      title = '(Please enter between ' + min_length.to_s + ' and ' + max_length.to_s + ' characters.)'
+      title = '(Please enter between ' + min_length.to_s + ' and ' + max_length.to_s\
+        + ' characters.)'
     end
   else
     title = ''
@@ -62,7 +63,10 @@ i = 0
     <div class="panel-body" style='height:210;'> <!-- todo - why must i set the height? -->
 
       <input type='hidden' name='tag_name<%= i.to_s %>' value='<%= tag_name %>'></input>
-      <input type='text' class='form-control' placeholder='<%= prompt %>' required value='<%= replacement_text %>' name='replacement_text<%= i.to_s %>' id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>' data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' >
+      <input type='text' class='form-control' placeholder='<%= prompt %>'
+        required value='<%= replacement_text %>' name='replacement_text<%= i.to_s %>'
+        id='replacement_text<%= i.to_s %>' data-maxl='<%= max_length %>'
+        data-minl='<%= min_length %>' data-tag-name='<%= tag_name %>' >
       </input>
       <%= title %>
 
@@ -72,10 +76,13 @@ i = 0
         <div id='colorpicker_container<%= i.to_s %>' style='display:inline-block;'>
           <div class='input-group' style='float:left; width:90%;'>
             <span class="input-group-addon" id="basic-addon1">Text Color</span>
-            <select name="color_val<%= i.to_s %>" id="color_val<%= i.to_s %>" style='width:98%;' aria-describedby="basic-addon1" class="form-control">
+            <select name="color_val<%= i.to_s %>" id="color_val<%= i.to_s %>"
+              style='width:98%;' aria-describedby="basic-addon1" class="form-control">
               <option disabled selected='selected'>Pick a Color</option>
 <%=           @palettes[ tag_name ].each do |c| %>
-                <option title='<%= c.description %>' value='<%= c.hex_code %>' <%= if( c.hex_code == text_color ) then 'selected' end %> ><%= c.hex_code %></option>
+                <option title='<%= c.description %>' value='<%= c.hex_code %>'
+                  <%= if( c.hex_code == text_color ) then 'selected' end %> >
+                  <%= c.hex_code %></option>
 <%            end %>
             </select>
           </div>

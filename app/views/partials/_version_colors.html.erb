@@ -1,0 +1,112 @@
+
+<%
+logger.info '_VERSION_COLORS.html.erb - @color_values: ' + @color_values.to_s
+logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
+  + JSON.pretty_generate(  @color_settings )
+
+%>
+<div class='panel panel-success'>
+  <div class='panel-heading'><h3 class='panel-title'>Choose Your Colors</h3></div>
+  <div class='panel-body'>
+
+<%
+    i = 0
+    @color_settings.each { |color|
+      color_settings = color[ 1 ]
+      next if( color_settings[ PROMPTS_KEY_REPLACE_COLOR ] == '' )
+
+      color_name = color[ 0 ]
+      logger.info '_VERSION_COLORS.html.erb - color_name: ' + color_name.to_s
+      replacement_color_id = ''
+      color_hex = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX ]
+
+
+      if @version
+      end
+%>
+
+
+      Old color:
+      <div style='width:40px; height:40px; background:<%= color_hex.to_s %>'>
+      </div>
+
+      <div class='spacer'></div>
+
+
+      <div id='colorpicker_container<%= i.to_s %>' style='display:inline-block;'>
+        <div class='input-group' style='float:left; width:90%;'>
+          <span class="input-group-addon" id="basic-addon1">New Color</span>
+          <select name="color_val<%= i.to_s %>" id="color_val<%= i.to_s %>"
+            style='width:98%;' aria-describedby="basic-addon1" class="form-control">
+            <option disabled selected='selected'>Pick a Color</option>
+<%=           @palettes[ color_name ].each do |c| %>
+              <option title='<%= c.description %>' value='<%= c.hex_code %>'
+                <%= if( false ) then 'selected' end %> >
+                <%= c.hex_code %></option>
+<%            end %>
+          </select>
+        </div>
+        <div id='swatch<%= i.to_s %>' style='display:inline-block; float:left; height:27px; width:27px; background:'></div>
+      </div>
+
+
+      <input style='display:none;' id='color_name<%= i.to_s %>' name='color_name<%= i.to_s %>' value='<%= color_name %>'></input>
+
+<%    i += 1
+    } # each color  %>
+
+
+  </div>
+</div>
+
+<input style='display:none;' id='version_id<%= i.to_s %>' name='version_id' value='<%= @version_id %>'></input>
+<input type='hidden' name='image_count' id='image_count' value='<%= i.to_s %>'></input>
+
+<script>
+
+  function validate_color_values()
+  {
+    var count = $('#color_count').val();
+    var s, o;
+
+    for( var i = 0; i < count; i++ )
+    {
+
+    }
+    return true;
+  }
+
+
+  $(document).ready(function() {
+    $("[id^='color_val']").select2({
+      templateResult: formatColor
+    });
+
+    $("[id^='colorpicker_container']").each( bindSwatch );
+  });
+
+  function bindSwatch( ) {
+    $(this).find( 'select' ).change( { swatch:$(this).find( "[id^='swatch']" ) }, changeTextColor );
+  }
+
+  function formatColor (color) {
+    if (!color.id) { return color.text; }
+    var $color = $(
+      '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div><div style="height:20px; margin-left:5px; display:inline-block; vertical-align:top;">' + color.text + '</div></span>'
+    );
+    return $color;
+  }
+
+
+  function changeTextColor( event )
+  {
+    var swatch = event.data.swatch;
+    var select = event.target;
+    var val = select.value;
+    swatch.css( 'background', val );
+  }
+
+
+
+
+</script>

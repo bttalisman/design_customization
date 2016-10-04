@@ -39,6 +39,32 @@ module DesignTemplatesHelper
     data_file
   end
 
+  # the path to the colors file is based on the path to the original ai file.
+  def path_to_colors_file( design_template )
+    file = design_template.original_file
+
+    if !file.path.nil?
+      source_path = file.path.to_s
+      source_folder = File.dirname( source_path )
+      data_file = source_folder + '/' + File.basename( source_path, '.ai' )\
+        + '_all_colors.jsn'
+    else
+      # zombie!
+      dt_folder = get_design_template_folder( design_template )
+      data_file = dt_folder + 'zombie_colors.jsn'
+    end
+
+    Rails.logger.info 'DesignTemplatesHelper - path_to_colors_file() - data_file: '\
+      + data_file.to_s
+    data_file
+  end
+
+  def colors_file_exist?( design_template )
+    path = path_to_colors_file( design_template )
+    exists = File.exist?( path )
+    exists
+  end
+
   def tags_file_exist?( design_template )
     path = path_to_tags_file( design_template )
     exists = File.exist?( path )
@@ -56,10 +82,10 @@ module DesignTemplatesHelper
     status = TEMPLATE_STATUS_SUCCESS
 
     # No tags and no images
-    if !tags?( dt ) && !images?( dt )
-      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats() - No tags or images.'
+    if !tags?( dt ) && !images?( dt ) && !colors?( dt )
+      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats() - No tags or images or colors.'
       valid = false
-      message = 'This file contains no tags or images for replacement.'
+      message = 'This file contains no tags, images, or colors for replacement.'
       status = TEMPLATE_STATUS_NOT_A_TEMPLATE
     end
 
@@ -87,6 +113,16 @@ module DesignTemplatesHelper
     tags
   end
 
+  # This method returns an array of extracted colors.
+  #
+  # [ { c: '233', m: '222', y: '111', k: '122' } ]
+  #
+  def get_colors_array( design_template )
+    colors_file = path_to_colors_file( design_template )
+    colors = load_array_file( colors_file )
+    colors
+  end
+
   # Returns true if this template is built from an AI file containing tags.
   # More specifically, true if the tags file found in this version's folder
   # represents a valid, non-empty json array of tag names.
@@ -104,6 +140,15 @@ module DesignTemplatesHelper
     return false if a.empty?
     true
   end
+
+  # Returns true if this template is built from an AI file containing colors.
+  # TODO is this useful?
+  def colors?( design_template )
+    a = get_colors_array( design_template )
+    return false if a.empty?
+    true
+  end
+
 
   # This method returns an array of extracted image data.  These are the
   # placed items within an AI file that will be replaced by versions of this
@@ -199,28 +244,6 @@ module DesignTemplatesHelper
     o[ 'height' ]
   end
 
-  # This method processes the params object, creating any ManagedAssets
-  # specified.
-#  def set_assets( template, params )
-#    Rails.logger.info 'design_templates_helper - set_assets() - params: '\
-#      + params.to_s
-
-#    assets = params[ 'managed_asset' ]
-#    if( assets )
-#      image = assets[ 'image' ]
-#      user = get_logged_in_user
-#      u_id = user.id if user
-
-#      if( image )
-#        ma_name = image.original_filename
-#        o = { image: image,
-#              name: ma_name,
-#              user_id: u_id }
-#        a = template.managed_assets.create( o )
-#        a.save
-#      end
-#    end
-#  end
 
   # This method constructs a new json string for the prompts field.  This
   # method must be coordinated with parameters as set in
@@ -364,6 +387,80 @@ module DesignTemplatesHelper
     template.prompts = prompts_string
   end
 
+
+
+  # This method constructs a new json string for the prompts field.  This
+  # method must be coordinated with parameters as set in
+  # views/partials/_design_template_colors.html.erb
+  def set_color_prompts( template, params )
+    Rails.logger.info 'design_templates_helper - set_color_prompts() - params: '\
+      + params.to_s
+    color_count = params[ 'color_count' ]
+    color_count = if color_count != ''
+                    color_count.to_i
+                  else
+                    0
+                  end
+
+    all_color_settings = {}
+
+    color_count.times do |i|
+      color_settings = {}
+
+      p_name = 'color_name' + i.to_s
+      color_name = params[ p_name ]
+      p_name = 'replace_color' + i.to_s
+      replace = params[ p_name ]
+      p_name = 'orig_color' + i.to_s
+      orig_color = params[ p_name ]
+
+      if replace
+        color_settings[ PROMPTS_KEY_REPLACE_COLOR ] = PROMPTS_VALUE_TRUE
+      else
+        color_settings[ PROMPTS_KEY_REPLACE_COLOR ] = PROMPTS_VALUE_FALSE
+      end
+
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX ] = orig_color
+      
+      all_color_settings[ color_name ] = color_settings
+    end # color_count times
+
+    prompts_string = template.prompts
+    prompts = JSON.parse( prompts_string )
+    prompts[ PROMPTS_KEY_COLOR_SETTINGS ] = all_color_settings
+    prompts_string = prompts.to_json
+    template.prompts = prompts_string
+  end
+
+  def get_hex_string_for_color( color )
+    return if color.nil?
+#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - color: '\
+#      + JSON.pretty_generate( color )
+
+    red_int = color['r'].to_s.to_i
+    green_int = color['g'].to_s.to_i
+    blue_int = color['b'].to_s.to_i
+
+#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - r, g, b: '\
+#      + red_int.to_s + ', ' + green_int.to_s + ', ' + blue_int.to_s
+
+    red_hex = red_int.to_s(16)
+    green_hex = green_int.to_s(16)
+    blue_hex = blue_int.to_s(16)
+    s = '#' + red_hex + green_hex + blue_hex
+#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - s: ' + s.to_s
+    s
+  end
+
+  def get_prompts_key_for_color( color )
+    return if color.nil?
+#    Rails.logger.info 'design_templates_helper - get_prompts_key_for_color() - color: '\
+#      + JSON.pretty_generate( color )
+    key = color['c'].to_s + color['m'].to_s + color['y'].to_s + color['k'].to_s
+    key.to_s
+  end
+
+
   # A design_template's prompts describes any extensible settings
   # presented by versions of this template, such as replace this image?, allow
   # users to set the color of this text?
@@ -373,8 +470,8 @@ module DesignTemplatesHelper
 #      + 'prompts_string: ' + prompts_string.to_s
     if json?( prompts_string )
       prompts = JSON.parse( prompts_string )
-#      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
-#        + 'prompts: ' + JSON.pretty_generate( prompts )
+      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
+        + 'prompts: ' + JSON.pretty_generate( prompts )
     end
     prompts
   end
@@ -508,6 +605,33 @@ module DesignTemplatesHelper
     config_file
   end
 
+
+  # This method returns the path to the configuration file for extracting images,
+  # to be used as an argument to the run_AI_script script.  The options
+  # parameter must contain either 'design_template_id' or 'design_template'
+  def colors_config_file_name( options = {} )
+    dt_id = options[ 'design_template_id' ]
+    design_template = options[ 'design_template' ]
+
+    Rails.logger.info 'design_templates_helper - colors_config_file_name() - options: '\
+      + options.to_s
+
+    dt = if dt_id.nil?
+           design_template
+         else
+           DesignTemplate.find( dt_id )
+         end
+
+    Rails.logger.info 'design_templates_helper - colors_config_file_name() - dt: '\
+      + dt.to_s
+
+    dt_folder = get_design_template_folder( dt )
+    config_file = dt_folder + '/' + RUNNER_COLORS_CONFIG_FILE_NAME
+    config_file
+  end
+
+
+
   # This method will run the necessary scripts to extract images and tags
   # info from an AI file.  If config/customization.yml[ 'run_remotely' ] then
   # HTTP requests will be sent to the remote server, otherwise local
@@ -515,6 +639,7 @@ module DesignTemplatesHelper
   def process_original( design_template )
     extract_tags( design_template )
     extract_images( design_template )
+    extract_colors( design_template )
   end
 
 
@@ -632,6 +757,37 @@ module DesignTemplatesHelper
   end
 
 
+  # This method runs the script that extracts all image-related information
+  # from the AI file.
+  def extract_colors( design_template )
+    app_config = Rails.application.config_for(:customization)
+    run_remotely = app_config[ 'run_remotely' ]
+
+    config_file = colors_config_file_name( 'design_template' => design_template )
+    source_folder = get_design_template_folder( design_template )
+
+    Rails.logger.info 'DESIGN_TEMPLATES_HELPER - extract_colors() - config_file: '\
+      + config_file.to_s
+
+    config = {}
+    config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = design_template.original_file.path
+    config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = app_config[ 'path_to_extract_colors_script' ]
+    config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = source_folder
+
+    File.open( config_file, 'w' ) do |f|
+      f.write( config.to_json )
+    end
+
+    make_output_folder( design_template )
+
+    if run_remotely
+      extract_colors_send_remote( design_template )
+    else
+      extract_colors_system_call( design_template )
+    end
+  end
+
+
   def post_process_send_remote( design_template )
     Rails.logger.info 'design_templates_helper - post_process_send_remote() - '\
       + 'design_template: ' + design_template.to_s
@@ -689,6 +845,25 @@ module DesignTemplatesHelper
 #    t.join
   end
 
+
+  def extract_colors_send_remote( design_template )
+    Rails.logger.info 'design_templates_helper - extract_colors_send_remote()'
+    uri_string = remote_host + '/do_extract_colors?design_template_id='\
+      + design_template.id.to_s
+    uri = URI.parse( uri_string )
+
+    t = Thread.new do
+      response = Net::HTTP.get_response(uri)
+      Rails.logger.info 'design_templates_helper - extract_colors_send_remote() - '\
+        + 'response.code: ' + response.code.to_s
+    end
+
+    # Wait until t gets back.  This hangs if one machine is serving both
+    # requests.
+#    t.join
+  end
+
+
   def post_process_system_call( design_template )
     Rails.logger.info 'design_templates_helper - post_process_system_call() - '\
       + 'design_template: ' + design_template.to_s
@@ -727,6 +902,21 @@ module DesignTemplatesHelper
       + 'about to run sys_com: ' + sys_com.to_s
     system( sys_com )
   end
+
+
+  def extract_colors_system_call( design_template )
+    Rails.logger.info 'design_templates_helper - extract_colors_system_call() - '\
+      + 'design_template: ' + design_template.to_s
+    app_config = Rails.application.config_for( :customization )
+    path = app_config[ 'path_to_runner_script' ]
+
+    sys_com = 'ruby ' + path + ' "'\
+      + colors_config_file_name( 'design_template' => design_template ) + '"'
+    Rails.logger.info 'design_templates_helper - extract_colors_system_call() - '\
+      + 'about to run sys_com: ' + sys_com.to_s
+    system( sys_com )
+  end
+
 
   def get_zombie_image_settings( images )
     image_settings = {}

@@ -64,6 +64,7 @@ class PartialsController < ApplicationController
     @design_template = DesignTemplate.find( template_id )
     @tags = get_tags_array( @design_template )
     @images = get_image_names_array( @design_template )
+    @colors = get_colors_array( @design_template )
     @palettes = Palette.all
 
     # If the user has set options regarding tags extracted from an AI file they
@@ -82,6 +83,8 @@ class PartialsController < ApplicationController
       + @tags.to_s
     logger.info 'PARTIALS_CONTROLLER - design_template_settings - @images: '\
       + @images.to_s
+    logger.info 'PARTIALS_CONTROLLER - design_template_settings - @colors: '\
+      + @colors.to_s
     logger.info 'PARTIALS_CONTROLLER - design_template_settings - @prompts: '\
       + @prompts.to_s
     logger.info 'PARTIALS_CONTROLLER - design_template_settings - @images.length: '\
@@ -131,7 +134,8 @@ class PartialsController < ApplicationController
     @design_template = DesignTemplate.find( t_id )
     @tags = get_tags_array( @design_template )
     @images = get_images_array( @design_template )
-    @colors = Color.all
+    @all_colors = Color.all
+    @mod_colors = get_colors_array( @design_template )
     @fonts = get_ai_fonts()
     @palettes = get_palettes( @design_template )
 
@@ -155,7 +159,6 @@ class PartialsController < ApplicationController
       + @version.to_s
 
     if !@version.nil?
-
       # we've got to update this version to reflect the new DesignTemplate,
       # and we've got to do this because the version has to be saved and ready
       # if the user tries to attach a file to it.
@@ -172,11 +175,12 @@ class PartialsController < ApplicationController
 
       if !values.nil?
         @image_values = values[ VERSION_VALUES_KEY_IMAGE_SETTINGS ]
+        @color_values = values[ VERSION_VALUES_KEY_COLOR_SETTINGS ]
         @tag_values = values[ VERSION_VALUES_KEY_TAG_SETTINGS ]
         @trans_butt_values = values [ VERSION_VALUES_KEY_TRANS_BUTT_SETTINGS ]
       end
 
-    end
+    end # @version not nil
 
     @prompts = get_prompts_object( @design_template )
   end

@@ -7,6 +7,7 @@ extracting information. -->
 <%
   rendering_tags_form = false
   rendering_images_form = false
+  rendering_colors_form = false
 
 
   if @design_template.is_trans_butt %>
@@ -31,7 +32,20 @@ extracting information. -->
 <%=   render :partial => 'design_template_tags' %>
 <%
     end
+  end
+
+  if !@colors.nil?
+    if !@colors.empty?
+      rendering_colors_form = true
+      logger.info 'design_template_settings.html - About to render colors.'
+%>
+<%=   render :partial => 'design_template_colors' %>
+<%
+    end
   end %>
+
+
+
 
 <script>
   function validate_design_template_settings()
@@ -54,6 +68,16 @@ extracting information. -->
       }
     <%
     end %>
+
+    <%
+    if rendering_colors_form %>
+      if( !validate_color_values() )
+      {
+        bReturn = false;
+      }
+    <%
+    end %>
+
 
     return bReturn;
   }
