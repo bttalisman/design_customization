@@ -46,6 +46,21 @@ form_for @design_template, html: { multipart: true, id: 'design_template_form' }
 
           <div id='managed_assets_container'></div>
 
+<%        if is_super_user %>
+            <div class='spacer'></div>
+            <div class='clearfix'>
+              <label class='checkbox-label' style='margin-left:30px;'>
+                Load Extracted Colors
+                <input type='checkbox' data-label-id='label'
+                  name='load_colors' id='load_colors'
+                  class='checkbox-input' value='true'>
+                </input>
+              </label>
+            </div>
+            <div class='spacer'></div>
+
+<%        end %>
+
         </div> <!-- /panel body -->
 
         <div class='panel panel-footer'>

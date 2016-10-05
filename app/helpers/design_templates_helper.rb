@@ -1,6 +1,8 @@
 # DesignTemplates Helper
 module DesignTemplatesHelper
 
+  include ColorsHelper
+  
   # the path to the tags file is based on the path to the original ai file.
   def path_to_tags_file( design_template )
     file = design_template.original_file

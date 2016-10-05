@@ -78,6 +78,8 @@ class DesignTemplatesController < ApplicationController
 
     set_color_prompts( @design_template, params )
 
+    load_extracted_colors( @design_template, params )
+
     if @design_template.save
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - SUCCESS!'
 

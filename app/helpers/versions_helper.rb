@@ -590,7 +590,6 @@ module VersionsHelper
       p_name = 'selected_k_val' + i.to_s
       k = params[ p_name ]
 
-
       p_name = 'original_c_val' + i.to_s
       orig_c = params[ p_name ]
 
