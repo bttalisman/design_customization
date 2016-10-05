@@ -45,6 +45,12 @@ PROMPTS_KEY_TRANS_BUTT_RIGHT_IMAGE_NAME = 'right_image_name'.freeze
 PROMPTS_KEY_TRANS_BUTT_SET_COLOR = 'tb_set_color'.freeze
 PROMPTS_KEY_REPLACE_COLOR = 'replace_color'.freeze
 PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX = 'rep_co_orig_co_hex'.freeze
+PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_C = 'rep_co_orig_co_c'.freeze
+PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_M = 'rep_co_orig_co_m'.freeze
+PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_Y = 'rep_co_orig_co_y'.freeze
+PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_K = 'rep_co_orig_co_k'.freeze
+
+
 
 PROMPTS_VALUE_TRUE = 'checked'.freeze
 PROMPTS_VALUE_FALSE = ''.freeze
@@ -66,6 +72,10 @@ VERSION_VALUES_KEY_TAG_SETTINGS = 'tag_settings'.freeze
 VERSION_VALUES_KEY_TRANS_BUTT_SETTINGS = 'trans_butt_settings'.freeze
 VERSION_VALUES_KEY_COLOR_SETTINGS = 'color_settings'.freeze
 
+VERSION_VALUES_KEY_MOD_COLOR_C = 'mc_c'.freeze
+VERSION_VALUES_KEY_MOD_COLOR_M = 'mc_m'.freeze
+VERSION_VALUES_KEY_MOD_COLOR_Y = 'mc_y'.freeze
+VERSION_VALUES_KEY_MOD_COLOR_K = 'mc_k'.freeze
 
 VERSION_VALUES_KEY_TB_TEXT = 'tb_text'.freeze
 VERSION_VALUES_KEY_TB_COLOR = 'tb_color'.freeze

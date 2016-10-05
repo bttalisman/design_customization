@@ -38,7 +38,12 @@ if !@colors.nil?
 
 
         <input type='hidden' name='color_name<%= i.to_s %>' value='<%= color_name.to_s %>'></input>
-        <input type='hidden' name='orig_color<%= i.to_s %>' value='<%= color_hex.to_s %>'></input>
+        <input type='hidden' name='orig_color_hex<%= i.to_s %>' value='<%= color_hex.to_s %>'></input>
+
+        <input type='hidden' name='orig_color_c<%= i.to_s %>' value='<%= color['c'].to_s %>'></input>
+        <input type='hidden' name='orig_color_m<%= i.to_s %>' value='<%= color['m'].to_s %>'></input>
+        <input type='hidden' name='orig_color_y<%= i.to_s %>' value='<%= color['y'].to_s %>'></input>
+        <input type='hidden' name='orig_color_k<%= i.to_s %>' value='<%= color['k'].to_s %>'></input>
 
 
         <div style='width:50px; display:inline-block; margin:10px;'>

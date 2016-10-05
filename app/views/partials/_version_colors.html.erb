@@ -35,12 +35,14 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
 
       <div id='colorpicker_container<%= i.to_s %>' style='display:inline-block;'>
         <div class='input-group' style='float:left; width:90%;'>
-          <span class="input-group-addon" id="basic-addon1">New Color</span>
-          <select name="color_val<%= i.to_s %>" id="color_val<%= i.to_s %>"
-            style='width:98%;' aria-describedby="basic-addon1" class="form-control">
+          <span class='input-group-addon' id='basic-addon1'>New Color</span>
+          <select name='color_val<%= i.to_s %>' id='color_val<%= i.to_s %>'
+            style='width:98%;' aria-describedby='basic-addon1' class='form-control'>
             <option disabled selected='selected'>Pick a Color</option>
 <%=           @palettes[ color_name ].each do |c| %>
-              <option title='<%= c.description %>' value='<%= c.hex_code %>'
+              <option data-c='cc<%= c.cyan.to_s %>' data-m='mm<%= c.magenta.to_s %>'
+                data-y='yy<%= c.yellow.to_s %>' data-k='kk<%= c.black.to_s %>'
+                data-i='<%= i.to_s %>' title='<%= c.description %>' value='<%= c.hex_code %>'
                 <%= if( false ) then 'selected' end %> >
                 <%= c.hex_code %></option>
 <%            end %>
@@ -49,6 +51,10 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
         <div id='swatch<%= i.to_s %>' style='display:inline-block; float:left; height:27px; width:27px; background:'></div>
       </div>
 
+      <input type='hidden' id='selected_c_val<%= i.to_s %>' name='selected_c_val<%= i.to_s %>' value=''></input>
+      <input type='hidden' id='selected_m_val<%= i.to_s %>' name='selected_m_val<%= i.to_s %>' value=''></input>
+      <input type='hidden' id='selected_y_val<%= i.to_s %>' name='selected_y_val<%= i.to_s %>' value=''></input>
+      <input type='hidden' id='selected_k_val<%= i.to_s %>' name='selected_k_val<%= i.to_s %>' value=''></input>
 
       <input style='display:none;' id='color_name<%= i.to_s %>' name='color_name<%= i.to_s %>' value='<%= color_name %>'></input>
 
@@ -60,9 +66,14 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
 </div>
 
 <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id' value='<%= @version_id %>'></input>
-<input type='hidden' name='image_count' id='image_count' value='<%= i.to_s %>'></input>
+<input type='hidden' name='color_count' id='color_count' value='<%= i.to_s %>'></input>
 
 <script>
+
+  function color_select_change()
+  {
+
+  }
 
   function validate_color_values()
   {
@@ -78,22 +89,20 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
 
 
   $(document).ready(function() {
-    $("[id^='color_val']").select2({
+    $('[id^="color_val"]').select2({
       templateResult: formatColor
     });
 
-    $("[id^='colorpicker_container']").each( bindSwatch );
+    $('[id^="colorpicker_container"]').each( bindSwatch );
   });
 
   function bindSwatch( ) {
-    $(this).find( 'select' ).change( { swatch:$(this).find( "[id^='swatch']" ) }, changeTextColor );
+    $(this).find( 'select' ).change( { swatch:$(this).find( '[id^="swatch"]' ) }, changeTextColor );
   }
 
   function formatColor (color) {
     if (!color.id) { return color.text; }
-    var $color = $(
-      '<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div><div style="height:20px; margin-left:5px; display:inline-block; vertical-align:top;">' + color.text + '</div></span>'
-    );
+    var $color = $('<span><div style="display:inline-block; height:20px; width:20px; background:' + color.element.value + '"></div><div style="height:20px; margin-left:5px; display:inline-block; vertical-align:top;">' + color.text + '</div></span>');
     return $color;
   }
 
@@ -104,6 +113,20 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
     var select = event.target;
     var val = select.value;
     swatch.css( 'background', val );
+
+    var option = $(select).find(':selected');
+    var c = option.attr('data-c');
+    var m = option.attr('data-m');
+    var y = option.attr('data-y');
+    var k = option.attr('data-k');
+    var i = option.attr('data-i');
+
+
+    $('#selected_c_val' + i).prop( 'value', c );
+    $('#selected_m_val' + i).prop( 'value', m );
+    $('#selected_y_val' + i).prop( 'value', y );
+    $('#selected_k_val' + i).prop( 'value', k );
+
   }
 
 

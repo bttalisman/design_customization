@@ -195,8 +195,8 @@ module VersionsHelper
     else
       Rails.logger.info 'VERSIONS_HELPER - get_values_object() - INVALID JSON!!'
     end
-#    Rails.logger.info 'versions_helper - get_values_object() - values: '\
-#      + JSON.pretty_generate( values )
+    Rails.logger.info 'versions_helper - get_values_object() - values: '\
+      + JSON.pretty_generate( values )
     values
   end
 
@@ -528,6 +528,73 @@ module VersionsHelper
       end
     end # image_count times
   end
+
+
+  def set_color_values( version, params )
+    Rails.logger.info 'versions_helper - set_color_values() - params: '\
+      + params.to_s
+
+    design_template = version.design_template
+    colors = get_colors_array( design_template )
+
+    all_color_settings = {}
+
+    color_count = params[ 'color_count' ]
+    color_count = if color_count != ''
+                    color_count.to_i
+                  else
+                    0
+                  end
+
+    Rails.logger.info 'VERSIONS_HELPER - set_color_values() - color_count: '\
+      + color_count.to_s
+
+    # go through all of the colors.
+    color_count.times do |i|
+
+      color_settings = {}
+
+      p_name = 'color_name' + i.to_s
+      color_name = params[ p_name ]
+
+      p_name = 'color_val' + i.to_s
+      color_val = params[ p_name ]
+
+      p_name = 'selected_c_val' + i.to_s
+      c = params[ p_name ]
+
+      p_name = 'selected_m_val' + i.to_s
+      m = params[ p_name ]
+
+      p_name = 'selected_y_val' + i.to_s
+      y = params[ p_name ]
+
+      p_name = 'selected_k_val' + i.to_s
+      k = params[ p_name ]
+
+
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_C ] = c
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_M ] = m
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_Y ] = y
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_K ] = k
+
+      all_color_settings[ color_name ] = color_settings
+
+      Rails.logger.info 'VERSIONS_HELPER - set_color_values() - color_settings: '\
+        + JSON.pretty_generate( color_settings )
+
+    end # color_count times
+
+    values = get_values_object( version )
+    values[ VERSION_VALUES_KEY_COLOR_SETTINGS ] = all_color_settings
+    version.values = values.to_json
+
+    Rails.logger.info 'VERSIONS_HELPER - set_color_values() - NEW VALUES: '\
+      + JSON.pretty_generate( values )
+    Rails.logger.info 'VERSIONS_HELPER - set_color_values() - version saved!'\
+      if version.save
+  end
+
 
   # a version's values object matches image tags to replacement_images.
   # this method gets that version's values, and updates it with the id of

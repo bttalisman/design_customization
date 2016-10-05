@@ -411,8 +411,17 @@ module DesignTemplatesHelper
       color_name = params[ p_name ]
       p_name = 'replace_color' + i.to_s
       replace = params[ p_name ]
-      p_name = 'orig_color' + i.to_s
-      orig_color = params[ p_name ]
+      p_name = 'orig_color_hex' + i.to_s
+      orig_color_hex = params[ p_name ]
+
+      p_name = 'orig_color_c' + i.to_s
+      orig_color_c = params[ p_name ]
+      p_name = 'orig_color_m' + i.to_s
+      orig_color_m = params[ p_name ]
+      p_name = 'orig_color_y' + i.to_s
+      orig_color_y = params[ p_name ]
+      p_name = 'orig_color_k' + i.to_s
+      orig_color_k = params[ p_name ]
 
       if replace
         color_settings[ PROMPTS_KEY_REPLACE_COLOR ] = PROMPTS_VALUE_TRUE
@@ -420,7 +429,11 @@ module DesignTemplatesHelper
         color_settings[ PROMPTS_KEY_REPLACE_COLOR ] = PROMPTS_VALUE_FALSE
       end
 
-      color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX ] = orig_color
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX ] = orig_color_hex
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_C ] = orig_color_c
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_M ] = orig_color_m
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_Y ] = orig_color_y
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_K ] = orig_color_k
       
       all_color_settings[ color_name ] = color_settings
     end # color_count times
