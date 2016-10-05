@@ -434,7 +434,7 @@ module DesignTemplatesHelper
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_M ] = orig_color_m
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_Y ] = orig_color_y
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_K ] = orig_color_k
-      
+
       all_color_settings[ color_name ] = color_settings
     end # color_count times
 

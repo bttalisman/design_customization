@@ -49,6 +49,9 @@ if !@colors.nil?
         <div style='width:50px; display:inline-block; margin:10px;'>
           <div style='width:40px; height:40px; background:<%= color_hex.to_s %>'>
           </div>
+
+          <div> C: <%= color['c'].to_s %>, M: <%= color['m'].to_s %>, Y: <%= color['y'].to_s %>, K: <%= color['k'].to_s %>
+          </div>
           <input type='checkbox' <%= replaceColor.to_s %> class='checkbox-input' value='true'
             name='replace_color<%= i.to_s %>' id='replace_color<%= i.to_s %>' >
           </input>

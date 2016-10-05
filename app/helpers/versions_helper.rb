@@ -530,6 +530,24 @@ module VersionsHelper
   end
 
 
+  # For images and tags, the existance of tags and named images indicates that
+  # a replacement should occur.  All designs have colors, so the existance of
+  # colors isnt sufficient.  This method determines if colors are being replaced.
+  def replace_colors?( version )
+    b = false
+    values = get_values_object( version )
+    if( values )
+      color_vals = values[ VERSION_VALUES_KEY_COLOR_SETTINGS ]
+      if( color_vals )
+        if( color_vals.length > 0 )
+          b = true
+        end
+      end
+    end
+    b
+  end
+
+
   def set_color_values( version, params )
     Rails.logger.info 'versions_helper - set_color_values() - params: '\
       + params.to_s
@@ -573,10 +591,30 @@ module VersionsHelper
       k = params[ p_name ]
 
 
+      p_name = 'original_c_val' + i.to_s
+      orig_c = params[ p_name ]
+
+      p_name = 'original_m_val' + i.to_s
+      orig_m = params[ p_name ]
+
+      p_name = 'original_y_val' + i.to_s
+      orig_y = params[ p_name ]
+
+      p_name = 'original_k_val' + i.to_s
+      orig_k = params[ p_name ]
+
+
       color_settings[ VERSION_VALUES_KEY_MOD_COLOR_C ] = c
       color_settings[ VERSION_VALUES_KEY_MOD_COLOR_M ] = m
       color_settings[ VERSION_VALUES_KEY_MOD_COLOR_Y ] = y
       color_settings[ VERSION_VALUES_KEY_MOD_COLOR_K ] = k
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_HEX ] = color_val
+
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_ORIGINAL_C ] = orig_c
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_ORIGINAL_M ] = orig_m
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_ORIGINAL_Y ] = orig_y
+      color_settings[ VERSION_VALUES_KEY_MOD_COLOR_ORIGINAL_K ] = orig_k
+
 
       all_color_settings[ color_name ] = color_settings
 
@@ -728,7 +766,7 @@ module VersionsHelper
     raise BailOutOfProcessing, 'Run AI checkbox unchecked.'\
       if runai != 'true'
     raise BailOutOfProcessing, 'No extracted images or tags.'\
-      if images.empty? && tags.empty?
+      if images.empty? && tags.empty? && !replace_colors?( version )
   end
 
   def prepare_files( version, config )
@@ -852,6 +890,8 @@ module VersionsHelper
     # this is an array of image names, extracted from the AI file
     images = get_images_array( design_template )
 
+    replace_colors = replace_colors?( version )
+
     maybe_bail_out( version, tags, images, params )
 
     # Generate trans-butt images
@@ -908,7 +948,32 @@ module VersionsHelper
       config[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ] = output_file_base_name
 
       prep_and_run( version, config )
+
+      # unless something went wrong, this should exist
+      int_file_exist = File.exist?( intermediate_output )
+
     end # there are images to replace
+
+    if replace_colors
+      # There are colors to replace, we should replace images
+      Rails.logger.info( 'versions_helper - process_version() - about to replace colors' )
+      config = {}
+      if int_file_exist
+        config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = intermediate_output
+      else
+        # the intermediate file does not exist, but we should still
+        # replace images
+        config[ RUNNER_CONFIG_KEY_SOURCE_FILE ] = version_file_path
+      end
+
+      config[ RUNNER_CONFIG_KEY_SCRIPT_FILE ] = app_config[ 'path_to_color_search_replace_script' ]
+      config[ RUNNER_CONFIG_KEY_OUTPUT_FOLDER ] = output_folder
+      config[ RUNNER_CONFIG_KEY_OUTPUT_BASE_NAME ] = output_file_base_name
+
+      prep_and_run( version, config )
+
+    end # there are colors to replace
+
 
   rescue => e
     Rails.logger.info 'versions_helper - Bailing Out! - ' + e.inspect
