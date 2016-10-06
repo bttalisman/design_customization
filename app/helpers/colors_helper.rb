@@ -42,16 +42,28 @@ module ColorsHelper
         p_name = 'orig_color_k' + i.to_s
         orig_color_k = params[ p_name ]
 
+        exists = Color.find_by( cyan: orig_color_c, magenta: orig_color_m,
+                                yellow: orig_color_y, black: orig_color_k )
 
-        new_color = Color.create
-        new_color.cyan = orig_color_c
-        new_color.magenta = orig_color_m
-        new_color.yellow = orig_color_y
-        new_color.black = orig_color_k
+        Rails.logger.info 'ColorsHelper - load_extracted_colors() - exists:'\
+          + exists.to_s
+        if( exists.blank? )
+          Rails.logger.info 'ColorsHelper - load_extracted_colors() - importing c:'\
+            + orig_color_c.to_s + ', m: ' + orig_color_m.to_s + ', y: ' + orig_color_y.to_s\
+            + ', k: ' + orig_color_k.to_s
 
-        new_color.hex_code = orig_color_hex
-        new_color.description = 'Imported from AI.'
-        new_color.save
+          new_color = Color.create
+          new_color.cyan = orig_color_c
+          new_color.magenta = orig_color_m
+          new_color.yellow = orig_color_y
+          new_color.black = orig_color_k
+
+          new_color.hex_code = orig_color_hex
+          new_color.description = 'Imported from AI.'
+          new_color.save
+        else
+          Rails.logger.info 'ColorsHelper - load_extracted_colors() - color already exists.'
+        end
       end # color_count times
     end
 

@@ -1,7 +1,7 @@
 # Colors Controller
 class ColorsController < ApplicationController
   def index
-    @colors = Color.all
+    @colors = Color.all.order( cyan: :asc, magenta: :asc, yellow: :asc, black: :asc )
   end
 
   def show
@@ -52,8 +52,7 @@ class ColorsController < ApplicationController
 
   def delete_all
     logger.info 'COLORS_CONTROLLER - delete_all'
-    cs = Color.all
-    cs.each(&:delete)
+    Color.all.delete_all
     render nothing: true
   end
 

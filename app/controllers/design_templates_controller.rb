@@ -48,7 +48,7 @@ class DesignTemplatesController < ApplicationController
   end
 
   def edit
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - edit! - params: ' + params.to_s
+#    logger.info 'DESIGN_TEMPLATES_CONTROLLER - edit! - params: ' + params.to_s
     @design_template = DesignTemplate.find( params[ :id ] )
 
     # this stats object describes the state and validity of the template
@@ -62,7 +62,7 @@ class DesignTemplatesController < ApplicationController
   end
 
   def update
-    logger.info 'DESIGN_TEMPLATES_CONTROLLER - update! - params: ' + params.to_s
+#    logger.info 'DESIGN_TEMPLATES_CONTROLLER - update! - params: ' + params.to_s
     @design_template = DesignTemplate.find( params[ :id ] )
     @design_template.update( design_template_params )
 

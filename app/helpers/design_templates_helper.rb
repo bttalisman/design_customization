@@ -2,7 +2,7 @@
 module DesignTemplatesHelper
 
   include ColorsHelper
-  
+
   # the path to the tags file is based on the path to the original ai file.
   def path_to_tags_file( design_template )
     file = design_template.original_file
@@ -251,8 +251,8 @@ module DesignTemplatesHelper
   # method must be coordinated with parameters as set in
   # views/partials/_design_template_tags.html.erb.
   def set_tag_prompts( template, params )
-    Rails.logger.info 'design_templates_helper - set_tag_prompts() - params: '\
-      + params.to_s
+#    Rails.logger.info 'design_templates_helper - set_tag_prompts() - params: '\
+#      + params.to_s
 
     tag_count = params[ 'tag_count' ]
     tag_count = if tag_count != ''
@@ -309,8 +309,8 @@ module DesignTemplatesHelper
   # views/partials/_design_template_trans_butt.html.erb.
   # See README.md for the format of the prompts json.
   def set_trans_butt_prompts( template, params )
-    Rails.logger.info 'design_templates_helper - set_image_prompts() - params: '\
-      + params.to_s
+#    Rails.logger.info 'design_templates_helper - set_image_prompts() - params: '\
+#      + params.to_s
 
     left_image_name = params[ 'left-butt' ]
     right_image_name = params[ 'right-butt' ]
@@ -338,8 +338,8 @@ module DesignTemplatesHelper
   # method must be coordinated with parameters as set in
   # views/partials/_design_template_images.html.erb
   def set_image_prompts( template, params )
-    Rails.logger.info 'design_templates_helper - set_image_prompts() - params: '\
-      + params.to_s
+#    Rails.logger.info 'design_templates_helper - set_image_prompts() - params: '\
+#      + params.to_s
     image_count = params[ 'image_count' ]
     image_count = if image_count != ''
                     image_count.to_i
@@ -449,21 +449,21 @@ module DesignTemplatesHelper
 
   def get_hex_string_for_color( color )
     return if color.nil?
-#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - color: '\
-#      + JSON.pretty_generate( color )
+    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - color: '\
+      + JSON.pretty_generate( color )
 
     red_int = color['r'].to_s.to_i
     green_int = color['g'].to_s.to_i
     blue_int = color['b'].to_s.to_i
 
-#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - r, g, b: '\
-#      + red_int.to_s + ', ' + green_int.to_s + ', ' + blue_int.to_s
+    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - r, g, b: '\
+      + red_int.to_s + ', ' + green_int.to_s + ', ' + blue_int.to_s
 
-    red_hex = red_int.to_s(16)
-    green_hex = green_int.to_s(16)
-    blue_hex = blue_int.to_s(16)
+    red_hex = red_int.to_s(16).rjust(2, '0')
+    green_hex = green_int.to_s(16).rjust(2, '0')
+    blue_hex = blue_int.to_s(16).rjust(2, '0')
     s = '#' + red_hex + green_hex + blue_hex
-#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - s: ' + s.to_s
+    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - s: ' + s.to_s
     s
   end
 
