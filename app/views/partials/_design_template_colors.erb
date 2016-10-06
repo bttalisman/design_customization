@@ -46,12 +46,12 @@ if !@colors.nil?
         <input type='hidden' name='orig_color_k<%= i.to_s %>' value='<%= color['k'].to_s %>'></input>
 
 
-        <div style='width:50px; display:inline-block; margin:10px;'>
+        <div style='width:40px; display:inline-block; margin:10px 10px 40px 10px;'>
           <div style='width:40px; height:40px; background:<%= color_hex.to_s %>'>
           </div>
 
-          <div> C: <%= color['c'].to_s %>, M: <%= color['m'].to_s %>, Y: <%= color['y'].to_s %>, K: <%= color['k'].to_s %>
-          </div>
+          <div class='cmyk-details'>C: <%= color['c'].to_s[0..4] %><br>M: <%= color['m'].to_s[0..4] %>
+          <br>Y: <%= color['y'].to_s[0..4] %><br>K: <%= color['k'].to_s[0..4] %></div>
           <input type='checkbox' <%= replaceColor.to_s %> class='checkbox-input' value='true'
             name='replace_color<%= i.to_s %>' id='replace_color<%= i.to_s %>' >
           </input>
