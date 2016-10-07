@@ -15,26 +15,30 @@
         </div>
         <div class='spacer'></div>
 
-        <div style='width:45%;' class='input-group' id=''>
-          <span class='input-group-addon' id='basic-addon1'>C</span>
-          <input type='text' disabled id='' aria-describedby='basic-addon1'
-            class='form-control' value='<%= @color.cyan %>'>
+        <div style='height:70px; margin-bottom:15px;'>
+          <div style='width:47%; float:left; margin-right:15px; margin-bottom:15px;' class='input-group' id=''>
+            <span class='input-group-addon' style='width:30px;' id='basic-addon1'>C</span>
+            <input type='text' disabled id='' aria-describedby='basic-addon1'
+              class='form-control' value='<%= @color.cyan %>'>
+          </div>
+          <div style='width:47%; float:left;' class='input-group' id=''>
+            <span class='input-group-addon' style='width:30px;' id='basic-addon2'>M</span>
+            <input type='text' disabled id='' aria-describedby='basic-addon2'
+              class='form-control' value='<%= @color.magenta %>'>
+          </div>
+          <div style='width:47%; float:left; margin-right:15px;' class='input-group' id=''>
+            <span class='input-group-addon' style='width:30px;' id='basic-addon3'>Y</span>
+            <input type='text' disabled id='' aria-describedby='basic-addon3'
+              class='form-control' value='<%= @color.yellow %>'>
+          </div>
+          <div style='width:47%; float:left;' class='input-group' id=''>
+            <span class='input-group-addon' style='width:30px;' id='basic-addon4'>K</span>
+            <input type='text' disabled id='' aria-describedby='basic-addon4'
+              class='form-control' value='<%= @color.black %>'>
+          </div>
         </div>
-        <div style='width:45%;' class='input-group' id=''>
-          <span class='input-group-addon' id='basic-addon2'>M</span>
-          <input type='text' disabled id='' aria-describedby='basic-addon2'
-            class='form-control' value='<%= @color.magenta %>'>
-        </div>
-        <div style='width:45%;' class='input-group' id=''>
-          <span class='input-group-addon' id='basic-addon3'>Y</span>
-          <input type='text' disabled id='' aria-describedby='basic-addon3'
-            class='form-control' value='<%= @color.yellow %>'>
-        </div>
-        <div style='width:45%;' class='input-group' id=''>
-          <span class='input-group-addon' id='basic-addon4'>K</span>
-          <input type='text' disabled id='' aria-describedby='basic-addon4'
-            class='form-control' value='<%= @color.black %>'>
-        </div>
+
+        <div class='spacer'></div>
 
         <div class='input-group' style='margin-bottom:20px;'>
           <span class='input-group-addon' id='basic-addon5'>Description</span>

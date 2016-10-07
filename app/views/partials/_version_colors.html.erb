@@ -20,10 +20,12 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
       logger.info '_VERSION_COLORS.html.erb - color_name: ' + color_name.to_s
       replacement_color_id = ''
       color_hex = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX ]
+      swatch_name = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_NAME ]
       original_c = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_C ]
       original_m = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_M ]
       original_y = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_Y ]
       original_k = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_K ]
+      replacement_hex = color_hex
 
       Rails.logger.info '_version_colors.html.erb - color_settings: '\
         + JSON.pretty_generate( color_settings )
@@ -42,46 +44,49 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
       if @version
       end
 %>
-
-
-      Old color:
-      <div style='width:40px; height:40px; background:<%= color_hex.to_s %>'>
-      </div>
-
-      <div class='spacer'></div>
-
-
-      <div id='colorpicker_container<%= i.to_s %>' style='display:inline-block;'>
-        <div class='input-group' style='float:left; width:90%;'>
-          <span class='input-group-addon' id='basic-addon1'>New Color</span>
-          <select name='color_val<%= i.to_s %>' id='color_val<%= i.to_s %>'
-            style='width:98%;' aria-describedby='basic-addon1' class='form-control'>
-            <option disabled selected='selected'>Pick a Color</option>
-<%=           @palettes[ color_name ].each do |c| %>
-              <option data-c='cc<%= c.cyan.to_s %>' data-m='mm<%= c.magenta.to_s %>'
-                data-y='yy<%= c.yellow.to_s %>' data-k='kk<%= c.black.to_s %>'
-                data-i='<%= i.to_s %>' title='<%= c.description %>' value='<%= c.hex_code %>'
-                <%= if( replacement_hex == c.hex_code ) then 'selected' end %> >
-                <%= c.hex_code %></option>
-<%            end %>
-          </select>
+      <div id='colorpicker_container<%= i.to_s %>' style='width:45%; margin-bottom:30px; display:inline-block;'>
+        <div style='width:100%'><%= swatch_name.to_s %></div>
+        <div style='vertical-align:top; width:45%; height:50px; display:inline-block;'>
+          <div>From:</div>
+          <div style='display:inline-block; width:40px; height:40px; background:<%= color_hex.to_s %>'></div>
         </div>
-        <div id='swatch<%= i.to_s %>' style='display:inline-block; float:left; height:27px; width:27px; background:<%= replacement_hex.to_s %>'></div>
-      </div>
+        <div style='vertical-align:top; width:45%; height:50px; display:inline-block;'>
+          <div>To:</div>
+          <div id='swatch<%= i.to_s %>' style='display:inline-block; float:left; height:40px; width:40px; background:<%= replacement_hex.to_s %>'></div>
+        </div>
 
-      <input type='hidden' id='selected_c_val<%= i.to_s %>' name='selected_c_val<%= i.to_s %>' value=''></input>
-      <input type='hidden' id='selected_m_val<%= i.to_s %>' name='selected_m_val<%= i.to_s %>' value=''></input>
-      <input type='hidden' id='selected_y_val<%= i.to_s %>' name='selected_y_val<%= i.to_s %>' value=''></input>
-      <input type='hidden' id='selected_k_val<%= i.to_s %>' name='selected_k_val<%= i.to_s %>' value=''></input>
+        <div class='spacer'></div>
 
-      <input type='hidden' id='original_c_val<%= i.to_s %>' name='original_c_val<%= i.to_s %>' value='<%= original_c.to_s %>'></input>
-      <input type='hidden' id='original_m_val<%= i.to_s %>' name='original_m_val<%= i.to_s %>' value='<%= original_m.to_s %>'></input>
-      <input type='hidden' id='original_y_val<%= i.to_s %>' name='original_y_val<%= i.to_s %>' value='<%= original_y.to_s %>'></input>
-      <input type='hidden' id='original_k_val<%= i.to_s %>' name='original_k_val<%= i.to_s %>' value='<%= original_k.to_s %>'></input>
+        <div style='display:inline-block; width:100%;'>
+          <div class='input-group' style='float:left; width:150px;'>
+            <select name='color_val<%= i.to_s %>' id='color_val<%= i.to_s %>'
+              style='width:98%;' aria-describedby='basic-addon1' class='form-control'>
+              <option selected='selected' value='<%= color_hex.to_s %>' data-c='0' data-m='0' data-y='0' data-k='0'
+                data-i='<%= i.to_s %>'>No Change</option>
+<%=           @palettes[ color_name ].each do |c| %>
+                <option data-c='<%= c.cyan.to_s %>' data-m='<%= c.magenta.to_s %>'
+                  data-y='<%= c.yellow.to_s %>' data-k='<%= c.black.to_s %>'
+                  data-i='<%= i.to_s %>' title='<%= c.description %>' value='<%= c.hex_code %>'
+                  <%= if( replacement_hex == c.hex_code ) then 'selected' end %> >
+                  <%= c.hex_code %></option>
+<%              end %>
+            </select>
+          </div> <!-- /input group -->
+        </div> <!-- /colorpicker container -->
 
+        <input type='hidden' id='selected_c_val<%= i.to_s %>' name='selected_c_val<%= i.to_s %>' value=''></input>
+        <input type='hidden' id='selected_m_val<%= i.to_s %>' name='selected_m_val<%= i.to_s %>' value=''></input>
+        <input type='hidden' id='selected_y_val<%= i.to_s %>' name='selected_y_val<%= i.to_s %>' value=''></input>
+        <input type='hidden' id='selected_k_val<%= i.to_s %>' name='selected_k_val<%= i.to_s %>' value=''></input>
 
+        <input type='hidden' id='original_c_val<%= i.to_s %>' name='original_c_val<%= i.to_s %>' value='<%= original_c.to_s %>'></input>
+        <input type='hidden' id='original_m_val<%= i.to_s %>' name='original_m_val<%= i.to_s %>' value='<%= original_m.to_s %>'></input>
+        <input type='hidden' id='original_y_val<%= i.to_s %>' name='original_y_val<%= i.to_s %>' value='<%= original_y.to_s %>'></input>
+        <input type='hidden' id='original_k_val<%= i.to_s %>' name='original_k_val<%= i.to_s %>' value='<%= original_k.to_s %>'></input>
 
-      <input style='display:none;' id='color_name<%= i.to_s %>' name='color_name<%= i.to_s %>' value='<%= color_name %>'></input>
+        <input style='display:none;' id='color_name<%= i.to_s %>' name='color_name<%= i.to_s %>' value='<%= color_name %>'></input>
+
+      </div> <!--  -->
 
 <%    i += 1
     } # each color  %>
@@ -94,11 +99,6 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
 <input type='hidden' name='color_count' id='color_count' value='<%= i.to_s %>'></input>
 
 <script>
-
-  function color_select_change()
-  {
-
-  }
 
   function validate_color_values()
   {
@@ -137,9 +137,10 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
     var swatch = event.data.swatch;
     var select = event.target;
     var val = select.value;
+    var option = $(select).find(':selected');
+
     swatch.css( 'background', val );
 
-    var option = $(select).find(':selected');
     var c = option.attr('data-c');
     var m = option.attr('data-m');
     var y = option.attr('data-y');

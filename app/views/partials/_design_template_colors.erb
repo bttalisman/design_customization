@@ -5,8 +5,8 @@ should this color be replaced? -->
 <%
 if !@colors.nil?
 
-  #logger.info '_design_template_images.html.erb - @prompts: ' + @prompts.to_s
-  #logger.info '_design_template_images.html.erb - @images: ' + @images.to_s
+  #logger.info '_design_template_colors.html.erb - @prompts: ' + @prompts.to_s
+  #logger.info '_design_template_colors.html.erb - @images: ' + @images.to_s
 
 %>
   <div class='panel panel-success'>
@@ -16,7 +16,7 @@ if !@colors.nil?
 <%
       i = 0
       @colors.each { |color|
-        logger.info '_design_template_images.html.erb - color: ' + color.to_s
+        logger.info '_design_template_colors.html.erb - color: ' + color.to_s
 
         color_key = get_prompts_key_for_color( color )
         color_hex = get_hex_string_for_color( color )
@@ -24,7 +24,7 @@ if !@colors.nil?
 
         if !@prompts.nil? && (color != '') && !color.nil? && !color_name.nil?
           colorProps = @prompts[ PROMPTS_KEY_COLOR_SETTINGS ][ color_key.to_s ]
-          logger.info '_design_template_images.html.erb - colorProps: ' + colorProps.to_s
+          logger.info '_design_template_colors.html.erb - colorProps: ' + colorProps.to_s
 
           if !colorProps.nil?
             # we've got color props, these settings have been previously set
@@ -37,7 +37,7 @@ if !@colors.nil?
           end # colorProps not nil
         end # @prompts not nil %>
 
-
+        <input type='hidden' name='color_key<%= i.to_s %>' value='<%= color_key.to_s %>'></input>
         <input type='hidden' name='color_name<%= i.to_s %>' value='<%= color_name.to_s %>'></input>
         <input type='hidden' name='orig_color_hex<%= i.to_s %>' value='<%= color_hex.to_s %>'></input>
 
@@ -50,8 +50,8 @@ if !@colors.nil?
         <div style='width:100px; display:inline-block; margin:10px 10px 40px 10px;'>
           <div><%= color_name.to_s %></div>
           <div style='width:40px; height:40px; background:<%= color_hex.to_s %>'></div>
-          <div class='cmyk-details'>C: <%= color['c'].to_s[0..4] %>M: <%= color['m'].to_s[0..4] %>
-          <br>Y: <%= color['y'].to_s[0..4] %>K: <%= color['k'].to_s[0..4] %></div>
+          <div class='cmyk-details'>C: <%= color['c'].to_s[0..4] %>&nbsp;M: <%= color['m'].to_s[0..4] %>
+          <br>Y: <%= color['y'].to_s[0..4] %>&nbsp;K: <%= color['k'].to_s[0..4] %></div>
           <input type='checkbox' <%= replaceColor.to_s %> class='checkbox-input' value='true'
             name='replace_color<%= i.to_s %>' id='replace_color<%= i.to_s %>' >
           </input>

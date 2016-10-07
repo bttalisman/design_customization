@@ -14,6 +14,10 @@ module ColorsHelper
     s
   end
 
+  # This method extracts color values from the params object.  These values
+  # are set by partials/_design_template_colors.html.erb, which in turn got them
+  # from the xxx_all_colors.jsn file created by the extract_all_colors.js AI
+  # script.
   def load_extracted_colors( design_template, params )
     if( params[ 'load_colors'] )
       logger.info 'ColorsHelper - load_extracted_colors() - LOADING COLORS'
@@ -42,16 +46,12 @@ module ColorsHelper
         p_name = 'orig_color_k' + i.to_s
         orig_color_k = params[ p_name ]
 
+        # One problem is that this only tells us if an exact match exists.
+        # it would be nice to avoid importing similar colors.
         exists = Color.find_by( cyan: orig_color_c, magenta: orig_color_m,
                                 yellow: orig_color_y, black: orig_color_k )
 
-        Rails.logger.info 'ColorsHelper - load_extracted_colors() - exists:'\
-          + exists.to_s
         if( exists.blank? )
-          Rails.logger.info 'ColorsHelper - load_extracted_colors() - importing c:'\
-            + orig_color_c.to_s + ', m: ' + orig_color_m.to_s + ', y: ' + orig_color_y.to_s\
-            + ', k: ' + orig_color_k.to_s
-
           new_color = Color.create
           new_color.cyan = orig_color_c
           new_color.magenta = orig_color_m

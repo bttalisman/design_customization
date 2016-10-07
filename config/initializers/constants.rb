@@ -49,6 +49,7 @@ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_C = 'rep_co_orig_co_c'.freeze
 PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_M = 'rep_co_orig_co_m'.freeze
 PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_Y = 'rep_co_orig_co_y'.freeze
 PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_K = 'rep_co_orig_co_k'.freeze
+PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_NAME = 'rep_co_orig_co_name'.freeze
 
 
 

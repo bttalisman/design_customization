@@ -395,8 +395,8 @@ module DesignTemplatesHelper
   # method must be coordinated with parameters as set in
   # views/partials/_design_template_colors.html.erb
   def set_color_prompts( template, params )
-    Rails.logger.info 'design_templates_helper - set_color_prompts() - params: '\
-      + params.to_s
+#    Rails.logger.info 'design_templates_helper - set_color_prompts() - params: '\
+#      + params.to_s
     color_count = params[ 'color_count' ]
     color_count = if color_count != ''
                     color_count.to_i
@@ -409,6 +409,8 @@ module DesignTemplatesHelper
     color_count.times do |i|
       color_settings = {}
 
+      p_name = 'color_key' + i.to_s
+      color_key = params[ p_name ]
       p_name = 'color_name' + i.to_s
       color_name = params[ p_name ]
       p_name = 'replace_color' + i.to_s
@@ -431,13 +433,14 @@ module DesignTemplatesHelper
         color_settings[ PROMPTS_KEY_REPLACE_COLOR ] = PROMPTS_VALUE_FALSE
       end
 
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_NAME ] = color_name
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX ] = orig_color_hex
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_C ] = orig_color_c
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_M ] = orig_color_m
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_Y ] = orig_color_y
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_K ] = orig_color_k
 
-      all_color_settings[ color_name ] = color_settings
+      all_color_settings[ color_key ] = color_settings
     end # color_count times
 
     prompts_string = template.prompts
@@ -449,21 +452,21 @@ module DesignTemplatesHelper
 
   def get_hex_string_for_color( color )
     return if color.nil?
-    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - color: '\
-      + JSON.pretty_generate( color )
+#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - color: '\
+#      + JSON.pretty_generate( color )
 
     red_int = color['r'].to_s.to_i
     green_int = color['g'].to_s.to_i
     blue_int = color['b'].to_s.to_i
 
-    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - r, g, b: '\
-      + red_int.to_s + ', ' + green_int.to_s + ', ' + blue_int.to_s
+#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - r, g, b: '\
+#      + red_int.to_s + ', ' + green_int.to_s + ', ' + blue_int.to_s
 
     red_hex = red_int.to_s(16).rjust(2, '0')
     green_hex = green_int.to_s(16).rjust(2, '0')
     blue_hex = blue_int.to_s(16).rjust(2, '0')
     s = '#' + red_hex + green_hex + blue_hex
-    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - s: ' + s.to_s
+#    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - s: ' + s.to_s
     s
   end
 
