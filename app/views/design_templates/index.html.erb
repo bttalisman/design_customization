@@ -8,20 +8,20 @@
       <thead>
         <tr>
           <th><a onclick='toggle_name();'>Template Name</a>
-            <span id='name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <span id='name_arrow' data-sort-key='name' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size:'14x14', class:'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_created();'>Created</a>
-            <span id='created_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <span id='created_arrow' data-sort-key='created' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size:'14x14', class:'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_updated();'>Updated</a>
-            <span id='updated_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <span id='updated_arrow' data-sort-key='updated' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size:'14x14', class:'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_owner();'>Owner</a>
-            <span id='owner_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
-            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+            <span id='owner_arrow' data-sort-key='owner' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size:'14x14', class:'arrow-spacer' ) %>
           </th>
 
         </tr>
@@ -81,16 +81,16 @@
 
 
   function toggle_name() {
-    toggle_header_item( 'name_arrow', get_cached_templates, cache_templates, 'name' ); }
+    toggle_header_item( 'name_arrow', get_cached_templates, cache_templates ); }
 
   function toggle_created() {
-    toggle_header_item( 'created_arrow', get_cached_templates, cache_templates, 'created' ); }
+    toggle_header_item( 'created_arrow', get_cached_templates, cache_templates ); }
 
   function toggle_updated() {
-    toggle_header_item( 'updated_arrow', get_cached_templates, cache_templates, 'updated' ); }
+    toggle_header_item( 'updated_arrow', get_cached_templates, cache_templates ); }
 
   function toggle_owner() {
-    toggle_header_item( 'owner_arrow', get_cached_templates, cache_templates, 'owner' ); }
+    toggle_header_item( 'owner_arrow', get_cached_templates, cache_templates ); }
 
 
 

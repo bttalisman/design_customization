@@ -5,27 +5,27 @@
       <thead>
         <tr>
           <th><a onclick='toggle_name();'>Version Name</a>
-            <span id='name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='name_arrow' data-sort-key='name' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_template();'>Template</a>
-            <span id='template_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='template_arrow' data-sort-key='template' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_created();'>Created</a>
-            <span id='created_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='created_arrow' data-sort-key='created' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_updated();'>Updated</a>
-            <span id='updated_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='updated_arrow' data-sort-key='updated' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_last_render_date();'>Last Render</a>
-            <span id='last_render_date_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='last_render_date_arrow' data-sort-key='last_render_date' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_owner();'>Owner</a>
-            <span id='owner_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='owner_arrow' data-sort-key='owner' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
 
@@ -96,28 +96,28 @@
 
 
   function toggle_owner() {
-    toggle_header_item( 'owner_arrow', get_cached_versions, cache_versions, 'owner' ); }
+    toggle_header_item( 'owner_arrow', get_cached_versions, cache_versions ); }
 
   function toggle_name() {
-    toggle_header_item( 'name_arrow', get_cached_versions, cache_versions, 'name' ); }
+    toggle_header_item( 'name_arrow', get_cached_versions, cache_versions ); }
 
   function toggle_created() {
-    toggle_header_item( 'created_arrow', get_cached_versions, cache_versions, 'created' ); }
+    toggle_header_item( 'created_arrow', get_cached_versions, cache_versions ); }
 
   function toggle_updated() {
-    toggle_header_item( 'updated_arrow', get_cached_versions, cache_versions, 'updated' ); }
+    toggle_header_item( 'updated_arrow', get_cached_versions, cache_versions ); }
 
   function toggle_template() {
-    toggle_header_item( 'template_arrow', get_cached_versions, cache_versions, 'template' ); }
+    toggle_header_item( 'template_arrow', get_cached_versions, cache_versions ); }
 
   function toggle_last_render_date() {
-    toggle_header_item( 'last_render_date_arrow', get_cached_versions, cache_versions, 'last_render_date' ); }
+    toggle_header_item( 'last_render_date_arrow', get_cached_versions, cache_versions ); }
 
   function toggle_tags() {
-    toggle_header_item( 'tags_arrow', get_cached_versions, cache_versions, 'tags' ); }
+    toggle_header_item( 'tags_arrow', get_cached_versions, cache_versions ); }
 
   function toggle_images() {
-  toggle_header_item( 'images_arrow', get_cached_versions, cache_versions, 'images' ); }
+  toggle_header_item( 'images_arrow', get_cached_versions, cache_versions ); }
 
 
   function fill_container( )

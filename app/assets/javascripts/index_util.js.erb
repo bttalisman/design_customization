@@ -13,7 +13,8 @@ function clear_versions_cache()
 
 function clear_design_templates_cache()
 {
-  clear_cache( '<%= CACHE_KEY_DESIGN_TEMPLATES.to_s %>' );
+  var cache_name = '<%= CACHE_KEY_DESIGN_TEMPLATES.to_s %>';
+  clear_cache( cache_name );
 }
 
 function clear_users_cache()
@@ -41,6 +42,23 @@ function log_out()
 }
 
 
+function get_arrow_id( cache_name )
+{
+  var id_name = cache_name + '_arrow_id';
+  var id = localStorage.getItem( id_name );
+  return id;
+}
+
+
+function get_arrow( cache_name )
+{
+  var arrow_id = get_arrow_id( cache_name );
+
+//  alert( 'getting - arrow_id: ' + arrow_id );
+  var arrow = $( '#' + arrow_id );
+  return arrow;
+}
+
 // Get cached array describing all items appearing in the index.  Attempt to
 // get it from the session cache, if that doesn't work, get it from the
 // html element written by the server.  Cache_name just needs to be unique
@@ -48,6 +66,11 @@ function log_out()
 function get_cached_json( cache_name )
 {
   var array, element, t;
+
+  var arrow = get_arrow( cache_name );
+  var sort_key = arrow.attr( 'data-sort-key' );
+
+//  alert( 'get_cached_json() - sort_key: ' + sort_key );
 
   try {
     array = localStorage.getItem( cache_name );
@@ -72,6 +95,9 @@ function get_cached_json( cache_name )
     }
   }
 
+  array.sort( function( obj1, obj2 ) {
+    return my_sort( obj1, obj2, sort_key, get_arrow_state( arrow ) ); });
+
   return array;
 }
 
@@ -87,16 +113,16 @@ function cache_json( array, cache_name )
 // Save the id and classes string for an arrow element to the session.
 function cache_arrow_by_name( e, cache_name )
 {
-  var id_name = cache_name + '_arrow_id';
-  var class_name = cache_name + '_arrow_class';
+  var id_key = cache_name + '_arrow_id';
+  var class_key = cache_name + '_arrow_class';
 
-  localStorage.setItem( id_name, e.attr( 'id' ) );
-  localStorage.setItem( class_name, e.attr( 'class' ) );
+  localStorage.setItem( id_key, e.attr( 'id' ) );
+  localStorage.setItem( class_key, e.attr( 'class' ) );
 }
 
 
 
-// Get the id and classes of the currently active menu arrow from the sessio,
+// Get the id and classes of the currently active menu arrow from the session,
 // hide all arrows, and then show and update the active menu arrow.
 function update_arrows( cache_name )
 {
@@ -139,6 +165,11 @@ function toggle_header_item( arrow_id, get_function, cache_function, sort_key )
 {
   var items = get_function();
   var arrow = $( '#' + arrow_id );
+
+  if( sort_key === undefined ) {
+    sort_key = arrow.attr( 'data-sort-key' );
+  }
+
   toggle_arrow( arrow );
   cache_arrow( arrow );
 
