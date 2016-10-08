@@ -41,7 +41,7 @@ function log_out()
   });
 }
 
-
+// from the session get the id of the arrow element which is used to sort items
 function get_arrow_id( cache_name )
 {
   var id_name = cache_name + '_arrow_id';
@@ -49,14 +49,28 @@ function get_arrow_id( cache_name )
   return id;
 }
 
-
+// get the arrow element which is used to sort items.  id was stored on the
+// session.
 function get_arrow( cache_name )
 {
   var arrow_id = get_arrow_id( cache_name );
-
-//  alert( 'getting - arrow_id: ' + arrow_id );
   var arrow = $( '#' + arrow_id );
   return arrow;
+}
+
+// This html element provides the array of items to all clien-side sorting code.
+function get_json_from_html( cache_name )
+{
+  element = $( '#' + cache_name );
+  t = element.text();
+  try {
+    array = JSON.parse( t );
+  }
+  catch( e )
+  {
+    array = [];
+  }
+  return array;
 }
 
 // Get cached array describing all items appearing in the index.  Attempt to
@@ -66,11 +80,9 @@ function get_arrow( cache_name )
 function get_cached_json( cache_name )
 {
   var array, element, t;
-
   var arrow = get_arrow( cache_name );
+  // each arrow element stores the key which is used to sort items.
   var sort_key = arrow.attr( 'data-sort-key' );
-
-//  alert( 'get_cached_json() - sort_key: ' + sort_key );
 
   try {
     array = localStorage.getItem( cache_name );
@@ -78,21 +90,15 @@ function get_cached_json( cache_name )
   }
   catch (e)
   {
-    element = $( '#' + cache_name );
-    t = element.text();
-    array = JSON.parse( t );
+    // if there's any problem at all get the items from the server-generated
+    // html.
+    array = get_json_from_html( cache_name );
   }
 
+  // if we didn't get an array of items, get them from the server-generated
+  // html.
   if( !array ) {
-    element = $( '#' + cache_name );
-    t = element.text();
-    try {
-      array = JSON.parse( t );
-    }
-    catch( e )
-    {
-      array = [];
-    }
+    array = get_json_from_html( cache_name );
   }
 
   array.sort( function( obj1, obj2 ) {
@@ -110,34 +116,48 @@ function cache_json( array, cache_name )
 }
 
 
+function get_arrow_id_key( cache_name )
+{
+  var key = cache_name + '_arrow_id';
+  return key;
+}
+
+function get_arrow_class_key( cache_name )
+{
+  var key = cache_name + '_arrow_class';
+  return key;
+}
+
+
 // Save the id and classes string for an arrow element to the session.
 function cache_arrow_by_name( e, cache_name )
 {
-  var id_key = cache_name + '_arrow_id';
-  var class_key = cache_name + '_arrow_class';
+  var id_key = get_arrow_id_key( cache_name );
+  var class_key = get_arrow_class_key( cache_name );
 
   localStorage.setItem( id_key, e.attr( 'id' ) );
   localStorage.setItem( class_key, e.attr( 'class' ) );
 }
 
 
-
 // Get the id and classes of the currently active menu arrow from the session,
 // hide all arrows, and then show and update the active menu arrow.
 function update_arrows( cache_name )
 {
-  var id_cache_name = cache_name + '_arrow_id';
-  var class_cache_name = cache_name + '_arrow_class';
+  var id_key = get_arrow_id_key( cache_name );
+  var class_key = get_arrow_class_key( cache_name );
 
-  var id = localStorage.getItem( id_cache_name );
-  var classes = localStorage.getItem( class_cache_name );
+  var id = localStorage.getItem( id_key );
+  var classes = localStorage.getItem( class_key );
   hide_arrows();
+  // Get the arrow being used to sort the items, show it, set its classes
   var e = $( '#' + id );
   e.show();
   e.attr( 'class', classes );
-  e.next().hide();
+  e.next().hide();  // this is the spacer that keeps everything lined up
 }
 
+// hide all arrows
 function hide_arrows()
 {
   $( '.menu-arrow' ).hide();    // hide arrows
@@ -161,14 +181,16 @@ function toggle_arrow( e )
 }
 
 
-function toggle_header_item( arrow_id, get_function, cache_function, sort_key )
+//  This is the function called when a user toggles a menu arrow.
+//  The arrow_id is the id of the menu-arrow clicked.
+//  get_function gets all of the items from the cache.
+//  cache_function stores sorted items back on the cache.
+function toggle_header_item( arrow_id, get_function, cache_function )
 {
   var items = get_function();
   var arrow = $( '#' + arrow_id );
 
-  if( sort_key === undefined ) {
-    sort_key = arrow.attr( 'data-sort-key' );
-  }
+  sort_key = arrow.attr( 'data-sort-key' );
 
   toggle_arrow( arrow );
   cache_arrow( arrow );
@@ -181,23 +203,19 @@ function toggle_header_item( arrow_id, get_function, cache_function, sort_key )
 }
 
 
-
+// This is the function used to sort item arrays.  The key parameter specifies
+// which item within each object to sort on.
 function my_sort( obj1, obj2, key, flip )
 {
   var o1, o2;
   var d1, d2;
 
-  if( flip )
-  {
+  if( flip ) {
     o1 = obj1;
     o2 = obj2;
-  }
-  else
-  {
+  } else {
     o1 = obj2;
-    o2 = obj1;
-  }
-
+    o2 = obj1; }
 
   var s1 = '';
   if( (o1[key] !== null) && (o1[key] !== undefined) ) {
@@ -211,27 +229,19 @@ function my_sort( obj1, obj2, key, flip )
     d2 = Date.parse( s2 );
   }
 
-
   if( d1 && d2 ) {
     s1 = d1;
-    s2 = d2;
-  }
+    s2 = d2; }
 
   var comp;
 
-  if( s1 < s2 )
-  {
+  if( s1 < s2 ) {
     comp = -1;
-  }
-  else if( s1 > s2 )
-  {
+  } else if( s1 > s2 ) {
     comp = 1;
-  }
-  else
-  {
+  } else {
     // the names are equal
-    comp = 0;
-  }
+    comp = 0; }
 
   return comp;
 }
