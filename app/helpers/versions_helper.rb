@@ -348,7 +348,7 @@ module VersionsHelper
       tag_settings = {}
       tag_name = params[ 'tag_name' + i.to_s ]
       rep_text = params[ 'replacement_text' + i.to_s ]
-      text_color = params[ 'color_val' + i.to_s ]
+      text_color = params[ 'ver_color_val' + i.to_s ]
 
       tag_settings[ VERSION_VALUES_KEY_REPLACEMENT_TEXT ] = rep_text
       tag_settings[ VERSION_VALUES_KEY_TEXT_COLOR ] = text_color

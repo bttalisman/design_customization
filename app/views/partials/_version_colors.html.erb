@@ -1,14 +1,13 @@
 
 <%
-logger.info '_VERSION_COLORS.html.erb - @color_values: ' + @color_values.to_s
-logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
-  + JSON.pretty_generate(  @color_settings )
+#logger.info '_VERSION_COLORS.html.erb - @color_values: ' + @color_values.to_s
+#logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
+#  + JSON.pretty_generate(  @color_settings )
 
 %>
 <div class='panel panel-success'>
   <div class='panel-heading'><h3 class='panel-title'>Choose Your Colors</h3></div>
   <div class='panel-body'>
-
 <%
     i = 0
     # These are all of the colors settings in template.prompts
@@ -57,22 +56,20 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
 
         <div class='spacer'></div>
 
-        <div style='display:inline-block; width:100%;'>
-          <div class='input-group' style='float:left; width:150px;'>
-            <select name='color_val<%= i.to_s %>' id='color_val<%= i.to_s %>'
-              style='width:98%;' aria-describedby='basic-addon1' class='form-control'>
-              <option selected='selected' value='<%= color_hex.to_s %>' data-c='0' data-m='0' data-y='0' data-k='0'
-                data-i='<%= i.to_s %>'>No Change</option>
-<%=           @palettes[ color_name ].each do |c| %>
-                <option data-c='<%= c.cyan.to_s %>' data-m='<%= c.magenta.to_s %>'
-                  data-y='<%= c.yellow.to_s %>' data-k='<%= c.black.to_s %>'
-                  data-i='<%= i.to_s %>' title='<%= c.description %>' value='<%= c.hex_code %>'
-                  <%= if( replacement_hex == c.hex_code ) then 'selected' end %> >
-                  <%= c.hex_code %></option>
-<%              end %>
-            </select>
-          </div> <!-- /input group -->
-        </div> <!-- /colorpicker container -->
+        <div class='input-group' style='float:left; width:150px;'>
+          <select name='color_val<%= i.to_s %>' id='color_val<%= i.to_s %>'
+            style='width:98%;' aria-describedby='basic-addon1' class='form-control'>
+            <option selected='selected' value='<%= color_hex.to_s %>' data-c='0' data-m='0' data-y='0' data-k='0'
+              data-i='<%= i.to_s %>'>No Change</option>
+<%=         @palettes[ color_name ].each do |c| %>
+              <option data-c='<%= c.cyan.to_s %>' data-m='<%= c.magenta.to_s %>'
+                data-y='<%= c.yellow.to_s %>' data-k='<%= c.black.to_s %>'
+                data-i='<%= i.to_s %>' title='<%= c.description %>' value='<%= c.hex_code %>'
+                <%= if( replacement_hex == c.hex_code ) then 'selected' end %> >
+                <%= c.hex_code %></option>
+<%          end %>
+          </select>
+        </div> <!-- /input group -->
 
         <input type='hidden' id='selected_c_val<%= i.to_s %>' name='selected_c_val<%= i.to_s %>' value=''></input>
         <input type='hidden' id='selected_m_val<%= i.to_s %>' name='selected_m_val<%= i.to_s %>' value=''></input>
@@ -86,17 +83,16 @@ logger.info '_VERSION_COLORS.html.erb - @color_settings: '\
 
         <input style='display:none;' id='color_name<%= i.to_s %>' name='color_name<%= i.to_s %>' value='<%= color_name %>'></input>
 
-      </div> <!--  -->
+      </div> <!-- /colorpicker container -->
 
 <%    i += 1
     } # each color  %>
-
-
   </div>
 </div>
+<div class='spacer'></div>
 
 <input style='display:none;' id='version_id<%= i.to_s %>' name='version_id' value='<%= @version_id %>'></input>
-<input type='hidden' name='color_count' id='color_count' value='<%= i.to_s %>'></input>
+<input style='display:none;' name='color_count' id='color_count' value='<%= i.to_s %>'></input>
 
 <script>
 

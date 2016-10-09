@@ -58,9 +58,9 @@ i = 0
 
 %>
 
-  <div class="panel panel-info">
-    <div class="panel-heading"><h3 class='panel-title'>Enter Your Text</h3></div>
-    <div class="panel-body" style='height:210;'> <!-- todo - why must i set the height? -->
+  <div class='panel panel-info'>
+    <div class='panel-heading'><h3 class='panel-title'>Enter Your Text</h3></div>
+    <div class='panel-body' style='height:210;'> <!-- todo - why must i set the height? -->
 
       <input type='hidden' name='tag_name<%= i.to_s %>' value='<%= tag_name %>'></input>
       <input type='text' class='form-control' placeholder='<%= prompt %>'
@@ -75,9 +75,10 @@ i = 0
 <%    if pick_color != '' %>
         <div id='colorpicker_container<%= i.to_s %>' style='display:inline-block;'>
           <div class='input-group' style='float:left; width:90%;'>
-            <span class="input-group-addon" id="basic-addon1">Text Color</span>
-            <select name="color_val<%= i.to_s %>" id="color_val<%= i.to_s %>"
-              style='width:98%;' aria-describedby="basic-addon1" class="form-control">
+            <span class='input-group-addon' id='basic-addon1'>Text Color</span>
+
+            <select name='ver_color_val<%= i.to_s %>' id='ver_color_val<%= i.to_s %>'
+              style='width:98%;' aria-describedby='basic-addon1' class='form-control'>
               <option disabled selected='selected'>Pick a Color</option>
 <%=           @palettes[ tag_name ].each do |c| %>
                 <option title='<%= c.description %>' value='<%= c.hex_code %>'
@@ -92,7 +93,7 @@ i = 0
 
   </div> <!-- panel-body -->
 </div> <!-- panel -->
-
+<div class='spacer'></div>
 <%
   i += 1
 } # each tag
@@ -104,7 +105,7 @@ i = 0
 <script>
 
   $(document).ready(function() {
-    $("[id^='color_val']").select2({
+    $("[id^='ver_color_val']").select2({
       templateResult: formatColor
     });
 
@@ -182,7 +183,7 @@ i = 0
         }
       }
 
-      s = '#color_val' + i;
+      s = '#ver_color_val' + i;
       o = $(s);
       text_color = o.val();
       if( text_color === null )

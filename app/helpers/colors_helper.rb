@@ -59,7 +59,12 @@ module ColorsHelper
           new_color.black = orig_color_k
 
           new_color.hex_code = orig_color_hex
-          new_color.description = 'Imported from AI.'
+          description = 'Imported from AI.'
+          if !color_name.empty?
+            description = description + ' Swatch name: ' + color_name
+          end
+          
+          new_color.description = description
           new_color.save
         else
           Rails.logger.info 'ColorsHelper - load_extracted_colors() - color already exists.'

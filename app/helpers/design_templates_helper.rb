@@ -427,7 +427,7 @@ module DesignTemplatesHelper
       p_name = 'orig_color_k' + i.to_s
       orig_color_k = params[ p_name ]
 
-      if replace
+      if !replace.empty?
         color_settings[ PROMPTS_KEY_REPLACE_COLOR ] = PROMPTS_VALUE_TRUE
       else
         color_settings[ PROMPTS_KEY_REPLACE_COLOR ] = PROMPTS_VALUE_FALSE
