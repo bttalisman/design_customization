@@ -5,6 +5,8 @@ module PartialsHelper
   # This method iterates through all of the tags associated with a template
   # and constructs a hash matching tags to Color collections.
   def get_palettes( template )
+
+    Rails.logger.info 'partials_helper - get_palettes()'
     palettes = {}
     prompts = get_prompts_object( template )
     tag_settings = prompts[ PROMPTS_KEY_TAG_SETTINGS ]
@@ -28,8 +30,38 @@ module PartialsHelper
 
     color_settings = prompts[ PROMPTS_KEY_COLOR_SETTINGS ]
 
+    Rails.logger.info 'partials_helper - get_palettes() color_settings: '\
+      + JSON.pretty_generate( color_settings )
+
     color_settings.each do |c|
-      palettes[ c[0] ] = Color.all
+      use_palette = c[ 1 ][ PROMPTS_KEY_REPLACE_COLOR_USE_PALETTE ]
+      palette_id = c[ 1 ][ PROMPTS_KEY_REPLACE_COLOR_PALETTE_ID ]
+
+      if use_palette === 'checked'
+        begin
+
+          Rails.logger.info 'partials_helper - get_palettes() - using a palette! - palette_id: '\
+            + palette_id.to_s
+
+          palette = Palette.find( palette_id )
+
+          Rails.logger.info 'partials_helper - get_palettes() - palette: '\
+            + palette.to_s
+
+          palettes[ c[0] ] = palette.colors
+
+          Rails.logger.info 'partials_helper - get_palettes() - c[0]: '\
+            + c[0].to_s
+            
+
+        rescue ActiveRecord::RecordNotFound
+          palettes[ c[0] ] = Color.all
+        end
+      else
+        palettes[ c[0] ] = Color.all
+      end
+
+
     end # each color setting
 
 

@@ -418,6 +418,11 @@ module DesignTemplatesHelper
       p_name = 'orig_color_hex' + i.to_s
       orig_color_hex = params[ p_name ]
 
+      p_name = 'select_pal' + i.to_s
+      palette_id = params[ p_name ]
+      p_name = 'use_pal' + i.to_s
+      use_palette = params[ p_name ]
+
       p_name = 'orig_color_c' + i.to_s
       orig_color_c = params[ p_name ]
       p_name = 'orig_color_m' + i.to_s
@@ -439,6 +444,10 @@ module DesignTemplatesHelper
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_M ] = orig_color_m
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_Y ] = orig_color_y
       color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_K ] = orig_color_k
+
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_USE_PALETTE ] = use_palette
+      color_settings[ PROMPTS_KEY_REPLACE_COLOR_PALETTE_ID ] = palette_id
+
 
       all_color_settings[ color_key ] = color_settings
     end # color_count times

@@ -614,7 +614,6 @@ module VersionsHelper
       color_settings[ VERSION_VALUES_KEY_MOD_COLOR_ORIGINAL_Y ] = orig_y
       color_settings[ VERSION_VALUES_KEY_MOD_COLOR_ORIGINAL_K ] = orig_k
 
-
       all_color_settings[ color_name ] = color_settings
 
       Rails.logger.info 'VERSIONS_HELPER - set_color_values() - color_settings: '\

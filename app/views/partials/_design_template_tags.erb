@@ -78,41 +78,6 @@ if !@tags.nil?
         </div>
         <div class='spacer'></div>
 
-        <div class='clearfix'>
-          <div style='float:left; width:45%;'>
-            <label class='checkbox-label' style='margin-left:30px;'>
-              Pick a color?
-              <input type='checkbox' data-label-id='label<%= i.to_s %>' data-use-pal-id='use_pal<%= i.to_s %>' data-sel-id='select_pal<%= i.to_s %>' name='colorp<%= i.to_s %>' id='colorp<%= i.to_s %>' onchange='toggle_pick_color( event );' class='checkbox-input' value='true' <%= pick_color %> ></input>
-            </label>
-          </div>
-          <div style='float:right; width:45%;'>
-            <label class='checkbox-label <%= label_class %>' id='label<%= i.to_s %>' style='margin-left:30px;'>
-              Offer a Palette?
-              <input type='checkbox' data-sel-id='select_pal<%= i.to_s %>' onchange='toggle_use_palette( event );' class='checkbox-input' value='true' name='use_pal<%= i.to_s %>' id='use_pal<%= i.to_s %>' <%= use_palette %> <%= offer_pal_enabled %> ></input>
-            </label>
-          </div>
-        </div>
-        <div class='spacer'></div>
-
-        <div>
-          <div class='input-group'>
-            <span class='input-group-addon' id='basic-addon4'>Palette</span>
-            <select <%= select_pal %> name='select_pal<%= i.to_s %>' id='select_pal<%= i.to_s %>' class='form-control' style='width:200px;' aria-describedby='basic-addon4'>
-              <option value='' disabled selected>Select a Palette</option>
-<%            @palettes.each { |p|
-                if p.id.to_s == palette_id
-                  selected = true
-                else
-                  selected = false
-                end %>
-                <option <%= if selected then 'selected="selected"' end %> value='<%= p.id.to_s %>'><%= p.name %></option>
-<%            } %>
-            </select>
-          </div>
-        </div>
-        <div class='spacer'></div>
-
-
       </div> <!-- /panel body -->
     </div> <!-- /panel -->
 

@@ -26,8 +26,8 @@
       original_k = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_K ]
       replacement_hex = color_hex
 
-      Rails.logger.info '_version_colors.html.erb - color_settings: '\
-        + JSON.pretty_generate( color_settings )
+#      Rails.logger.info '_version_colors.html.erb - color_settings: '\
+#        + JSON.pretty_generate( color_settings )
 
       if @color_values
         val = @color_values[ color_name ]
@@ -61,7 +61,9 @@
             style='width:98%;' aria-describedby='basic-addon1' class='form-control'>
             <option selected='selected' value='<%= color_hex.to_s %>' data-c='0' data-m='0' data-y='0' data-k='0'
               data-i='<%= i.to_s %>'>No Change</option>
-<%=         @palettes[ color_name ].each do |c| %>
+<%=
+            Rails.logger.info '_version_colors.html.erb - color_name: ' + color_name.to_s
+            @palettes[ color_name ].each do |c| %>
               <option data-c='<%= c.cyan.to_s %>' data-m='<%= c.magenta.to_s %>'
                 data-y='<%= c.yellow.to_s %>' data-k='<%= c.black.to_s %>'
                 data-i='<%= i.to_s %>' title='<%= c.description %>' value='<%= c.hex_code %>'
