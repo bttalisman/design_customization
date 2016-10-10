@@ -37,8 +37,12 @@ if !@colors.nil?
         use_palette_select = 'disabled="disabled"'
 
 
-        if !@prompts.nil? && (color != '') && !color.nil? && !color_name.nil?
+        if !@prompts.nil? && (color != '') && !color.nil?
           color_props = @prompts[ PROMPTS_KEY_COLOR_SETTINGS ][ color_key.to_s ]
+
+
+          Rails.logger.info 'color_props: ' + color_props.to_s
+
           if !color_props.nil?
             # we've got color props, these settings have been previously set
             replace_color = color_props[ PROMPTS_KEY_REPLACE_COLOR ]
@@ -56,7 +60,6 @@ if !@colors.nil?
             else
               use_palette_select = ''
             end
-
 
           end # colorProps not nil
         end # @prompts not nil %>
