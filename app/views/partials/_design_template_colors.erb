@@ -40,9 +40,6 @@ if !@colors.nil?
         if !@prompts.nil? && (color != '') && !color.nil?
           color_props = @prompts[ PROMPTS_KEY_COLOR_SETTINGS ][ color_key.to_s ]
 
-
-          Rails.logger.info 'color_props: ' + color_props.to_s
-
           if !color_props.nil?
             # we've got color props, these settings have been previously set
             replace_color = color_props[ PROMPTS_KEY_REPLACE_COLOR ]
@@ -50,12 +47,21 @@ if !@colors.nil?
             palette_id = color_props[ PROMPTS_KEY_REPLACE_COLOR_PALETTE_ID ]
 
             if( replace_color == 'checked' )
+              # this color has previously been selected for replacement.
               border_css = 'border-color:blue;'
+              label_class = ''
+              use_pal_cb_class = ''
+              use_pal_cb_prop = ''
             else
+              # this color has not been selected for replacement.
               border_css = 'border-color:' + background_color.to_s + ';'
+              label_class = 'disabled'
+              use_pal_cb_class = 'disabled'
+              use_pal_cb_prop = 'disabled="disabled"'
             end
 
             if( use_palette != 'checked' )
+              # if this color does not use a palette, then the select is disabled
               use_palette_select = 'disabled="disabled"'
             else
               use_palette_select = ''
@@ -80,10 +86,11 @@ if !@colors.nil?
         <div style='width:170px; padding:15px; background:<%= background_color.to_s %>; display:inline-block;'>
 
           <div onclick='click_color(this);' data-selected='<%= replace_color.to_s %>'
-            data-input-id='replace_color<%= i.to_s %>'
+            data-input-id='replace_color<%= i.to_s %>' data-label-id='op_label<%= i.to_s %>'
+            data-cb-id='use_pal<%= i.to_s %>' data-sel-id='select_pal<%= i.to_s %>'
             style='float:left; <%= border_css.to_s %> border-style:solid; border-width:2px; padding:10px; width:140px; height:140px;'>
 
-            <div style='width:100%; height:40px; font-size:12px;'><%= color_name.to_s %></div>
+            <div style='width:100%; height:40px; font-weight:bold; font-size:12px;'><%= color_name.to_s %></div>
 
             <div style='display:inline-block; vertical-align:top; width:40px;
               height:40px; background:<%= color_hex.to_s %>'></div>
@@ -97,10 +104,11 @@ if !@colors.nil?
           </div>
 
           <div style='width:150px;'>
-            <label class='' id='op_label<%= i.to_s %>' style=''>Offer a Palette?
-              <input type='checkbox' data-sel-id='select_pal<%= i.to_s %>'
+            <label class='<%= label_class.to_s %>' id='op_label<%= i.to_s %>' style=''>Offer a Palette?
+              <input type='checkbox' class='<%= use_pal_cb_class.to_s %>' data-sel-id='select_pal<%= i.to_s %>'
                 onchange='toggle_use_palette( event );' class='checkbox-input'
-                value='checked' name='use_pal<%= i.to_s %>' id='use_pal<%= i.to_s %>'
+                value='checked' name='use_pal<%= i.to_s %>'
+                id='use_pal<%= i.to_s %>' <%= use_pal_cb_prop.to_s %>
                 <%= use_palette %> ></input>
             </label>
           </div>
@@ -144,24 +152,43 @@ end #colors is not nil
     var element = $(e);
     var bg_color = element.css( 'background-color' );
     var selected = element.attr( 'data-selected' );
-    var inputId;
-    var input;
+    var inputId = element.attr( 'data-input-id' );
+    var input = $( '#' + inputId );
+    var label_id = element.attr( 'data-label-id' );
+    var label = $( '#' + label_id );
+    var cb_id = element.attr( 'data-cb-id' );
+    var cb = $( '#' + cb_id );
+    var sel_id = element.attr( 'data-sel-id' );
+    var select = $( '#' + sel_id );
+
 
     if( selected !== '' )
     {
+      // this color is already selected, make it NOT selected
       element.css( 'border-color', bg_color );
       element.attr( 'data-selected', '' );
-      inputId = element.attr( 'data-input-id' );
-      input = $( '#' + inputId );
       input.val( '' );
+      label.addClass( 'disabled' );
+      cb.addClass( 'disabled' );
+      cb.prop( 'disabled', true );
+      select.addClass( 'disabled' );
+      select.prop( 'disabled', true );
     }
     else
     {
+      // this color is not selected, make it selected
       element.css( 'border-color', 'blue' );
       element.attr( 'data-selected', 'checked' );
-      inputId = element.attr( 'data-input-id' );
-      input = $( '#' + inputId );
       input.val( 'checked' );
+      label.removeClass( 'disabled' );
+      cb.removeClass( 'disabled' );
+      cb.prop( 'disabled', false );
+
+      if( cb.is( ':checked' ) ) {
+          select.removeClass( 'disabled' );
+          select.prop( 'disabled', false );
+      }
+      
     }
 
   }
@@ -176,51 +203,9 @@ end #colors is not nil
     select.prop( 'disabled', !target.is(':checked') );
 
     if( !target.is(':checked') ) {
-      o.val( '' );
+      select.val( '' );
     }
   }
-
-    function toggle( event )
-    {
-      var target = $(event.target);
-      var use_pal_id = target.attr( 'data-use-pal-id' );
-      var sel_pal_id = target.attr( 'data-sel-id' );
-      var label_id = target.attr( 'data-label-id' );
-
-      var s, o;
-      s = '#' + use_pal_id;
-      o = $(s);
-      o.prop( 'disabled', !target.is(':checked') );
-
-      if( !target.is(':checked') ) {
-        //  if pick color checkbox is unchecked
-
-        // uncheck the use palette checkbox
-        o.prop( 'checked', false );
-
-        // disable the label
-        s = '#' + label_id;
-        o = $(s);
-        o.addClass( 'disabled' );
-
-        // set the value and disable the select
-        s = '#' + sel_pal_id;
-        o = $(s);
-        o.val( '' );
-        o.prop( 'disabled', true );
-      }
-      else
-      {
-        s = '#' + label_id;
-        o = $(s);
-        o.removeClass( 'disabled' );
-      }
-    }
-
-
-
-
-
 
 
 
