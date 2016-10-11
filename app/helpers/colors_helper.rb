@@ -52,20 +52,25 @@ module ColorsHelper
                                 yellow: orig_color_y, black: orig_color_k )
 
         if( exists.blank? )
+
+          Rails.logger.info 'ColorsHelper - load_extracted_colors() - creating color'
+
           new_color = Color.create
           new_color.cyan = orig_color_c
           new_color.magenta = orig_color_m
           new_color.yellow = orig_color_y
           new_color.black = orig_color_k
 
+          new_color.was_extracted = true
           new_color.hex_code = orig_color_hex
-          description = 'Imported from AI.'
+          description = 'Imported from Illustrator.'
           if !color_name.empty?
             description = description + ' Swatch name: ' + color_name
           end
-          
+
           new_color.description = description
-          new_color.save
+          Rails.logger.info 'ColorsHelper - load_extracted_colors() - save SUCCESS!'\
+            if new_color.save
         else
           Rails.logger.info 'ColorsHelper - load_extracted_colors() - color already exists.'
         end

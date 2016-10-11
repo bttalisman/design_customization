@@ -16,8 +16,19 @@ Rails.application.config.assets.precompile += %w( bootstrap.js )
 Rails.application.config.assets.precompile += %w( bootstrap.css )
 Rails.application.config.assets.precompile += %w( bootstrap-responsive.css )
 Rails.application.config.assets.precompile += %w( select2.js )
-Rails.application.config.assets.precompile += %w( jquery.reel-min.js )
 Rails.application.config.assets.precompile += %w( select2.css )
+Rails.application.config.assets.precompile += %w( lodash.js )
+Rails.application.config.assets.precompile += %w( three.js )
+
+Rails.application.config.assets.precompile += %w( cameraDolly.js )
+Rails.application.config.assets.precompile += %w( meshControl.js )
+Rails.application.config.assets.precompile += %w( utils.js )
+Rails.application.config.assets.precompile += %w( viewer.js )
+
+
+Rails.application.config.assets.precompile += %w( jquery.reel-min.js )
 Rails.application.config.assets.precompile += %w( util.css )
+
+
 Rails.application.config.assets.precompile += %w( star.png )
 Rails.application.config.assets.precompile += %w( blank.png )

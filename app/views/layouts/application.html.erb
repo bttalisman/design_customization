@@ -16,7 +16,15 @@
     <%= javascript_include_tag 'select2.js', 'data-turbolinks-track' => true %>
     <%= stylesheet_link_tag    'select2.css', media: 'all', 'data-turbolinks-track' => true %>
 
-    <%= javascript_include_tag 'jquery.reel-min.js', 'data-turbolinks-track' => true %>
+
+    <!-- the following are for 3d rendering -->
+    <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js"></script>
+    <%= javascript_include_tag 'utils.js', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'cameraDolly.js', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'meshControl.js', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'viewer.js', 'data-turbolinks-track' => true %>
+
+
 
   </head>
   <body>

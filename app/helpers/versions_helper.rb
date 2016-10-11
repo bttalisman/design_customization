@@ -77,6 +77,12 @@ module VersionsHelper
     url
   end
 
+  def get_bitmap_name( version )
+    paths = get_paths( version )
+    output_file_base_name = paths[ :output_file_base_name ]
+    url = output_file_base_name + '.png'
+    url
+  end
 
   # Returns the number of rendered images in the render folder.
   def get_local_render_image_count( version, plus_size )
@@ -812,6 +818,26 @@ module VersionsHelper
     end
     output_folder
   end
+
+  # This method copies the final bitmap output to the local render folder
+  # root.  This is the location where client-side render engine looks for
+  # bitmaps.
+  def copy_output_to_local_render_folder( version, params )
+    app_config = Rails.application.config_for( :customization )
+    local_render_folder = app_config[ 'path_to_local_render_folder_root' ]
+
+    paths = get_paths( version )
+    output_folder = paths[ :output_folder ]
+    original_file_path = paths[ :original_file_path ]
+    original_file_base_name = paths[ :original_file_base_name ]
+    output_file_base_name = paths[ :output_file_base_name ]
+
+    png_file = output_folder + output_file_base_name + '.png'
+
+    FileUtils.cp( png_file, local_render_folder ) if File.exist?( png_file )
+
+  end
+
 
   def send_to_render( version, params )
     do_render = to_boolean( params[ 'render' ] )

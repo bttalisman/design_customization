@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005011657) do
+ActiveRecord::Schema.define(version: 20161010183858) do
 
   create_table "collages", force: :cascade do |t|
     t.string   "path",       limit: 255
@@ -23,15 +23,16 @@ ActiveRecord::Schema.define(version: 20161005011657) do
   end
 
   create_table "colors", force: :cascade do |t|
-    t.string   "hex_code",    limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.integer  "palette_id",  limit: 4
-    t.string   "description", limit: 255
-    t.float    "cyan",        limit: 24
-    t.float    "magenta",     limit: 24
-    t.float    "yellow",      limit: 24
-    t.float    "black",       limit: 24
+    t.string   "hex_code",      limit: 255
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.integer  "palette_id",    limit: 4
+    t.string   "description",   limit: 255
+    t.float    "cyan",          limit: 24
+    t.float    "magenta",       limit: 24
+    t.float    "yellow",        limit: 24
+    t.float    "black",         limit: 24
+    t.boolean  "was_extracted", limit: 1,   default: false
   end
 
   add_index "colors", ["palette_id"], name: "index_colors_on_palette_id", using: :btree

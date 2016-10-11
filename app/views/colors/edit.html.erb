@@ -13,9 +13,39 @@
 
           <div class='form-group'>
             <input type='text' id='hex_code' name='color[hex_code]'
-              class='form-control' data-control='hue' value='<%= @color.hex_code %>'>
+              class='form-control' <%= if @color.was_extracted then 'disabled' end %>
+              data-control='hue' value='<%= @color.hex_code %>'>
           </div>
           <div class='spacer'></div>
+
+
+          <div style='height:70px; margin-bottom:15px;'>
+            <div style='width:47%; float:left; margin-right:15px; margin-bottom:15px;' class='input-group' id=''>
+              <span class='input-group-addon' style='width:30px;' id='basic-addon1'>C</span>
+              <input type='text' <%= if @color.was_extracted then 'disabled' end %> id='' aria-describedby='basic-addon1'
+                class='form-control' value='<%= @color.cyan %>'>
+            </div>
+            <div style='width:47%; float:left;' class='input-group' id=''>
+              <span class='input-group-addon' style='width:30px;' id='basic-addon2'>M</span>
+              <input type='text' <%= if @color.was_extracted then 'disabled' end %> id='' aria-describedby='basic-addon2'
+                class='form-control' value='<%= @color.magenta %>'>
+            </div>
+            <div style='width:47%; float:left; margin-right:15px;' class='input-group' id=''>
+              <span class='input-group-addon' style='width:30px;' id='basic-addon3'>Y</span>
+              <input type='text' <%= if @color.was_extracted then 'disabled' end %> id='' aria-describedby='basic-addon3'
+                class='form-control' value='<%= @color.yellow %>'>
+            </div>
+            <div style='width:47%; float:left;' class='input-group' id=''>
+              <span class='input-group-addon' style='width:30px;' id='basic-addon4'>K</span>
+              <input type='text' <%= if @color.was_extracted then 'disabled' end %> id='' aria-describedby='basic-addon4'
+                class='form-control' value='<%= @color.black %>'>
+            </div>
+          </div>
+
+
+
+
+
 
           <div class='alert alert-warning'>Customers may see this description!</div>
           <div class='input-group' style='margin-bottom:20px;'>

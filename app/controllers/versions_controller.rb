@@ -95,8 +95,14 @@ class VersionsController < ApplicationController
     # above.
     process_replacement_images( @version )
 
+    # Generates all modified AI files and other bitmap output
     process_version( @version, params ) if @version.save
+
+    # Sends to the remote render folder on google drive, to await
+    # rendering
     send_to_render( @version, params )
+
+    copy_output_to_local_render_folder( @version, params )
 
     redirect_to versions_path
   end
@@ -153,6 +159,7 @@ class VersionsController < ApplicationController
     @render_url = get_render_url( @version, false )
     @render_image_url = get_render_image_url( @version, false )
     @render_image_count = get_local_render_image_count( @version, false )
+    @bitmap_name = get_bitmap_name( @version )
 
     logger.info 'version_controller - show - @version: ' + @version.to_s
     logger.info 'version_controller - show - @design_template: '\
