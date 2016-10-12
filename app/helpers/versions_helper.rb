@@ -864,7 +864,9 @@ module VersionsHelper
   end
 
   def get_paths( version )
-    version_name = version.name
+    #file_name = version.name # TODO should not be based on version name?
+    file_name = version.design_template.id.to_s + '_' + version.id.to_s
+
     original_file = version.design_template.original_file
     original_file_path = original_file.path
     original_file_name = File.basename( original_file_path )
@@ -872,7 +874,7 @@ module VersionsHelper
     version_folder = get_version_folder( version )
     version_file_path = version_folder + '/' + original_file_name
     output_folder = get_output_folder( version )
-    output_file_base_name = make_suitable_file_name( version_name.to_s ) + '_final'
+    output_file_base_name = make_suitable_file_name( file_name.to_s ) + '_final'
     intermediate_output = output_folder.to_s + output_file_base_name + '.ai'
 
     o = {

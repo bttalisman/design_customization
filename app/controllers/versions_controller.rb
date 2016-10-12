@@ -62,6 +62,8 @@ class VersionsController < ApplicationController
     @design_template_id = @design_template.id
     @values = get_values_object( @version )
     @root_folder = Rails.root.to_s
+    @original_bitmap_name = ''
+    
   end
 
   def update
@@ -104,7 +106,7 @@ class VersionsController < ApplicationController
 
     copy_output_to_local_render_folder( @version, params )
 
-    redirect_to versions_path
+    redirect_to @version
   end
 
   def new

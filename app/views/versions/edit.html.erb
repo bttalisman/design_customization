@@ -69,6 +69,18 @@
   $(document).ready( function() {
     getTemplateHTML( <%= @design_template.id %> );
     getManagedAssetsHTML( <%= @design_template.id %> );
+
+
+    var container = $('#original_render_container');
+
+    var settings = {
+        assetPath: "/RENDERINGS/",
+        sceneBackgroundColor: "rgb(0, 0, 0)"
+      };
+
+    var viewer = new Viewer(['<%= @original_bitmap_name.to_s %>'],
+                            container,
+                            settings);
   });
 
 </script>
@@ -147,11 +159,25 @@ form_for @version, html: { multipart: true, id: 'version_form' } do |form|
       <div class='spacer'></div>
       <div id='managed_assets_container'></div>
 
+
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'>Original</h3>
+        </div>
+        <div class='panel-body'>
+          <div id='original_render_container'></div>
+        </div>
+      </div>
+
+
+
     </div>  <!-- / col -->
+
     <div class='col col-md-1'></div>
     <div class='col col-md-5'>
       <div id='values_container'></div>
     </div>
+
   </div> <!-- / row -->
 <%
 end %>
