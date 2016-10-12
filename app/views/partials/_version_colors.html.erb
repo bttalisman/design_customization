@@ -16,7 +16,6 @@
       next if( color_settings[ PROMPTS_KEY_REPLACE_COLOR ] == '' )
 
       color_name = color[ 0 ]
-      logger.info '_VERSION_COLORS.html.erb - color_name: ' + color_name.to_s
       replacement_color_id = ''
       color_hex = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_HEX ]
       swatch_name = color_settings[ PROMPTS_KEY_REPLACE_COLOR_ORIG_COLOR_NAME ]
@@ -62,7 +61,6 @@
             <option selected='selected' value='<%= color_hex.to_s %>' data-c='0' data-m='0' data-y='0' data-k='0'
               data-i='<%= i.to_s %>'>No Change</option>
 <%=
-            Rails.logger.info '_version_colors.html.erb - color_name: ' + color_name.to_s
             @palettes[ color_name ].each do |c| %>
               <option data-c='<%= c.cyan.to_s %>' data-m='<%= c.magenta.to_s %>'
                 data-y='<%= c.yellow.to_s %>' data-k='<%= c.black.to_s %>'

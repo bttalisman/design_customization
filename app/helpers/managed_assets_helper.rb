@@ -18,9 +18,7 @@ module ManagedAssetsHelper
   end
 
   def get_sorted_managed_assets( design_template )
-    Rails.logger.info '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
     Rails.logger.info 'managed_assets_helper - get_sorted_managed_assets()'
-
     return [] if design_template.managed_assets.length == 0
 
     prefs = get_asset_prefs_object( design_template )

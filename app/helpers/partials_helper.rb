@@ -30,8 +30,8 @@ module PartialsHelper
 
     color_settings = prompts[ PROMPTS_KEY_COLOR_SETTINGS ]
 
-    Rails.logger.info 'partials_helper - get_palettes() color_settings: '\
-      + JSON.pretty_generate( color_settings )
+#    Rails.logger.info 'partials_helper - get_palettes() color_settings: '\
+#      + JSON.pretty_generate( color_settings )
 
     color_settings.each do |c|
       use_palette = c[ 1 ][ PROMPTS_KEY_REPLACE_COLOR_USE_PALETTE ]
@@ -40,20 +40,8 @@ module PartialsHelper
       if use_palette === 'checked'
         begin
 
-          Rails.logger.info 'partials_helper - get_palettes() - using a palette! - palette_id: '\
-            + palette_id.to_s
-
           palette = Palette.find( palette_id )
-
-          Rails.logger.info 'partials_helper - get_palettes() - palette: '\
-            + palette.to_s
-
           palettes[ c[0] ] = palette.colors
-
-          Rails.logger.info 'partials_helper - get_palettes() - c[0]: '\
-            + c[0].to_s
-            
-
         rescue ActiveRecord::RecordNotFound
           palettes[ c[0] ] = Color.all
         end
@@ -65,8 +53,8 @@ module PartialsHelper
     end # each color setting
 
 
-    Rails.logger.info 'PartialsHelper - get_palettes() - palettes: '\
-      + JSON.pretty_generate( palettes )
+#    Rails.logger.info 'PartialsHelper - get_palettes() - palettes: '\
+#      + JSON.pretty_generate( palettes )
 
     palettes
   end

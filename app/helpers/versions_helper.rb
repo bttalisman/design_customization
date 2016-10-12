@@ -4,6 +4,7 @@ module VersionsHelper
   include CollagesHelper
   include ReplacementImagesHelper
   include ImageHelper
+  include GoogleDriveHelper
 
   # Every version has its own folder, used for building modified AI files.
   # This folder will contain a copy of the AI file from the template,
@@ -46,150 +47,50 @@ module VersionsHelper
   def get_render_image_url( version, plus_size )
     paths = get_paths( version )
     output_file_base_name = paths[ :output_file_base_name ]
-    url = '/RENDERINGS/' + output_file_base_name + '/image_000.png'
+    url = output_file_base_name + '/image.png'
     url
   end
 
-  # This is the url that specifies the set of rendered images. Formatted to
-  # suit jquery reel, http://jquery.vostrel.cz/reel
-  def get_render_url( version, plus_size )
+
+  #
+  def get_original_image_url( version )
     paths = get_paths( version )
     output_file_base_name = paths[ :output_file_base_name ]
-    url = '/RENDERINGS/' + output_file_base_name + '/image_###.png|0..'\
-      + (get_local_render_image_count( version, plus_size ) - 1).to_s
-
-    Rails.logger.info ''
-    Rails.logger.info ''
-    Rails.logger.info ''
-
-    Rails.logger.info 'VERSIONS_HELPER - get_render_url() -'\
-      + ' url: ' + url.to_s
+    url = output_file_base_name + '/original.png'
     url
   end
 
-  # This is the url that specifies the set of rendered images. Formatted to
-  # suit jquery reel, http://jquery.vostrel.cz/reel.  Not sure why reel wants
-  # this when it has the whole set of images.
-  def get_render_image_url( version, plus_size )
-    paths = get_paths( version )
-    output_file_base_name = paths[ :output_file_base_name ]
-    url = '/RENDERINGS/' + output_file_base_name + '/image_000.png'
-    url
-  end
 
-  def get_bitmap_name( version )
-    paths = get_paths( version )
-    output_file_base_name = paths[ :output_file_base_name ]
-    url = output_file_base_name + '.png'
-    url
-  end
-
-  # Returns the number of rendered images in the render folder.
-  def get_local_render_image_count( version, plus_size )
-    local_render_folder = get_local_render_folder( version )
-    i = 0
-    Dir.entries( local_render_folder ).each do |name|
-      # skip folders
-      next if File.directory? name
-      next if name == '.DS_Store'
-
-      Rails.logger.info 'VERSIONS_HELPER - get_local_render_image_count() - name: '\
-        + name.to_s
-
-      if plus_size
-        next if !name.to_s.include?( 'Plus' )
-      else
-        next if name.to_s.include?( 'Plus' )
-      end
-      i += 1
-    end # each entry in dir
-    Rails.logger.info 'VERSIONS_HELPER - get_local_render_image_count() - plus_size: '\
-      + plus_size.to_s
-    Rails.logger.info 'VERSIONS_HELPER - get_local_render_image_count() - i: '\
-      + i.to_s
-    i
-  end
-
-  # This id is used for downloading rendered images.
-  def get_google_drive_folder_id( folder_name )
-    command = %Q[ gdrive list -q 'name = "#{folder_name}" and mimeType = "application/vnd.google-apps.folder"' > tmp/output.txt ]
-
-    begin
-      system( command )
-    rescue Error
-    end
-
-    file = File.new( 'tmp/output.txt', 'r' )
-    first_line = file.gets
-    second_line = file.gets
-    file.close
-
-    if second_line
-      data = second_line.split( ' ' )
-      id = data[0] if data.kind_of?(Array)
-    end
-    Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() folder_name: ' + folder_name.to_s
-    Rails.logger.info 'VERSIONS_HELPER - get_google_drive_folder_id() id: ' + id.to_s
-    id
-  end
-
-  # This method copies rendered images from the remote render folder on
-  # Google drive into the local render folder.  It then renames all images
-  # to image_###.png or image_Plus_###.png
-  def update_local_render_folder( version )
-    app_config = Rails.application.config_for( :customization )
-    render_root_folder = app_config[ 'path_to_local_render_folder_root' ]
-    local_render_folder = get_local_render_folder( version )
+  # This method copies the final bitmap output to the local render folder
+  # root.  This is the location where client-side render engine looks for
+  # bitmaps.
+  def copy_output_to_local_render_folder( version )
+    render_folder = get_local_render_folder( version )
+    render_file = render_folder + 'image.png'
 
     paths = get_paths( version )
+    output_folder = paths[ :output_folder ]
     output_file_base_name = paths[ :output_file_base_name ]
 
-    FileUtils.mkdir_p( local_render_folder )\
-      unless File.directory?( local_render_folder )
-
-    folder_id = get_google_drive_folder_id( output_file_base_name )
-    command = %Q[ gdrive download --recursive --path '#{render_root_folder}' #{folder_id} ]
-    Rails.logger.info '!!!!!!!!!!!!!!!!!!! ----- VERSIONS_HELPER - update_local_render_folder() - command: ' + command.to_s
-
-    return if folder_id.nil?
-
-    begin
-      system( command )
-    rescue Error
-    end
-
-    path = render_root_folder + output_file_base_name
-
-    Rails.logger.info 'versions_helper - update_local_render_folder() - about to rename contents of : '\
-      + path.to_s
+    png_file = output_folder + output_file_base_name + '.png'
+    FileUtils.cp( png_file, render_file ) if File.exist?( png_file )
+  end
 
 
-    i = 0
-    Dir.open( path ).each do |p|
-      next if File.extname(p) != '.png'
-      next if p.to_s.include?( 'Plus' )
-      newname = 'image_' + i.to_s.rjust( 3, '0' ) + '.png'
-      begin
-        FileUtils.mv( "#{path}/#{p}", "#{path}/#{newname}", { :force => true } )
-      rescue ArgumentError
-      end
-      i += 1
-    end
+  def copy_original_to_local_render_folder( version )
+    render_folder = get_local_render_folder( version )
 
-    # Rename plus-sized images
-    i = 0
-    Dir.open( path ).each do |p|
-      next if File.extname(p) != '.png'
-      next if !p.to_s.include?( 'Plus' )
-      newname = 'image_Plus_' + i.to_s.rjust( 3, '0' ) + '.png'
-      begin
-        FileUtils.mv( "#{path}/#{p}", "#{path}/#{newname}", { :force => true } )
-      rescue ArgumentError
-      end
-      i += 1
-    end
+    dt_output_folder = get_design_template_folder( version.design_template )
+    original_file = dt_output_folder + '/original.png'
+
+    original_render_file = render_folder + 'original.png'
+    FileUtils.cp( original_file, original_render_file ) if File.exist?( original_file )
 
   end
+
+
+
+
 
   # A version's values is a json obj describing all extensible settings,
   # set by the user.  See README.md
@@ -201,8 +102,8 @@ module VersionsHelper
     else
       Rails.logger.info 'VERSIONS_HELPER - get_values_object() - INVALID JSON!!'
     end
-    Rails.logger.info 'versions_helper - get_values_object() - values: '\
-      + JSON.pretty_generate( values )
+#    Rails.logger.info 'versions_helper - get_values_object() - values: '\
+#      + JSON.pretty_generate( values )
     values
   end
 
@@ -817,25 +718,6 @@ module VersionsHelper
       output_folder = guarantee_final_slash( version_folder )
     end
     output_folder
-  end
-
-  # This method copies the final bitmap output to the local render folder
-  # root.  This is the location where client-side render engine looks for
-  # bitmaps.
-  def copy_output_to_local_render_folder( version, params )
-    app_config = Rails.application.config_for( :customization )
-    local_render_folder = app_config[ 'path_to_local_render_folder_root' ]
-
-    paths = get_paths( version )
-    output_folder = paths[ :output_folder ]
-    original_file_path = paths[ :original_file_path ]
-    original_file_base_name = paths[ :original_file_base_name ]
-    output_file_base_name = paths[ :output_file_base_name ]
-
-    png_file = output_folder + output_file_base_name + '.png'
-
-    FileUtils.cp( png_file, local_render_folder ) if File.exist?( png_file )
-
   end
 
 

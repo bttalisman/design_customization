@@ -27,8 +27,8 @@ class DesignTemplatesController < ApplicationController
       @design_templates << o
     end
 
-    Rails.logger.info 'design_templates_controller - index() - @design_templates: '\
-      + JSON.pretty_generate( @design_templates )
+#    Rails.logger.info 'design_templates_controller - index() - @design_templates: '\
+#      + JSON.pretty_generate( @design_templates )
   end
 
   def show
@@ -36,12 +36,7 @@ class DesignTemplatesController < ApplicationController
     @versions = @design_template.versions
     # this stats object describes the state and validity of the template
     @stats = get_stats( @design_template )
-
-    file = @design_template.original_file
-    unless file.path.nil?
-      source_path = file.path
-      @folder = File.dirname( source_path.to_s )
-    end
+    @folder = get_design_template_folder( @design_template )
 
     @quick_new_partial_url = local_host + '/partials/quick_new?template_id='\
                               + @design_template.id.to_s + '&user_id=<SHOPIFY_USER_ID>'

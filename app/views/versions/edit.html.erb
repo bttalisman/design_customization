@@ -74,11 +74,11 @@
     var container = $('#original_render_container');
 
     var settings = {
-        assetPath: "/RENDERINGS/",
+        assetPath: '/RENDERINGS/',
         sceneBackgroundColor: "rgb(0, 0, 0)"
       };
 
-    var viewer = new Viewer(['<%= @original_bitmap_name.to_s %>'],
+    var viewer = new Viewer(['<%= @original_bitmap_url.to_s %>'],
                             container,
                             settings);
   });

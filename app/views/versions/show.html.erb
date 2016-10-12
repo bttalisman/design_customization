@@ -29,8 +29,6 @@
         <a class='btn btn-default' href='<%= edit_version_path %>'>Edit</a>
         <a class='btn btn-default' href='/versions/<%= @version.id %>'
           data-confirm='Are you sure?' data-method='delete' rel='nofollow'>Delete</a>
-        <a class='btn btn-default' onclick='update_render_folder();' >Check for Renderings</a>
-
       </div> <!-- /panel footer -->
     </div> <!-- / panel -->
   </div> <!-- / col -->
@@ -58,25 +56,6 @@
 </div>
 
 <script>
-
-  function button_click()
-  {
-//    var reel = $('#reel_viewer');
-//    var d = reel.data();
-//    var frame = reel.reel('frame');
-//    var url = d.images[ frame - 1 ];
-//    window.open( url );
-  }
-
-  function update_render_folder()
-  {
-    $.ajax({
-      url: '/versions/<%= @version.id.to_s %>/update_render_folder',
-    }).done(function() {
-    });
-  }
-
-
 
   $(document).ready( function() {
 

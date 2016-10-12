@@ -3,6 +3,7 @@ module DesignTemplatesHelper
 
   include ColorsHelper
 
+
   # the path to the tags file is based on the path to the original ai file.
   def path_to_tags_file( design_template )
     file = design_template.original_file
@@ -497,8 +498,8 @@ module DesignTemplatesHelper
 #      + 'prompts_string: ' + prompts_string.to_s
     if json?( prompts_string )
       prompts = JSON.parse( prompts_string )
-      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
-        + 'prompts: ' + JSON.pretty_generate( prompts )
+#      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
+#        + 'prompts: ' + JSON.pretty_generate( prompts )
     end
     prompts
   end

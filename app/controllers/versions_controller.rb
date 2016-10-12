@@ -62,8 +62,9 @@ class VersionsController < ApplicationController
     @design_template_id = @design_template.id
     @values = get_values_object( @version )
     @root_folder = Rails.root.to_s
-    @original_bitmap_name = ''
-    
+    @original_bitmap_url = get_original_image_url( @version )
+    logger.info 'VERSION_COTROLLER - EDIT - @original_bitmap_url: ' + @original_bitmap_url.to_s
+
   end
 
   def update
@@ -104,7 +105,7 @@ class VersionsController < ApplicationController
     # rendering
     send_to_render( @version, params )
 
-    copy_output_to_local_render_folder( @version, params )
+    copy_output_to_local_render_folder( @version )
 
     redirect_to @version
   end
@@ -140,6 +141,7 @@ class VersionsController < ApplicationController
     @version.update( { user_id: user.id } ) if user
 
     if @version.save
+      copy_original_to_local_render_folder( @version )
       redirect_to action: 'edit', id: @version.id
     else
       logger.info 'VERSION_CONTROLLER - create - FAILURE!'
@@ -158,10 +160,10 @@ class VersionsController < ApplicationController
       @data_file = path_to_data_file( @version.design_template.original_file.path.to_s )
     end
 
-    @render_url = get_render_url( @version, false )
-    @render_image_url = get_render_image_url( @version, false )
-    @render_image_count = get_local_render_image_count( @version, false )
-    @bitmap_name = get_bitmap_name( @version )
+    Rails.logger.info ''
+    Rails.logger.info '!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    Rails.logger.info 'About to call get_render_image_url()'
+    @bitmap_name = get_render_image_url( @version, false )
 
     logger.info 'version_controller - show - @version: ' + @version.to_s
     logger.info 'version_controller - show - @design_template: '\
