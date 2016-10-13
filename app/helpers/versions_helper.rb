@@ -17,8 +17,7 @@ module VersionsHelper
     version_output_folder = versions_folder + version.id.to_s
 
     Rails.logger.info 'VERSIONS_HELPER - get_version_folder() -'\
-      + ' version_output_folder: '\
-      + version_output_folder.to_s
+      + ' version_output_folder: ' + version_output_folder.to_s
 
     FileUtils.mkdir_p( version_output_folder )\
       unless File.directory?( version_output_folder )
@@ -42,8 +41,10 @@ module VersionsHelper
     render_folder
   end
 
-  # This is the url that specifies the set of rendered images. Formatted to
-  # suit jquery reel, http://jquery.vostrel.cz/reel
+  # This is the url that locates the bitmap for client-side rendering,
+  # showing the final product of a version.
+  # The url is relative the the render root url, specified by the
+  # configuration setting app_config[ 'path_to_local_render_folder_root' ]
   def get_render_image_url( version, plus_size )
     paths = get_paths( version )
     output_file_base_name = paths[ :output_file_base_name ]
@@ -52,7 +53,10 @@ module VersionsHelper
   end
 
 
-  #
+  # This is the url that locates the bitmap for client-side rendering,
+  # showing the original design file, before any version transformations are made.
+  # The url is relative the the render root url, specified by the
+  # configuration setting app_config[ 'path_to_local_render_folder_root' ]
   def get_original_image_url( version )
     paths = get_paths( version )
     output_file_base_name = paths[ :output_file_base_name ]
@@ -76,7 +80,9 @@ module VersionsHelper
     FileUtils.cp( png_file, render_file ) if File.exist?( png_file )
   end
 
-
+  # This method copies the original design bitmap to the local render folder
+  # root.  This is the location where client-side render engine looks for
+  # bitmaps.
   def copy_original_to_local_render_folder( version )
     render_folder = get_local_render_folder( version )
 
@@ -85,10 +91,7 @@ module VersionsHelper
 
     original_render_file = render_folder + 'original.png'
     FileUtils.cp( original_file, original_render_file ) if File.exist?( original_file )
-
   end
-
-
 
 
 
@@ -239,6 +242,8 @@ module VersionsHelper
     replacement_path
   end
 
+  # This method updates version.values with settings posted by
+  # partials/_version_tags.html.erb
   def set_tag_values( version, params )
     Rails.logger.info 'VERSIONS_HELPER - set_tag_values() - params: '\
       + params.to_s
@@ -294,6 +299,8 @@ module VersionsHelper
     end
   end
 
+  # This method updates version.values with settings posted by
+  # partials/_version_trans_butt.html.erb
   def set_trans_butt_values( version, params )
     Rails.logger.info 'VERSIONS_HELPER - set_trans_butt_values() - params: '\
       + params.to_s
@@ -318,16 +325,8 @@ module VersionsHelper
   end
 
 
-
-  # This method updates a version's values json and associated ReplacementImages
-  # and Collages.
-  # params must contain an 'image_count' property.
-  # params contain values keyed by:
-  # => replacement_image<index>,
-  # => image_name<index>,
-  # => type<index>,
-  # => collage_query<index>
-  # for each image.
+  # This method updates version.values with settings posted by
+  # partials/_version_images.html.erb
   def set_image_values( version, params )
     Rails.logger.info 'versions_helper - set_image_values() - params: '\
       + params.to_s
@@ -439,7 +438,8 @@ module VersionsHelper
 
   # For images and tags, the existance of tags and named images indicates that
   # a replacement should occur.  All designs have colors, so the existance of
-  # colors isnt sufficient.  This method determines if colors are being replaced.
+  # colors isnt sufficient.  This method determines if colors are being replaced
+  # by looking at the version.values object.
   def replace_colors?( version )
     b = false
     values = get_values_object( version )
@@ -454,7 +454,8 @@ module VersionsHelper
     b
   end
 
-
+  # This method updates version.values with settings posted by
+  # partials/_version_colors.html.erb
   def set_color_values( version, params )
     Rails.logger.info 'versions_helper - set_color_values() - params: '\
       + params.to_s
@@ -604,7 +605,7 @@ module VersionsHelper
   end
 
   def remove_data_file( path_to_ai_file )
-    Rails.logger.info 'versions_helper - remove_data_file() !!!!!!!!!!!'
+    Rails.logger.info 'versions_helper - remove_data_file()'
     temp_values_file = path_to_data_file( path_to_ai_file )
     File.delete( temp_values_file )
   end
@@ -720,7 +721,9 @@ module VersionsHelper
     output_folder
   end
 
-
+  # This method uploads a version's final output png file to google drive
+  # where it will be picked up for rendering.  This method uses an
+  # executable called 'gdrive'
   def send_to_render( version, params )
     do_render = to_boolean( params[ 'render' ] )
     Rails.logger.info 'VERSION_HELPER - send_to_render() - do_render: '\
@@ -745,6 +748,8 @@ module VersionsHelper
     end # if do_render
   end
 
+  # This method constructs an object containing paths relevant to many other
+  # methods.
   def get_paths( version )
     #file_name = version.name # TODO should not be based on version name?
     file_name = version.design_template.id.to_s + '_' + version.id.to_s
@@ -889,6 +894,9 @@ module VersionsHelper
   end
 
 
+  # This method launches an an Illustrator script that takes trans-butt text
+  # along with other settings and generates two bitmap images, one for each
+  # butt half.  
   def process_trans_butt_images( version )
     return if !version.design_template.is_trans_butt
 

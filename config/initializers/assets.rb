@@ -25,8 +25,6 @@ Rails.application.config.assets.precompile += %w( meshControl.js )
 Rails.application.config.assets.precompile += %w( utils.js )
 Rails.application.config.assets.precompile += %w( viewer.js )
 
-
-Rails.application.config.assets.precompile += %w( jquery.reel-min.js )
 Rails.application.config.assets.precompile += %w( util.css )
 
 
