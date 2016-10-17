@@ -4,23 +4,23 @@
 
   <div class='col col-md-1'></div>
   <div class='col col-md-10'>
-    <table class='table table-hover'>
+    <table class='table user-index'>
       <thead>
         <tr>
           <th><a onclick='toggle_first_name();'>First Name</a>
-            <span id='first_name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='first_name_arrow' data-sort-key='first_name' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_last_name();'>Last Name</a>
-            <span id='last_name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='last_name_arrow' data-sort-key='last_name' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_shopify_id();'>Shopify ID</a>
-            <span id='shopify_id_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='shopify_id_arrow' data-sort-key='shopify_id' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_email();'>Email</a>
-            <span id='email_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='email_arrow' data-sort-key='email' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
         </tr>
@@ -85,16 +85,16 @@
 
 
   function toggle_first_name() {
-    toggle_header_item( 'first_name_arrow', get_cached_users, cache_users, 'first_name' ); }
+    toggle_header_item( 'first_name_arrow', get_cached_users, cache_users ); }
 
   function toggle_last_name() {
-    toggle_header_item( 'last_name_arrow', get_cached_users, cache_users, 'last_name' ); }
+    toggle_header_item( 'last_name_arrow', get_cached_users, cache_users ); }
 
   function toggle_shopify_id() {
-    toggle_header_item( 'shopify_id_arrow', get_cached_users, cache_users, 'shopify_id' ); }
+    toggle_header_item( 'shopify_id_arrow', get_cached_users, cache_users ); }
 
   function toggle_email() {
-    toggle_header_item( 'email_arrow', get_cached_users, cache_users, 'email' ); }
+    toggle_header_item( 'email_arrow', get_cached_users, cache_users ); }
 
 
 

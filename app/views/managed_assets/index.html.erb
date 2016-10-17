@@ -4,15 +4,15 @@
 
   <div class='col col-md-1'></div>
   <div class='col col-md-10'>
-    <table class='table table-hover'>
+    <table class='table asset-index'>
       <thead>
         <tr>
           <th><a onclick='toggle_name();'>Name</a>
-            <span id='name_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='name_arrow' data-sort-key='name' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_owner();'>Owner</a>
-            <span id='owner_arrow' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='owner_arrow' data-sort-key='owner' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
         </tr>
@@ -45,6 +45,8 @@
 
 <script>
 
+
+
   var CACHE_NAME = '<%= CACHE_KEY_MANAGED_ASSETS.to_s %>';
 
 
@@ -60,10 +62,10 @@
 
 
   function toggle_name() {
-    toggle_header_item( 'name_arrow', get_cached_assets, cache_assets, 'name' ); }
+    toggle_header_item( 'name_arrow', get_cached_assets, cache_assets ); }
 
   function toggle_owner() {
-    toggle_header_item( 'owner_arrow', get_cached_assets, cache_assets, 'owner' ); }
+    toggle_header_item( 'owner_arrow', get_cached_assets, cache_assets ); }
 
 
   function show_asset( id )

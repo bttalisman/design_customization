@@ -1,21 +1,294 @@
 @import "bootstrap"
 
-.bordered-item
-  border-style: solid
-  border-width: 2px
-  border-color: #eeeeee
 
-.cmyk-details
-  font-size: 8px
+$yellow: rgb(255,255,153)
+$trans-gray: rgba(200,200,200,0.1)
+$deep-blue: rgb(0,0,80)
+$blue-green: rgb(224, 235, 255)
+$dark-gray: rgb(30,30,30)
+$light-gray: rgb(200,200,200)
+$deep-purple: rgb(40,0,20)
+$pink: #ed4faf
+$light-pink: rgb(255,155,220)
+$light-blue: #00b3db
+$deep-yellow: rgb(43, 36, 5)
+$deep-red: rgb(51, 1, 1)
+$deep-aqua: rgb(4, 31, 48)
+$slate-blue: rgb(11, 68, 91)
+$super-bright-pink: rgb(247, 227, 246)
 
-.panel
-  margin-bottom: 0px
+
+
+$main-bg-color: black
+$main-text-color: $pink
+$list-bg-color: black
+
+$inactive-menu-color: $deep-red
+$active-menu-color: $deep-red
+
+$active-hover-color: $pink
+$active-hover-bg-color: $deep-blue
+
+$inactive-hover-color: $pink
+$inactive-hover-bg-color: $deep-blue
+
+$inactive-link-color: $pink
+$active-link-color: white
+
+$table-row-hover-color: $deep-blue
+$table-row-division-color: $deep-blue
+
+$panel-heading-bg-color: $deep-blue
+$panel-heading-text-color: $light-pink
+$panel-footer-bg-color: $deep-blue
+
+$modal-header-bg-color: $slate-blue
+$modal-content-bg-color: $slate-blue
+
+$button-bg-color: $deep-purple
+$button-font-color: $pink
+$button-hover-bg-color: $light-blue
+
+
+// ___________________________________________
+// Header / global stuff
+
+.page-header
+  border: none
+  margin: 0px 0px 0px 0px
+  padding: 10px 10px 10px 10px
+  background: $slate-blue
+  color: $super-bright-pink
+
+
+body
+  background: $main-bg-color
+  color: $main-text-color
+
+
+// ___________________________________________
+// Main menu
 
 .menu-item
   font-weight: bold
 
-.reel-class
-  margin: auto
+ul.nav
+  background-color: $inactive-menu-color
+
+.nav-tabs
+
+  li.active
+    background-color: $active-menu-color
+    border-bottom: 1px solid black
+
+    a
+      background-color: black
+      color: $active-link-color
+
+    a:hover
+      background-color: $active-hover-bg-color
+      color: $active-hover-color
+
+  li
+    background-color: $inactive-menu-color
+    a
+      color: $inactive-link-color
+
+    a:hover
+      background-color: $inactive-hover-bg-color
+      color: $inactive-hover-color
+
+// Main menu dropdown
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus
+  background-color: $main-bg-color
+
+.dropdown
+  ul
+    background-color: black
+    border: 1px solid $pink
+  li
+    background-color: black
+
+
+
+
+
+// ______________________________________________
+// Modals
+
+.modal-header
+  background-color: $modal-header-bg-color
+  color: $pink
+  border-radius: 6px
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  z-index: 100
+
+.modal-content
+  background-color: $modal-content-bg-color
+
+.modal-body
+  margin-top: 54px
+
+// _____________________________________________
+// Table and index styles
+table
+  width: 100%
+
+
+td
+  border-width: 1px 0
+  border-color: $table-row-division-color
+  border-style: solid
+
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th
+  background-color: $table-row-hover-color
+
+
+
+thead, tbody, tr, td, th
+  display: block
+
+tr:after
+  content: ' '
+  display: block
+  visibility: hidden
+  clear: both
+
+thead th
+  height: 40px
+
+tbody
+  height: 400px
+  overflow-y: auto
+
+.design-template-index
+  tbody td, thead th
+    width: 25%
+    height: 50px
+    float: left
+
+.version-index
+  tbody td, thead th
+    width: 16%
+    height: 50px
+    float: left
+
+.user-index
+  tbody td, thead th
+    width: 25%
+    height: 50px
+    float: left
+
+.palette-index
+  tbody td, thead th
+    width: 50%
+    height: 50px
+    float: left
+
+.asset-index
+  tbody td, thead th
+    width: 50%
+    height: 50px
+    float: left
+
+
+// _________________________________________
+// Color selectors and swatches
+
+.color-selector-panel
+  width: 170px
+  padding: 15px
+  display: inline-block
+
+  .alt
+    background-color: pink
+
+.color-selector-swatch
+  display: inline-block
+  border-color: pink
+  border-width: 1px
+  border-style: solid
+  vertical-align: top
+  width: 40px
+  height: 40px
+
+
+
+// ____________________________________________
+// Panels
+
+div.panel-body
+  background-color: $main-bg-color
+
+
+.panel
+  border-color: $pink
+  margin-bottom: 0px
+
+  .panel-heading
+    background-color: $panel-heading-bg-color
+
+
+.panel-title
+  background-color: $panel-heading-bg-color
+  color: $panel-heading-text-color
+
+.panel-footer
+  background-color: $panel-footer-bg-color
+
+
+
+// __________________________________________
+// Forms, inputs, and buttons
+
+.btn-default
+  background-color: $button-bg-color
+  color: $button-font-color
+
+.btn-default:hover, .btn-default:focus, .btn-default:active, .open>.dropdown-toggle.btn-default
+  color: #fff
+  background-color: $button-hover-bg-color
+  border-color: #285e8e
+
+.input-group-addon
+  background-color: $deep-blue
+  color: $main-text-color
+
+
+.form-control[disabled]
+  background-color: $dark-gray
+  color: $light-gray
+
+.form-control
+  background-color: $main-bg-color
+  color: $main-text-color
+  a
+    color: white
+
+
+.fileinput-button
+  position: relative
+  overflow: hidden
+
+
+.fileinput-button input
+  position: absolute
+  top: 0
+  right: 0
+  margin: 0
+  opacity: 0
+  font-size: 200px
+  direction: ltr
+  cursor: pointer
+
+
+
+// ___________________________________________
+// Glyphs
 
 .glyphicon.glyphicon-menu-up
   font-size: 10px
@@ -27,6 +300,9 @@
   width: 10px
   height: 10px
 
+
+//___________________________________
+// Loading spinner
 
 .loader
   border: 16px solid #f3f3f3
@@ -51,6 +327,9 @@
     transform: rotate(360deg)
 
 
+
+// ______________________________________
+// Palette swatch selection
 
 .add_swatch
   animation:
@@ -90,6 +369,23 @@
 
 .color-item a
   margin: auto
+
+
+
+
+
+.list-group-item
+  background-color: $list-bg-color
+  color: $main-text-color
+
+
+.bordered-item
+  border-style: solid
+  border-width: 2px
+  border-color: #eeeeee
+
+.cmyk-details
+  font-size: 8px
 
 
 li a
@@ -145,24 +441,6 @@ ul.swatch-selector li.active
 
 .container
   display: flex
-
-
-.fileinput-button
-  position: relative
-  overflow: hidden
-
-
-.fileinput-button input
-  position: absolute
-  top: 0
-  right: 0
-  margin: 0
-  opacity: 0
-  font-size: 200px
-  direction: ltr
-  cursor: pointer
-
-
 
 
 /*

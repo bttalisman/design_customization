@@ -35,9 +35,8 @@
 
     <div class='container-fluid' style='margin:0px; padding:0px;'>
 
-      <div class='page-header' style='border:none; margin:0px 0px 0px 0px; padding:10px 10px 10px 10px; background:#ffaaaa;'>
+      <div class='page-header'>
         <h1 style='margin:0px; width:400px; display:inline-block; '>Custom Designs</h1>
-
         <div class='text-right' style='display:inline-block; width:400px; float:right;'>
           <h4 style='margin:0px; color:#fafafa'>
 <%          if @user %>
@@ -48,13 +47,12 @@
 <%          end %>
           </h4>
         </div>
-
       </div>
 
 
       <nav style='border:none;' class='navbar navbar-light bg-faded'>
 
-        <ul style='background:#eff57a' class='nav nav-tabs'>
+        <ul class='nav nav-tabs'>
           <li role='presentation' class='menu-item <%= if params[:controller] == 'design_templates' then 'active' end %>' ><a href='<%= design_templates_path %>'>Templates</a></li>
           <li role='presentation' class='menu-item <%= if params[:controller] == 'versions' then 'active' end %>' ><a href='<%= versions_path %>'>Versions</a></li>
           <li role='presentation' class='menu-item <%= if params[:controller] == 'users' then 'active' end %>' ><a href='<%= users_path %>'>Users</a></li>
@@ -66,7 +64,8 @@
 <%        end %>
 
           <li role='presentation' class='menu-item dropdown'>
-            <a class='dropdown-toggle' data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false'>
+            <a class='dropdown-toggle' data-toggle='dropdown' href='#'
+              role='button' aria-haspopup='true' aria-expanded='false'>
               New <span class='caret'></span>
             </a>
             <ul class='dropdown-menu'>
@@ -77,8 +76,6 @@
             </ul>
           </li>
         </ul>
-
-
       </nav>
 
       <div style='margin-top:20px;'>

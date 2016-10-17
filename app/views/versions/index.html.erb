@@ -1,30 +1,30 @@
 <div class='row'>
   <div class='col col-md-1'></div>
   <div class='col col-md-10'>
-    <table class='table table-hover'>
+    <table class='table version-index'>
       <thead>
         <tr>
-          <th style='width:30%;;'><a onclick='toggle_name();'>Version Name</a>
+          <th><a onclick='toggle_name();'>Version Name</a>
             <span id='name_arrow' data-sort-key='name' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
-          <th style='width:15%'><a onclick='toggle_template();'>Template</a>
+          <th><a onclick='toggle_template();'>Template</a>
             <span id='template_arrow' data-sort-key='template' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
-          <th style='width:15%;'><a onclick='toggle_created();'>Created</a>
+          <th><a onclick='toggle_created();'>Created</a>
             <span id='created_arrow' data-sort-key='created' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
-          <th style='width:15%;'><a onclick='toggle_updated();'>Updated</a>
+          <th><a onclick='toggle_updated();'>Updated</a>
             <span id='updated_arrow' data-sort-key='updated' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
-          <th style='width:15%;'><a onclick='toggle_last_render_date();'>Last Render</a>
+          <th><a onclick='toggle_last_render_date();'>Last Render</a>
             <span id='last_render_date_arrow' data-sort-key='last_render_date' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
-          <th style='width:20%;'><a onclick='toggle_owner();'>Owner</a>
+          <th><a onclick='toggle_owner();'>Owner</a>
             <span id='owner_arrow' data-sort-key='owner' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', class: 'arrow-spacer' ) %>
           </th>
@@ -37,22 +37,22 @@
         @versions.each { |v| %>
           <tr>
             <td class='clickable' onclick='show_version( "<%= v[:id]%>" );' id='name<%= i.to_s %>'>
-              <%= v[:name] %>
+              <%= v[:name] %>&nbsp;
             </td>
             <td class='clickable' onclick='show_template( "<%= v[:template_id]%>" );' id='template<%= i.to_s %>'>
-              <%= v[:template] %>
+              <%= v[:template] %>&nbsp;
             </td>
             <td id='created<%= i.to_s %>'>
-              <%= v[:created] %>
+              <%= v[:created] %>&nbsp;
             </td>
             <td id='updated<%= i.to_s %>'>
-              <%= v[:updated] %>
+              <%= v[:updated] %>&nbsp;
             </td>
             <td id='last_render_date<%= i.to_s %>'>
-              <%= v[:last_render_date] %>
+              <%= v[:last_render_date] %>&nbsp;
             </td>
             <td id='owner<%= i.to_s %>'>
-              <%= v[:owner] %>
+              <%= v[:owner] %>&nbsp;
             </td>
           </tr>
     <%    i += 1

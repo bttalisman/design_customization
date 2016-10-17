@@ -53,7 +53,7 @@
           <h4 class='modal-title' id='exampleModalLabel'>Describe this Template</h4>
         </div>
   <%=   form_for @managed_asset, html: { multipart: true, id: 'managed_asset_form' } do |form| %>
-          <div style='margin:10px;'>
+          <div class='modal-body'>
             <div class='spacer'></div>
             <textarea id='text_asset' name='managed_asset[description]'
               class='form-control' rows='3'></textarea>
@@ -94,20 +94,17 @@
           <h4 class='modal-title' id='exampleModalLabel'>Add an Asset</h4>
         </div>
 
-          <div style='margin:10px;'>
-
-            <select class='form-control' style='width:100%;' id='asset_select'>
-              <option value='' disabled selected>Select an Asset</option>
-  <%            @managed_assets.each { |a|
-                  if !template_has_asset( @design_template, a ) %>
-                    <option value='<%= a.id.to_s %>'><%= a.name %></option>
-  <%              end
-                } %>
-            </select>
-
-            <div class='spacer'></div>
-
-          </div>
+        <div class='modal-body'>
+          <select class='form-control' style='width:100%;' id='asset_select'>
+            <option value='' disabled selected>Select an Asset</option>
+<%            @managed_assets.each { |a|
+                if !template_has_asset( @design_template, a ) %>
+                  <option value='<%= a.id.to_s %>'><%= a.name %></option>
+<%              end
+              } %>
+          </select>
+          <div class='spacer'></div>
+        </div>
 
         <div class='modal-footer'>
           <button type='button' id='vid_btn' class='btn btn-default'

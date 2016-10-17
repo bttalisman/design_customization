@@ -3,11 +3,18 @@
 
   <div class='col col-md-1'></div>
   <div class='col col-md-10'>
-    <table class="table table-striped">
+    <table class='table palette-index'>
       <thead>
         <tr>
-          <th><a onclick='toggle_name();'>Name</a></th>
-          <th><a onclick='toggle_description();'>Description</a></th>
+          <th><a onclick='toggle_name();'>Name</a>
+            <span id='name_arrow' data-sort-key='name' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+          <th><a onclick='toggle_description();'>Description</a>
+            <span id='name_arrow' data-sort-key='description' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
+          </th>
+
         </tr>
       </thead>
       <tbody>
@@ -15,7 +22,7 @@
 <%      i = 0
         @palettes.each { |p| %>
           <tr>
-            <td onclick='show_palette( "<%= p[:id]%>" );' id='name<%= i.to_s %>'>
+            <td onclick='show_palette( '<%= p[:id]%>' );' id='name<%= i.to_s %>'>
               <%= p[:name] %>
             </td>
 
@@ -34,67 +41,43 @@
 
 </div> <!-- / row -->
 
-<div style='display:none' id='palettes'><%= @palettes.to_json %></div>
+
+<div style='display:none' id='<%= CACHE_KEY_PALETTES.to_s %>'><%= @palettes.to_json %></div>
+
 
 <script>
 
-  var NAME_FLIP = true;
-  var DESCRIPTION_FLIP = true;
+
+  var CACHE_NAME = '<%= CACHE_KEY_PALETTES.to_s %>';
+
+
+
+  function get_cached_palettes() {
+    return get_cached_json( CACHE_NAME ); }
+
+  function cache_palettes( palettes_array ) {
+    cache_json( palettes_array, CACHE_NAME ); }
+
+  function cache_arrow( e ) {
+    cache_arrow_by_name( e, CACHE_NAME ); }
+
+
+  function toggle_name() {
+    toggle_header_item( 'name_arrow', get_cached_palettes, cache_palettes ); }
+
+  function toggle_description() {
+    toggle_header_item( 'description_arrow', get_cached_palettes, cache_palettes ); }
+
 
   function show_palette( id )
   {
     window.location = '/palettes/' + id;
   }
 
-  function get_palettes()
-  {
-    var element = $('#palettes');
-    var text = element.text();
-    var array = JSON.parse( text );
-    return array;
-  }
-
-
-  function put_palettes( array )
-  {
-    var element = $('#palettes');
-    element.text( JSON.stringify( array ) );
-  }
-
-
-  function toggle_name()
-  {
-    var palettes = get_palettes();
-    NAME_FLIP = !NAME_FLIP;
-
-    palettes.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'name', NAME_FLIP );
-    });
-
-    put_palettes( palettes );
-    drawPage();
-  }
-
-
-  function toggle_description()
-  {
-    var palettes = get_palettes();
-    DESCRIPTION_FLIP = !DESCRIPTION_FLIP;
-
-    palettes.sort( function( obj1, obj2 )
-    {
-      return my_sort( obj1, obj2, 'description', DESCRIPTION_FLIP );
-    });
-
-    put_palettes( palettes );
-    drawPage();
-  }
-
-
   function fill_container( )
   {
-    var palettes = get_palettes();
+    update_arrows( CACHE_NAME );
+    var palettes = get_cached_palettes();
     var o, s, el;
     var d;
     var container_index = 0;
@@ -117,15 +100,8 @@
   }
 
 
-  function drawPage()
-  {
-    fill_container();
-  }
-
-
   $(document).ready( function() {
-    // clicks data are probably what the user is here for
-    toggle_name();
+    fill_container();
   });
 
 

@@ -23,9 +23,9 @@ if !@colors.nil?
         color_name = color[ 'name' ]
 
         if i%2 === 0
-          background_color = '#fafafa'
+          alt_class = 'alt'
         else
-          background_color = '#ffffff'
+          alt_class = ''
         end
 
         use_palette = ''
@@ -33,7 +33,7 @@ if !@colors.nil?
         palette_id = ''
         select_pal = ''
         offer_pal_enabled = ''
-        border_css = 'border-color:' + background_color.to_s + ';'
+        border_css = 'border-color: black;'
         use_palette_select = 'disabled="disabled"'
 
 
@@ -54,7 +54,7 @@ if !@colors.nil?
               use_pal_cb_prop = ''
             else
               # this color has not been selected for replacement.
-              border_css = 'border-color:' + background_color.to_s + ';'
+              border_css = 'border-color: black;'
               label_class = 'disabled'
               use_pal_cb_class = 'disabled'
               use_pal_cb_prop = 'disabled="disabled"'
@@ -83,7 +83,7 @@ if !@colors.nil?
           name='replace_color<%= i.to_s %>' id='replace_color<%= i.to_s %>' >
         </input>
 
-        <div style='width:170px; padding:15px; background:<%= background_color.to_s %>; display:inline-block;'>
+        <div class='color-selector-panel <%= alt_class.to_s %>'>
 
           <div onclick='click_color(this);' data-selected='<%= replace_color.to_s %>'
             data-input-id='replace_color<%= i.to_s %>' data-label-id='op_label<%= i.to_s %>'
@@ -92,8 +92,7 @@ if !@colors.nil?
 
             <div style='width:100%; height:40px; font-weight:bold; font-size:12px;'><%= color_name.to_s %></div>
 
-            <div style='display:inline-block; vertical-align:top; width:40px;
-              height:40px; background:<%= color_hex.to_s %>'></div>
+            <div class='color-selector-swatch' style='background:<%= color_hex.to_s %>'></div>
 
             <div class='cmyk-details' style='vertical-align:top; width:35px; margin-bottom:15px;
               margin-left:15px; display:inline-block;'>
@@ -188,7 +187,7 @@ end #colors is not nil
           select.removeClass( 'disabled' );
           select.prop( 'disabled', false );
       }
-      
+
     }
 
   }
