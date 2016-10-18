@@ -1,7 +1,7 @@
 # Palettes Controller
 class PalettesController < ApplicationController
   def index
-        
+
     @palettes = Palette.all
 
     palettes = Palette.all
@@ -39,7 +39,7 @@ class PalettesController < ApplicationController
     logger.info 'PALETTES_CONTROLLER - update - about to save.'
     if @palette.save
       logger.info 'PALETTES_CONTROLLER - update - SUCCESS!'
-      redirect_to palette_path
+      redirect_to palettes_path
     else
       logger.info 'PALETTES_CONTROLLER - update - FAILURE!'
       render 'new'

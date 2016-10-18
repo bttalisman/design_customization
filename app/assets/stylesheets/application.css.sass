@@ -16,7 +16,7 @@ $deep-red: rgb(51, 1, 1)
 $deep-aqua: rgb(4, 31, 48)
 $slate-blue: rgb(11, 68, 91)
 $super-bright-pink: rgb(247, 227, 246)
-
+$oxblood: rgb(73, 7, 17)
 
 
 $main-bg-color: black
@@ -48,6 +48,9 @@ $modal-content-bg-color: $slate-blue
 $button-bg-color: $deep-purple
 $button-font-color: $pink
 $button-hover-bg-color: $light-blue
+
+$alert-bg-color: $oxblood
+$alert-color: white
 
 
 // ___________________________________________
@@ -132,8 +135,11 @@ ul.nav
 .modal-body
   margin-top: 54px
 
+
+
 // _____________________________________________
 // Table and index styles
+
 table
   width: 100%
 
@@ -371,8 +377,13 @@ div.panel-body
   margin: auto
 
 
+// __________________________________________
+// Other tidbits
 
 
+.alert-warning
+  background-color: $alert-bg-color
+  color: $alert-color
 
 .list-group-item
   background-color: $list-bg-color

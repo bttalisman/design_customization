@@ -7,11 +7,13 @@
       <thead>
         <tr>
           <th><a onclick='toggle_name();'>Name</a>
-            <span id='name_arrow' data-sort-key='name' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='name_arrow' data-sort-key='name'
+              class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
           <th><a onclick='toggle_description();'>Description</a>
-            <span id='name_arrow' data-sort-key='description' class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
+            <span id='description_arrow' data-sort-key='description'
+              class='glyphicon glyphicon-menu-up menu-arrow' aria-hidden='true'></span>
             <%= image_tag( 'blank.png', size: '14x14', class: 'arrow-spacer' ) %>
           </th>
 
@@ -49,7 +51,6 @@
 
 
   var CACHE_NAME = '<%= CACHE_KEY_PALETTES.to_s %>';
-
 
 
   function get_cached_palettes() {

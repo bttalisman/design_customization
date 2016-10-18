@@ -93,6 +93,18 @@
     $loading = $('#loading-indicator');
     $loading.hide();  // hide it initially.
 
+    turnOnLoadingIndicator();
+
+  });
+
+  function turnOffLoadingIndicator()
+  {
+    $(document).unbind( 'ajaxStart' );
+    $(document).unbind( 'ajaxStop' );
+  }
+
+  function turnOnLoadingIndicator()
+  {
     $(document)
       .ajaxStart(function () {
         $loading.show();
@@ -100,7 +112,7 @@
       .ajaxStop(function () {
         $loading.hide();
       });
+  }
 
-  });
 
 </script>

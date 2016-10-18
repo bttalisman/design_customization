@@ -20,6 +20,7 @@ extracting information. -->
       rendering_images_form = true
       logger.info 'design_template_settings.html - About to render images.' %>
 <%=   render :partial => 'design_template_images' %>
+      <div class='spacer'></div>
 <%  end
   end
 
@@ -27,9 +28,9 @@ extracting information. -->
   if !@tags.nil?
     if !@tags.empty?
       rendering_tags_form = true
-      logger.info 'design_template_settings.html - About to render tags.'
-%>
+      logger.info 'design_template_settings.html - About to render tags.' %>
 <%=   render :partial => 'design_template_tags' %>
+      <div class='spacer'></div>
 <%
     end
   end
@@ -37,11 +38,10 @@ extracting information. -->
   if !@colors.nil?
     if !@colors.empty?
       rendering_colors_form = true
-      logger.info 'design_template_settings.html - About to render colors.'
-%>
+      logger.info 'design_template_settings.html - About to render colors.' %>
 <%=   render :partial => 'design_template_colors' %>
-<%
-    end
+      <div class='spacer'></div>
+<%  end
   end %>
 
 

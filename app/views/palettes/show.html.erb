@@ -8,8 +8,7 @@
         <h3 class="panel-title"><%= @palette.name.to_s %></h3>
       </div>
       <div class="panel-body">
-<%
-        if !@my_colors.empty?
+<%      if !@my_colors.empty?
           @my_colors.each do |c| %>
             <div class='color-item' title='<%= c.hex_code %>' id='all_color<%= c.id %>' style='background:<%= c.hex_code %>;'>
             </div>
@@ -17,7 +16,7 @@
         end %>
       </div> <!-- / body -->
     </div>  <!-- / panel -->
-
+    <div class='spacer'></div>
     <a class='btn btn-default' href='<%= edit_palette_path %>'>Edit this Palette</a>
     <a class="btn btn-default" href="/palettes/<%= @palette.id %>"  data-confirm='Are you sure?' data-method="delete" rel="nofollow">Delete</a>
 

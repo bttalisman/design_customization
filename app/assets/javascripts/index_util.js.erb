@@ -27,6 +27,12 @@ function clear_managed_assets_cache()
   clear_cache( '<%= CACHE_KEY_MANAGED_ASSETS.to_s %>' );
 }
 
+function clear_palettes_cache()
+{
+  clear_cache( '<%= CACHE_KEY_PALETTES.to_s %>' );
+}
+
+
 
 function log_out()
 {
