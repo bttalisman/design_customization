@@ -26,7 +26,6 @@ class DesignTemplatesController < ApplicationController
             owner: get_full_name( t.user_id ) }
       @design_templates << o
     end
-
 #    Rails.logger.info 'design_templates_controller - index() - @design_templates: '\
 #      + JSON.pretty_generate( @design_templates )
   end
@@ -38,6 +37,8 @@ class DesignTemplatesController < ApplicationController
     @stats = get_stats( @design_template )
     @folder = get_design_template_folder( @design_template )
 
+    # If using this URL from outside of this app, replace <SHOPIFY_USER_ID>
+    # with the shopify user id.
     @quick_new_partial_url = local_host + '/partials/quick_new?template_id='\
                               + @design_template.id.to_s + '&user_id=<SHOPIFY_USER_ID>'
   end
@@ -70,18 +71,20 @@ class DesignTemplatesController < ApplicationController
     # extract trans-butt-related settings from the parameters object, and
     # set prompts.
     set_trans_butt_prompts( @design_template, params )
-
+    # extract color-related settings from the parameters object, and
+    # set prompts.
     set_color_prompts( @design_template, params )
-
+    # This method creates Color objects based on all colors found in the params
+    # object.  This is only done as a convenience, to import colors from designs
+    # into this system.  Currently, the ui enabling this feature is only exposed
+    # to super users.
     load_extracted_colors( @design_template, params )
 
     if @design_template.save
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - SUCCESS!'
-
       # Do any post-processing necessary.  Original purpose: to fix paths to
-      # missing files.
+      # missing files so AI will not complain, and versions can be created remotely.
       post_process( @design_template )
-
       redirect_to design_template_path
     else
       logger.info 'DESIGN_TEMPLATES_CONTROLLER - update - FAILURE!'
@@ -133,10 +136,9 @@ class DesignTemplatesController < ApplicationController
 
   def delete_all
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - delete_all()'
-
+    # TODO, make this less dangerous
     assets = ManagedAsset.all
     assets.each( &:delete )
-
     dts = DesignTemplate.all
     dts.each( &:delete )
     render nothing: true
@@ -145,10 +147,9 @@ class DesignTemplatesController < ApplicationController
   def destroy
     logger.info 'DESIGN_TEMPLATES_CONTROLLER - destroy()'
     @design_template = DesignTemplate.find( params[ :id ] )
-
+    # TODO, make this less dangerous
     assets = @design_template.managed_assets.all
     assets.each( &:delete )
-
     @design_template.destroy
     redirect_to :design_templates
   end

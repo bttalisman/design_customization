@@ -14,7 +14,11 @@ module ColorsHelper
     s
   end
 
-  # This method extracts color values from the params object.  These values
+  # This method extracts color values from the params object and creates
+  # actual Color objects, managed by this app, available for use in future
+  # versions.
+  #
+  # These values
   # are set by partials/_design_template_colors.html.erb, which in turn got them
   # from the xxx_all_colors.jsn file created by the extract_all_colors.js AI
   # script.
