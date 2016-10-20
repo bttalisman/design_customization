@@ -1,6 +1,7 @@
 @import "bootstrap"
 
 
+
 $yellow: rgb(255,255,153)
 $trans-gray: rgba(200,200,200,0.1)
 $deep-blue: rgb(0,0,80)
@@ -51,6 +52,8 @@ $button-hover-bg-color: $light-blue
 
 $alert-bg-color: $oxblood
 $alert-color: white
+
+
 
 
 // ___________________________________________
@@ -140,9 +143,18 @@ ul.nav
 // _____________________________________________
 // Table and index styles
 
+
+tbody::-webkit-scrollbar
+  background-color: black
+  width: 10px
+
+tbody::-webkit-scrollbar-thumb
+  -webkit-border-radius: 10px
+  border-radius: 10px
+  background: $pink
+
 table
   width: 100%
-
 
 td
   border-width: 1px 0
