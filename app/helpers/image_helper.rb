@@ -76,9 +76,8 @@ module ImageHelper
   end
 
 
-
-
-
+  # The rest of this file is code I found on the internet, seems to work
+  
   def resize_with_crop(img, w, h, options = {})
 
     Rails.logger.info 'ImageHelper - resize_with_crop() - img: ' + img.to_s

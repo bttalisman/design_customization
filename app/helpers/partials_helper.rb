@@ -4,6 +4,10 @@ module PartialsHelper
 
   # This method iterates through all of the tags associated with a template
   # and constructs a hash matching tags to Color collections.
+  # It then iterates through all of the colors being replaced, and adds keys
+  # matching color-to-be-replaced to a Color collection.
+  # This is all for use by partials/_version_colors, and the partials/_versions_tags
+  # views.
   def get_palettes( template )
 
     Rails.logger.info 'partials_helper - get_palettes()'

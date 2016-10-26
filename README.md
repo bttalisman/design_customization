@@ -10,15 +10,29 @@ The intended user for all version-related UI is a customer, and therefore not ne
 
 ## Managed Objects
 
-Each DesignTemplate object is associated with an Adobe Illustrator file.  A DesignTemplate object encapsulates a description of how customers will be prompted to create their individual versions.  A template is associated with an OS folder, referred to as its 'working folder'
+Each DesignTemplate object is associated with an Adobe Illustrator file.  A DesignTemplate object encapsulates a description of how customers will be prompted to create their unique versions.  Each template is associated with an OS folder, referred to as its 'working folder'
 
 Each Version object encapsulates a customer’s specifications of how one particular version is to be created.  A Version is associated with an OS folder, referred to as its 'working folder'.  A Version’s specifications are passed along to AI when generating output.
 
-Colors and Palettes are used to manage color usage.  Color objects can be created for appealing colors, and grouped into Palettes. In this way a customer's choices can be limited.
+### Colors and Palettes
+
+Colors and Palettes are used to manage color usage.  Color objects can be created for appealing colors, and grouped into Palettes. In this way a customer's choices can be limited.  Colors can be created in the app UI, or imported from AI.
+
+#### Creating Colors
+
+When a color is created, the color is specified with an RGB color picker.  Specifying a cmyk color would be preferable, but I could not find a ready-made cmyk picker, so it's possible one would have to make one.  Not all rgb colors map to cmyk.  AI can convert rgb to cmyk, as done in bin/illustrator_processing/extractAllText.jsx.  If a user creates a version using a color that does not have a cmyk equivalent, the color switch just doesn't happen.
+
+#### Importing Colors
+
+When a user creates a template, the Edit page displays all colors extracted from the document, each containing cmyk and rgb representations, as well as swatch name if there is one.  A super user is presented with an option to import the extracted colors into the system.  This is just a way to populate the collection of managed colors with useful and appealing cmyk colors.
+
+### Replacement Images
 
 A Replacement Image is essentially an uploaded file that will replace a 'placed item' found in an AI file.  ReplacementImages may contain image files or zip archives containing image files. In the case that a ReplacementImage is a zip, its items will be cycled through randomly when replacing placed items for a version.
 
 A Collage is an alternative to a Replacement Image, essentially being a collection of images, currently implemented as a connection to Instagram.  When created, a collage downloads a collection of images from Instagram into an OS folder.
+
+### Managed Assets
 
 A ManagedAsset is an image or a block of text that can be associated with a template.  Versions of a template will display these images and text.  The intention is to give the user creating the version a clue about what can be produced.
 
@@ -29,7 +43,7 @@ A ManagedAsset is an image or a block of text that can be associated with a temp
 
 This is a Rails application, but several other scripting languages are used as needed.
 
-The Adobe Illustrator application is used to run a script written in JavaScript, but any AI-supported scripting language could be used.  This script has access to the entire Illustrator API.  AppleScript is used as little as possible: to launch Adobe Illustrator, load the AI script, and close Illustrator.  A Ruby OS script creates this AppleScript in memory, runs it, and generates a collection of output files including .ai, .jpeg, .json, and any other type needed.  These files are initially placed in the ‘output’ subfolder of a Version’s,
+The Adobe Illustrator application is used to run a script written in JavaScript, but any AI-supported scripting language could be used.  This script has access to the entire Illustrator API.  AppleScript is used as little as possible: to launch Adobe Illustrator, load the AI script, and close Illustrator.  A Ruby OS script creates this AppleScript in memory, runs it, and generates a collection of output files including .ai, .jpeg, .png, .json, and any other type needed.  These files are initially placed in the ‘output’ subfolder of a Version’s,
 or a DesignTemplate's working folder. The OS script copies these output files to their final location, as well as initiates any further processing that needs to occur.
 
 ## Distributed Installation
@@ -61,14 +75,16 @@ All generally known UI is found in the views for each model as expected.  All ex
 
 Extensible UI is only provided by the ‘edit’ views for versions and templates.  Ajax requests are made by the ‘edit’ views to the partials controller, requesting UI for the template or version as necessary.  Extensible UI for these objects is only available after the version or template has been created and saved, due to the way attachments are created and associated.
 
-When a user clicks Save, pending javaScript validation a json object containing all settings, both extensible and general, is created and posted to the appropriate controller.
-
-
 ## Settings schema
 
 ### design_template.prompts
 
-JSON object describing constraints on how versions can be made, other properties of the template such as the dimensions of placed items that may affect versions.  These settings affect the creation of a version only indirectly.
+JSON object describing constraints on how versions can be made, other properties of the template such as the dimensions of placed items that may affect versions.  These settings generally affect the creation of a version indirectly.
+
+Info for a particular tag is stored in an object, the key referencing that object is the name of the tag.  The same is true for placed items.  The search and replace scripts can then easily locate the relevant settings when they encounter an item or a tag.  Colors are different, the key referring to a color's settings is constructed from the cmyk values, but this key is not used by search scripts to look up settings.  Colors often have slight variations in values, and I didn't find lookup by name to be a practical solution.  Instead, setting lookup is done by comparing the actual cmyk values, allowing for some floating point tolerance.  If speed ever becomes a concern, making the hash lookup work would improve performance.
+
+To see the code that builds these objects, checking out design_templates_helper.set_color_prompts(),
+design_templates_helper.set_tag_prompts(), etc...
 
 ```json
   tag_settings:
@@ -92,11 +108,24 @@ JSON object describing constraints on how versions can be made, other properties
     left_image_name: 'lefty'
     right_image_name: 'righty'
     tb_set_color: 'checked'
+
+  color_settings:  
+    '57.42187560.1562563.67187541.796875':
+      replace_color: 'checked'
+      rep_co_orig_co_name: 'drab blue'
+      rep_co_orig_co_hex: '#3f3b35'
+      rep_co_orig_co_c: '57.421875'
+      rep_co_orig_co_m: '60.15625'
+      rep_co_orig_co_y: '63.671875'
+      rep_co_orig_co_k: '41.796875'
+
 ```
 
 ### version.values
 
 JSON object describing the user's final input into how the version will be made.  This object is saved to the file system before the illustrator scripts are run, making these data available to the script.
+
+Check out versions_helper.set_tag_values(), versions_helper.set_color_values(), etc...
 
 ```json
   tag_settings:
@@ -120,4 +149,17 @@ JSON object describing the user's final input into how the version will be made.
     tb_hw_ratio: '1.4'
     tb_v_align: 'center'
     tb_font: 'helvetica'
+
+  color_settings:
+    new_c: '23.3'
+    new_m: '23.3'
+    new_y: '23.3'
+    new_k: '23.3'
+    new_hex: '#333333'
+    orig_c: '3.33'
+    orig_m: '4.44'
+    orig_y: '5.55'
+    orig_k: '33.2'
+    orig_hex: '#444444'
+
 ```

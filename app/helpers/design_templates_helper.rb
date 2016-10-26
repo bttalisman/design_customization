@@ -84,7 +84,8 @@ module DesignTemplatesHelper
     valid = true
     status = TEMPLATE_STATUS_SUCCESS
 
-    # No tags and no images
+    # No tags and no images and no colors.  TODO - every design has colors, so maybe
+    # this could be more meaningful
     if !tags?( dt ) && !images?( dt ) && !colors?( dt )
       Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_stats() - No tags or images or colors.'
       valid = false
@@ -116,9 +117,11 @@ module DesignTemplatesHelper
     tags
   end
 
-  # This method returns an array of extracted colors.
+  # This method returns an array of extracted colors.  CMYK values are the primary
+  # representation, rgb values are calculated from cmyk.  The 'name' field is
+  # an option for colors that are swatches.
   #
-  # [ { c: '233', m: '222', y: '111', k: '122' } ]
+  # [ { c: '233', m: '222', y: '111', k: '122', r:'3', g: '3', b:'4', name:'bob' } ]
   #
   def get_colors_array( design_template )
     colors_file = path_to_colors_file( design_template )
@@ -254,7 +257,6 @@ module DesignTemplatesHelper
   def set_tag_prompts( template, params )
 #    Rails.logger.info 'design_templates_helper - set_tag_prompts() - params: '\
 #      + params.to_s
-
     tag_count = params[ 'tag_count' ]
     tag_count = if tag_count != ''
                     tag_count.to_i
@@ -312,7 +314,6 @@ module DesignTemplatesHelper
   def set_trans_butt_prompts( template, params )
 #    Rails.logger.info 'design_templates_helper - set_image_prompts() - params: '\
 #      + params.to_s
-
     left_image_name = params[ 'left-butt' ]
     right_image_name = params[ 'right-butt' ]
     set_color = params[ 'trans-butt-set-color' ]
@@ -472,6 +473,7 @@ module DesignTemplatesHelper
 #    Rails.logger.info 'design_templates_helper - get_hex_string_for_color() - r, g, b: '\
 #      + red_int.to_s + ', ' + green_int.to_s + ', ' + blue_int.to_s
 
+    # turn our base-10 ints into base-16 ints, right-justified, and padded with 0's if necessary
     red_hex = red_int.to_s(16).rjust(2, '0')
     green_hex = green_int.to_s(16).rjust(2, '0')
     blue_hex = blue_int.to_s(16).rjust(2, '0')
@@ -480,6 +482,9 @@ module DesignTemplatesHelper
     s
   end
 
+  # This method constructs a key under which to save this color in the prompts object.
+  # When ultimately being replaced, colors are not looked up by their keys, they
+  # are looked up by their cmyk values, so this key is not actually used.
   def get_prompts_key_for_color( color )
     return if color.nil?
 #    Rails.logger.info 'design_templates_helper - get_prompts_key_for_color() - color: '\
@@ -498,8 +503,8 @@ module DesignTemplatesHelper
 #      + 'prompts_string: ' + prompts_string.to_s
     if json?( prompts_string )
       prompts = JSON.parse( prompts_string )
-#      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
-#        + 'prompts: ' + JSON.pretty_generate( prompts )
+      Rails.logger.info 'DESIGN_TEMPLATES_HELPER - get_prompts_object() - '\
+        + 'prompts: ' + JSON.pretty_generate( prompts )
     end
     prompts
   end
@@ -523,7 +528,6 @@ module DesignTemplatesHelper
     end
     prefs
   end
-
 
 
   # This method makes a folder to temporarily hold output.  The folder is
@@ -660,7 +664,7 @@ module DesignTemplatesHelper
 
 
 
-  # This method will run the necessary scripts to extract images and tags
+  # This method will run the necessary scripts to extract images, tags and color
   # info from an AI file.  If config/customization.yml[ 'run_remotely' ] then
   # HTTP requests will be sent to the remote server, otherwise local
   # system calls will be executed.
@@ -697,7 +701,7 @@ module DesignTemplatesHelper
   def post_process( design_template )
 
     return if design_template.has_been_post_processed
-    design_template.has_been_post_processed = true
+    design_template.has_been_post_processed = true # at least we'll try
     design_template.save
 
     app_config = Rails.application.config_for( :customization )
@@ -716,8 +720,6 @@ module DesignTemplatesHelper
     File.open( config_file, 'w' ) do |f|
       f.write( config.to_json )
     end
-
-    #make_output_folder( design_template )
 
     if run_remotely
       post_process_send_remote( design_template )
